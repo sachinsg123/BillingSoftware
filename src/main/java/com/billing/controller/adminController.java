@@ -116,10 +116,12 @@ public class adminController{
 //	  System.out.println(user);
 	  String username =	auth.getName();
 	  model.addAttribute("username", username);
-	 String companyName = company.getName();
-	 String companyLogo = company.getLogo();
-	 model.addAttribute("company",company);
+	  String companyName = company.getName();
+	  String companyLogo = company.getLogo();
+	  model.addAttribute("company",company);
 	  model.addAttribute("companyName", companyName);
+	  
+	  // comment add
 	  
 		return "home";
 		
