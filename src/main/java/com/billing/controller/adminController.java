@@ -264,7 +264,6 @@ public class adminController{
 			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			
-			
 			User user = userRepo.findByUsername(auth.getName());
 			
 			Company company = companyRepo.getCompanyByUserId(user.getId());
@@ -623,6 +622,9 @@ public class adminController{
 		
 		model.addAttribute("companyName",companyName);
 		
+		String imgpath = StringUtils.ImagePaths.adminImageUrl+"admin.jpg";
+		model.addAttribute("imagePath",imgpath);
+		
 		return "admin/update_supplier";
 		
 		
@@ -636,16 +638,18 @@ public class adminController{
 		Supplier supp = supplierGet.get();
 		supp.setName(supplier.getName());
 		supp.setEmail(supplier.getEmail());
-		if(supplier.getAddedDate().isEmpty()) {
+		
+		if(!supplier.getAddedDate().isEmpty()) {
 		supp.setAddedDate(supplier.getAddedDate());
 		}
+		
 		supp.setAddress(supplier.getAddress());
 		supp.setMobile(supplier.getMobile());
 		
 		supplierRepo.save(supp);
 		
 		session.setAttribute("message","supplier Updated Successfully --!");
-		
+			
 		return "redirect:/a2zbilling/admin/supplier/list";
 	}
 	

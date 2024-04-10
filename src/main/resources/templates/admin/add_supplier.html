@@ -1,70 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-th:replace="fragments/base::layout(~{::section})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 
-    <section>
-        <div class="contaier-fluid">
-          <div th:if="${session.message}">
-          <div class="alert alert-primary" role="alert">
-         <p th:text="${session.message}"></p>
-        <script th:inline="javascript">
-          /*<![CDATA[*/
-          setTimeout(function() {
-          	
-          	window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-          }, 800); 
-         
-      </script> 
-          </div>
-             </div>
-             <div class="row">
-              <div class="col-md-12">
-              <h1 class="text-center">Add Supplier</h1>
-               </div>
-                </div>
-            <form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data" class="form-group">
-             <div class="row">
-              <div class="col-md-4">
-              <div class="form-group">
-              <label>Supplier Name</label>
-              <input type="text" class="form-control" name="name">
-              </div>
-              </div>
-                <div class="col-md-4">
-              <div class="form-group">
-              <label>Supplier email</label>
-              <input type="text" class="form-control" name="email">
-              </div>
-              </div>
-              <div class="col-md-4">
-              <div class="form-group">
-              <label>Supplier Mobile</label>
-              <input type="text" class="form-control" name="mobile">
-              </div>
-              </div>
-              <div class="col-md-4">
-              <div class="form-group">
-              <label>Address</label>
-              <input type="text" class="form-control" name="address">
-              </div>
-              </div>
-               <div class="col-md-4">
-              <div class="form-group">
-              <label>choose date</label>
-              <input type="date" class="form-control" name="addedDate">
-              </div>
-              </div>
-              <div class="col-md-12">
-              <div class="text-center">
-              <button type="submit" class="btn btn-info text-center">Add</button>
-              </div>
-              </div>
-              </div>
-              </form>
-             </div>
-              </section>           
-               </body>
-    <!-- END Body -->
+<section>
+	<div class="contaier-fluid" style="line-height: 25px;">
+		<div th:if="${session.message}">
+			<div class="alert alert-primary" role="alert">
+				<p th:text="${session.message}"></p>
+				<script th:inline="javascript">
+					/*<![CDATA[*/
+					setTimeout(function () {
+						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+					}, 800); 
+				</script>
+			</div>
+		</div>
+		<div class="row" style="background-color:rgb(84,78,131);">
+			<div class="col-md-12">
+				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;">Add
+					Supplier</h1>
+			</div>
+		</div>
+		<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
+			class="form-group">
+			<div class="row" style="background-color:#f5f0f0 ;">
+				<div class="col-md-4 mt-4">
+					<div class="form-group">
+						<label>Supplier Name</label>
+						<input required retype="text" class="form-control" placeholder="Please Enter a Full Name" name="name">
+					</div>
+				</div>
+				<div class="col-md-4 mt-4">
+					<div class="form-group">
+						<label>Supplier Email</label>
+						<input required type="text" class="form-control" placeholder="Please Enter a Valid Email" name="email">
+					</div>
+				</div>
+				<div class="col-md-4 mt-4">
+					<div class="form-group">
+						<label>Supplier Mobile</label>
+						<input type="tel" required class="form-control" placeholder="Please Enter a Mobile Number" name="mobile">
+					</div>
+				</div>
+				<div class="col-md-4 mt-2">
+					<div class="form-group">
+						<label>Address</label>
+						<textarea required type="text" class="form-control" placeholder="Please Enter a Address"
+							name="address"></textarea>
+					</div>
+				</div>
+				<div class="col-md-4 mt-2">
+					<div class="form-group">
+						<label>Choose Date</label>
+						<input type="date" class="form-control" name="addedDate">
+					</div>
+				</div>
+
+				<div class="col-md-12 mt-2">
+					<div class="text-center">
+						<button type="submit" class="btn btn-info text-center">Add</button>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</div>
+</section>
+</body>
+<!-- END Body -->
 
 <!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+
 </html>

@@ -47,59 +47,58 @@ th:replace="fragments/base::layout(~{::section})">
             }
         </script>
         <!-- BEGIN Page Wrapper -->
-       
-                 <div class="contaier-fluid">
-                    <div th:if="${session.message}">
-                   <div class="alert alert-primary" role="alert">
-                  <p th:text="${session.message}"></p>
-                  <script th:inline="javascript">
-                  setTimeout(function() {
+       	<div class="contaier-fluid" style="background-color: bisque; border: 1px solid darkblue;" >
+			<div th:if="${session.message}">
+				<div class="alert alert-primary" role="alert">
+					<p th:text="${session.message}"></p>
+					<script th:inline="javascript">
+                  	setTimeout(function() {
         	            window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-             }, 500); 
-                </script> 
-                  </div>
-                 </div>
-                 <div class="row">
-                  <div class="col-md-12">
-                  <h1 class="text-center">All Suppliers</h1>
-                   </div>
-                    </div>
-                    <div class="row">
-                    <div class="col-md-12">
-                    <table class="table table-bordered">
-		  <thead class="thead-dark">
-		    <tr>
-		      <th scope="col">Supplier Id</th>
-		      <th scope="col">Name</th>
-		      <th scope="col">Email</th>
-		      <th scope="col">Mobile</th>
-		      <th scope="col">Address</th>
-		      <th scope="col">Added Date</th>
-		      <!-- <th scope="col">Added By</th> -->
-		      <th scope="col">Edit</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr th:each=" supplier : ${suppliers}">
-		      <th scope="row" th:text="${supplier.id}"></th>
-		      <td th:text="${supplier.name}"></td>
-		      <td th:text="${supplier.email}"></td>
-		      <td th:text="${supplier.mobile}"></td>
-		      <td th:text="${supplier.address}"></td>
-		      <td th:text="${supplier.addedDate}"></td>
-		      <!-- <td th:text="${supplier.user.username}"></td> -->
-              <td><a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }" class="btn btn-info">Edit</a>
-              <a  th:onclick="|deleteContactAlert(${supplier.id})|" class="btn btn-danger">Del</a>
-              </td> 				      
-		    </tr>
-		  </tbody>
-		</table>
-          </div>
-          </div>
-       </div>
-     </section>              
-       </body>
+						}, 500); 
+                	</script> 
+           		</div>
+			</div>
+        	<div class="row">
+                <div class="col-md-12">
+                 	<h1 class="text-center" >All Suppliers</h1>
+               	</div>
+            </div>
+                <div class="row">
+                	<div class="col-md-12">
+                		<table class="table table-bordered">
+		  					<thead class="thead-dark">
+		    					<tr style="text-align: center;">
+			  					<!-- <th scope="col">Supplier Id</th> -->
+		      						<th scope="col">Name</th>
+		      						<th scope="col">Email</th>
+		      						<th scope="col">Mobile</th>
+	      							<th scope="col">Address</th>
+		      						<th scope="col">Added Date</th>
+		      						<!-- <th scope="col">Added By</th> -->
+		      						<th scope="col">Action</th>
+		    					</tr>
+	 					 	</thead>
+		  					<tbody>
+							    <tr th:each=" supplier : ${suppliers}" style="text-align: center;">
+							      <!-- <th scope="row" th:text="${supplier.id}"></th> -->
+							      <td th:text="${supplier.name}" style="background-color: lightskyblue;"></td>
+							      <td th:text="${supplier.email}"></td>
+							      <td th:text="${supplier.mobile}" style="background-color: lightskyblue;"></td>
+							      <td th:text="${supplier.address}"></td>
+							      <td th:text="${supplier.addedDate}" style="background-color: lightskyblue;"></td>
+							      <!-- <td th:text="${supplier.user.username}"></td> -->
+					              <td>
+									<a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }" class="btn btn-info">Edit</a>
+					              	<a  th:onclick="|deleteContactAlert(${supplier.id})|" class="btn btn-danger">Del</a>
+					              </td>
+							    </tr>
+							 </tbody>
+						</table>
+          			</div>
+          		</div>
+       		</div>
+     	</section>              
+	</body>
     <!-- END Body -->
-
 <!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
 </html>
