@@ -13,33 +13,32 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
 @Entity
-public class Customer{
-	
+public class Customer {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	private String name;
-	
+
 	private String email;
 
 	private String mobile;
-	
+
 	private String password;
-	
+
 	private String address;
-	
+
 	private String addedDate;
-	
+
 	@ManyToMany(mappedBy = "customer")
 	private List<Product> products = new ArrayList<Product>();
-	
+
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name="customer_user",
-	joinColumns = @JoinColumn(name="customer_id")
-	,inverseJoinColumns = @JoinColumn(name="user_id"))
+	@JoinTable(name = "customer_user", joinColumns = @JoinColumn(name = "customer_id"), 
+	inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<User> user = new ArrayList<User>();
-	
+
 	private String status;
 
 	public int getId() {
@@ -89,7 +88,7 @@ public class Customer{
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	public String getAddedDate() {
 		return addedDate;
 	}
@@ -102,7 +101,7 @@ public class Customer{
 		return products;
 	}
 
-	public void setProducts(List<Product> products){
+	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
 
@@ -128,10 +127,5 @@ public class Customer{
 				+ password + ", address=" + address + ", addedDate=" + addedDate + ", products=" + products + ", user="
 				+ user + ", status=" + status + "]";
 	}
-	
-	
-	
-	
-	
 
 }
