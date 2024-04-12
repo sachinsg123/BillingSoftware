@@ -24,12 +24,12 @@ public class SecurityConfig{
 	private CustomSuccessHandler customSuccessHandler;
 	
 	@Bean
-	public UserDetailsService getUserDetailsService() {
+	UserDetailsService getUserDetailsService() {
 		return new CustomUserDetailService();
 	}
 	
 	@Bean
-	public DaoAuthenticationProvider getDaoAuthenticationProvider() {
+	DaoAuthenticationProvider getDaoAuthenticationProvider() {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(getUserDetailsService());
 		authenticationProvider.setPasswordEncoder(getpasswordEncoder());
@@ -40,7 +40,7 @@ public class SecurityConfig{
 	
 	
 	@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		
 		http
 		.csrf().disable()

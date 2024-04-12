@@ -31,11 +31,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		
-		<dependency>
-		    <groupId>jakarta.validation</groupId>
-		    <artifactId>jakarta.validation-api</artifactId>
-		    <version>3.0.1</version> <!-- or the latest version -->
-		</dependency>
 
 		<!--<dependency>
 			<groupId>com.h2database</groupId>

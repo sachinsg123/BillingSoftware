@@ -1,5 +1,7 @@
 package com.billing.model;
+
 import java.util.*;
+
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -10,39 +12,33 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-public class Supplier{
-	
+public class Supplier {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@NotEmpty(message="The Name is Required")
+
 	private String name;
-	
-	@NotEmpty(message="The Email is Required")
+
 	private String email;
-	
-	@NotEmpty(message="The Mobile is Required")
+
 	private String mobile;
-	
-	@NotEmpty(message="The Address is Required")
+
 	private String address;
-	
+
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
 	private List<Product> products = new ArrayList<Product>();
-	
+
 	private String status;
-	
+
 	private String addedDate;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -121,10 +117,5 @@ public class Supplier{
 				+ address + ", user=" + user + ", products=" + products + ", status=" + status + ", addedDate="
 				+ addedDate + "]";
 	}
-	
-	
-	
-	
-	
 
 }
