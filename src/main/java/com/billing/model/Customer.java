@@ -1,6 +1,7 @@
 package com.billing.model;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -19,6 +20,8 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	// @NotEmpty(message = "The Name is Required")
+
 	private String name;
 
 	private String email;
@@ -35,8 +38,7 @@ public class Customer {
 	private List<Product> products = new ArrayList<Product>();
 
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "customer_user", joinColumns = @JoinColumn(name = "customer_id"), 
-	inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JoinTable(name = "customer_user", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<User> user = new ArrayList<User>();
 
 	private String status;

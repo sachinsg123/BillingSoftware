@@ -1,6 +1,7 @@
 package com.billing.controller;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -114,6 +115,7 @@ public class adminController {
 		model.addAttribute("imagePath", imgpath);
 
 //	  System.out.println(user);
+
 		String username = auth.getName();
 		model.addAttribute("username", username);
 		String companyName = company.getName();
@@ -122,7 +124,7 @@ public class adminController {
 		model.addAttribute("companyName", companyName);
 
 		// comment add
-
+		//System.out.println("Conflict");
 		return "home";
 
 	}
@@ -474,7 +476,6 @@ public class adminController {
 		model.addAttribute("companyName", companyName);
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
-
 
 		return "/admin/update_customer";
 

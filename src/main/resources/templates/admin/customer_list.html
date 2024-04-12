@@ -7,7 +7,7 @@ th:replace="fragments/base::layout(~{::section})">
 </head>
 <body>
 <section>
-
+<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 <script>
 
 function deleteContactAlert(id){
@@ -81,8 +81,8 @@ function deleteContactAlert(id){
 		      <td th:text="${customer.mobile}"></td>
 		      <td th:text="${customer.address}"></td>
 		      <td th:text="${customer.addedDate}"></td>
-              <td><a th:href="@{'/a2zbilling/admin/customer/update/'+ ${customer.id} }" class="btn btn-success">Edit</a>
-              <a  th:onclick="|deleteContactAlert(${customer.id})|" class="btn btn-danger">Del</a>
+              <td><a th:href="@{'/a2zbilling/admin/customer/update/'+ ${customer.id} }" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></a>
+              <a  th:onclick="|deleteContactAlert(${customer.id})|" class="btn btn-danger"><i style="background-color: Red;" class="fa-solid fa-trash"></i></a>
               </td> 				      
 		    </tr>
 		  </tbody>

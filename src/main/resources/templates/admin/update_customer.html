@@ -93,26 +93,26 @@
         </div>
                      </div>
                      <div class="row">
-	                     <div class="col-md-12 mb-4" style="background-color: rgb(84,78,130)!important;color:#fff;">
+	                     <div class="col-md-12 	" style="background-color: rgb(84,78,130)!important;color:#fff;">
 	                     <h1 class="text-center pt-1">Update Customer</h1>
 	                      </div>
 	                       </div>
 	                   <form th:action="@{/a2zbilling/admin/customer/update}" method="post" th:object="${customer}" enctype="multipart/form-data" class="form-group">
 	                    <div class="row" style="background-color: #f5f0f0;">
-	                     <div class="col-md-4">
+	                     <div class="col-md-4 mt-4">
 	                     <input type="hidden" name="id" th:field="*{id}"/>
 	                     <div class="form-group">
 	                     <label>Customer Name</label>
 	                     <input type="text" class="form-control" name="name" th:field="*{name}">
 	                     </div>
 	                     </div>
-	                       <div class="col-md-4">
+	                       <div class="col-md-4 mt-4">
 	                     <div class="form-group">
 	                     <label>Customer email</label>
 	                     <input type="text" class="form-control" name="email" th:field="*{email}">
 	                     </div>
 	                     </div>
-	                     <div class="col-md-4">
+	                     <div class="col-md-4 mt-4">
 	                     <div class="form-group">
 	                     <label>Customer Mobile</label>
 	                     <input type="text" class="form-control" name="mobile"  th:field="*{mobile}">
