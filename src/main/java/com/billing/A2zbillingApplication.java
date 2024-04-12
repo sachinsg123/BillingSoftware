@@ -12,7 +12,7 @@ public class A2zbillingApplication implements CommandLineRunner {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) { 
 
 		SpringApplication.run(A2zbillingApplication.class, args);
 	}
