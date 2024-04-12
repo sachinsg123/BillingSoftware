@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+th:replace="fragments/base::layout(~{::section})">
+ <body>
+  <section>          
+                     <div class="contaier-fluid">
+                       <div th:if="${session.message}">
+                       <div class="alert alert-primary" role="alert">
+                      <p th:text="${session.message}"></p>
+          <script th:inline="javascript">
+            /*<![CDATA[*/
+            setTimeout(function() {
+            	
+            	window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+            }, 500); 
+           
+        </script> 
+        </div>
+                     </div>
+                     <div class="row">
+	                     <div class="col-md-12">
+	                     <h1 class="text-center">UPDATE CATEGORY</h1>
+	                      </div>
+	                       </div>
+	                   <form th:action="@{/a2zbilling/admin/category/update}" method="post" th:object="${category}"  class="form-group">
+	                    <div class="row">
+	                     <div class="col-md-4">
+	                     <input type="hidden" name="id" th:field="*{id}"/>
+	                     <div class="form-group">
+	                     <label>Category Name</label>
+	                     <input type="text" class="form-control" name="categoryName" th:field="*{categoryName}">
+	                     </div>
+	                     </div>
+	                     <div class="col-md-12">
+	                     <div class="text-center">
+	                     <button type="submit" class="btn btn-info text-center">Add</button>
+	                     </div>
+	                     </div>
+	                     </div>
+	                     </form>
+                     </div>
+                        </section>          
+                        </body>
+    <!-- END Body -->
+
+<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+</html>

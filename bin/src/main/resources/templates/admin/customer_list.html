@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+th:replace="fragments/base::layout(~{::section})">
+<head>
+<meta charset="ISO-8859-1">
+<title>Customer list</title>
+</head>
+<body>
+<section>
+
+<script>
+
+function deleteContactAlert(id){
+	
+	const swalWithBootstrapButtons = Swal.mixin({
+		  customClass: {
+		    confirmButton: 'btn btn-success',
+		    cancelButton: 'btn btn-danger'
+		  },
+		  buttonsStyling: false
+		})
+
+		swalWithBootstrapButtons.fire({
+		  title: 'Are you sure?',
+		  text: "You won't be able to revert this!",
+		  icon: 'warning',
+		  showCancelButton: true,
+		  confirmButtonText: 'Yes, delete it!',
+		  cancelButtonText: 'No, cancel!',
+		  reverseButtons: true
+		}).then((result) => {
+		  if (result.isConfirmed) {
+			  
+			  
+			  window.location="/a2zbilling/admin/customer/delete/"+id+" ";
+			  
+			  
+		    swalWithBootstrapButtons.fire(
+		      'Customer Deleted Successfully !',
+		      
+		    )
+		  } else if (
+		    /* Read more about handling dismissals below */
+		    result.dismiss === Swal.DismissReason.cancel
+		  ) {
+		    swalWithBootstrapButtons.fire(
+		      'Cancelled',
+		      'Customer Not deleted',
+		      'error'
+		    )
+		  }
+		})
+	
+}
+
+</script>
+	   <div class="row">
+	     <div class="col-md-12">
+	     <h1 class="text-center">All Customers</h1>
+	      </div>
+	       </div>
+	       <div class="row">
+	       <div class="col-md-12">
+	       <table class="table table-bordered">
+		  <thead class="thead-dark">
+		    <tr>
+		      <th scope="col">Customer Id</th>
+		      <th scope="col">Name</th>
+		      <th scope="col">Email</th>
+		      <th scope="col">Mobile</th>
+		      <th scope="col">Address</th>
+		      <th scope="col">Added Date</th>
+		      <th scope="col">Edit</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each=" customer : ${customers}">
+		      <th scope="row" th:text="${customer.id}"></th>
+		      <td th:text="${customer.name}"></td>
+		      <td th:text="${customer.email}"></td>
+		      <td th:text="${customer.mobile}"></td>
+		      <td th:text="${customer.address}"></td>
+		      <td th:text="${customer.addedDate}"></td>
+              <td><a th:href="@{'/a2zbilling/admin/customer/update/'+ ${customer.id} }" class="btn btn-info">Edit</a>
+              <a  th:onclick="|deleteContactAlert(${customer.id})|" class="btn btn-danger">Del</a>
+              </td> 				      
+		    </tr>
+		  </tbody>
+		</table>
+            </div>
+            </div>
+</section>
+
+</body>
+</html>
+

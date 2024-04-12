@@ -7,7 +7,7 @@ th:replace="fragments/base::layout(~{::section})">
 </head>
 <body>
 <section>
-
+<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 <script>
 
 function deleteContactAlert(id){
@@ -55,14 +55,14 @@ function deleteContactAlert(id){
 
 </script>
 	   <div class="row">
-	     <div class="col-md-12">
-	     <h1 class="text-center">All Customers</h1>
+	     <div class="col-md-12" style="background-color: rgb(84,78,130);color:#fff;">
+	     <h1 class="text-center pt-1">All Customers</h1>
 	      </div>
 	       </div>
-	       <div class="row">
-	       <div class="col-md-12">
+	       <div class="row" style="background-color: #f5f0f0;">
+	       <div class="col-md-12 mt-2">
 	       <table class="table table-bordered">
-		  <thead class="thead-dark">
+		  <thead style="background-color: #e6ede8;">
 		    <tr>
 		      <th scope="col">Customer Id</th>
 		      <th scope="col">Name</th>
@@ -81,8 +81,8 @@ function deleteContactAlert(id){
 		      <td th:text="${customer.mobile}"></td>
 		      <td th:text="${customer.address}"></td>
 		      <td th:text="${customer.addedDate}"></td>
-              <td><a th:href="@{'/a2zbilling/admin/customer/update/'+ ${customer.id} }" class="btn btn-info">Edit</a>
-              <a  th:onclick="|deleteContactAlert(${customer.id})|" class="btn btn-danger">Del</a>
+              <td><a th:href="@{'/a2zbilling/admin/customer/update/'+ ${customer.id} }" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></a>
+              <a  th:onclick="|deleteContactAlert(${customer.id})|" class="btn btn-danger"><i style="background-color: Red;" class="fa-solid fa-trash"></i></a>
               </td> 				      
 		    </tr>
 		  </tbody>
