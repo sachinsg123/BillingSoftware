@@ -16,8 +16,7 @@
 		</div>
 		<div class="row" style="background-color:rgb(84,78,131);">
 			<div class="col-md-12">
-				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;">Add
-					Supplier</h1>
+				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;">Add Supplier</h1>
 			</div>
 		</div>
 		<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
@@ -32,13 +31,13 @@
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
 						<label>Supplier Email</label>
-						<input required type="text" class="form-control" placeholder="Please Enter a Valid Email" name="email">
+						<input required type="email" class="form-control" placeholder="Please Enter a Valid Email" name="email">
 					</div>
 				</div>
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
 						<label>Supplier Mobile</label>
-						<input type="tel" required class="form-control" placeholder="Please Enter a Mobile Number" name="mobile">
+						<input type="number" required class="form-control" placeholder="Please Enter a Mobile Number" name="mobile">
 					</div>
 				</div>
 				<div class="col-md-4 mt-2">

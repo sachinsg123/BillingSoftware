@@ -1,104 +1,111 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-th:replace="fragments/base::layout(~{::section})">
- <section>
-      <script>
-        function deleteContactAlert(id){
-            	
-            	const swalWithBootstrapButtons = Swal.mixin({
-            		  customClass: {
-            		    confirmButton: 'btn btn-success',
-            		    cancelButton: 'btn btn-danger'
-            		  },
-            		  buttonsStyling: false
-            		})
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+<section>
+	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	<script>
+		function deleteContactAlert(id) {
 
-            		swalWithBootstrapButtons.fire({
-            		  title: 'Are you sure?',
-            		  text: "You won't be able to revert this!",
-            		  icon: 'warning',
-            		  showCancelButton: true,
-            		  confirmButtonText: 'Yes, delete it!',
-            		  cancelButtonText: 'No, cancel!',
-            		  reverseButtons: true
-            		}).then((result) => {
-            		  if (result.isConfirmed) {
-            			  
-            			  
-            			  window.location="/a2zbilling/admin/supplier/delete/"+id+" ";
-            			  
-            			  
-            		    swalWithBootstrapButtons.fire(
-            		      'Supplier Deleted Successfully !',
-            		      
-            		    )
-            		  } else if (
-            		    /* Read more about handling dismissals below */
-            		    result.dismiss === Swal.DismissReason.cancel
-            		  ) {
-            		    swalWithBootstrapButtons.fire(
-            		      'Cancelled',
-            		      'Supplier Not deleted',
-            		      'error'
-            		    )
-            		  }
-            		})
-            	
-            }
-        </script>
-        <!-- BEGIN Page Wrapper -->
-       	<div class="contaier-fluid" style="background-color: bisque; border: 1px solid darkblue;" >
-			<div th:if="${session.message}">
-				<div class="alert alert-primary" role="alert">
-					<p th:text="${session.message}"></p>
-					<script th:inline="javascript">
-                  	setTimeout(function() {
-        	            window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-						}, 500); 
-                	</script> 
-           		</div>
+			const swalWithBootstrapButtons = Swal.mixin({
+				customClass: {
+					confirmButton: 'btn btn-success',
+					cancelButton: 'btn btn-danger'
+				},
+				buttonsStyling: true
+
+			})
+
+			swalWithBootstrapButtons.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'No, cancel!',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.isConfirmed) {
+
+
+					window.location = "/a2zbilling/admin/supplier/delete/" + id + " ";
+
+
+					swalWithBootstrapButtons.fire(
+						'Supplier Deleted Successfully !',
+
+					)
+				} else if (
+					/* Read more about handling dismissals below */
+					result.dismiss === Swal.DismissReason.cancel
+				) {
+					swalWithBootstrapButtons.fire(
+						'Cancelled',
+						'Supplier Not deleted',
+						'error'
+					)
+				}
+			})
+
+		}
+	</script>
+	<!-- BEGIN Page Wrapper -->
+	<div class="contaier-fluid">
+		<div th:if="${session.message}">
+			<div class="alert alert-primary" role="alert">
+				<p th:text="${session.message}"></p>
+				<script th:inline="javascript">
+					setTimeout(function () {
+						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+					}, 500); 
+				</script>
 			</div>
-        	<div class="row">
-                <div class="col-md-12">
-                 	<h1 class="text-center" >All Suppliers</h1>
-               	</div>
-            </div>
-                <div class="row">
-                	<div class="col-md-12">
-                		<table class="table table-bordered">
-		  					<thead class="thead-dark">
-		    					<tr style="text-align: center;">
-			  					<!-- <th scope="col">Supplier Id</th> -->
-		      						<th scope="col">Name</th>
-		      						<th scope="col">Email</th>
-		      						<th scope="col">Mobile</th>
-	      							<th scope="col">Address</th>
-		      						<th scope="col">Added Date</th>
-		      						<!-- <th scope="col">Added By</th> -->
-		      						<th scope="col">Action</th>
-		    					</tr>
-	 					 	</thead>
-		  					<tbody>
-							    <tr th:each=" supplier : ${suppliers}" style="text-align: center;">
-							      <!-- <th scope="row" th:text="${supplier.id}"></th> -->
-							      <td th:text="${supplier.name}" style="background-color: lightskyblue;"></td>
-							      <td th:text="${supplier.email}"></td>
-							      <td th:text="${supplier.mobile}" style="background-color: lightskyblue;"></td>
-							      <td th:text="${supplier.address}"></td>
-							      <td th:text="${supplier.addedDate}" style="background-color: lightskyblue;"></td>
-							      <!-- <td th:text="${supplier.user.username}"></td> -->
-					              <td>
-									<a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }" class="btn btn-info">Edit</a>
-					              	<a  th:onclick="|deleteContactAlert(${supplier.id})|" class="btn btn-danger">Del</a>
-					              </td>
-							    </tr>
-							 </tbody>
-						</table>
-          			</div>
-          		</div>
-       		</div>
-     	</section>              
-	</body>
-    <!-- END Body -->
+		</div>
+		<div class="row" style="background-color:rgb(84,78,131);">
+			<div class="col-md-12">
+				<h1 class="text-center" style="color: white;">All Suppliers</h1>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-12">
+				<table style="border: 1px solid black;" class="table table-bordered table-striped">
+					<thead class="thead-dark">
+						<tr style="text-align: center;">
+							<!-- <th scope="col">Supplier Id</th> -->
+							<th style="border: 1px solid black;" scope="col">Name</th>
+							<th style="border: 1px solid black;" scope="col">Email</th>
+							<th style="border: 1px solid black;" scope="col">Mobile</th>
+							<th style="border: 1px solid black;" scope="col">Address</th>
+							<th style="border: 1px solid black;" scope="col">Added Date</th>
+							<th style="border: 1px solid black;" scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each=" supplier : ${suppliers}" style="text-align: center; border: 1px solid black;">
+							<!-- <th scope="row" th:text="${supplier.id}"></th> -->
+							<td th:text="${supplier.name}" style="border: 1px solid black;"></td>
+							<td th:text="${supplier.email}" style="border: 1px solid black;"></td>
+							<td th:text="${supplier.mobile}" style="border: 1px solid black;"></td>
+							<td th:text="${supplier.address}" style="border: 1px solid black;"></td>
+							<td th:text="${supplier.addedDate}" style="border: 1px solid black;"></td>
+							<!-- <td th:text="${supplier.user.username}"></td> -->
+							<td style="border: 1px solid black;">
+								<a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }"
+									class="btn btn-info" style="margin-right: 10px;">
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+								<a th:onclick="|deleteContactAlert(${supplier.id})|" class="btn btn-danger"
+									style="margin-right: 10px;">
+									<i style="background-color: Red;" class="fa-solid fa-trash"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+</body>
+<!-- END Body -->
 <!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+
 </html>
