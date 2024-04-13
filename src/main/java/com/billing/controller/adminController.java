@@ -97,6 +97,25 @@ public class adminController {
 
 	@Autowired
 	private BrandRepository brandRepo;
+	
+	
+
+	@GetMapping("/viewAdminProfile")
+	public String viewAdminProfile(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+	    
+	    model.addAttribute("user", user);
+	    
+	    Company company = companyRepo.getCompanyByUserId(user.getId());
+	    String companyName = company.getName();
+	    model.addAttribute("companyName", companyName);
+
+	    String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+	    
+	    return "/admin/view_Admin_Profile";
+	}
 
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
@@ -126,6 +145,7 @@ public class adminController {
 		return "home";
 
 	}
+	
 
 	@GetMapping("/product/add")
 	public String addProductByAdmin(Model model) {
@@ -659,6 +679,7 @@ public class adminController {
 		model.addAttribute("username", username);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		model.addAttribute("company", company);
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 
