@@ -1,4 +1,5 @@
 package com.billing.model;
+
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.Entity;
@@ -12,71 +13,65 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Product{
-	
+public class Product {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	private String name;
-	
-	private String quantity;
-	
-	@ManyToOne
-	@JoinColumn(name="color_id")
-	private Color color;
-	
-	private String price;
-	
-	@ManyToOne
-	@JoinColumn(name="brand_id")
-	private Brand brand;
-	
 
-	
+	private String name;
+
+	private String quantity;
+
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "color_id")
+	private Color color;
+
+	private String price;
+
+	@ManyToOne
+	@JoinColumn(name = "brand_id")
+	private Brand brand;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private User user;
-	
-	
+
 	private String addedDate;
-	
+
 	private String status;
-	
+
 	private String imageUrl;
-	
+
 	@ManyToMany
-	@JoinTable(name="product_customer",
-	joinColumns = @JoinColumn(name="customer_id")
-	,inverseJoinColumns = @JoinColumn(name="product_id"))
+	@JoinTable(name = "product_customer", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private List<Customer> customer = new ArrayList<Customer>();
-	
+
 	@ManyToOne
-	@JoinColumn(name="category_id")
-	private Category category ;
-	
-    @OneToOne
-    @JoinColumn(name="stock_id")
+	@JoinColumn(name = "category_id")
+	private Category category;
+
+	@OneToOne
+	@JoinColumn(name = "stock_id")
 	private Stock stock;
-    
-    @ManyToOne
-    @JoinColumn(name="size_id")
-    private Size size;
-    
-    
-    private String about;
-    
-    @ManyToOne
-    @JoinColumn(name="supplier_id")
-    private Supplier supplier;
-	
-    @ManyToOne
-    @JoinColumn(name="unit_id")
-    private Unit unit;
-    
-    @ManyToOne
-    @JoinColumn(name="gst_id")
-    private GSTRate gst ;
+
+	@ManyToOne
+	@JoinColumn(name = "size_id")
+	private Size size;
+
+	private String about;
+
+	@ManyToOne
+	@JoinColumn(name = "supplier_id")
+	private Supplier supplier;
+
+	@ManyToOne
+	@JoinColumn(name = "unit_id")
+	private Unit unit;
+
+	@ManyToOne
+	@JoinColumn(name = "gst_id")
+	private GSTRate gst;
 
 	public int getId() {
 		return id;
@@ -166,7 +161,7 @@ public class Product{
 		this.category = category;
 	}
 
-	public User getUser(){
+	public User getUser() {
 		return user;
 	}
 
@@ -197,7 +192,7 @@ public class Product{
 	public void setAbout(String about) {
 		this.about = about;
 	}
-	
+
 	public Supplier getSupplier() {
 		return supplier;
 	}
@@ -209,40 +204,22 @@ public class Product{
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", quantity=" + quantity + ", color=" + color + ", price="
-				+ price + ", user=" + user + ", addedDate=" + addedDate + ", status=" + status
-				+ ", imageUrl=" + imageUrl + ", customer=" + customer + ", category=" + category + ", stock=" + stock
-				+ ", size=" + size + ", about=" + about + ", supplier=" + supplier + ", unit=" + unit + ", gst=" + gst
-				+"category ="+ category + "]";
-		}
-/*	public Rating getRating() {
-		return rating;
+				+ price + ", user=" + user + ", addedDate=" + addedDate + ", status=" + status + ", imageUrl="
+				+ imageUrl + ", customer=" + customer + ", category=" + category + ", stock=" + stock + ", size=" + size
+				+ ", about=" + about + ", supplier=" + supplier + ", unit=" + unit + ", gst=" + gst + "category ="
+				+ category + "]";
 	}
-
-	public void setRating(Rating rating) {
-		this.rating = rating;
-	}
-
-	public Stock getStock() {
-		return stock;
-	}
-
-	public void setStock(Stock stock) {
-		this.stock = stock;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
-	*/
-	
-	
-	
-	
-	
-
-}
+	/*
+	 * public Rating getRating() { return rating; }
+	 * 
+	 * public void setRating(Rating rating) { this.rating = rating; }
+	 * 
+	 * public Stock getStock() { return stock; }
+	 * 
+	 * public void setStock(Stock stock) { this.stock = stock; }
+	 * 
+	 * public User getUser() { return user; }
+	 * 
+	 * public void setUser(User user) { this.user = user; }
+	 * 
+	 */}
