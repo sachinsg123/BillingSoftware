@@ -14,15 +14,15 @@ th:replace="fragments/base::layout(~{::section})">
                     </script> 
                       </div>
                      </div> -->
-                     <div class="row">
-	                     <div class="col-md-12">
+                     <div class="row" style="background-color:rgb(84,78,130);color: #fff;" >
+	                     <div class="col-md-12 mt-1">
 	                     <h1 class="text-center">All Products</h1>
 	                      </div>
 	                       </div>
-	                       <div class="row">
+	                       <div class="row" style="background-color: #f5f0f0;">
 	                       <div class="col-md-12">
 	                       <table class="table table-bordered">
-						  <thead class="thead-dark">
+						  <thead style="background-color: #e6ede8;">
 						    <tr>
 						      <th scope="col">Product Id</th>
 						      <th scope="col">Name</th>
@@ -53,8 +53,8 @@ th:replace="fragments/base::layout(~{::section})">
                               <td> sales rate</td>	
                               <td th:text="${product.customer}"></td>	
                               <td>customer mobile</td>
-                              <td><a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}" class="btn btn-info"><i class="fa fa-edit"></i></a>
-                              <a class="btn btn-danger mt-2"><i class="fa fa-trash"></i></a>
+                              <td><a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}" class="btn btn-success"><i class="fa fa-edit"></i></a>
+                              <a class="btn btn-danger"><i class="fa fa-trash"></i></a>
                               </td> 				      
 						    </tr>
 						  </tbody>
