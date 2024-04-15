@@ -41,7 +41,8 @@
 					<div class="form-group">
 						<label>Supplier Mobile</label>
 						<input type="number" required class="form-control" placeholder="Please Enter a Mobile Number"
-							name="mobile">
+							name="mobile" id="mobile">
+						<small id="mobileErrorMessage" class="text-danger"></small>
 					</div>
 				</div>
 				<div class="col-md-4 mt-2">
@@ -67,7 +68,29 @@
 			</div>
 		</form>
 	</div>
+	<script>
+	        // Function to validate the mobile number
+	        function validateMobileNumber() {
+	            var mobileInput = document.getElementById("mobile");
+	            var mobileErrorMessage = document.getElementById("mobileErrorMessage");
+	
+	            // Regular expression to validate mobile number
+	            var mobileRegex = /^\d{10}$/;
+	
+	            if (!mobileRegex.test(mobileInput.value)) {
+	                mobileErrorMessage.textContent = "Please enter a valid 10-digit mobile number";
+	                return false;
+	            } else {
+	                mobileErrorMessage.textContent = ""; // Clear any existing error message
+	                return true;
+	            }
+	        }
+	
+	        // Add event listener to validate mobile number when input changes
+	        document.getElementById("mobile").addEventListener("input", validateMobileNumber);
+	    </script>
 </section>
+
 </body>
 <!-- END Body -->
 

@@ -54,6 +54,7 @@
 		var resetSettings = function () {
 			localStorage.setItem("themeSettings", "");
 		}
+		// Function to validate the mobile number
 
 	</script>
 	<!-- BEGIN Page Wrapper -->
@@ -111,7 +112,8 @@
 									<div class="form-group">
 										<label>Supplier Mobile</label>
 										<input required type="number" class="form-control" name="mobile"
-											th:field="*{mobile}">
+											th:field="*{mobile}" id="mobile">
+										<small id="mobileErrorMessage" class="text-danger"></small>
 									</div>
 								</div>
 								<div class="col-md-4 mt-2">
@@ -1550,7 +1552,24 @@
 
 
 		});
+		function validateMobileNumber() {
+			var mobileInput = document.getElementById("mobile");
+			var mobileErrorMessage = document.getElementById("mobileErrorMessage");
 
+			// Regular expression to validate mobile number
+			var mobileRegex = /^\d{10}$/;
+
+			if (!mobileRegex.test(mobileInput.value)) {
+				mobileErrorMessage.textContent = "Please enter a valid 10-digit mobile number";
+				return false;
+			} else {
+				mobileErrorMessage.textContent = ""; // Clear any existing error message
+				return true;
+			}
+		}
+
+		// Add event listener to validate mobile number when input changes
+		document.getElementById("mobile").addEventListener("input", validateMobileNumber);
 	</script>
 </body>
 <!-- END Body -->
