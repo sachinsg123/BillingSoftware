@@ -9,4 +9,7 @@ public interface SupplierService {
 	public List<Supplier> getAllSupplierAddedByAdmin();
 	
 	public Supplier updateSupplier(Supplier supplier);
+	
+//	//Changes by Younus
+	public long getSupplierCount();
 }

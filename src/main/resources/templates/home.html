@@ -102,7 +102,9 @@ th:fragment="layout(content)">
                                 <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
                                     <div class="">
                                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                            1000
+                                        
+                                           <span th:text="${customercount}">0</span>
+                                           
                                             <small class="m-0 l-h-n">Customers</small>
                                         </h3>
                                     </div>
@@ -113,7 +115,9 @@ th:fragment="layout(content)">
                                 <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
                                     <div class="">
                                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                            600
+                                            
+                                            <span th:text="${suppliercount}">0</span>
+                                            
                                             <small class="m-0 l-h-n">Suppliers</small>
                                         </h3>
                                     </div>

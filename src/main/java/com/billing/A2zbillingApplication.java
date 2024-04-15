@@ -7,25 +7,23 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-public class A2zbillingApplication implements CommandLineRunner{
-	
-	@Autowired	
-    PasswordEncoder passwordEncoder;
-	
+public class A2zbillingApplication implements CommandLineRunner {
 
-	public static void main(String[] args){
-		
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+	public static void main(String[] args) {
+
 		SpringApplication.run(A2zbillingApplication.class, args);
 	}
 
 	@Override
-	public void run(String... args) throws Exception{
+	public void run(String... args) throws Exception {
 		String password = "1234";
 		String encodedPass = passwordEncoder.encode(password);
-		
+
 		System.out.println(encodedPass);
-		
-		
+
 	}
 
 }

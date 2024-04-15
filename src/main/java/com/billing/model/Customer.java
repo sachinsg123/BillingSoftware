@@ -20,8 +20,6 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	// @NotEmpty(message = "The Name is Required")
-
 	private String name;
 
 	private String email;

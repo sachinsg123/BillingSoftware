@@ -48,6 +48,8 @@ import com.billing.repositories.UnitRepository;
 import com.billing.repositories.UserRepository;
 import com.billing.services.CustomerServiceImpl;
 import com.billing.services.ProductServiceImpl;
+import com.billing.services.SupplierService;
+import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -77,12 +79,16 @@ public class adminController {
 
 	@Autowired
 	private CustomerServiceImpl customerService;
+	
+	//Change by Younus
+	@Autowired
+	private SupplierServiceImpl supplierService;
+	
+	@Autowired
+	private SupplierRepository supplierRepo;
 
 	@Autowired
 	private UserRepository userRepo;
-
-	@Autowired
-	private SupplierRepository supplierRepo;
 
 	@Autowired
 	private CompanyRepository companyRepo;
@@ -113,16 +119,24 @@ public class adminController {
 
 //	  System.out.println(user);
 
-		// comment add
-		//System.out.println("Conflict");
 
-	  String username =	auth.getName();
-	  model.addAttribute("username", username);
-	  String companyName = company.getName();
-	  String companyLogo = company.getLogo();
-	  model.addAttribute("company",company);
-	  model.addAttribute("companyName", companyName);
-	 
+		String username = auth.getName();
+		model.addAttribute("username", username);
+		String companyName = company.getName();
+		String companyLogo = company.getLogo();
+		model.addAttribute("company", company);
+		model.addAttribute("companyName", companyName);
+		
+		//Changes by Younus -(For Customer Count- Dynamically)
+		long customercount=customerService.getCustomerCount();
+		model.addAttribute("customercount", customercount);
+		
+		//Changes by Younus -(For Supplier Count- Dynamically)
+		long suppliercount=supplierService.getSupplierCount();
+		model.addAttribute("suppliercount", suppliercount);
+		
+		//System.out.println("Controller");
+
 		return "home";
 
 	}
