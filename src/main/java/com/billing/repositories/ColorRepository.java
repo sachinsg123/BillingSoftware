@@ -7,6 +7,6 @@ import com.billing.model.Color;
 
 @Repository
 public interface ColorRepository extends JpaRepository<Color, Integer>{
-
-	public Color findByName(String colorName);
+	
+		public Color findByName(String colorName);
 }
