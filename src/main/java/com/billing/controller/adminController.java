@@ -1,5 +1,4 @@
 package com.billing.controller;
-
 import java.io.File;
 
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.billing.model.Brand;
 import com.billing.model.Category;
 import com.billing.model.Color;
@@ -122,6 +119,7 @@ public class adminController {
 
 //	  System.out.println(user);
 
+
 		String username = auth.getName();
 		model.addAttribute("username", username);
 		String companyName = company.getName();
@@ -137,7 +135,8 @@ public class adminController {
 		long suppliercount=supplierService.getSupplierCount();
 		model.addAttribute("suppliercount", suppliercount);
 		
-		// comment add
+		//System.out.println("Controller");
+
 		return "home";
 
 	}
