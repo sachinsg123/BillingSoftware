@@ -8,5 +8,8 @@ public interface CustomerService {
 	public Customer getCustomerByAdmin(String adminName);
 	public Customer getCustomerById(int id);
 	public Customer updateCustomer(Customer customer);
+	
+	//Changes by Younus
+	public long getCustomerCount();
 
 }

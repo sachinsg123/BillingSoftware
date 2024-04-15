@@ -81,4 +81,11 @@ public class CustomerServiceImpl implements CustomerService{
 		
 	}
 
+	//Changes byYounus
+	@Override
+	public long getCustomerCount() {
+		
+		return customerRepo.count();
+	}
+
 }

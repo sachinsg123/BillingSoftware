@@ -103,31 +103,31 @@
 	                     <input type="hidden" name="id" th:field="*{id}"/>
 	                     <div class="form-group">
 	                     <label>Customer Name</label>
-	                     <input type="text" class="form-control" name="name" th:field="*{name}">
+	                     <input type="text" required class="form-control" name="name" th:field="*{name}">
 	                     </div>
 	                     </div>
 	                       <div class="col-md-4 mt-4">
 	                     <div class="form-group">
 	                     <label>Customer email</label>
-	                     <input type="text" class="form-control" name="email" th:field="*{email}">
+	                     <input type="email" required class="form-control" name="email" th:field="*{email}">
 	                     </div>
 	                     </div>
 	                     <div class="col-md-4 mt-4">
 	                     <div class="form-group">
 	                     <label>Customer Mobile</label>
-	                     <input type="text" class="form-control" name="mobile"  th:field="*{mobile}">
+	                     <input type="text" required class="form-control" name="mobile"  th:field="*{mobile}">
 	                     </div>
 	                     </div>
 	                     <div class="col-md-4 mt-2">
 	                     <div class="form-group">
 	                     <label>Address</label>
-	                     <input type="text" class="form-control" name="address" th:field="*{address}">
+	                     <input type="text" required class="form-control" name="address" th:field="*{address}">
 	                     </div>
 	                     </div>
 	                      <div class="col-md-4 mt-2">
 	                     <div class="form-group">
 	                     <label>choose date</label>
-	                     <input type="date" class="form-control" name="addedDate">
+	                     <input type="date" required class="form-control" name="addedDate">
 	                     </div>
 	                     </div>
 	                     <div class="col-md-12">
