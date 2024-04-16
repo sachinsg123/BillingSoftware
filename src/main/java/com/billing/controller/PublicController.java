@@ -13,7 +13,4 @@ public class PublicController{
 		
 		return "/public/homep";
 	}
-	
-	
-
 }
