@@ -115,7 +115,8 @@
 	                     <div class="col-md-4 mt-4">
 	                     <div class="form-group">
 	                     <label>Customer Mobile</label>
-	                     <input type="text" required class="form-control" name="mobile"  th:field="*{mobile}">
+	                     <input type="text" id="mobile" pattern="[0-9]{10}" title="Please enter a 10-digit mobile number" required class="form-control" name="mobile"  th:field="*{mobile}">
+	                     
 	                     </div>
 	                     </div>
 	                     <div class="col-md-4 mt-2">
