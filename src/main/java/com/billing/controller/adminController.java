@@ -102,6 +102,25 @@ public class adminController {
 	@Autowired
 	private BrandRepository brandRepo;
 	
+	//Created by Mahesh
+	@GetMapping("/viewAdminProfile")
+	public String viewAdminProfile(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+	    
+	    model.addAttribute("user", user);
+	    
+	    Company company = companyRepo.getCompanyByUserId(user.getId());
+	    String companyName = company.getName();
+	    model.addAttribute("companyName", companyName);
+
+	    String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+	    
+	    return "/admin/view_Admin_Profile";
+	}
+
+
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 
@@ -527,7 +546,7 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/customer/list";
 	}
 
-	// adding supplier
+	// Changes By Mahesh
 	@GetMapping("/supplier/add")
 	public String addSupplierForm(Model model) {
 
@@ -547,7 +566,8 @@ public class adminController {
 		return "admin/add_supplier";
 
 	}
-
+	
+	//changes By Mahesh
 	@PostMapping("/supplier/add")
 	public String supplierAddingProcess(@ModelAttribute Supplier supplier, HttpSession session) {
 
@@ -618,6 +638,9 @@ public class adminController {
 		String companyName = company.getName();
 
 		model.addAttribute("companyName", companyName);
+		
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
 
 		return "admin/update_supplier";
 
