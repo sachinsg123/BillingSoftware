@@ -81,11 +81,18 @@ public class CustomerServiceImpl implements CustomerService{
 		
 	}
 
-	//Changes byYounus
+	//Changes by Younus
 	@Override
 	public long getCustomerCount() {
+		int count=0;
 		
-		return customerRepo.count();
+	List<Customer> customers=customerRepo.findAll();
+	for(Customer customer : customers) {
+		if(customer.getStatus().equals("Active")) {
+			count++;
+		}
+	}
+		return count;
 	}
 
 }

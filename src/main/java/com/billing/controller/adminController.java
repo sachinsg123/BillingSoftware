@@ -31,6 +31,7 @@ import com.billing.model.Company;
 import com.billing.model.Customer;
 import com.billing.model.GSTRate;
 import com.billing.model.Product;
+import com.billing.model.Purchase;
 import com.billing.model.Size;
 import com.billing.model.Supplier;
 import com.billing.model.Unit;
@@ -48,7 +49,6 @@ import com.billing.repositories.UnitRepository;
 import com.billing.repositories.UserRepository;
 import com.billing.services.CustomerServiceImpl;
 import com.billing.services.ProductServiceImpl;
-import com.billing.services.SupplierService;
 import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
 
@@ -101,7 +101,7 @@ public class adminController {
 
 	@Autowired
 	private BrandRepository brandRepo;
-
+	
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 
@@ -135,8 +135,6 @@ public class adminController {
 		long suppliercount=supplierService.getSupplierCount();
 		model.addAttribute("suppliercount", suppliercount);
 		
-		//System.out.println("Controller");
-
 		return "home";
 
 	}
@@ -413,6 +411,8 @@ public class adminController {
 		String companyName = company.getName();
 
 		model.addAttribute("companyName", companyName);
+		
+		//Code to Render admin on our page
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 
@@ -909,6 +909,27 @@ public class adminController {
 		session.removeAttribute("message");
 
 		return "redirect:/a2zbilling/admin/customer/add";
+	}
+	
+	//Changes by Younus
+	@GetMapping("/purchasebill/list")
+	public String purchaseBillList(Model model) {
+		
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		
+        return "admin/purchasebill_list";
+    }
+	
+	//Changes by Younus
+	@GetMapping("/purchasebill/add")
+	public String addPurchaseBill(Model model) {
+		
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		return "admin/purchasebill_add";
+		
+		
 	}
 
 }
