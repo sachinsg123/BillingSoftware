@@ -438,6 +438,46 @@ public class adminController {
 
 	}
 
+	// Created by Mahesh
+	@GetMapping("/parties/add")
+	public String addParties(Model model)
+	{
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		
+		return "admin/add_parties";
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/parties/update")
+	public String updateParties(Model model)
+	{
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		
+		return "admin/update_parties";
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/parties/list")
+	public String listOfParties(Model model)
+	{
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		
+		return "admin/parties_list";
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/parties/transactions/list")
+	public String listOfPartiesTransactions(Model model)
+	{
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		
+		return "admin/transactions_list";
+	}
+	
 	@PostMapping("/customer/add")
 	public String addingProcessCustomer(@ModelAttribute Customer customer, HttpSession session) {
 
@@ -595,7 +635,7 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/supplier/add";
 	}
 
-	// list of suppliers
+	//change by Mahesh
 	@GetMapping("/supplier/list")
 	public String listOfSuppliers(Model model) {
 
@@ -620,7 +660,7 @@ public class adminController {
 
 	}
 
-	// update supplier form
+	//change by Mahesh
 	@GetMapping("/supplier/update/{id}")
 	public String updateSupplier(@PathVariable("id") int id, Model model) {
 
@@ -646,6 +686,7 @@ public class adminController {
 	}
 
 	// update supplier processing
+	//change by Mahesh
 	@PostMapping({ "/supplier/update", "/supplier/update/" })
 	public String supplierUpdateProcess(@ModelAttribute Supplier supplier, HttpSession session) {
 
@@ -666,6 +707,7 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/supplier/list";
 	}
 
+	//change by Mahesh
 	@GetMapping("/supplier/delete/{id}")
 	public String deleteSupplier(@PathVariable("id") int id) {
 

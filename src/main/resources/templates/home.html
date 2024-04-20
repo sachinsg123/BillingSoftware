@@ -471,42 +471,42 @@ th:fragment="layout(content)">
   <div class="modal fade" id="exampleModalUnits" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header align-items-center">
-        <h1 class="modal-title" id="exampleModalLabel">Add Units</h1>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-                 <form th:action="@{/a2zbilling/admin/unit/add}" method="post" class="form-group">
-	                    <div class="row">
-	                     <div class="col-md-12">
-	                     <div class="form-group">
-	                     <label>Unit</label>
-	                     <input type="text" class="form-control" name="unitName" required>
-	                     </div>
-	                     </div>
-	                     <div class="col-md-12">
-	                     <div class="form-group">
-	                     <label>Unit Code</label>
-	                     <input type="text" class="form-control" name="unitCode" required>
-	                     </div>
-	                     </div>
-	                     </div>
-	                     <div class="col-md-12 mt-2">
-	                     <div class="text-center">
-	                     <button type="submit" class="btn btn-info text-center">Add</button>
-	                     </div>
-	                     </div>
-	                     </form>
-                  </div>
-                </div>
-   <!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-    </div>
-  </div>
+      <div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
+		<h1 class="modal-title" id="exampleModalLabel"><b>Add Units</b></h1>
+							<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body" style="background-color:#f5f0f0;">
+							<form th:action="@{/a2zbilling/admin/unit/add}" method="post" class="form-group">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label><b>Unit</b></label>
+											<input type="text" placeholder="Please enter a Unit" class="form-control" name="unitName" required>
+										</div>
+									</div>
+									<div class="col-md-12 mt-4">
+										<div class="form-group">
+											<label><b>Unit Code</b></label>
+											<input type="text" placeholder="Please enter a Unit Code" class="form-control" name="unitCode" required>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 mt-4">
+									<div class="text-center">
+										<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!--    <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary">Save changes</button>
+  </div> -->
+				</div>
+			</div>
   
   <!--  js code for gst  -->
   
@@ -529,52 +529,57 @@ th:fragment="layout(content)">
   </script>
   
   <!-- Adding GST Modal -->
-  <div class="modal fade" id="exampleModalForGST" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header align-items-center">
-        <h1 class="modal-title" id="exampleModalLabel">Add GST</h1>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-                 <form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
-	                    <div class="row">
-	                     <div class="col-md-12 mt-2">
-	                     <input type="hidden" class="form-control" name="name">
-	                     <div class="form-group">
-	                     <label>GST :</label>
-	                     <input type="text" class="form-control" onkeyup="gstCalculator()" id="gstPercentage" name="gstRate" placeholder=" e.g. Government tax in %" required>
-	                     </div>
-	                     </div>
-	                     <div class="col-md-12 mt-2">
-	                     <div class="form-group">
-	                     <label>SGST :</label>
-	                     <input type="text" class="form-control" id="sgstPercentage" name="sgstRate" placeholder="e.g. state government tax in %">
-	                     </div>
-	                     </div>
-	                     <div class="col-md-12 mt-2">
-	                     <div class="form-group">
-	                     <label>CGST :</label>
-	                     <input type="text" class="form-control" id="cgstPercentage" name="cgstRate" placeholder="e.g. central government tax in %">
-	                     </div>
-	                     </div>
-	                     </div>
-	                     <div class="col-md-12 mt-2">
-	                     <div class="text-center">
-	                     <button type="submit" class="btn btn-info text-center">Add</button>
-	                     </div>
-	                     </div>
-	                     </form>
-                  </div>
-                </div>
-   <!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-    </div>
-  </div>
+  <div class="modal fade" id="exampleModalForGST" tabindex="-1" role="dialog"
+  					aria-labelledby="exampleModalLabel" aria-hidden="true">
+  					<div class="modal-dialog" role="document">
+  						<div class="modal-content">
+  							<div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
+  								<h1 class="modal-title" id="exampleModalLabel">Add GST</h1>
+  								<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+  									<span aria-hidden="true">&times;</span>
+  								</button>
+  							</div>
+  							<div class="modal-body" style="background-color:#f5f0f0;">
+  								<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
+  									<div class="row">
+  										<div class="col-md-12 mt-2">
+  											<input type="hidden" class="form-control" name="name">
+  											<div class="form-group">
+  												<label><b>GST :</b></label>
+  												<input type="text" class="form-control" onkeyup="gstCalculator()"
+  													id="gstPercentage" name="gstRate"
+  													placeholder=" e.g. Government tax in %" required>
+  											</div>
+  										</div>
+  										<div class="col-md-12 mt-2">
+  											<div class="form-group">
+  												<label><b>SGST :</b></label>
+  												<input type="text" class="form-control" id="sgstPercentage"
+  													name="sgstRate" placeholder="e.g. state government tax in %">
+  											</div>
+  										</div>
+  										<div class="col-md-12 mt-2">
+  											<div class="form-group">
+  												<label><b>CGST :</b></label>
+  												<input type="text" class="form-control" id="cgstPercentage"
+  													name="cgstRate" placeholder="e.g. central government tax in %">
+  											</div>
+  										</div>
+  									</div>
+  									<div class="col-md-12 mt-4">
+  										<div class="text-center">
+  											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+  										</div>
+  									</div>
+  								</form>
+  							</div>
+  						</div>
+  						<!--    <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> -->
+  					</div>
+  				</div>
   
   
   <div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
