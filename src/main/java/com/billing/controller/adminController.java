@@ -32,7 +32,6 @@ import com.billing.model.Company;
 import com.billing.model.Customer;
 import com.billing.model.GSTRate;
 import com.billing.model.Product;
-import com.billing.model.Purchase;
 import com.billing.model.Size;
 import com.billing.model.Supplier;
 import com.billing.model.Unit;
@@ -103,6 +102,24 @@ public class adminController {
 	@Autowired
 	private BrandRepository brandRepo;
 
+	// Created by Mahesh
+	@GetMapping("/viewAdminProfile")
+	public String viewAdminProfile(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+
+		model.addAttribute("user", user);
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "/admin/view_Admin_Profile";
+	}
+
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 
@@ -117,8 +134,6 @@ public class adminController {
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
-
-//	  System.out.println(user);
 
 		String username = auth.getName();
 		model.addAttribute("username", username);
@@ -527,7 +542,7 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/customer/list";
 	}
 
-	// adding supplier
+	// Changes By Mahesh
 	@GetMapping("/supplier/add")
 	public String addSupplierForm(Model model) {
 
@@ -548,6 +563,7 @@ public class adminController {
 
 	}
 
+	// changes By Mahesh
 	@PostMapping("/supplier/add")
 	public String supplierAddingProcess(@ModelAttribute Supplier supplier, HttpSession session) {
 
@@ -618,6 +634,9 @@ public class adminController {
 		String companyName = company.getName();
 
 		model.addAttribute("companyName", companyName);
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
 
 		return "admin/update_supplier";
 
@@ -911,7 +930,7 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/customer/add";
 	}
 
-	// Changes by Younus - Get Purchase bill list
+	// Created by Younus - Get Purchase bill list
 	@GetMapping("/purchasebill/list")
 	public String purchaseBillList(Model model) {
 
@@ -921,7 +940,7 @@ public class adminController {
 		return "admin/purchasebill_list";
 	}
 
-	// Changes by Younus - add Purchase bill
+	// Created by Younus - add Purchase bill
 	@GetMapping("/purchasebill/add")
 	public String addPurchaseBill(Model model) {
 
@@ -931,7 +950,7 @@ public class adminController {
 
 	}
 
-	// Changes by Younus - Update PurchaseBill form
+	// Created by Younus - Update PurchaseBill form
 	@GetMapping("/purchasebill/update")
 	public String updatePurchaseBill(Model model) {
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -941,7 +960,7 @@ public class adminController {
 
 	}
 
-	// Changes by Younus - get sale list
+	// Created by Younus - get sale list
 	@GetMapping("/sales/list")
 	public String salesList(Model model) {
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -949,23 +968,25 @@ public class adminController {
 		return "admin/sales_list";
 
 	}
-	// Changes by Younus - add sales
-		@GetMapping("/sales/add")
-		public String addSales(Model model) {
 
-			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-			model.addAttribute("imagePath", imgpath);
-			return "admin/sales_add";
+	// Created by Younus - add sales
+	@GetMapping("/sales/add")
+	public String addSales(Model model) {
 
-		}
-		// Changes by Younus - Update PurchaseBill form
-		@GetMapping("/sales/update")
-		public String updatesales(Model model) {
-			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-			model.addAttribute("imagePath", imgpath);
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		return "admin/sales_add";
 
-			return "admin/sales_update";
+	}
 
-		}
+	// Created by Younus - Update PurchaseBill form
+	@GetMapping("/sales/update")
+	public String updatesales(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/sales_update";
+
+	}
 
 }
