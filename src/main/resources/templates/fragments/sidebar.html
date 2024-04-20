@@ -23,7 +23,7 @@
                                 </a>
                             </div>
                         </div>
-                        <ul id="js-nav-menu" class="nav-menu">
+                        <ul id="js-nav-menu" class="nav-menu">	
                             <li class="active open">
                                 <a th:href="@{/a2zbilling/admin/}" title="Application Intel" data-filter-tags="application intel">
                                     <i class="fa fa-tachometer" aria-hidden="true"></i>
@@ -38,7 +38,7 @@
                                 <ul>
                                     <li>
                                         <a th:href="@{/a2zbilling/admin/product/list}" title="How it works" data-filter-tags="theme products">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">PRODUCTS</span>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ALL PRODUCTS</span>
                                         </a>
                                     </li>
                                     <li>
@@ -80,7 +80,7 @@
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="#" title="General Docs" data-filter-tags="sales">
+                                        <a th:href="@{/a2zbilling/admin/sales/list}" title="General Docs" data-filter-tags="sales">
                                             <span class="nav-link-text" data-i18n="nav.documentation_general_docs">SALES</span>
                                         </a>
                                     </li>

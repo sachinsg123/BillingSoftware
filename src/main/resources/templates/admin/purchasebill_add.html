@@ -24,8 +24,8 @@
 		 <h1 class="text-center pt-1">Create Purchase Bill</h1>
 		  </div>
 		   </div>
-		<form th:action="@{/a2zbilling/admin/customer/add}" method="post" enctype="multipart/form-data" class="form-group">
-		 <div class="row" style="background-color: #f5f0f0;">
+		<form th:action="@{/a2zbilling/admin/purchasebill/add}" method="post" enctype="multipart/form-data" class="form-group">
+		 <div class="row pb-3" style="background-color: #f5f0f0;">
 		  <div class="col-md-4 mt-4">
 		  <div class="form-group">
 		  <label>Item</label>
@@ -35,13 +35,13 @@
 		    <div class="col-md-4 mt-4">
 		  <div class="form-group">
 		  <label>MRP</label>
-		  <input type="email" required class="form-control" name="email" placeholder="Enter the MRP">
+		  <input type="number" required class="form-control" name="mrp" placeholder="Enter the MRP">
 		  </div>
 		  </div>
 		  <div class="col-md-4 mt-4">
 		  <div class="form-group">
 		  <label>Size</label>
-		  <input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter the Size">
+		  <input type="text" id="text" required class="form-control" name="size" placeholder="Enter the Size">
 		  </div>
 		  </div>
 		  <div class="col-md-4 mt-2">
@@ -79,9 +79,11 @@
 		  </div>
 		  
 		  
-		  <div class="col-md-12">
+		  <div class="col-md-12 mt-5">
 		  <div class="text-center">
-		  <button type="submit" class="btn btn-info text-center mt-5">Create Bill</button>
+		  <button type="submit" class="btn btn-info text-center ">Create Bill</button>
+		  <a th:href="@{'/a2zbilling/admin/purchasebill/list'}"
+											class="btn btn-info ml-3" >Cancel</a>
 		  </div>
 		  </div>
 		  </div>

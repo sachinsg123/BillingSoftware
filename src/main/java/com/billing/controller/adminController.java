@@ -1,4 +1,5 @@
 package com.billing.controller;
+
 import java.io.File;
 
 import java.io.IOException;
@@ -79,11 +80,11 @@ public class adminController {
 
 	@Autowired
 	private CustomerServiceImpl customerService;
-	
-	//Change by Younus
+
+	// Change by Younus
 	@Autowired
 	private SupplierServiceImpl supplierService;
-	
+
 	@Autowired
 	private SupplierRepository supplierRepo;
 
@@ -101,7 +102,7 @@ public class adminController {
 
 	@Autowired
 	private BrandRepository brandRepo;
-	
+
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 
@@ -119,22 +120,21 @@ public class adminController {
 
 //	  System.out.println(user);
 
-
 		String username = auth.getName();
 		model.addAttribute("username", username);
 		String companyName = company.getName();
 		String companyLogo = company.getLogo();
 		model.addAttribute("company", company);
 		model.addAttribute("companyName", companyName);
-		
-		//Changes by Younus -(For Customer Count- Dynamically)
-		long customercount=customerService.getCustomerCount();
+
+		// Changes by Younus -(For Customer Count- Dynamically)
+		long customercount = customerService.getCustomerCount();
 		model.addAttribute("customercount", customercount);
-		
-		//Changes by Younus -(For Supplier Count- Dynamically)
-		long suppliercount=supplierService.getSupplierCount();
+
+		// Changes by Younus -(For Supplier Count- Dynamically)
+		long suppliercount = supplierService.getSupplierCount();
 		model.addAttribute("suppliercount", suppliercount);
-		
+
 		return "home";
 
 	}
@@ -411,8 +411,8 @@ public class adminController {
 		String companyName = company.getName();
 
 		model.addAttribute("companyName", companyName);
-		
-		//Code to Render admin on our page
+
+		// Code to Render admin on our page
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 
@@ -910,26 +910,62 @@ public class adminController {
 
 		return "redirect:/a2zbilling/admin/customer/add";
 	}
-	
-	//Changes by Younus
+
+	// Changes by Younus - Get Purchase bill list
 	@GetMapping("/purchasebill/list")
 	public String purchaseBillList(Model model) {
-		
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
-		
-        return "admin/purchasebill_list";
-    }
-	
-	//Changes by Younus
+
+		return "admin/purchasebill_list";
+	}
+
+	// Changes by Younus - add Purchase bill
 	@GetMapping("/purchasebill/add")
 	public String addPurchaseBill(Model model) {
-		
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 		return "admin/purchasebill_add";
-		
-		
+
 	}
+
+	// Changes by Younus - Update PurchaseBill form
+	@GetMapping("/purchasebill/update")
+	public String updatePurchaseBill(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/purchasebill_update";
+
+	}
+
+	// Changes by Younus - get sale list
+	@GetMapping("/sales/list")
+	public String salesList(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		return "admin/sales_list";
+
+	}
+	// Changes by Younus - add sales
+		@GetMapping("/sales/add")
+		public String addSales(Model model) {
+
+			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+			model.addAttribute("imagePath", imgpath);
+			return "admin/sales_add";
+
+		}
+		// Changes by Younus - Update PurchaseBill form
+		@GetMapping("/sales/update")
+		public String updatesales(Model model) {
+			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+			model.addAttribute("imagePath", imgpath);
+
+			return "admin/sales_update";
+
+		}
 
 }
