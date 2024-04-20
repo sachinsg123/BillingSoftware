@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+<section>
+<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	<script>
+		function deleteContactAlert(id) {
+
+			const swalWithBootstrapButtons = Swal.mixin({
+				customClass: {
+					confirmButton: 'btn btn-success',
+					cancelButton: 'btn btn-danger'
+				},
+				buttonsStyling: false
+			})
+
+			swalWithBootstrapButtons.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'No, cancel!',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.isConfirmed) {
+
+
+					window.location = "/a2zbilling/admin/supplier/delete/" + id + " ";
+
+
+					swalWithBootstrapButtons.fire(
+						'Supplier Deleted Successfully !',
+
+					)
+				} else if (
+					/* Read more about handling dismissals below */
+					result.dismiss === Swal.DismissReason.cancel
+				) {
+					swalWithBootstrapButtons.fire(
+						'Cancelled',
+						'Supplier Not deleted',
+						'error'
+					)
+				}
+			})
+
+		}
+	</script>
+	<!-- BEGIN Page Wrapper -->
+
+	<div class="contaier-fluid">
+		<div th:if="${session.message}">
+			<div class="alert alert-primary" role="alert">
+				<p th:text="${session.message}"></p>
+				<script th:inline="javascript">
+					setTimeout(function () {
+						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+					}, 500);
+				</script>
+			</div>
+		</div>
+		<div class="row" style="background-color: rgb(84,78,130);color:#fff;" >
+			<div class="col-md-12 mt-1">
+				<h1 class="text-center">Purchase List</h1>
+			</div>
+		</div>
+		<div style="background-color: #f5f0f0;">
+		<div class="row pb-3">
+		<div  class="col-md-6">
+		 <form th:action="@{/search}" method="get">
+		 <div class="col-md-6" >
+
+        <input type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color:rgb(12,131,226) ;" name="query" placeholder="   Search">
+        <!-- Search icon -->
+        <i class="fas fa-search search-icon" style="font-size: 20px; color:rgb(12,131,226);" onclick="submitForm()"></i>
+		 </div>
+		
+    </form>
+		</div >
+			<div class="col-md-6 mt-3"  style="text-align: right;"> 
+			
+				<a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-plus"></i>
+					Add Purchase</a>
+			</div>
+		</div>
+		<div class="row mt-2" >
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead style="background-color: #e6ede8;">
+						<tr>
+							<th scope="col">Date</th>
+							<th scope="col">Invoice No</th>
+							<th scope="col">Party Name</th>
+							<th scope="col">Payment Type</th>
+							<th scope="col">Amount</th>
+							<th scope="col">Balance Due</th>
+							<!-- <th scope="col">Added By</th> -->
+							<th scope="col">Print</th>
+						</tr>
+					</thead>
+					<tbody>
+					<!--
+						<tr th:each=" supplier : ${suppliers}">
+							<th scope="row" th:text="${supplier.id}"></th>
+							<td th:text="${supplier.name}"></td>
+							<td th:text="${supplier.email}"></td>
+							<td th:text="${supplier.mobile}"></td>
+							<td th:text="${supplier.address}"></td>
+							<td th:text="${supplier.addedDate}"></td>
+							<!-- <td th:text="${supplier.user.username}"></td> 
+							<td><a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }"
+									class="btn btn-info">Edit</a>
+								<a th:onclick="|deleteContactAlert(${supplier.id})|" class="btn btn-danger">Del</a>
+							</td>
+						</tr>
+					</tbody>
+					-->
+				</table>
+			</div>
+		</div>
+	</div >
+	</div>
+</section>
+</body>
+<!-- END Body -->
+
+<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+
+</html>

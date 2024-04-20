@@ -9,9 +9,9 @@ import com.billing.model.Supplier;
 import com.billing.repositories.SupplierRepository;
 
 @Service
-public class SupplierServiceImpl implements SupplierService{
-	
-	//Changes by Younus
+public class SupplierServiceImpl implements SupplierService {
+
+	// Changes by Younus
 	@Autowired
 	private SupplierRepository supplierRepo;
 
@@ -23,16 +23,21 @@ public class SupplierServiceImpl implements SupplierService{
 
 	@Override
 	public Supplier updateSupplier(Supplier supplier) {
-		
-		
+
 		return null;
 	}
 
-	//Changes by Younus
+	// Changes by Younus
 	@Override
 	public long getSupplierCount() {
-		
-		return supplierRepo.count();
+		int count = 0;
+		List<Supplier> suppliers = supplierRepo.findAll();
+		for (Supplier sup : suppliers) {
+			if (sup.getStatus().equals("Active")) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 }

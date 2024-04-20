@@ -1,0 +1,95 @@
+		<!DOCTYPE html>
+		<html lang="en" xmlns:th="https://www.thymeleaf.org"
+		th:replace="fragments/base::layout(~{::section})">
+		    
+		        <!-- BEGIN Page Wrapper -->
+		        
+		<section>                 
+		<div class="contaier-fluid">
+		  <div th:if="${session.message}">
+		  <div class="alert alert-primary" role="alert">
+		 <p th:text="${session.message}"></p>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		setTimeout(function() {
+			
+			window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+		}, 500); 
+		
+		</script> 
+		  </div>
+		</div>
+		<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
+		 <div class="col-md-12 " >
+		 <h1 class="text-center pt-1">Create Purchase Bill</h1>
+		  </div>
+		   </div>
+		<form th:action="@{/a2zbilling/admin/customer/add}" method="post" enctype="multipart/form-data" class="form-group">
+		 <div class="row" style="background-color: #f5f0f0;">
+		  <div class="col-md-4 mt-4">
+		  <div class="form-group">
+		  <label>Item</label>
+		  <input type="text" required class="form-control" name="name" placeholder="Enter your name">
+		  </div>
+		  </div>
+		    <div class="col-md-4 mt-4">
+		  <div class="form-group">
+		  <label>MRP</label>
+		  <input type="email" required class="form-control" name="email" placeholder="Enter the MRP">
+		  </div>
+		  </div>
+		  <div class="col-md-4 mt-4">
+		  <div class="form-group">
+		  <label>Size</label>
+		  <input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter the Size">
+		  </div>
+		  </div>
+		  <div class="col-md-4 mt-2">
+		  <div class="form-group">
+		  <label>Quantity</label>
+		  <input type="text" required class="form-control" name="quantity" placeholder="Enter the quantity">
+		  </div>
+		  </div>
+		  <div class="col-md-4 mt-2">
+		  <div class="form-group">
+		  <label>Price/Unit</label>
+		  <input type="text" required class="form-control" name="price/unit" placeholder="Enter the price">
+		  </div>
+		  </div>
+		  
+		  <div class="col-md-4 mt-2">
+		  <div class="form-group">
+		  <label>Discount</label>
+		  <input type="text" required class="form-control" name="discount" placeholder="Discount">
+		  </div>
+		  </div>
+		  
+		  <div class="col-md-4 mt-2">
+		  <div class="form-group">
+		  <label>Tax</label>
+		  <input type="text" required class="form-control" name="tax" placeholder="Tax %">
+		  </div>
+		  </div>
+		  
+		  <div class="col-md-4 mt-2">
+		  <div class="form-group">
+		  <label>Amount</label>
+		  <input type="text" required class="form-control" name="amount" placeholder="Enter the final Amount">
+		  </div>
+		  </div>
+		  
+		  
+		  <div class="col-md-12">
+		  <div class="text-center">
+		  <button type="submit" class="btn btn-info text-center mt-5">Create Bill</button>
+		  </div>
+		  </div>
+		  </div>
+		  </form>
+		 </div>
+		</section>                      
+		 </body>
+		    <!-- END Body -->
+		
+		<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+		</html>
