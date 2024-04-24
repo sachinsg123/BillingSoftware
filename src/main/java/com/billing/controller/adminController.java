@@ -1,4 +1,5 @@
 package com.billing.controller;
+
 import java.io.File;
 
 import java.io.IOException;
@@ -31,7 +32,6 @@ import com.billing.model.Company;
 import com.billing.model.Customer;
 import com.billing.model.GSTRate;
 import com.billing.model.Product;
-import com.billing.model.Purchase;
 import com.billing.model.Size;
 import com.billing.model.Supplier;
 import com.billing.model.Unit;
@@ -79,11 +79,11 @@ public class adminController {
 
 	@Autowired
 	private CustomerServiceImpl customerService;
-	
-	//Change by Younus
+
+	// Change by Younus
 	@Autowired
 	private SupplierServiceImpl supplierService;
-	
+
 	@Autowired
 	private SupplierRepository supplierRepo;
 
@@ -101,25 +101,24 @@ public class adminController {
 
 	@Autowired
 	private BrandRepository brandRepo;
-	
-	//Created by Mahesh
+
+	// Created by Mahesh
 	@GetMapping("/viewAdminProfile")
 	public String viewAdminProfile(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-	    
-	    model.addAttribute("user", user);
-	    
-	    Company company = companyRepo.getCompanyByUserId(user.getId());
-	    String companyName = company.getName();
-	    model.addAttribute("companyName", companyName);
 
-	    String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("user", user);
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
-	    
-	    return "/admin/view_Admin_Profile";
-	}
 
+		return "/admin/view_Admin_Profile";
+	}
 
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
@@ -136,24 +135,21 @@ public class adminController {
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 
-//	  System.out.println(user);
-
-
 		String username = auth.getName();
 		model.addAttribute("username", username);
 		String companyName = company.getName();
 		String companyLogo = company.getLogo();
 		model.addAttribute("company", company);
 		model.addAttribute("companyName", companyName);
-		
-		//Changes by Younus -(For Customer Count- Dynamically)
-		long customercount=customerService.getCustomerCount();
+
+		// Changes by Younus -(For Customer Count- Dynamically)
+		long customercount = customerService.getCustomerCount();
 		model.addAttribute("customercount", customercount);
-		
-		//Changes by Younus -(For Supplier Count- Dynamically)
-		long suppliercount=supplierService.getSupplierCount();
+
+		// Changes by Younus -(For Supplier Count- Dynamically)
+		long suppliercount = supplierService.getSupplierCount();
 		model.addAttribute("suppliercount", suppliercount);
-		
+
 		return "home";
 
 	}
@@ -430,8 +426,8 @@ public class adminController {
 		String companyName = company.getName();
 
 		model.addAttribute("companyName", companyName);
-		
-		//Code to Render admin on our page
+
+		// Code to Render admin on our page
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 
@@ -606,8 +602,8 @@ public class adminController {
 		return "admin/add_supplier";
 
 	}
-	
-	//changes By Mahesh
+
+	// changes By Mahesh
 	@PostMapping("/supplier/add")
 	public String supplierAddingProcess(@ModelAttribute Supplier supplier, HttpSession session) {
 
@@ -678,7 +674,7 @@ public class adminController {
 		String companyName = company.getName();
 
 		model.addAttribute("companyName", companyName);
-		
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 
@@ -975,26 +971,75 @@ public class adminController {
 
 		return "redirect:/a2zbilling/admin/customer/add";
 	}
-	
-	//Changes by Younus
+
+	// Created by Younus - Get Purchase bill list
 	@GetMapping("/purchasebill/list")
 	public String purchaseBillList(Model model) {
-		
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
-		
-        return "admin/purchasebill_list";
-    }
-	
-	//Changes by Younus
+
+		return "admin/purchasebill_list";
+	}
+
+	// Created by Younus - add Purchase bill
 	@GetMapping("/purchasebill/add")
 	public String addPurchaseBill(Model model) {
-		
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 		return "admin/purchasebill_add";
-		
-		
+
 	}
+
+	// Created by Younus - Update PurchaseBill form
+	@GetMapping("/purchasebill/update")
+	public String updatePurchaseBill(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/purchasebill_update";
+
+	}
+
+	// Created by Younus - get sale list
+	@GetMapping("/sales/list")
+	public String salesList(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		return "admin/sales_list";
+
+	}
+
+	// Created by Younus - add sales
+	@GetMapping("/sales/add")
+	public String addSales(Model model) {
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		return "admin/sales_add";
+
+	}
+
+	// Created by Younus - Update PurchaseBill form
+	@GetMapping("/sales/update")
+	public String updatesales(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/sales_update";
+
+	}
+	
+//	//Created by Younus - add Item
+	@GetMapping("/Item/add")
+	public String addItem(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/Item_add";
+
+	}
+	
 
 }
