@@ -88,29 +88,29 @@
 						</div>
 						<div class="row" style="background-color:rgb(85,75,126);">
 							<div class="col-md-12">
-								<h1 class="text-center" style="color: white;">Update Supplier</h1>
+								<h1 class="text-center" style="color: white;"><b>Update Supplier</b></h1>
 							</div>
 						</div>
 						<form th:action="@{/a2zbilling/admin/supplier/update}" method="post" th:object="${supplier}"
 							enctype="multipart/form-data" class="form-group">
-							<div class="row" style="background-color:#f5f0f0;">
+							<div class="row pb-3" style="background-color:#f5f0f0;">
 								<div class="col-md-4">
 									<input type="hidden" name="id" th:field="*{id}" />
 									<div class="form-group mt-4">
-										<label>Supplier Name</label>
+										<label><b>Supplier Name</b></label>
 										<input required type="text" class="form-control" name="name" th:field="*{name}">
 									</div>
 								</div>
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
-										<label>Supplier email</label>
+										<label><b>Supplier email</b></label>
 										<input required type="email" class="form-control" name="email"
 											th:field="*{email}">
 									</div>
 								</div>
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
-										<label>Supplier Mobile</label>
+										<label><b>Supplier Mobile</b></label>
 										<input required type="number" class="form-control" name="mobile"
 											th:field="*{mobile}" id="mobile">
 										<small id="mobileErrorMessage" class="text-danger"></small>
@@ -118,19 +118,25 @@
 								</div>
 								<div class="col-md-4 mt-2">
 									<div class="form-group">
-										<label>Address</label>
+										<label><b>Address</b></label>
 										<textarea required type="text" class="form-control" name="address"
 											th:field="*{address}"></textarea>
 									</div>
 								</div>
 								<div class="col-md-4 mt-2">
 									<div class="form-group">
-										<label>choose date</label>
+										<label><b>choose date</b></label>
 										<input type="date" class="form-control" name="addedDate">
 									</div>
 								</div>
 								<div class="col-md-12 mt-2">
 									<div class="text-center">
+
+										<button type="submit" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
+											class="btn btn-info text-center"><b>Update</b></button>
+										<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
+											th:href="@{'/a2zbilling/admin/supplier/list'}" class="btn btn-info"><b>Cancel</b></a>
+
 										<button type="submit" style="color: white;"class="btn btn-info text-center">Update</button>
 										
 										<a th:href="@{'/a2zbilling/admin/supplier/list'}"

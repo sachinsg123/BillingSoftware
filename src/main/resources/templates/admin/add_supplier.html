@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 
 <section>
@@ -16,31 +15,31 @@
 			</div>
 		</div>
 		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12">
-				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;">Add
-					Supplier</h1>
+			<div class="col-md-12 text-center">
+				<h1 style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;"><b>Add
+					Supplier</b></h1>
 			</div>
 		</div>
 		<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
-			<div class="row" style="background-color:#f5f0f0 ;">
+			<div class="row pb-3" style="background-color:#f5f0f0 ;">
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
-						<label>Supplier Name</label>
+						<label><b>Supplier Name</b></label>
 						<input required retype="text" class="form-control" placeholder="Please Enter a Full Name"
 							name="name">
 					</div>
 				</div>
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
-						<label>Supplier Email</label>
+						<label><b>Supplier Email</b></label>
 						<input required type="email" class="form-control" placeholder="Please Enter a Valid Email"
 							name="email">
 					</div>
 				</div>
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
-						<label>Supplier Mobile</label>
+						<label><b>Supplier Mobile</b></label>
 						<input type="number" required class="form-control" placeholder="Please Enter a Mobile Number"
 							name="mobile" id="mobile">
 						<small id="mobileErrorMessage" class="text-danger"></small>
@@ -48,21 +47,21 @@
 				</div>
 				<div class="col-md-4 mt-2">
 					<div class="form-group">
-						<label>Address</label>
+						<label><b>Address</b></label>
 						<textarea required type="text" class="form-control" placeholder="Please Enter a Address"
 							name="address"></textarea>
 					</div>
 				</div>
 				<div class="col-md-4 mt-2">
 					<div class="form-group">
-						<label>Choose Date</label>
+						<label><b>Choose Date</b></label>
 						<input type="date" class="form-control" name="addedDate">
 					</div>
 				</div>
 
 				<div class="col-md-12 mt-2">
 					<div class="text-center">
-						<button type="submit" class="btn btn-info text-center">Add</button>
+						<button type="submit" class="btn btn-info text-center" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;"><b>Add</b></button>
 					</div>
 				</div>
 

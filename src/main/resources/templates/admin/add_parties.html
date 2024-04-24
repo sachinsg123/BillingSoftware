@@ -16,7 +16,7 @@
 		</div>
 		<div class="row" style="background-color:rgb(84,78,131);">
 			<div class="col-md-12 mt-1">
-				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;"> ADD PARTY </h1>
+				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;"><b>ADD PARTY</b></h1>
 			</div>
 		</div>
 		<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
@@ -24,21 +24,21 @@
 			<div class="row" style="background-color:#f5f0f0 ;">
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
-						<label>Name*</label>
+						<label><b>Name*</b></label>
 						<input required retype="text" class="form-control" placeholder="Please Enter a Name"
 							name="name">
 					</div>
 				</div>
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
-						<label>Email*</label>
+						<label><b>Email*</b></label>
 						<input required type="email" class="form-control" placeholder="Please Enter a Email"
 							name="email">
 					</div>
 				</div>
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
-						<label>Mobile*</label>
+						<label><b>Mobile*</b></label>
 						<input type="number" required class="form-control" placeholder="Please Enter a Mobile Number"
 							name="mobile" id="mobile">
 						<small id="mobileErrorMessage" class="text-danger"></small>
@@ -46,7 +46,7 @@
 				</div>
 				<div class="col-md-4 mt-2">
 					<div class="form-group">
-						<label>Address</label>
+						<label><b>Address</b></label>
 						<textarea required type="text" class="form-control" placeholder="Please Enter a Address"
 							name="address"></textarea>
 					</div>
@@ -54,10 +54,9 @@
 				
 				<div class="col-md-12 mt-2">
 					<div class="text-center">
-						<button type="submit" class="btn btn-info text-center" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Add</button>
-						<a th:href="@{'/a2zbilling/admin/parties/list'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info">Cancel</a>
+						<button type="submit" class="btn btn-info text-center" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;"><b>Add</b></button>
+						<a th:href="@{'/a2zbilling/admin/parties/list'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><b>Cancel</b></a>
 					</div>
-					
 				</div>
 
 			</div>
