@@ -988,5 +988,16 @@ public class adminController {
 		return "admin/sales_update";
 
 	}
+	
+//	//Created by Younus - add Item
+	@GetMapping("/Item/add")
+	public String addItem(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/Item_add";
+
+	}
+	
 
 }
