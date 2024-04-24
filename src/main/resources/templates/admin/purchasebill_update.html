@@ -87,60 +87,56 @@
 							</div>
 						</div>
 						<div class="row" style="background-color:rgb(85,75,126);">
-							<div class="col-md-12">
-								<h1 class="text-center" style="color: white;"><b>Update Supplier</b></h1>
+							<div class="col-md-12 mt-1">
+								<h1 class="text-center" style="color: white;">Update Purchase Bill</h1>
 							</div>
 						</div>
-						<form th:action="@{/a2zbilling/admin/supplier/update}" method="post" th:object="${supplier}"
+						<form th:action="@{/a2zbilling/admin/purchasebill/update}" method="post"
 							enctype="multipart/form-data" class="form-group">
 							<div class="row pb-3" style="background-color:#f5f0f0;">
 								<div class="col-md-4">
-									<input type="hidden" name="id" th:field="*{id}" />
+									<input type="hidden" name="id"  />
 									<div class="form-group mt-4">
-										<label><b>Supplier Name</b></label>
-										<input required type="text" class="form-control" name="name" th:field="*{name}">
+										<label>Date</label>
+										<input required type="Date" class="form-control" name="date" >
 									</div>
 								</div>
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
-										<label><b>Supplier email</b></label>
-										<input required type="email" class="form-control" name="email"
-											th:field="*{email}">
+										<label>Invoice No</label>
+										<input required type="No" class="form-control" name="invoiceno">
 									</div>
 								</div>
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
-										<label><b>Supplier Mobile</b></label>
-										<input required type="number" class="form-control" name="mobile"
-											th:field="*{mobile}" id="mobile">
-										<small id="mobileErrorMessage" class="text-danger"></small>
+										<label>Party Name</label>
+										<input required type="Name" class="form-control" name="partyname">
 									</div>
 								</div>
 								<div class="col-md-4 mt-2">
 									<div class="form-group">
-										<label><b>Address</b></label>
-										<textarea required type="text" class="form-control" name="address"
-											th:field="*{address}"></textarea>
+										<label>Payment Type</label>
+										<input required type="type" class="form-control" name="paymenttype">
 									</div>
 								</div>
 								<div class="col-md-4 mt-2">
 									<div class="form-group">
-										<label><b>choose date</b></label>
-										<input type="date" class="form-control" name="addedDate">
+										<label>Amount</label>
+										<input required type="Amount" class="form-control" name="amount">
 									</div>
 								</div>
-								<div class="col-md-12 mt-2">
+								<div class="col-md-4 mt-2">
+									<div class="form-group">
+										<label>Balance Due</label>
+										<input required type="Amount" class="form-control" name="balanccedue">
+									</div>
+								</div>
+								<div class="col-md-12 mt-4">
 									<div class="text-center">
-
-										<button type="submit" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
-											class="btn btn-info text-center"><b>Update</b></button>
-										<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
-											th:href="@{'/a2zbilling/admin/supplier/list'}" class="btn btn-info"><b>Cancel</b></a>
-
-										<button type="submit" style="color: white;"class="btn btn-info text-center">Update</button>
-										
-										<a th:href="@{'/a2zbilling/admin/supplier/list'}"
-											class="btn btn-info">Cancel</a>
+										<button type="submit" style="color: white;"
+											class="btn btn-info text-center">Update</button>
+										<a th:href="@{'/a2zbilling/admin/purchasebill/list'}"
+											class="btn btn-info ml-3">Cancel</a>
 									</div>
 								</div>
 							</div>

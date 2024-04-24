@@ -81,7 +81,7 @@ public class CustomerServiceImpl implements CustomerService{
 		
 	}
 
-	//Changes by Younus
+	//Created by Younus
 	@Override
 	public long getCustomerCount() {
 		int count=0;
