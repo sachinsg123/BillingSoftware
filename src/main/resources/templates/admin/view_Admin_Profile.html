@@ -86,51 +86,58 @@
 							</div>
 						</div>
 						<div class="row" style="background-color:rgb(85,75,126);">
-							<div class="col-md-12">
-								<h1 class="text-center" style="color: white;"> Admin Profile</h1>
+							<div class="col-md-12 mt-2">
+								<h1 class="text-center" style="color: white;"><b>Admin Profile</b></h1>
 							</div>
 						</div>
 
-						<div class="row mt-4" style="background-color:#f5f0f0;" th:object="${user}">
-							<div class="col-md-4 mt-4">
+						<div class="row mt-4" style="background-color:rgb(231,252,227);;" th:object="${user}">
+							<div class="col-md-6 mt-2">
 								<div class="form-group">
-									<h3>
-										<span th:text="${companyName}"></span>
-									</h3>
+									<h2>
+										<b><span th:text="${companyName}"></span></b>
+									</h2>
 								</div>
+								
 							</div>
+							<div class="col-md-6 text-center">
+								<img style="height:150px; width: 150px; margin-left: 200px;" th:src="${adminImg}">
+							</div>
+							
 						</div>
+						
 
-						<div class="row mt-6" style="background-color:#f5f0f0;" th:object="${user}">
+						<div class="row mt-6 pb-3" style="background-color:rgb(231,252,227);" th:object="${user}">
 							<div class="col-md-4 mt-4">
 								<input type="hidden" name="id" th:field="*{id}" />
 								<div class="form-group">
-									<label>Name :- </label>
-									<span th:text="${user.username}"></span>
+									<label><b>Name :- </b></label>
+									<input style="background-color:#f5f0f0;" name="id" readonly th:field="*{username}" />
 								</div>
 							</div>
 							<div class="col-md-4 mt-4">
 								<div class="form-group">
-									<label>Email :- </label>
-									<span th:text="${user.email}"></span>
+									<label><b>Email :- </b></label>
+									<input name="id" style="background-color:#f5f0f0;" readonly th:field="*{email}" />
 								</div>
 							</div>
 							<div class="col-md-4 mt-4">
 								<div class="form-group">
-									<label>Mobile No. :- </label>
-									<span th:text="${user.mobile}"></span>
+									<label><b>Mobile No.:- </b></label>
+									<input name="id" style="background-color:#f5f0f0;" readonly th:field="*{mobile}" />
 								</div>
 							</div>
 
 							<div class="col-md-4 mt-4">
 								<div class="form-group">
-									<label>Role :- </label>
-									<span th:text="${user.role}"></span>
+									<label><b>Role :- </b></label>
+									<input name="id" style="background-color:#f5f0f0;" readonly th:field="*{role}" />
 								</div>
 							</div>
 							<div class="col-md-12 mt-4">
 								<div class="text-center">
-									<a th:href="@{'/a2zbilling/admin/'}" class="btn btn-info">Cancel</a>
+									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
+										th:href="@{'/a2zbilling/admin/'}" class="btn btn-info"><b>Cancel</b></a>
 								</div>
 							</div>
 						</div>

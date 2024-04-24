@@ -113,6 +113,16 @@ public class adminController {
 	    Company company = companyRepo.getCompanyByUserId(user.getId());
 	    String companyName = company.getName();
 	    model.addAttribute("companyName", companyName);
+	    
+	    if(user.getImageUrl() != null)
+	    {
+	    	String adminImg = user.getImageUrl();
+	    	model.addAttribute("adminImg", adminImg);
+	    }
+	    else {
+	    	String adminImg = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+	    	model.addAttribute("adminImg", adminImg);
+	    }
 
 	    String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
@@ -418,26 +428,6 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/product/list";
 	}
 
-	@GetMapping("/customer/add")
-	public String customerAddForm(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		User user = userRepo.findByUsername(auth.getName());
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		String companyName = company.getName();
-
-		model.addAttribute("companyName", companyName);
-		
-		//Code to Render admin on our page
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		model.addAttribute("imagePath", imgpath);
-
-		return "/admin/add_customer_form";
-
-	}
 
 	// Created by Mahesh
 	@GetMapping("/parties/add")
@@ -467,6 +457,15 @@ public class adminController {
 		model.addAttribute("imagePath", imgpath);
 		
 		return "admin/parties_list";
+	
+	}
+	
+	//change by Mahesh
+	@GetMapping("/parties/delete")
+	public String deleteParties() {
+
+		return "redirect:/a2zbilling/admin/parties/list";
+
 	}
 	
 	// Created by Mahesh
@@ -477,6 +476,44 @@ public class adminController {
 		model.addAttribute("imagePath", imgpath);
 		
 		return "admin/transactions_list";
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/parties/transactions/update")
+	public String updateTransactions(Model model)
+	{
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+		
+		return "admin/update_transactions";
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/parties/transactions/delete")
+	public String deleteTransaction() {
+
+		return "redirect:/a2zbilling/admin/parties/transactions/list";
+	}
+	
+	@GetMapping("/customer/add")
+	public String customerAddForm(Model model) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		User user = userRepo.findByUsername(auth.getName());
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+
+		String companyName = company.getName();
+
+		model.addAttribute("companyName", companyName);
+		
+		//Code to Render admin on our page
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "/admin/add_customer_form";
+
 	}
 	
 	@PostMapping("/customer/add")
@@ -695,7 +732,8 @@ public class adminController {
 		Supplier supp = supplierGet.get();
 		supp.setName(supplier.getName());
 		supp.setEmail(supplier.getEmail());
-		if (supplier.getAddedDate().isEmpty()) {
+		if (!supplier.getAddedDate().isEmpty()){
+			
 			supp.setAddedDate(supplier.getAddedDate());
 		}
 		supp.setAddress(supplier.getAddress());
