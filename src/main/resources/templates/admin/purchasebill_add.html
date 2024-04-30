@@ -3,153 +3,293 @@
 
 <!-- BEGIN Page Wrapper -->
 
+<!-- Created by Younus -->
+
 <section>
-	<div class="contaier-fluid">
-		<div th:if="${session.message}">
-			<div class="alert alert-primary" role="alert">
-				<p th:text="${session.message}"></p>
-				<script th:inline="javascript">
-					/*<![CDATA[*/
-					setTimeout(function () {
 
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500);
+	<head>
 
-				</script>
+
+		<meta charset="UTF-8">
+		<title>Invoice</title>
+		<style>
+			.invoice-container {
+				width: 100%;
+				padding: 20px;
+				border: 2px solid #ccc;
+				border-radius: 10px;
+				background-color: #f9f9f9;
+				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+				text-align: left;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: space-between;
+			}
+
+			.invoice-field {
+				flex-basis: calc(50% - 10px);
+				margin-bottom: 10px;
+				box-sizing: border-box;
+				padding: 10px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+			}
+
+			.invoice-label {
+				font-weight: bold;
+			}
+
+			.invoice-value {
+				margin-left: 10px;
+			}
+		</style>
+
+		<div class="contaier-fluid">
+			<div th:if="${session.message}">
+				<div class="alert alert-primary" role="alert">
+					<p th:text="${session.message}"></p>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						setTimeout(function () {
+
+							window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+						}, 500);
+
+						
+
+					</script>
+				</div>
 			</div>
+
+
+
+
+	</head>
+
+	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
+		<div class="col-md-12 ">
+			<h1 class="text-center pt-1">Purchase Bill</h1>
 		</div>
-		<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
-			<div class="col-md-12 ">
-				<h1 class="text-center pt-1">Purchase Bill</h1>
-			</div>
-		</div>
+	</div>
+
+	<div class="row pb-3" style="background-color: #f5f0f0;">
+	
+	<div style="overflow-x: auto;">
+    <table id="itemTable" class="table">
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Size</th>
+                <th>Unit</th>
+                <th>Price/Unit</th>
+                <th>Tax %</th>
+                <th>Tax Amount</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            
+                <td><button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i></button></td>
+                <td><input type="text" name="item[]" required></td>
+                <td><input type="number" name="quantity[]" required oninput="calculateTotalAmount(this)"></td>
+                <td><input type="text" name="size[]" required></td>
+                <td>
+                    <select name="unit[]" required>
+                        <option value="None">NONE</option>
+                        <option value="kg">Kilogram (kg)</option>
+                        <option value="lit">Liter (lit)</option>
+                        <option value="pic">Pieces (pic)</option>
+                    </select>
+                </td>
+                <td><input type="number" name="price[]" required oninput="calculateTotalAmount(this)"></td>
+                <td><input type="number" name="tax_percent[]" required oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>
+                <td><input type="number" name="tax_amount[]" required></td>
+                <td><input type="number" name="total_amount[]" required readonly></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="invoice-container mt-5" style="background-color: #f5f0f0;">
+    <div class="container">
+        <div class="row d-flex justify-content-between">
+            <div>
+                <div class="form-group">
+                    <label class="invoice-label">Total amount:</label>
+                    <input id="totalAmountField" type="text" required class="form-control" name="total amount"
+                        placeholder="Total amount" readonly>
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label class="invoice-label">Discount (Rs):</label>
+                    <input id="discountAmountField" type="number" class="form-control" name="discount"
+                        placeholder="Discount amount" oninput="updateDiscountedAmount()">
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label class="invoice-label">Discount %:</label>
+                    <input id="discountPercentField" type="number" class="form-control" name="discount %"
+                        placeholder="Discount %" oninput="updateDiscountedAmount()">
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label class="invoice-label">Payment mode:</label>
+                    <select class="form-control" name="type" required>
+                        <option value="cash">Cash</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="online">Online</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <div class="form-group">
+                    <label class="invoice-label">Paid:</label>
+                    <input id="paidAmountField" type="number" required class="form-control" name="paid" placeholder="Amount paid" oninput="updateDues()">
+                </div>
+            </div>
+            <div style="margin-left: 170px;">
+                <div class="form-group">
+                    <label class="invoice-label">Dues:</label>
+                    <input id="duesAmountField" type="number" required class="form-control" name="dues" placeholder="Dues" readonly>
+                </div>
+            </div>
+            <div style="margin-left: 170px;">
+                <div class="form-group">
+                    <label class="invoice-label">Net Payment:</label>
+                    <input id="netPaymentField" type="number" required class="form-control" name="netpayment" placeholder="Final Amount" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addRow() {
+        var newRow = '<tr>' +
+            '<td><button type="button" class="btn btn-warning btn-sm text-white" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button></td>' +
+            '<td><input type="text" name="item[]" required></td>' +
+            '<td><input type="number" name="quantity[]" required oninput="calculateTotalAmount(this)"></td>' +
+            '<td><input type="text" name="size[]" required></td>' +
+            '<td>' +
+            '<select name="unit[]" required>' +
+            '<option value="None">NONE</option>' +
+            '<option value="kg">Kilogram (kg)</option>' +
+            '<option value="lit">Liter (lit)</option>' +
+            '<option value="pic">Pieces (pic)</option>' +
+            '</select>' +
+            '</td>' +
+            '<td><input type="number" name="price[]" required oninput="calculateTotalAmount(this)"></td>' +
+            '<td><input type="number" name="tax_percent[]" required oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>' +
+            '<td><input type="number" name="tax_amount[]" required></td>' +
+            '<td><input type="number" name="total_amount[]" required readonly></td>' +
+            '</tr>';
+        document.getElementById('itemTable').getElementsByTagName('tbody')[0].insertAdjacentHTML('beforeend', newRow);
+    }
+
+    function removeRow(btn) {
+        var row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        updateTotalAmount();
+        updateDiscountedAmount();
+        updateDues();
+    }
+
+    function calculateTotalAmount(input) {
+        var row = input.parentNode.parentNode;
+        var price = parseFloat(row.querySelector('[name="price[]"]').value);
+        var quantity = parseFloat(row.querySelector('[name="quantity[]"]').value);
+        var taxAmount = parseFloat(row.querySelector('[name="tax_amount[]"]').value);
+        var totalAmount = (price * quantity) + taxAmount;
+        row.querySelector('[name="total_amount[]"]').value = totalAmount.toFixed(2);
+        updateTotalAmount();
+        updateDiscountedAmount();
+        updateDues();
+    }
+
+    function calculateTaxAmount(input) {
+        var row = input.parentNode.parentNode;
+        var taxPercent = parseFloat(input.value);
+        var price = parseFloat(row.querySelector('[name="price[]"]').value);
+        var quantity = parseFloat(row.querySelector('[name="quantity[]"]').value);
+        var taxAmount = (price * quantity * taxPercent) / 100;
+        row.querySelector('[name="tax_amount[]"]').value = taxAmount.toFixed(2);
+        updateTotalAmount();
+        updateDiscountedAmount();
+        updateDues();
+    }
+
+    function updateTotalAmount() {
+        var totalAmount = 0;
+        var totalAmountInputs = document.querySelectorAll('[name="total_amount[]"]');
+        totalAmountInputs.forEach(function(input) {
+            totalAmount += parseFloat(input.value);
+        });
+        document.getElementById('totalAmountField').value = totalAmount.toFixed(2);
+    }
+
+    function updateDiscountedAmount() {
+        var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
+        var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
+        var discountPercent = parseFloat(document.getElementById('discountPercentField').value);
+
+        // Calculate the discounted amount
+        var discountedAmount = discountAmount;
+        if (!isNaN(discountPercent)) {
+            discountedAmount += (totalAmount * discountPercent) / 100;
+        }
+
+        // Update the net amount
+        var netAmount = totalAmount - discountedAmount;
+
+        // Update the discounted amount display
+        document.getElementById('discountAmountField').value = discountedAmount.toFixed(2);
+
+        // Update the net amount display
+        document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+    }
+
+    function updateDues() {
+        var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
+        var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
+        var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
+        var duesAmount = totalAmount - paidAmount;
+
+        // Exclude discounted amount from dues if there are dues
+        if (duesAmount > 0) {
+            duesAmount -= discountAmount;
+            if (duesAmount < 0) {
+                duesAmount = 0; // Ensure dues amount doesn't go negative
+            }
+        }
+
+        // Update the dues amount display
+        document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
+    }
+</script>
+
+
 		
-			<div class="row pb-3" style="background-color: #f5f0f0;">
-				
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-					
-						<label>Item</label>
-						<div class="input-group">
-							<div class="input-group-prepend">
-							<a th:href="@{/a2zbilling/admin/Item/add}">
-								<button class="btn btn-outline-secondary" type="button" >+</button>
-							</div>
-							</a>
-							<input type="text" required class="form-control" name="name" placeholder="Add Item">
-						</div>
-							
-					</div>
-				</div>
-				
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label>MRP</label>
-						<input type="number" required class="form-control" name="mrp" placeholder="Enter the MRP">
-					</div>
-				</div>
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label>Size</label>
-						<input type="text" id="text" required class="form-control" name="size"
-							placeholder="Enter the Size">
-					</div>
-				</div>
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Quantity</label>
-						<input type="number" required class="form-control" name="quantity" placeholder="Select the Quantity">
-					</div>
-				</div>
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Unit</label>
-						<select class="form-control" name="unit" required>
-							<option value="None">NONE</option>
-							<option value="kg">Kilogram (kg)</option>
-							<option value="lit">Liter (lit)</option>
-
-						</select>
-					</div>
-				</div>
-
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Price/Unit</label>
-						<input type="text" required class="form-control" name="price/unit"
-							placeholder="Enter the price">
-					</div>
-				</div>
-
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Discount %</label>
-						<select class="form-control" name="number" required>
-							<option value="None">NONE</option>
-							<option value="tax">5%</option>
-							<option value="tax">10%</option>
-							<option value="tax">15%</option>
-
-						</select>
-					</div>
-				</div>
-
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Discount Amount</label>
-						<input type="text" required class="form-control" name="discount" placeholder="Discount">
-					</div>
-				</div>
+		
 
 
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Tax %</label>
-						<select class="form-control" name="number" required>
-							<option value="None">NONE</option>
-							<option value="tax">5%</option>
-							<option value="tax">10%</option>
-							<option value="tax">15%</option>
-
-						</select>
-					</div>
-				</div>
-
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Tax Amount</label>
-						<input type="text" required class="form-control" name="tax" placeholder="Tax amount">
-					</div>
-				</div>
-
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Amount</label>
-						<input type="text" required class="form-control" name="amount"
-							placeholder="Enter the final Amount">
-					</div>
-				</div>
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Payment Type</label>
-						<select class="form-control" name="type" required>
-							<option value="cash">Cash</option>
-							<option value="cheque">Cheque</option>
-							<option value="online">Online</option>
-
-						</select>
-					</div>
-				</div>
-
-
-				<div class="col-md-12 mt-5">
-					<div class="text-center">
-						<button type="submit" class="btn btn-info text-center ">Save</button>
-						<a th:href="@{'/a2zbilling/admin/purchasebill/list'}" class="btn btn-info ml-3">Cancel</a>
-					</div>
-				</div>
+		<div class="col-md-12 mt-5">
+			<div class="text-center">
+				<button type="submit" class="btn btn-info text-center ">Save</button>
+				<!--<button type="button" onclick="saveAndNew" class="btn btn-info text-center ml-3 ">Save & New</button> -->
+				<a th:href="@{'/a2zbilling/admin/purchasebill/list'}" class="btn btn-info ml-3">Cancel</a>
 			</div>
-		</form>
+		</div>
+	</div >
+	</form>
 	</div>
 </section>
 </body>

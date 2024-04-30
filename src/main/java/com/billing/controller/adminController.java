@@ -1031,7 +1031,7 @@ public class adminController {
 
 	}
 	
-//	//Created by Younus - add Item
+	//Created by Younus - add Item
 	@GetMapping("/Item/add")
 	public String addItem(Model model) {
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -1041,5 +1041,14 @@ public class adminController {
 
 	}
 	
+	//Created by Younus - to Manage Stock
+	@GetMapping("/managestock")
+	public String manageStock(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/manage_stock";
+
+	}
 
 }
