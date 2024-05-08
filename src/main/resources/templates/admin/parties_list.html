@@ -3,7 +3,7 @@
 <section>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
-		function deleteContactAlert(id) {
+		function deleteContactAlert() {
 
 			const swalWithBootstrapButtons = Swal.mixin({
 				customClass: {
@@ -16,7 +16,7 @@
 
 			swalWithBootstrapButtons.fire({
 				title: 'Are you sure?',
-				text: "You won't be able to revert this!",
+				text: "You Wont To Delete!!",
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonText: 'Yes, delete it!',
@@ -26,11 +26,11 @@
 				if (result.isConfirmed) {
 
 
-					window.location = "/a2zbilling/admin/supplier/delete/" + id + " ";
+					window.location = "/a2zbilling/admin/parties/delete";
 
 
 					swalWithBootstrapButtons.fire(
-						'Supplier Deleted Successfully !',
+						'Parties Deleted Successfully !',
 
 					)
 				} else if (
@@ -39,7 +39,7 @@
 				) {
 					swalWithBootstrapButtons.fire(
 						'Cancelled',
-						'Supplier Not deleted',
+						'Parties Not deleted',
 						'error'
 					)
 				}
@@ -61,18 +61,18 @@
 		</div>
 		<div class="row" style="background-color:rgb(84,78,131);">
 			<div class="col-md-12">
-				<h1 class="text-center" style="color: white;">All Parties</h1>
+				<h1 class="text-center" style="color: white;"><b>ALL PARTIES</b></h1>
 			</div>
 		</div>
 		
 		<div class="row">
 			<div class="col-md-12 mt-3">
-				<a th:href="@{'/a2zbilling/admin/parties/add'}" class="btn btn-info"><i class="fa-solid fa-plus"></i> Add Party</a>
+				<a th:href="@{'/a2zbilling/admin/parties/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><i class="fa-solid fa-plus"></i> Add Party</a>
 			</div>
 		</div>
 		<div class="row mt-4">
 			<div class="col-md-12">
-				<table style="border: 1px solid black;" class="table table-bordered table-striped">
+				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
 					<thead class="thead-dark">
 						<tr style="text-align: center;">
 							<!-- <th scope="col">Supplier Id</th> -->
@@ -91,9 +91,9 @@
 									<i class="fa-solid fa-ellipsis-vertical"></i>
 								  </button>
 								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/transactions/list}">View Transactions</a>
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/update}">Edit</a>
-								    <a class="dropdown-item" href="#">Delete</a>
+								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/transactions/list}"><b>View Transactions</b></a>
+								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/update}"><b>Edit</b></a>
+								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#"><b>Delete</b></a>
 								  </div>
 								</div>
 							</td>
