@@ -38,16 +38,17 @@
 					<span class="nav-link-text" data-i18n="nav.theme_settings">PRODUCTS</span>
 				</a>
 				<ul>
-					<li>
-						<a th:href="@{/a2zbilling/admin/product/list}" title="How it works"
-							data-filter-tags="theme products">
-							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ALL PRODUCTS</span>
-						</a>
-					</li>
+
 					<li>
 						<a th:href="@{/a2zbilling/admin/product/add}" title="Layout Options"
 							data-filter-tags="theme create product">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ADD PRODUCT</span>
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/a2zbilling/admin/product/list}" title="How it works"
+							data-filter-tags="theme products">
+							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ALL PRODUCTS</span>
 						</a>
 					</li>
 					<li>
@@ -175,9 +176,8 @@
 				</a>
 				<ul>
 					<li>
-						<a th:href="@{/a2zbilling/admin/Item/add}" title="How it works"
-							data-filter-tags="item item add" <span class="nav-link-text"
-							data-i18n="nav.theme_settings_how_it_works">ADD ITEM</span>
+						<a th:href="@{/a2zbilling/admin/Item/add}" title="How it works" data-filter-tags="item item add"
+							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ADD ITEM</span>
 						</a>
 					</li>
 					<li>
@@ -262,7 +262,8 @@
 				</a>
 				<ul>
 					<li>
-						<a th:href="@{/a2zbilling/admin/managestock}" title="How it works" data-filter-tags="stock manage">
+						<a th:href="@{/a2zbilling/admin/managestock}" title="How it works"
+							data-filter-tags="stock manage">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">MANAGE STOCK</span>
 						</a>
 					<li>

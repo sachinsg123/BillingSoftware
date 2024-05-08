@@ -1041,6 +1041,8 @@ public class adminController {
 
 	}
 	
+	
+	
 	//Created by Younus - to Manage Stock
 	@GetMapping("/managestock")
 	public String manageStock(Model model) {

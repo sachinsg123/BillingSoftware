@@ -1,117 +1,135 @@
-<!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 
 <!-- BEGIN Page Wrapper -->
 
 <!-- Created by Younus -->
 
-<section>
-	<div class="contaier-fluid">
-		<div th:if="${session.message}">
-			<div class="alert alert-primary" role="alert">
-				<p th:text="${session.message}"></p>
-				<script th:inline="javascript">
-					/*<![CDATA[*/
-					setTimeout(function () {
-						a
+<head>
+    <section>
+        <div class="contaier-fluid">
+            <style>
+                body {
+                    background-color: #f8f9fa;
+                    font-family: Arial, sans-serif;
+                }
 
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500);
+                .form-container {
+                    background-color: #F6F6F6;
+                    border: 1px solid #dee2e6;
+                    border-radius: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    box-sizing: border-box;
+                    padding: 20px;
+                }
 
-				</script>
+                .form-group {
+                    margin-bottom: 15px; /* Decreased margin */
+                }
 
-			</div>
-		</div>
-		<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
-			<div class="col-md-12 ">
-				<h1 class="text-center pt-1">Manage Stock</h1>
-			</div>
-		</div>
-		<!-- <form th:action="@{/a2zbilling/admin/managestock}" method="post" enctype="multipart/form-data" class="form-group"> -->
-		<div class="row pb-3" style="background-color: #f5f0f0;">
+                label {
+                    font-weight: bold;
+                    font-size: 15px;
+                }
 
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Supplier Info</label>
-					<input type="text" required class="form-control" name="name" placeholder="Enter supplier name">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Name</label>
-					<input type="text" required class="form-control" name="name" placeholder="Enter product name">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Category</label>
-					<input type="text" required class="form-control" name="name" placeholder="Enter product category">
-				</div>
-			</div>
+                button[type="submit"] {	
+                    width: 10%; 
+                }
 
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Item HSN/SAC</label>
-					<input type="text" required class="form-control" name="name" placeholder="Enter HSN No">
-				</div>
-			</div>
+                .form-control {
+                    border: 1.5px solid #ced4da;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                    padding: 8px; /* Adjusted padding */
+                    font-size: 14px; /* Adjusted font size */
+                }
+            </style>
+        </div>
 
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Quantity</label>
-					<input type="text" required class="form-control" name="email" placeholder="Enter product quantity">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Unit</label>
-					<input type="text" required class="form-control" name="email" placeholder="Select product unit">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Price/Unit</label>
-					<input type="text" required class="form-control" name="email" placeholder="Enter price/unit">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Tax %</label>
-					<input type="text" required class="form-control" name="email" placeholder="Enter product tax %">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Tax Amount</label>
-					<input type="text" required class="form-control" name="email" placeholder="Enter tax amount">
-				</div>
-			</div>
+</head>
 
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Stock Update date</label>
-					<input type="date" class="form-control" name="addedDate">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Minimum Stock Qty</label>
-					<input type="text" required class="form-control" name="mobile"
-						placeholder="Set minimum stock quantity">
-				</div>
-			</div>
-			<div class="col-md-12 mt-6 pb-1">
-				<div class="text-center">
-					<button type="submit" class="btn btn-info text-center ">Save</button>
-				</div>
-			</div>
-		</div>
-		<!--  </form>  -->
-	</div>
-</section>
+<body>
+    <div class="row" style="background-color: rgb(84, 78, 130); color: #fff;">
+        <div class="col-md-12 ">
+            <h1 class="text-center pt-1">Manage Stock</h1>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="form-container">
+            <form action="/submit" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="supplierInfo">Supplier Info</label>
+                    <input type="text" id="supplierInfo" name="supplierInfo" required class="form-control"
+                        placeholder="Enter supplier name">
+                </div>
+
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" name="productName" required class="form-control"
+                        placeholder="Enter product name">
+                </div>
+
+                <div class="form-group">
+                    <label for="productCategory">Product Category</label>
+                    <input type="text" id="productCategory" name="productCategory" required class="form-control"
+                        placeholder="Enter product category">
+                </div>
+
+                <div class="form-group">
+                    <label for="itemHSN">Item HSN/SAC</label>
+                    <input type="text" id="itemHSN" name="itemHSN" required class="form-control"
+                        placeholder="Enter HSN No">
+                </div>
+
+                <div class="form-group">
+                    <label for="productQuantity">Product Quantity</label>
+                    <input type="text" id="productQuantity" name="productQuantity" required class="form-control"
+                        placeholder="Enter product quantity">
+                </div>
+
+                <div class="form-group">
+                    <label for="productUnit">Product Unit</label>
+                    <input type="text" id="productUnit" name="productUnit" required class="form-control"
+                        placeholder="Select product unit">
+                </div>
+
+                <div class="form-group">
+                    <label for="priceUnit">Price/Unit</label>
+                    <input type="text" id="priceUnit" name="priceUnit" required class="form-control"
+                        placeholder="Enter price/unit">
+                </div>
+
+                <div class="form-group">
+                    <label for="productTax">Product Tax %</label>
+                    <input type="text" id="productTax" name="productTax" required class="form-control"
+                        placeholder="Enter product tax %">
+                </div>
+
+                <div class="form-group">
+                    <label for="taxAmount">Product Tax Amount</label>
+                    <input type="text" id="taxAmount" name="taxAmount" required class="form-control"
+                        placeholder="Enter tax amount">
+                </div>
+
+                <div class="form-group">
+                    <label for="stockUpdateDate">Stock Update date</label>
+                    <input type="date" id="stockUpdateDate" name="stockUpdateDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="minStockQty">Minimum Stock Qty</label>
+                    <input type="text" id="minStockQty" name="minStockQty" required class="form-control"
+                        placeholder="Set minimum stock quantity">
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-info btn-save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 <!-- END Body -->
 
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
 
 </html>

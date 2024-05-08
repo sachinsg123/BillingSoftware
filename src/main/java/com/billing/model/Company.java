@@ -1,4 +1,5 @@
 package com.billing.model;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,41 +11,41 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="user_company")
-public class Company{
+@Table(name = "user_company")
+public class Company {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="company_name")
+
+	@Column(name = "company_name")
 	private String name;
-	
+
 	private String phone;
-	
+
 	private String email;
-	
+
 	private String Address;
-	
-	@Column(name="company_type")
+
+	@Column(name = "company_type")
 	private String type;
-	
+
 	@OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
 	private BusinessCategory businessCategory;
-	
+
 	private String gstn;
-	
+
 	private String signature;
-	
+
 	private String state;
-	
+
 	private String description;
-	
+
 	private String logo;
-	
+
 	@OneToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 //	private List<Customer> customers = new ArrayList<Customer>();
 
 	public int getId() {
@@ -152,24 +153,19 @@ public class Company{
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return "Company [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", Address=" + Address
 				+ ", type=" + type + ", businessCategory=" + businessCategory + ", gstn=" + gstn + ", signature="
 				+ signature + ", state=" + state + ", description=" + description + ", logo=" + logo + ", user=" + user
 				+ "]";
 	}
-	
-	
-    
-	
-/*	public List<Customer> getCustomers() {
-		return customers;
-	}
 
-	public void setCustomers(List<Customer> customers) {
-		this.customers = customers;
-	}
-	
-	*/
-	
+	/*
+	 * public List<Customer> getCustomers() { return customers; }
+	 * 
+	 * public void setCustomers(List<Customer> customers) { this.customers =
+	 * customers; }
+	 * 
+	 */
+
 }
