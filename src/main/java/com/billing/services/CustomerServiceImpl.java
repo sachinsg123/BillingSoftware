@@ -48,7 +48,6 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public Customer getCustomerById(int id) {
-		
 		Customer customer = customerRepo.findById(id).get();
 		
 		return customer;
@@ -95,9 +94,5 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 		return count;
 	}
-
-	public Optional<Customer> getCustomerByName(String name) {
-		return customerRepo.findByName(name);
-    }
 
 }
