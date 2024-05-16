@@ -78,6 +78,22 @@ public class Product{
     @JoinColumn(name="gst_id")
     private GSTRate gst ;
 
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
+	public GSTRate getGst() {
+		return gst;
+	}
+
+	public void setGst(GSTRate gst) {
+		this.gst = gst;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -124,10 +124,8 @@ public class adminController {
 	    if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	adminImg = "/img/userImage/" + image;
+	    	adminImg = StringUtils.ImagePaths.userImageUrl + image;
 	    }
-	    
-	    model.addAttribute("adminImg", adminImg);
 
 		model.addAttribute("user", user);
 
@@ -156,7 +154,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    } 
 		
 		model.addAttribute("imagePath", imgpath);
@@ -207,7 +205,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -326,7 +324,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -360,7 +358,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -473,7 +471,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -491,7 +489,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -510,7 +508,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -538,7 +536,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -557,7 +555,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -589,7 +587,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -620,7 +618,7 @@ public class adminController {
 		if(user1.getImageUrl() != null)
 	    {
 	    	String image = user1.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -652,7 +650,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -681,7 +679,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -712,7 +710,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -752,7 +750,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -811,7 +809,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -841,7 +839,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -904,7 +902,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -1086,7 +1084,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -1114,7 +1112,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -1169,7 +1167,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -1188,7 +1186,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -1206,7 +1204,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -1224,6 +1222,7 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		
+		System.out.println("hellooooooo");
 		List<Customer> customers = customerRepo.findAll();
 		model.addAttribute("customers",customers);
 		
@@ -1234,7 +1233,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -1252,7 +1251,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 		
@@ -1270,7 +1269,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -1288,7 +1287,7 @@ public class adminController {
 		if(user.getImageUrl() != null)
 	    {
 	    	String image = user.getImageUrl();
-	    	imgpath = "/img/userImage/" + image;
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 		model.addAttribute("imagePath", imgpath);
 
@@ -1322,5 +1321,15 @@ public class adminController {
 		return ResponseEntity.ok("admin/sales_list");
 
 
+	}
+	
+	@GetMapping("/customerDetails")
+	public ResponseEntity<Customer> getCustomerDetails(@RequestParam("customerId") String customerId) {
+	    int id = Integer.parseInt(customerId);
+		Customer customer = customerService.getCustomerById(id);
+	    
+	    System.out.println(customer.getName()+" "+customer.getEmail());
+	    
+	    return ResponseEntity.ok(customer);
 	}
 }
