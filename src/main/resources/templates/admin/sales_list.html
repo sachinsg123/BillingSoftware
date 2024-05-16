@@ -5,7 +5,7 @@
 
 <section>
 <script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
-	<script>
+	<script>	
 		function deleteContactAlert(id) {
 
 			const swalWithBootstrapButtons = Swal.mixin({
@@ -49,6 +49,7 @@
 
 		}
 	</script>
+	
 	<!-- BEGIN Page Wrapper -->
 
 	<div class="contaier-fluid">
@@ -63,74 +64,341 @@
 			</div>
 		</div>
 		<div class="row" style="background-color: rgb(84,78,130);color:#fff;" >
-			<div class="col-md-12 mt-1">
+			<div class="col-md-12">
 				<h1 class="text-center">Sales List</h1>
 			</div>
 		</div>
-		<div style="background-color: #f5f0f0;">
-		<div class="row pb-3">
-		<div  class="col-md-6">
-		 <form th:action="@{/search}" method="get">
-		 <div class="col-md-6" >
-
-        <input type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color:rgb(12,131,226) ;" name="query" placeholder="   Search">
-        <!-- Search icon -->
-        <i class="fas fa-search search-icon" style="font-size: 20px; color:rgb(12,131,226);" onclick="submitForm()"></i>
-		 </div>
 		
-    </form>
-		</div >
-			<div class="col-md-6 mt-3"  style="text-align: right;"> 
+		<div class="row pb-3" style="background-color: #f5f0f0;">
+			<div class="row ml-1 mr-1">
+				<div class="input-group">
+					<div class="col-md-4 mt-3 input-group">
+						<label>Customer Name :- </label>
+			           	<select	id="customerSelect" class="form-select form-control" aria-label="Default select example" name="saleProduct">
+				           	<option selected>Choose</option>
+				           	<option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}"></option>
+			           	</select>
+					   
+						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
+							<i class="fa-solid fa-plus"></i>
+					   	</button>
+				   </div>
 			
-				<a th:href="@{'/a2zbilling/admin/sales/add'}" class="btn btn-info"><i class="fa-solid fa-plus"></i>
-					Add Sale</a>
-			</div>
-		</div>
-		<div class="row mt-2" >
+				   <div class="col-md-2 mt-3 input-group">
+   		               <label>Mobile :- </label>
+   		               <input id="mobile" type="text" class="form-control">
+   		           </div>
+				   <div class="col-md-2 mt-3 input-group">
+   		               <label>Email :- </label>
+   		               <input id="email" type="email" class="form-control">
+   		           </div>
+				   
+		           <div class="col-md-2 mt-3 input-group">
+		               <label>Customer Id :- </label>
+		               <input id="customerId"  class="form-control">
+		           </div>
+			 		
+				   <div class="col-md-2 mt-3 input-group">
+   		               <label>Date :- </label>
+					   <input type="text" class="form-control" id="currentDateInput" readonly>
+   		           </div>
+				   
+			     </div>
+			 </div>
+
+		<div class="row mt-4 ml-1 mr-1" >
 			<div class="col-md-12">
-				<table class="table table-bordered">
-					<thead style="background-color: #e6ede8;">
+				<table class="table table-bordered" style="background-color:rgb(134,166,174);">
+					<thead style="color: white;">
 						<tr>
-							<th scope="col">Date</th>
-							<th scope="col">Invoice No</th>
-							<th scope="col">Party Name</th>
-							<th scope="col">Payment Type</th>
-							<th scope="col">Amount</th>
-							<th scope="col">Balance Due</th>
-							<!-- <th scope="col">Added By</th> -->
-							<th scope="col">Print</th>
+							<th scope="col">Barcode</th>
+							<th scope="col">Product Name</th>
+							<th scope="col">CGST</th>
+							<th scope="col">SGST</th>
+							<th scope="col">Product Size</th>
+							<th scope="col">Available Qty</th>
+							<th scope="col">QTY</th>
+							<th scope="col">Disc</th>
+							<th scope="col">Selling Price</th>
+							<th scope="col">Total Amount</th>
 							<th>  </tr>
 							
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="addrow">
 					<tr>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> 
-					<div class="dropdown">
-								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fa-solid fa-ellipsis-vertical"></i>
-								  </button>
-								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}">Update</a>
-								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|"href="#">Delete</a>
-								  </div>
-								</div>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td>
+						<select	id="productSelect" class="form-select form-control" aria-label="Default select example" name="productSelect">
+				           <option selected>Choose</option>
+				           <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>
+			           	</select>
+					</td>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input type="text" id="total_amount" class="form-controle" style="width: 70px;"></td>
+					<td>
+						<a class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
 					</td>
 					</tr>
 					</tbody>
 				</table>
 			</div>
+			<div class="col-md-2 mt-2 pb-2">
+				<button type="button" class="btn btn-success" id="add" style="color: white;"><b><i class="fa-solid fa-plus"></i></b></button>
+			</div>
 		</div>
+		<!--                       -->
+		<div class="invoice-container mt-3 ml-3 mr-3">
+		    <div class="container">
+		        <div class="row d-flex justify-content-between">
+		            <div>
+		                <div class="form-group">
+		                    <label class="invoice-label">Total amount:</label>
+		                    <input id="totalAmountField" type="text" required class="form-control" name=""
+		                        placeholder="Total amount" readonly>
+		                </div>
+		            </div>
+		            <div>
+		                <div class="form-group">
+		                    <label class="invoice-label">Discount (Rs):</label>
+		                    <input id="discountAmountField" type="number" class="form-control" name="discount"
+		                        placeholder="Discount amount" oninput="updateDiscountedAmount()">
+		                </div>
+		            </div>
+		            <div>
+		                <div class="form-group">
+		                    <label class="invoice-label">Discount %:</label>
+		                    <input id="discountPercentField" type="number" class="form-control" name="discount %"
+		                        placeholder="Discount %" oninput="updateDiscountedAmount()">
+		                </div>
+		            </div>
+		            <div>
+		                <div class="form-group">
+		                    <label class="invoice-label">Payment mode:</label>
+		                    <select class="form-control" name="type" required>
+		                        <option value="cash">Cash</option>
+		                        <option value="cheque">Cheque</option>
+		                        <option value="online">Online</option>
+		                    </select>
+		                </div>
+		            </div>
+		        </div>
+		        <div class="row">
+		            <div>
+		                <div class="form-group">
+		                    <label class="invoice-label">Paid:</label>
+		                    <input id="paidAmountField" type="number" required class="form-control" name="paid" placeholder="Amount paid" oninput="updateDues()">
+		                </div>
+		            </div>
+		            <div style="margin-left: 170px;">
+		                <div class="form-group">
+		                    <label class="invoice-label">Dues:</label>
+		                    <input id="duesAmountField" type="number" required class="form-control" name="dues" placeholder="Dues" readonly>
+		                </div>
+		            </div>
+		            <div style="margin-left: 170px;">
+		                <div class="form-group">
+		                    <label class="invoice-label">Net Payment:</label>
+		                    <input id="netPaymentField" type="number" required class="form-control" name="netpayment" placeholder="Final Amount" readonly>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		
 	</div >
 	</div>
+	
+	<!--Add Customer Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+			
+	      <div class="modal-header d-flex justify-content-center">
+	        <h1 class="modal-title" id="exampleModalLabel">Add Customer</h1>
+	      </div>
+		  
+		  <div class="modal-body">
+		  <form th:action="@{/a2zbilling/admin/customer/add}" method="post" enctype="multipart/form-data" class="form-group">
+		  		<div class="row pb-3" style="background-color: #f5f0f0;">
+					<div class="col-md-5 mt-4">
+				        <label>Customer Name</label>
+				    </div>
+				    <div class="col-md-7 mt-4">
+				        <input type="text" required class="form-control" name="name" placeholder="Enter your name">
+				    </div>
+					
+		  		  <div class="col-md-5 mt-4">
+						<label>Customer email</label>
+				  </div>
+		  		  <div class="col-md-7 mt-4">
+		  		  		<input size="50" type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
+		  		  </div>
+				  
+				  <div class="col-md-5 mt-4">
+						<label>Customer Mobile</label>
+				  </div>
+			  		  <div class="col-md-7 mt-4">
+					<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
+			  		  </div>
+				  
+		  		  <div class="col-md-5 mt-2">
+		  		  		<label>Address</label>
+		  		  </div>
+				  <div class="col-md-7 mt-4">
+		  		  		<textarea type="text" required class="form-control" name="address" placeholder="Enter your address"></textarea>
+		  		  </div>
+				  
+		  		  <div class="col-md-5 mt-2">
+						<label>Choose date</label>
+		  		  </div>
+		  		  <div class="col-md-7 mt-4">
+						<input type="date" class="form-control" name="addedDate">
+		  		  </div>
+				  
+				  
+				  <div class="modal-footer d-flex justify-content-end">
+				      <button type="submit" class="btn btn-primary">Add</button>
+				      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				  </div>	  
+		  	</div>
+		  </form>
+		  </div>
+		  
+	    </div>
+	  </div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var i=1;
+			$('#add').click(function(){
+				i++;
+				$('#addrow').append('<tr id="row'+i+'">'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td>'+
+										'<select id="productSelect" class="form-select form-control" aria-label="Default select example" name="productSelect">'+
+											'<option selected>Choose</option>'+
+											'<option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>'+
+										'</select>'+
+									'</td>'+
+									
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
+									'<td>'+
+										'<a id="'+i+'" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>'+
+									'</td>'+'</tr>');
+									
+			});
+			$(document).on('click','.remove_row', function(){
+				var row_id = $(this).attr('id');
+				$('#row'+row_id+'').remove();
+			});
+		});
+	</script>
+	<script>
+	    // Get references to the input fields
+	    const totalAmountInput = document.getElementById('total_amount');
+	    const totalAmountField = document.getElementById('totalAmountField');
+	
+	    // Add an event listener to the first input field
+	    totalAmountInput.addEventListener('input', function() {
+	        // Set the value of the second input field to the value entered in the first input field
+	        totalAmountField.value = this.value;
+	    });
+	</script>
+	<script>
+	    document.getElementById('customerSelect').addEventListener('change', function() {
+	        var selectedCustomerId = this.value;
+	        if (selectedCustomerId !== 'Choose') {
+				const customerId = encodeURIComponent(selectedCustomerId);
+				const url = '/customerDetails/'+customerId;
+				fetch(url)
+	                .then(response => {
+	                    return response.json();
+	                })
+	                .then(data => {
+						
+						try {
+						    let jsonData = JSON.parse(data);
+						    alert("The data is valid JSON.");
+						    console.log(jsonData); // Log the parsed JSON data if needed
+						} catch (error) {
+						    alert("The data is not valid JSON.");
+						    alert(error);
+						}
+						
+	                    document.getElementById('mobile').value = selectedCustomerId;
+						
+						const email = document.getElementById('email');
+						email.value = data.email;
+						
+	                    document.getElementById('customerId').value = data.id;
+	                })
+	        } else {
+	            document.getElementById('mobile').value = '11';
+	            document.getElementById('email').value = '';
+	            document.getElementById('customerId').value = '';
+	        }
+	    });
+	</script>
+
+
+	<script>
+        // Get the current date
+        var currentDate = new Date();
+        
+        // Format the date as desired (e.g., "2024-04-26")
+        var formattedDate = currentDate.toISOString().split('T')[0];
+        
+        // Set the value of the input field to the formatted date
+        document.getElementById('currentDateInput').value = formattedDate;
+	 </script>
+	 <style>
+ 			.invoice-container {
+ 				width: 100%;
+ 				padding: 20px;
+ 				border: 2px solid #ccc;
+ 				border-radius: 10px;
+ 				background-color: #f9f9f9;
+ 				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+ 				text-align: left;
+ 				display: flex;
+ 				flex-direction: row;
+ 				flex-wrap: wrap;
+ 				justify-content: space-between;
+ 			}
+ 
+ 			.invoice-field {
+ 				flex-basis: calc(50% - 10px);
+ 				margin-bottom: 10px;
+ 				box-sizing: border-box;
+ 				padding: 10px;
+ 				border: 1px solid #ccc;
+ 				border-radius: 5px;
+ 			}
+ 
+ 			.invoice-label {
+ 				font-weight: bold;
+ 			}
+ 
+ 			.invoice-value {
+ 				margin-left: 10px;
+ 			}
+	 		</style>
+		
 </section>
 </body>
 <!-- END Body -->

@@ -65,9 +65,15 @@
 			</div>
 		</div>
 		<div class="row mt-4" style="background-color: #f6f0f0;">
+
 			<div class="col-md-12 pb-2">
 				<table  class="table table-bordered table-hover " style="background-color: #fff	;" >
 					<thead style="background-color: #B2C8BA;">
+
+			<div class="col-md-12">
+				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
+					<thead style="background-color: #e6ede8;">
+
 						<tr style="text-align: center;">
 							<!-- <th scope="col">Supplier Id</th> -->
 							<th scope="col">Name</th>
@@ -88,12 +94,12 @@
 							<td th:text="${supplier.addedDate}"></td>
 							<!-- <td th:text="${supplier.user.username}"></td> -->
 							<td>
-								<a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }"
-									class="btn btn-info" style="margin-right: 10px;">
+								<a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;"
+									class="btn btn-info">
 									<i class="fa-solid fa-pen-to-square"></i>
 								</a>
 								<a th:onclick="|deleteContactAlert(${supplier.id})|" class="btn btn-danger"
-									style="margin-right: 10px;">
+									style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">
 									<i style="background-color: Red;" class="fa-solid fa-trash"></i>
 								</a>
 							</td>
