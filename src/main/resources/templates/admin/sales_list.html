@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 <section>
-<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>	
 		function deleteContactAlert(id) {
 
@@ -47,6 +48,7 @@
 		}
 	</script>
 	
+	
 	<!-- BEGIN Page Wrapper -->
 
 	<div class="contaier-fluid">
@@ -62,50 +64,50 @@
 		</div>
 		<div class="row" style="background-color: rgb(84,78,130);color:#fff;" >
 			<div class="col-md-12">
-				<h1 class="text-center">Sales List</h1>
+				<h1 class="text-center">Sales Bill</h1>
 			</div>
 		</div>
 		
 		<div class="row pb-3" style="background-color: #f5f0f0;">
 			<div class="row ml-1 mr-1">
 				<div class="input-group">
-					<div class="col-md-4 mt-3 input-group">
-						<label>Customer Name :- </label>
-			           	<select	id="customerSelect" class="form-select form-control" aria-label="Default select example" name="saleProduct">
-				           	<option selected>Choose</option>
-				           	<option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}"></option>
-			           	</select>
-					   
+				    <div class="col-md-4 mt-3 input-group">
+				        <label>Customer Name :- </label>
+						<select id="customerSelect" class="form-select form-control" aria-label="Default select example" name="saleCustomer">
+				            <option selected>Choose</option>
+				            <!-- Dynamically populate options with customer data -->
+				            <option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}" 
+									th:attr="data-mobile=${customer.mobile}, 
+									data-email=${customer.email}"></option>
+							
+				        </select>
+						
+						
 						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
 							<i class="fa-solid fa-plus"></i>
 					   	</button>
-				   </div>
-			
-				   <div class="col-md-2 mt-3 input-group">
-   		               <label>Mobile :- </label>
-   		               <input id="mobile" type="text" class="form-control">
-   		           </div>
-				   <div class="col-md-2 mt-3 input-group">
-   		               <label>Email :- </label>
-   		               <input id="email" type="email" class="form-control">
-   		           </div>
-				   
-		           <div class="col-md-2 mt-3 input-group">
-		               <label>Customer Id :- </label>
-		               <input id="customerId"  class="form-control">
-		           </div>
-			 		
-				   <div class="col-md-2 mt-3 input-group">
+
+				    </div>
+				
+				    <div class="col-md-3 mt-3 input-group">
+				        <label>Mobile :- </label>
+				        <input id="mobile1" readonly type="text" class="form-control">
+				    </div>
+				    <div class="col-md-3 mt-3 input-group">
+				        <label>Email :- </label>
+				        <input id="email1" readonly type="email" class="form-control">
+				    </div>
+				
+					<div class="col-md-2 mt-3 input-group">
    		               <label>Date :- </label>
 					   <input type="text" class="form-control" id="currentDateInput" readonly>
    		           </div>
-				   
-			     </div>
+				</div>
 			 </div>
 
 		<div class="row mt-4 ml-1 mr-1" >
 			<div class="col-md-12">
-				<table class="table table-bordered" style="background-color:rgb(134,166,174);">
+				<table class="table table-bordered" style="background-color:#86A6AE;">
 					<thead style="color: white;">
 						<tr>
 							<th scope="col">Barcode</th>
@@ -115,39 +117,45 @@
 							<th scope="col">Product Size</th>
 							<th scope="col">Available Qty</th>
 							<th scope="col">QTY</th>
-							<th scope="col">Disc</th>
+							<th scope="col">Tax(%)</th>
+							<th scope="col">Tax in Amount</th>
 							<th scope="col">Selling Price</th>
 							<th scope="col">Total Amount</th>
-							<th>  </tr>
+							<th scope="col">  </tr>
 							
 						</tr>
 					</thead>
 					<tbody id="addrow">
 					<tr>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
+					<td><input id="barcode" type="text" class="form-control" ></td>
 					<td>
 						<select	id="productSelect" class="form-select form-control" aria-label="Default select example" name="productSelect">
 				           <option selected>Choose</option>
-				           <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>
+						   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
+					               th:attr="data-price=${product.price},
+					                         data-quantity=${product.quantity},
+					                         data-size=${product.size.sizeValue}">
+					       </option>
 			           	</select>
 					</td>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
-					<td><input type="text" class="form-controle" style="width: 70px;"></td>
-					<td><input type="text" id="total_amount" class="form-controle" style="width: 70px;"></td>
+					<td><input id="cgst" type="text" class="form-control"  readonly></td>
+					<td><input id="sgst" type="text" class="form-control" readonly></td>
+					<td><input id="size" type="text" class="form-control" readonly></td>
+					<td><input id="AQty" type="text" class="form-control" readonly></td>
+					<td><input id="Qty" type="text" class="form-control"></td>
+					<td><input id="taxinpercentage" oninput="calculateTaxAmount()" type="text" class="form-control"></td>
+					<td><input id="taxinamount" type="text" class="form-control" readonly></td>
+					<td><input id="price" type="text" class="form-control" readonly></td>
+					<td><input id="total_amount" type="text" class="form-control" readonly></td>
 					<td>
-						<a class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
+						<a id="1" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
 					</td>
 					</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="col-md-2 mt-2 pb-2">
-				<button type="button" class="btn btn-success" id="add" style="color: white;"><b><i class="fa-solid fa-plus"></i></b></button>
+				<button type="button" class="btn btn-success" id="add" style="color: white;"><b><i class="fa-solid fa-plus"></i> Add Row</b></button>
 			</div>
 		</div>
 		<!--                       -->
@@ -165,13 +173,13 @@
 		                <div class="form-group">
 		                    <label class="invoice-label">Discount (Rs):</label>
 		                    <input id="discountAmountField" type="number" class="form-control" name="discount"
-		                        placeholder="Discount amount" oninput="updateDiscountedAmount()">
+		                        placeholder="Discount amount" oninput="updatePercentageAmount()">
 		                </div>
 		            </div>
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Discount %:</label>
-		                    <input id="discountPercentField" type="number" class="form-control" name="discount %"
+		                    <input id="discountPercentField" type="number" class="form-control" name="discount%"
 		                        placeholder="Discount %" oninput="updateDiscountedAmount()">
 		                </div>
 		            </div>
@@ -188,19 +196,19 @@
 		        </div>
 		        <div class="row">
 		            <div>
-		                <div class="form-group">
+		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Paid:</label>
 		                    <input id="paidAmountField" type="number" required class="form-control" name="paid" placeholder="Amount paid" oninput="updateDues()">
 		                </div>
 		            </div>
-		            <div style="margin-left: 170px;">
-		                <div class="form-group">
+		            <div style="margin-left: 110px;">
+		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Dues:</label>
 		                    <input id="duesAmountField" type="number" required class="form-control" name="dues" placeholder="Dues" readonly>
 		                </div>
 		            </div>
-		            <div style="margin-left: 170px;">
-		                <div class="form-group">
+		            <div style="margin-left: 110px;">
+		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Net Payment:</label>
 		                    <input id="netPaymentField" type="number" required class="form-control" name="netpayment" placeholder="Final Amount" readonly>
 		                </div>
@@ -213,7 +221,7 @@
 	</div>
 	
 	<!--Add Customer Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 			
@@ -228,21 +236,21 @@
 				        <label>Customer Name</label>
 				    </div>
 				    <div class="col-md-7 mt-4">
-				        <input type="text" required class="form-control" name="name" placeholder="Enter your name">
+				        <input type="text" required class="form-control" name="name1" placeholder="Enter your name">
 				    </div>
 					
 		  		  <div class="col-md-5 mt-4">
 						<label>Customer email</label>
 				  </div>
 		  		  <div class="col-md-7 mt-4">
-		  		  		<input size="50" type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
+		  		  		<input size="50" type="email" required class="form-control" name="email1" placeholder="Enter your e-mail">
 		  		  </div>
 				  
 				  <div class="col-md-5 mt-4">
 						<label>Customer Mobile</label>
 				  </div>
 			  		  <div class="col-md-7 mt-4">
-					<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
+					<input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
 			  		  </div>
 				  
 		  		  <div class="col-md-5 mt-2">
@@ -271,86 +279,230 @@
 	    </div>
 	  </div>
 	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			var i=1;
-			$('#add').click(function(){
-				i++;
-				$('#addrow').append('<tr id="row'+i+'">'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td>'+
-										'<select id="productSelect" class="form-select form-control" aria-label="Default select example" name="productSelect">'+
-											'<option selected>Choose</option>'+
-											'<option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>'+
-										'</select>'+
-									'</td>'+
-									
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td><input type="text" class="form-controle" style="width: 70px;"></td>'+
-									'<td>'+
-										'<a id="'+i+'" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>'+
-									'</td>'+'</tr>');
-									
+	
+	<script>
+		function calculateTaxAmount(input) {
+	            var price = parseFloat(document.getElementById('price').value);
+	            var quantity = parseFloat(document.getElementById('Qty').value);
+				var taxPercent = parseFloat(document.getElementById('taxinpercentage').value);
+				
+	            var taxAmount = (price * quantity * taxPercent) / 100;
+				
+				var totalAmount = taxAmount + price;
+				
+				document.getElementById('taxinamount').value = taxAmount.toFixed(2);
+				document.getElementById('total_amount').value = totalAmount.toFixed(2);
+				document.getElementById('totalAmountField').value = totalAmount.toFixed(2);
+	        }
+					
+		function updateDues() {
+                var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
+                var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
+                var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
+                var duesAmount = totalAmount - paidAmount;
+
+                // Exclude discounted amount from dues if there are dues
+                if (duesAmount > 0) {
+                    duesAmount -= discountAmount;
+                    if (duesAmount < 0) {
+                        duesAmount = 0; // Ensure dues amount doesn't go negative
+                    }
+                }
+
+                // Update the dues amount display
+                document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
+            }
+			function updatePercentageAmount() {
+			    const totalAmountField = document.getElementById('totalAmountField');
+			    const discountPercentField = document.getElementById('discountPercentField');
+			    const discountAmountField = document.getElementById('discountAmountField');
+			
+			    // Calculate the percentage and net amount initially
+			    calculatePercentageAndNetAmount();
+			
+			    // Add event listener to discountAmountField
+			    discountAmountField.addEventListener('input', calculatePercentageAndNetAmount);
+			
+			    // Function to calculate percentage and net amount
+			    function calculatePercentageAndNetAmount() {
+			        var totalAmount = parseFloat(totalAmountField.value);
+			        var discountAmount = parseFloat(discountAmountField.value);
+			
+			        // Calculate the discount percentage
+			        var discountPercentage = (discountAmount / totalAmount) * 100;
+			
+			        // Update the net amount
+			        var netAmount = totalAmount - discountAmount;
+			
+			        // Update the discount percentage display
+			        document.getElementById('discountPercentField').value = discountPercentage.toFixed(2);
+			
+			        // Update the net amount display
+			        document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+			    }
+			}
+
+		function updateDiscountedAmount() {
+				const totalAmountField = document.getElementById('totalAmountField');
+		        const discountPercentField = document.getElementById('discountPercentField');
+		        const discountAmountField = document.getElementById('discountAmountField');
+		
+		        // Calculate the discounted amount initially
+		        calculateDiscountAndNetAmount();
+		
+		        // Add event listener to discountPercentField
+		        discountPercentField.addEventListener('input', calculateDiscountAndNetAmount);
+		
+		        // Function to calculate discounted amount and net amount
+		        function calculateDiscountAndNetAmount() {
+		            var totalAmount = parseFloat(totalAmountField.value);
+		            var discountAmount = parseFloat(discountAmountField.value);
+		            var discountPercent = parseFloat(discountPercentField.value);
+	
+		
+		            var discountedAmount = discountAmount;
+		            if (!isNaN(discountPercent)) {
+		                discountedAmount = (totalAmount * discountPercent) / 100;
+		            }
+		
+		            // Update the net amount
+		            var netAmount = totalAmount - discountedAmount;
+		
+		            // Update the discounted amount display
+		            document.getElementById('discountAmountField').value = discountedAmount.toFixed(2);
+		
+		            // Update the net amount display
+		            document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+		        }
+            }
+		
+			$(document).ready(function(){
+			   // Event listener for changing the selected option in the dropdown
+			   $('#productSelect').change(function() {
+			       var selectedOption = $(this).find('option:selected');
+			       var price = selectedOption.data('price');
+				   var size = selectedOption.data('size');
+			       var AQty = selectedOption.data('quantity');
+				   var Cgst = selectedOption.data('cgst');
+				   
+				   if(AQty == null)
+				   {
+					AQty = 0;
+				   }
+				   if(Cgst == null)
+   				   {
+   					Cgst = 0;
+   				   }
+				   
+					
+			       $('#price').val(price);
+				   $('#size').val(size);
+				   $('#AQty').val(AQty);
+				   $('#cgst').val(Cgst);
+			   });
 			});
-			$(document).on('click','.remove_row', function(){
-				var row_id = $(this).attr('id');
-				$('#row'+row_id+'').remove();
-			});
-		});
+		</script>
+	<script>
+	$(document).ready(function(){
+		
+	   // Event listener for changing the selected option in the dropdown
+	   $('#customerSelect').change(function() {
+	       var selectedOption = $(this).find('option:selected');
+	       var phone = selectedOption.data('mobile');
+	       var email = selectedOption.data('email');
+	       
+	       $('#mobile1').val(phone);
+	       $('#email1').val(email);
+	   });
+	});
 	</script>
+	
 	<script>
 	    // Get references to the input fields
 	    const totalAmountInput = document.getElementById('total_amount');
 	    const totalAmountField = document.getElementById('totalAmountField');
-	
+		const sellingPriceInput = document.getElementById('price');
+		const QtyInput = document.getElementById('Qty');
+		const AQtyInput = document.getElementById('AQty');
+		
+		QtyInput.addEventListener('input', function() {
+			if(parseFloat(AQtyInput.value) < parseFloat(QtyInput.value))
+			{
+				alert("Please Enter Quantity less than Available Quantity");
+				QtyInput.value="";
+			}
+		});
+		QtyInput.addEventListener('input', function() {
+			if(parseFloat(QtyInput.value) < 0)
+			{
+				alert("Please Enter Quantity > 0");
+				QtyInput.value="";
+			}
+		});
+		
+		QtyInput.addEventListener('input', function() {
+		    // Parse the values to numbers
+		    const sellingPrice = parseFloat(sellingPriceInput.value);
+		    const quantity = parseFloat(QtyInput.value);
+		    
+		    // Check if the values are valid numbers
+		    if (!isNaN(sellingPrice) && !isNaN(quantity)) {
+		        // Calculate the total amount
+		        const totalAmount = sellingPrice * quantity;
+		        
+		        // Assign the total amount to the total amount input field
+		        totalAmountInput.value = totalAmount.toFixed(2); // Format to two decimal places
+				
+				totalAmountField.value = totalAmount.toFixed(2);
+		    } else {
+		        // If either input is not a valid number, set the total amount input field to empty
+		        totalAmountInput.value = '';
+				
+				totalAmountField.value = '';
+		    }
+		});
+
 	    // Add an event listener to the first input field
 	    totalAmountInput.addEventListener('input', function() {
 	        // Set the value of the second input field to the value entered in the first input field
 	        totalAmountField.value = this.value;
 	    });
 	</script>
-	<script>
-	    document.getElementById('customerSelect').addEventListener('change', function() {
-	        var selectedCustomerId = this.value;
-	        if (selectedCustomerId !== 'Choose') {
-				const customerId = encodeURIComponent(selectedCustomerId);
-				const url = '/customerDetails/'+customerId;
-				fetch(url)
-	                .then(response => {
-	                    return response.json();
-	                })
-	                .then(data => {
-						
-						try {
-						    let jsonData = JSON.parse(data);
-						    alert("The data is valid JSON.");
-						    console.log(jsonData); // Log the parsed JSON data if needed
-						} catch (error) {
-						    alert("The data is not valid JSON.");
-						    alert(error);
-						}
-						
-	                    document.getElementById('mobile').value = selectedCustomerId;
-						
-						const email = document.getElementById('email');
-						email.value = data.email;
-						
-	                    document.getElementById('customerId').value = data.id;
-	                })
-	        } else {
-	            document.getElementById('mobile').value = '11';
-	            document.getElementById('email').value = '';
-	            document.getElementById('customerId').value = '';
-	        }
-	    });
-	</script>
+	<script type="text/javascript">
+			$(document).ready(function(){
+				var i=1;
+				$('#add').click(function(){
+					i++;
+					$('#addrow').append('<tr id="row'+i+'">'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td>'+
+											'<select id="productSelect" class="form-select form-control" aria-label="Default select example" name="productSelect">'+
+												'<option selected>Choose</option>'+
+												'<option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>'+
+											'</select>'+
+										'</td>'+
+										
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td><input type="text" class="form-control"></td>'+
+										'<td>'+
+											'<a id="'+i+'" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>'+
+										'</td>'+'</tr>');
+										
+				});
+				$(document).on('click','.remove_row', function(){
+					var row_id = $(this).attr('id');
+					$('#row'+row_id+'').remove();
+				});
+			});
+		</script>
+
 
 
 	<script>

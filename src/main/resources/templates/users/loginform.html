@@ -185,13 +185,13 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 						  		  </div>
 								  
 								  <div class="col-md-5 mt-2">
-				                      <label class="col-sm-4 col-form-label">Image</label>
+				                      <label>Image</label>
 				                  </div>
 								  <div class="col-md-7 mt-4">
 									<input class="form-control" name="imageUrl" type="file">
 								  </div>
 								  <div class="col-md-5 mt-2">
-  				                      <label class="col-sm-4 col-form-label">Password</label>
+  				                      <label>Password</label>
   				                  </div>
   								  <div class="col-md-7 mt-4">
   									<input class="form-control" name="password" type="text" placeholder="Enter a Password" required>
@@ -299,9 +299,9 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 					  		  </div>
 							  
 							  <div class="col-md-5 mt-4">
-							  		<a type="button" class="btn btn-primary">Generate OTP</a>
+							  		<a th:href="@{/auth/sendOTPEmail}" type="button" class="btn btn-primary">Generate OTP</a>
 								</div>
-								<button onclick="showInput()">Add Input Field</button>
+								<!--<button onclick="showInput()">Add Input Field</button> -->
 								<div id="inputContainer"></div>
 								
 							  <div class="modal-footer d-flex justify-content-end">

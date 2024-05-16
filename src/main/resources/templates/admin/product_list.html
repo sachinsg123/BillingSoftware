@@ -44,17 +44,19 @@ th:replace="fragments/base::layout(~{::section})">
 						      <th scope="row" th:text="${product.id}"></th>
 						      <td th:text="${product.name}"></td>
 						      <td th:text="${product.category?.categoryName}"></td>
-						      <td>color</td>
+						      <td th:text="${product.color.name}">color</td>
 						      <td th:text="${product.price}"></td>
 						      <td th:text="${product.addedDate}"></td>
-						      <td th:text="${product.stock}"></td>
-						      <td> added by</td>
+						      <td th:text="${product.quantity}"></td>
+						      <td th:text="${product.addedDate}"> added by</td>
 						      <td> supplier</td>
                               <td> sales rate</td>	
                               <td th:text="${product.customer}"></td>	
                               <td>customer mobile</td>
-                              <td><a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                              <a class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                              <td>
+								
+								<a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" class="btn btn-success"><i class="fa fa-edit"></i></a>
+                              	<a class="btn btn-danger" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;"><i class="fa fa-trash"></i></a>
                               </td> 				      
 						    </tr>
 						  </tbody>

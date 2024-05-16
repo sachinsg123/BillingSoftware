@@ -1,11 +1,17 @@
 package com.billing.controller;
 
 import java.io.InputStream;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.Random;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +29,9 @@ import com.billing.model.UserDto;
 import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.UserRepository;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+
 @Controller
 @RequestMapping("/auth")
 public class LoginController{
@@ -35,6 +44,10 @@ public class LoginController{
 	
 	@Autowired
 	private CompanyRepository companyRepo;
+	
+	@Autowired
+    private JavaMailSender javaMailSender;
+	
 	
 	@GetMapping("/login-user")
 	public String loginPage(){
@@ -105,9 +118,45 @@ public class LoginController{
 		return "redirect:/auth/login-user";
 	}
 	
+	public String generateOTP(int length) {
+        String numbers = "0123456789";
+        Random random = new Random();
+        StringBuilder otp = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            otp.append(numbers.charAt(random.nextInt(numbers.length())));
+        }
+        return otp.toString();
+    }
 	
+	public void sendOTPEmail(String to, String subject, String body) throws MessagingException {
+		MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(body, true);
+        
+        System.out.println(body);
+        
+        javaMailSender.send(message);
+    }
 	
+	//created by Mahesh
+	@GetMapping("/sendOTPEmail")
+	public void sendOTPEmail() {
+        String otp = generateOTP(6); // Generate a 6-digit OTP
+        String subject = "Your OTP for Verification";
+        String body = "Your OTP is: " + otp + ". Please use this OTP to verify your email.";
+        
+        System.out.println(otp);
+        
+        
+        try {
+            sendOTPEmail("maheshmisal2018@gmail.com", subject, body);
+        } catch (MessagingException e) {
+            e.printStackTrace(); // Handle exception appropriately
+        }
+    }
 			
-	}
+}
 
 
