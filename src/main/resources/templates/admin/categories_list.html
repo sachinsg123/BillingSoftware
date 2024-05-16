@@ -82,8 +82,9 @@ function deleteContactAlert(id){
 						      <td th:text="${category.categoryName}"></td>
 						      <td th:text="${category.addedDate}"></td>
                               <td>
-                              <a th:href="@{'/a2zbilling/admin/category/update/'+ ${category.id}}" class="btn btn-info">Edit</a>
-                              <a  th:onclick="|deleteContactAlert(${category.id})|"  class="btn btn-danger">Del</a>
+                              <a th:href="@{'/a2zbilling/admin/category/update/'+ ${category.id}}" class="btn btn-info"><i class="fa fa-edit"></i></a>
+                              <a  th:onclick="|deleteContactAlert(${category.id})|"  class="btn btn-danger"><i
+										style="background-color: Red;" class="fa-solid fa-trash"></i></a>
                               </td> 				      
 						    </tr>
 						  </tbody>

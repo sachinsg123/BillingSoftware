@@ -1278,7 +1278,7 @@ public class adminController {
 
 	}
 	
-//	//Created by Younus - add Item
+	//Created by Younus - add Item
 	@GetMapping("/Item/add")
 	public String addItem(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1295,6 +1295,20 @@ public class adminController {
 		return "admin/Item_add";
 
 	}
+
+	
+	
+	
+	//Created by Younus - to Manage Stock
+	@GetMapping("/managestock")
+	public String manageStock(Model model) {
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/manage_stock";
+
+	}
+
 	// created by Mahesh
 	@GetMapping("/generetOTP/{mobile}")
 	public ResponseEntity<String> generetOTP(@PathVariable("mobile") String mobileNumber) {
@@ -1306,6 +1320,7 @@ public class adminController {
         }
   
 		return ResponseEntity.ok("admin/sales_list");
+
 
 	}
 }

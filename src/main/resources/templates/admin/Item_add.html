@@ -3,77 +3,150 @@
 
 <!-- BEGIN Page Wrapper -->
 
-<section>
-	<div class="contaier-fluid">
-		<div th:if="${session.message}">
-			<div class="alert alert-primary" role="alert">
-				<p th:text="${session.message}"></p>
-				<script th:inline="javascript">
-					/*<![CDATA[*/
-					setTimeout(function () {
 
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500);
+<body>
+	<section>
+		<div class="contaier-fluid">
+			<div th:if="${session.message}">
+				<div class="alert alert-primary" role="alert">
+					<p th:text="${session.message}"></p>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						setTimeout(function () {
 
-				</script>
+							window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+						}, 500);
+
+					</script>
+				</div>
 			</div>
+			
+			<!-- Created by Younus -->
+			
+			<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
+				<div class="col-md-12 ">
+					<h1 class="text-center pt-1">Add Item</h1>
+				</div>
+			</div>
+			<form th:action="@{/a2zbilling/admin/Item/add}" method="post" enctype="multipart/form-data"
+				class="form-group">
+				<div class="row pb-3" style="background-color: #f5f0f0;">
+					<div class="col-md-4 mt-4">
+						<div class="form-group">
+							<label>Item Name</label>
+							<input type="text" required class="form-control" name="name" placeholder="Enter Item name">
+						</div>
+					</div>
+					<div class="col-md-4 mt-4">
+						<div class="form-group">
+							<label>Item HSN/SAC</label>
+							<input type="text" required class="form-control" name="name" placeholder="Enter HSN No">
+						</div>
+					</div>
+					<div class="col-md-4 mt-4">
+						<div class="form-group">
+							<label>Item Code</label>
+							<input type="number" required class="form-control" name="code"
+								placeholder="Enter Item code">
+						</div>
+					</div>
+
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Units</label>
+							<select class="form-control" name="unit" required>
+								<option value="None">NONE</option>
+								<option value="kg">Kilogram (kg)</option>
+								<option value="lit">Liter (lit)</option>
+								<option value="gm">Gram (gm)</option>
+								<option value="pcs">Pieces (Pcs)</option>
+								<option value="m">Meter (m)</option>
+								<option value="mm">MiliMeter (mm)</option>
+
+							</select>
+						</div>
+					</div>
+
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Stock</label>
+							<input type="number" required class="form-control" name="name" placeholder="Item Stock">
+						</div>
+					</div>
+
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Min Stock Qty</label>
+							<input type="number" required class="form-control" name="name"
+								placeholder="Enter min stock q	ty">
+						</div>
+					</div>
+
+
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Selling Price</label>
+							<div class="input-group">
+								<input type="number" required class="form-control" name="salePrice"
+									placeholder="Enter item Sale price">
+								<select class="form-control" name="salePriceTax" required>
+									<option value="inclusive">Including Tax</option>
+									<option value="exclusive">Excluding Tax</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Purchase Price</label>
+							<div class="input-group">
+								<input type="number" required class="form-control" name="purchasePrice"
+									placeholder="Enter item Purchase price">
+								<select class="form-control" name="purchasePriceTax" required>
+									<option value="inclusive">Including Tax</option>
+									<option value="exclusive">Excluding Tax</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Item Images (max 5)</label>
+							<input type="file" class="form-control" name="imageFile" multiple accept="image/*"
+								onchange="limitFiles(this)">
+						</div>
+					</div>
+
+					<script>
+						function limitFiles(input) {
+							// Get the number of files selected
+							var files = input.files.length;
+
+							// If more than 5 files are selected, alert the user and clear the file input
+							if (files > 5) {
+								alert("Please select up to 5 images.");
+								input.value = '';
+							}
+						}
+					</script>
+
+					<div class="col-md-12 mt-6">
+						<div class="text-center">
+							<button type="submit" class="btn btn-info text-center ml-3">Save</button>
+							<button type="submit" class="btn btn-info text-center ml-3 " name="saveAndNew">Save & New</button>
+							<!-- <a th:href="@{'/a2zbilling/admin/purchasebill/add'}"
+								class="btn btn-info ml-3 ">Cancel</a> -->	
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
-		<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
-			<div class="col-md-12 ">
-				<h1 class="text-center pt-1">Add Item</h1>
-			</div>
-		</div>
-		<form th:action="@{/a2zbilling/admin/Item/add}" method="post" enctype="multipart/form-data" class="form-group">
-			<div class="row pb-3" style="background-color: #f5f0f0;">
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label>Item Name</label>
-						<input type="text" required class="form-control" name="name" placeholder="Enter Item name">
-					</div>
-				</div>
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label>Item HSN</label>
-						<input type="text" required class="form-control" name="name" placeholder="Enter HSN No">
-					</div>
-				</div>
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label>Item Code</label>
-						<input type="number" required class="form-control" name="code" placeholder="Enter Item code">
-					</div>
-				</div>
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Units</label>
-						<select class="form-control" name="unit" required>
-							<option value="None">NONE</option>
-							<option value="kg">Kilogram (kg)</option>
-							<option value="lit">Liter (lit)</option>
-							<option value="kg">Gram (gm)</option>
-							<option value="lit">Pieces (Pcs)</option>
-							<option value="kg">Meter (m)</option>
-							<option value="lit">MiliMeter (mm)</option>
+	</section>
 
-						</select>
-					</div>
-				</div>
-				
-				
-				
-				
-				
-				
-				<div class="col-md-12">
-					<div class="text-center">
-						<button type="submit" class="btn btn-info text-center mt-5">Add</button>
-						<a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info ml-3 mt-5">Cancel</a>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
-</section>
+
+
 </body>
 <!-- END Body -->
 
