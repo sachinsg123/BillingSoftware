@@ -32,6 +32,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
         <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
         <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="/css/fa-brands.css">
+		<script th:src="@{/js/script.js}" defer></script>
     </head>
     <!-- BEGIN Body -->
     <!-- Possible Classes
@@ -124,6 +125,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
             }
 
         </script>
+		
         <div class="page-wrapper auth">
             <div class="page-inner bg-brand-gradient">
                 <div class="page-content-wrapper bg-transparent m-0">
@@ -135,11 +137,79 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                     <span class="page-logo-text mr-1">A2Z Billing</span>
                                 </a>
                             </div>
-                            <a href="#" class="btn-link text-white ml-auto">
+							<a data-toggle="modal" data-target="#createAccount" class="btn-link text-white ml-auto">
                                 Create Account
                             </a>
                         </div>
                     </div>
+					
+					
+					<!--Register Modal -->
+					<div class="modal fade" id="createAccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+							
+					      <div class="modal-header d-flex justify-content-center">
+					        <h1 class="modal-title" id="exampleModalLabel">Registration Form</h1>
+					      </div>
+						  
+						  <div class="modal-body">
+						  <form th:action="@{/auth/registration}" method="post" enctype="multipart/form-data" class="form-group">
+								<div class="row pb-3" style="background-color: #f5f0f0;">
+									<div class="col-md-5 mt-4">
+								        <label>UserName</label>
+								    </div>
+								    <div class="col-md-7 mt-4">
+								        <input type="text" required class="form-control" name="username" placeholder="Enter your name">
+								    </div>
+									
+									<div class="col-md-5 mt-4">
+								        <label>Company Name</label>
+								    </div>
+								    <div class="col-md-7 mt-4">
+								        <input type="text" required class="form-control" name="companyname" placeholder="Enter your Company Name">
+								    </div>
+									
+						  		  <div class="col-md-5 mt-4">
+										<label>Email</label>
+								  </div>
+						  		  <div class="col-md-7 mt-4">
+						  		  		<input size="50" type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
+						  		  </div>
+								  
+								  <div class="col-md-5 mt-4">
+										<label>Mobile</label>
+								  </div>
+						  		  <div class="col-md-7 mt-4">
+										<input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
+						  		  </div>
+								  
+								  <div class="col-md-5 mt-2">
+				                      <label class="col-sm-4 col-form-label">Image</label>
+				                  </div>
+								  <div class="col-md-7 mt-4">
+									<input class="form-control" name="imageUrl" type="file">
+								  </div>
+								  <div class="col-md-5 mt-2">
+  				                      <label class="col-sm-4 col-form-label">Password</label>
+  				                  </div>
+  								  <div class="col-md-7 mt-4">
+  									<input class="form-control" name="password" type="text" placeholder="Enter a Password" required>
+  								  </div>
+								  
+								  <div class="modal-footer d-flex justify-content-end">
+								      <button type="submit" class="btn btn-primary">Add</button>
+								      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+								  </div>  
+						  	</div>
+						  </form>
+						  </div>
+						  
+					    </div>
+					  </div>
+					</div>
+					
+					
                     <div class="flex-1" style="background: url(img/svg/pattern-1.svg) no-repeat center bottom fixed; background-size: cover;">
                         <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
                             <div class="row">
@@ -180,8 +250,8 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                     <div class="card p-4 rounded-plus bg-faded">
                                         <form id="js-login" th:action="@{/signin}" method="post">
                                             <div class="form-group">
-                                                <label class="form-label" for="username">Username</label>
-                                                <input type="email" id="username" name="username" class="form-control form-control-lg" placeholder="your id or email" required>
+                                                <label class="form-label" for="email">Email</label>
+                                                <input type="email" id="email" name="username" class="form-control form-control-lg" placeholder="Please enter your Email" required>
                                             </div>
                                             <div class="form-group">
                                                 <label class="form-label" for="password">Password</label>
@@ -191,6 +261,11 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                             <div class="row no-gutters">
                                                 <div class="col-lg-6 pl-lg-1 my-2">
                                                     <button id="js-login-btn" type="submit" class="btn btn-danger btn-block btn-lg">login</button>
+                                                </div>
+												<div class="col ml-5 mt-4">
+													<a data-toggle="modal" data-target="#forgotPassword">
+														Forget Password
+												   	</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -202,6 +277,44 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                 </div>
             </div>
         </div>
+		
+		
+		<div class="modal fade" id="forgotPassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+						
+				      <div class="modal-header d-flex justify-content-center">
+				        <h1 class="modal-title" id="exampleModalLabel">Forget Password</h1>
+				      </div>
+					  
+					  <div class="modal-body">
+					  <form th:action="@{/auth/mobile}" method="post" enctype="multipart/form-data" class="form-group">
+					  		<div class="row pb-3" style="background-color: #f5f0f0;">
+								
+							  <div class="col-md-5 mt-4">
+									<label>Email</label>
+							  </div>
+					  		  <div class="col-md-7 mt-4">
+									<input type="email" required class="form-control" name="email" placeholder="Enter your Email">
+					  		  </div>
+							  
+							  <div class="col-md-5 mt-4">
+							  		<a type="button" class="btn btn-primary">Generate OTP</a>
+								</div>
+								<button onclick="showInput()">Add Input Field</button>
+								<div id="inputContainer"></div>
+								
+							  <div class="modal-footer d-flex justify-content-end">
+							      <button type="submit" class="btn btn-primary">Add</button>
+							      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							  </div>	  
+					  	</div>
+					  </form>
+					  </div>
+					  
+				    </div>
+				  </div>
+				</div>
         <!-- BEGIN Color profile -->
         <!-- this area is hidden and will not be seen on screens or screen readers -->
         <!-- we use this only for CSS color refernce for JS stuff -->
@@ -269,6 +382,16 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
         </p>
         <!-- END Color profile -->
         <script>
+			
+			function showInput() {
+			    var inputContainer = document.getElementById("inputContainer");
+			    var inputField = document.createElement("input");
+			    inputField.type = "text";
+			    inputField.name = "dynamicInput";
+			    inputContainer.appendChild(inputField);
+			}
+			
+			
             (function(i, s, o, g, r, a, m)
             {
                 i['GoogleAnalyticsObject'] = r;

@@ -13,8 +13,7 @@ import com.billing.model.Customer;
 public interface CustomerRepository extends JpaRepository<Customer, Integer>{
 
 	@Query("SELECT c FROM Customer c WHERE c.status ='active'")
-	 List<Customer> showAllCustomerBYActive();
+	List<Customer> showAllCustomerBYActive();
 	
-	@Query("SELECT c FROM Customer c WHERE c.name = :name")
-	Optional<Customer> findByName(String name);
+	public Customer findByName(String name);
 }
