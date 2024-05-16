@@ -3,7 +3,9 @@
 		<!-- Modal -->
 		<a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
 			data-toggle="modal" data-target="#modal-shortcut">
-			<img src="/img/favicon/a2zlogo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
+			
+			<img th:src="${companyLogo}" alt="SmartAdmin WebApp" aria-roledescription="logo">
+		
 			<div th:if="${companyName != null}">
 				<span class="page-logo-text mr-1" style="font-size:30px" th:text="${companyName}"></span>
 			</div>
