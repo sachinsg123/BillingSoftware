@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.billing.model.Brand;
 import com.billing.model.Category;
@@ -130,11 +132,9 @@ public class adminController {
 
 		model.addAttribute("user", user);
 
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		
 		model.addAttribute("imagePath", imgpath);
 
 		return "/admin/view_Admin_Profile";
@@ -432,27 +432,6 @@ public class adminController {
 //		productRepo.save(product);			
 
 		return "redirect:/a2zbilling/admin/product/list";
-	}
-
-	@GetMapping("/customer/add")
-	public String customerAddForm(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		User user = userRepo.findByUsername(auth.getName());
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		String companyName = company.getName();
-
-		model.addAttribute("companyName", companyName);
-
-		// Code to Render admin on our page
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		model.addAttribute("imagePath", imgpath);
-
-		return "/admin/add_customer_form";
-
 	}
 
 	// Created by Mahesh
@@ -1069,10 +1048,29 @@ public class adminController {
 		return "admin/purchasebill_update";
 
 	}
+	
 
-	// Created by Younus - get sale list
+	
+	@GetMapping("/customerDetails/{name}")
+	public ResponseEntity<?> getCustomerDetailsByName(@PathVariable("name") String name) {
+	    Optional<Customer> customerOptional = customerService.getCustomerByName(name);
+	    if (customerOptional.isPresent()) {
+	        return ResponseEntity.ok(customerOptional.get());
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
+	// Created by Mahesh - get sale list
 	@GetMapping("/sales/list")
 	public String salesList(Model model) {
+		
+		List<Customer> customers = customerRepo.findAll();
+		model.addAttribute("customers",customers);
+		
+		List<Product> products = productRepo.findAll();
+		model.addAttribute("products",products);
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
 		return "admin/sales_list";
