@@ -17,46 +17,41 @@ import com.billing.repositories.SizeRepository;
 import com.billing.repositories.StockRepository;
 
 @Service
-public class ProductServiceImpl implements ProductServices{
-    @Autowired
-	private CategoryRepository categoryRepo;
-    
+public class ProductServiceImpl implements ProductServices {
 	@Autowired
-    private StockRepository stockRepo;
-	
+	private CategoryRepository categoryRepo;
+
+	@Autowired
+	private StockRepository stockRepo;
+
 	@Autowired
 	private BrandRepository brandRepo;
-	
+
 	@Autowired
-    private ColorRepository colorRepo;
-	
+	private ColorRepository colorRepo;
+
 	@Autowired
 	private CustomerRepository customerRepo;
-	
+
 	@Autowired
 	private SizeRepository sizeRepository;
-	
+
 	@Autowired
 	private ProductRepository productRepo;
-	
-	
-	
+
 	@Override
-	public Product addProduct(Product product){
-		
+	public Product addProduct(Product product) {
+
 		System.out.println("service working");
-	  
-	  
-	   
-	   	   
+
 		product.setCustomer(product.getCustomer());
-		
+
 		System.out.println(product);
-		
-     	productRepo.save(product);		
-		
-	 return product;
-	 
+
+		productRepo.save(product);
+
+		return product;
+
 	}
 
 	@Override
@@ -67,10 +62,9 @@ public class ProductServiceImpl implements ProductServices{
 
 	@Override
 	public List<Product> getAllProducts() {
-		
+
 		List<Product> allProducts = productRepo.findAll();
-		
-		
+
 		return allProducts;
 	}
 
