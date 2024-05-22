@@ -65,33 +65,49 @@
 
 	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
 		<div class="col-md-12 ">
-			<h1 class="text-center pt-1">Purchase Bill</h1>
+			<h1 class="text-center pt-1">Purchase Return/Debit Note</h1>
 		</div>
 	</div>
 
 	<div class="row pb-3" style="background-color: #f5f0f0;">
+
 		<!-- //style="overflow-x: auto;" -->
 		<div class="col-md-12 mt-1">
 
-			<!--Purchase Bill Number Code-->
+			<!--Purchase Return Number Code-->
 			<div class="row d-flex justify-content-end">
 				<div class="col-md-3 mt-3 input-group ">
 					<div class="input-group-prepend">
 						<span class="input-group-text"
-							style="background-color: #715499; color: white ; border: 1px solid #715499 ;">Bill
+							style="background-color: #F75E61; color: white ; border: 1px solid #694c94c4 ;">Return
 							No</span>
 					</div>
-					<input id="purchaseorder" style="border: 1px solid #715499	 ;" type="text" class="form-control"
-						readonly value="A2Z-PO-">
+					<input id="purchaseorder" style="border: 1px solid #F75E61 ;" type="text" class="form-control"
+						readonly value="A2Z-PR-">
 				</div>
 			</div>
 
-			<!--Get Parties data from database-->
+			<script>
+				$(document).ready(function () {
 
+					// Event listener for changing the selected option in the dropdown
+					$('#supplierSelect').change(function () {
+						var selectedOption = $(this).find('option:selected');
+						var phone = selectedOption.data('mobile');
+						var email = selectedOption.data('email');
+
+						$('#mobile1').val(phone);
+						$('#email1').val(email);
+					});
+				});
+			</script>
+
+
+			<!--Get Suppiler data from database-->
 			<div class="row ml-1 mr-1">
 				<div class="input-group">
 					<div class="col-md-4 mt-3 input-group">
-						<label>Party Name :- </label>
+						<label>Supplier Name :- </label>
 						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
 							name="addSupplierProduct">
 							<option selected>Choose</option>
@@ -123,9 +139,8 @@
 				</div>
 				 
 			</div>
-
-			<table id="itemTable" class="table table-bordered" style="background-color: #694c94c4; color: white;">
-				<thead style="background-color: #694c94c4;">
+			<table id="itemTable" class="table table-bordered" style="background-color: #F7B0BB; color: white;">
+				<thead style="background-color: #F75E61;">
 					<tr>
 						<th></th>
 						<th scope="col">Item Name</th>
@@ -145,8 +160,6 @@
 						<td><input class="form-control" type="text" name="item[]" required></td>
 						<td><input class="form-control" min="1" type="number" name="quantity[]" required
 								oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
-
-
 
 						<td>
 							<select name="size[]" class="form-control" required>
@@ -176,13 +189,13 @@
 		</div>
 
 		<!-- Add Row Button -->
-		<div class="col-md-12 mt-3 ">	
+		<div class="col-md-12 mt-3 ">
 			<button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add
 				Row</button>
 		</div>
 
 		<!-- Add Underline  -->
-		<div style="height: 0px; width: 100%; border: 1px solid #694c94c4; margin-top: 10px; "></div>
+		<div style="height: 0px; width: 100%; border: 1px solid #F75E61; margin-top: 10px; "></div>
 
 		<div class="invoice-container mt-5" style="background-color: #F9F9F9;">
 			<div class="container">
@@ -215,15 +228,16 @@
 								<option value="cash">Cash</option>
 								<option value="cheque">Cheque</option>
 								<option value="online">Online</option>
+								<option value="online">Pending</option>
 							</select>
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div>
-						<div class="form-group mt-2">
+						<div class="form-group mt-2 ">
 							<label class="invoice-label">Paid:</label>
-							<input id="paidAmountField" type="number" required class="form-control" name="paid"
+							<input id="paidAmountField" type="number" min="0" required class="form-control" name="paid"
 								placeholder="Amount paid" oninput="updateDues()">
 						</div>
 					</div>
@@ -241,6 +255,13 @@
 								placeholder="Final Amount" readonly>
 						</div>
 					</div>
+					<div style="margin-left: 89px;">
+						<div class="form-group mt-2">
+							<label class="invoice-label">Received:</label>
+							<input id="receivedAmountField" type="number" min="0" class="form-control" name="netpayment"
+								placeholder="Received Amount">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -250,65 +271,57 @@
 			<div class="text-center">
 				<button type="submit" class="btn btn-info text-center ">Save</button>
 				<!--<button type="button" onclick="saveAndNew" class="btn btn-info text-center ml-3 ">Save & New</button> -->
-				<a th:href="@{'/a2zbilling/admin/purchasebill/transection'}" class="btn btn-info ml-3">Cancel</a>
+				<a th:href="@{'/a2zbilling/admin/purchasereturn/transection'}" class="btn btn-info ml-3">Cancel</a>
 			</div>
 		</div>
 
 
-		<!--Add Parties Modal -->
+		<!-- Add Supplier Modal -->
 		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
 			aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-
 					<div class="modal-header d-flex justify-content-center">
-						<h1 class="modal-title" id="exampleModalLabel">Add Party</h1>
+						<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
 					</div>
-
 					<div class="modal-body">
 						<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
 							class="form-group">
 							<div class="row pb-3" style="background-color: #f5f0f0;">
 								<div class="col-md-5 mt-4">
-									<label>Party Name</label>
+									<label>Supplier Name</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<input type="text" required class="form-control" name="name"
-										placeholder="Enter party name">
+										placeholder="Enter supplier name">
 								</div>
-
 								<div class="col-md-5 mt-4">
-									<label>Party email</label>
+									<label>Supplier Email</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<input size="50" type="email" required class="form-control" name="email"
-										placeholder="Enter party e-mail">
+										placeholder="Enter supplier e-mail">
 								</div>
-
 								<div class="col-md-5 mt-4">
-									<label>Party Mobile</label>
+									<label>Supplier Mobile</label>
 								</div>
 								<div class="col-md-7 mt-4">
-									<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control"
-										name="mobile" placeholder="Enter party mobile No">
+									<input type="text" pattern="[0-9]{10}" required class="form-control" name="mobile"
+										placeholder="Enter supplier mobile No">
 								</div>
-
 								<div class="col-md-5 mt-4">
 									<label>Address</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<textarea type="text" required class="form-control" name="address"
-										placeholder="Enter party address"></textarea>
+										placeholder="Enter supplier address"></textarea>
 								</div>
-
 								<div class="col-md-5 mt-2">
-									<label>Choose date</label>
+									<label>Choose Date</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<input type="date" class="form-control" name="addedDate">
 								</div>
-
-
 								<div class="modal-footer d-flex justify-content-end">
 									<button type="submit" class="btn btn-primary">Add</button>
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -316,17 +329,12 @@
 							</div>
 						</form>
 					</div>
-
 				</div>
-				  
 			</div>
 		</div>
 
-
-
-
-
 		<script>
+
 			function addRow() {
 				var newRow = '<tr>' +
 					'<td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button></td>' +
@@ -538,7 +546,6 @@
 				}
 			});
 
-
 			// Get the current date automatically
 			var currentDate = new Date();
 
@@ -549,6 +556,23 @@
 			document.getElementById('currentDateInput').value = formattedDate;
 
 		</script>
+
+		<script>
+			$(document).ready(function () {
+
+				// Event listener for changing the selected option in the dropdown
+				$('#supplierSelect').change(function () {
+					var selectedOption = $(this).find('option:selected');
+					var phone = selectedOption.data('mobile');
+					var email = selectedOption.data('email');
+
+					$('#mobile1').val(phone);
+					$('#email1').val(email);
+				});
+			});
+		</script>
+
+
 	</div>
 	</form>
 	</div>

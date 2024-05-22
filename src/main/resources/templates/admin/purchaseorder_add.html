@@ -63,25 +63,26 @@
 
 	</head>
 
+
 	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
 		<div class="col-md-12 ">
-			<h1 class="text-center pt-1">Purchase Bill</h1>
+			<h1 class="text-center pt-1">Purchase Order</h1>
 		</div>
 	</div>
 
 	<div class="row pb-3" style="background-color: #f5f0f0;">
+
 		<!-- //style="overflow-x: auto;" -->
 		<div class="col-md-12 mt-1">
 
-			<!--Purchase Bill Number Code-->
+			<!--Purchase Order Number Code-->
 			<div class="row d-flex justify-content-end">
 				<div class="col-md-3 mt-3 input-group ">
 					<div class="input-group-prepend">
 						<span class="input-group-text"
-							style="background-color: #715499; color: white ; border: 1px solid #715499 ;">Bill
-							No</span>
+							style="background-color: #B3409A; color: white ; border: 1px solid #694c94c4 ;">PO No</span>
 					</div>
-					<input id="purchaseorder" style="border: 1px solid #715499	 ;" type="text" class="form-control"
+					<input id="purchaseorder" style="border: 1px solid #B3409A ;" type="text" class="form-control"
 						readonly value="A2Z-PO-">
 				</div>
 			</div>
@@ -124,8 +125,8 @@
 				 
 			</div>
 
-			<table id="itemTable" class="table table-bordered" style="background-color: #694c94c4; color: white;">
-				<thead style="background-color: #694c94c4;">
+			<table id="itemTable" class="table table-bordered" style="background-color: #CD9BB1; color: white;">
+				<thead style="background-color: #B3409A;">
 					<tr>
 						<th></th>
 						<th scope="col">Item Name</th>
@@ -176,14 +177,14 @@
 		</div>
 
 		<!-- Add Row Button -->
-		<div class="col-md-12 mt-3 ">	
+		<div class="col-md-12 mt-3 ">
 			<button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add
 				Row</button>
 		</div>
 
-		<!-- Add Underline  -->
-		<div style="height: 0px; width: 100%; border: 1px solid #694c94c4; margin-top: 10px; "></div>
-
+<!-- Add Underline  -->
+		<div style="height: 0px; width: 100%; border: 1px solid #B3409A; margin-top: 10px; "></div>
+		
 		<div class="invoice-container mt-5" style="background-color: #F9F9F9;">
 			<div class="container">
 				<div class="row d-flex justify-content-between">
@@ -308,7 +309,6 @@
 									<input type="date" class="form-control" name="addedDate">
 								</div>
 
-
 								<div class="modal-footer d-flex justify-content-end">
 									<button type="submit" class="btn btn-primary">Add</button>
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -327,6 +327,7 @@
 
 
 		<script>
+
 			function addRow() {
 				var newRow = '<tr>' +
 					'<td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button></td>' +
