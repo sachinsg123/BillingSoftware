@@ -1329,6 +1329,9 @@ public class adminController {
 	// Created by Younus - add Purchase order
 	@GetMapping("/purchaseorder/add")
 	public String addPurchaseOrder(Model model) {
+		
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+		model.addAttribute("suppliers", suppliers);
 
 		// to render unit list on Purchase bill page
 		List<Unit> units = unitRepo.findAll();
