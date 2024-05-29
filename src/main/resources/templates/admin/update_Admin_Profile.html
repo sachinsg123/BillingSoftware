@@ -70,6 +70,7 @@
 				<!-- the #js-page-content id is needed for some plugins to initialize -->
 
 				<main id="js-page-content" role="main" class="page-content">
+
 					<div class="contaier-fluid">
 						<div th:if="${session.message}">
 							<div class="alert alert-primary" role="alert">
@@ -86,59 +87,63 @@
 						</div>
 						<div class="row" style="background-color:rgb(85,75,126);">
 							<div class="col-md-12 mt-2">
-								<h1 class="text-center" style="color: white;"><b>Admin Profile</b></h1>
+								<h1 class="text-center" style="color: white;"><b>Update Profile</b></h1>
 							</div>
-						</div>
-
-						<div class="row mt-4" style="background-color:rgb(231,252,227);" th:object="${user}">
-							<div class="col-md-6 mt-2">
-								<div class="form-group mt-6">
-									<h2>
-										<b><span th:text="${companyName}"></span></b>
-									</h2>
-								</div>
-							</div>
-							
-							<div class="col-md-6 text-center">
-								<img  style="height:150px; width: 150px; margin-left: 200px;" th:src="${imagePath}">
-							</div>
-							
 						</div>
 						
 
 						<div class="container mt-6 pb-3" style="background-color:rgb(231,252,227);" th:object="${user}">
-							
-							<div class="row">
-								<input type="hidden" name="id" th:field="*{id}">
-								<div class="col-md-4 mt-4">
-									<label><b>Name :- </b></label>
-									<input class="form-control" name="name" readonly th:field="*{username}">
-								</div>
-								<div class="col-md-4 mt-4">
-									<label><b>Mobile :- </b></label>
-									<input class="form-control" name="mobile" readonly th:field="*{mobile}">
-								</div>
-								<div class="col-md-4 mt-4">
-									<label><b>Email :- </b></label>
-									<input class="form-control" name="email" readonly th:field="*{email}">
-								</div>
-							</div>
-					
-							<div class="row">
-								<div class="col-md-4 mt-4">
-									<label><b>Role :- </b></label>
-									<input class="form-control" name="role" readonly th:field="*{role}">
-								</div>
-							</div>
-							
-							<div class="row text-center">
-								<div class="col-md-12 mt-4">
-									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
-										th:href="@{'/a2zbilling/admin/updateAdminProfile'}" class="btn btn-info"><b>Update</b></a>
-									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
-										th:href="@{'/a2zbilling/admin/'}" class="btn btn-info"><b>Cancel</b></a>
-								</div>
-							</div>
+							  <form th:action="@{/a2zbilling/admin/updateAdminProfile}" method="post" enctype="multipart/form-data" class="form-group">
+									<div class="row pb-3">
+										
+										<div class="col-md-5 mt-4">
+									        <label><b>UserName</b></label>
+									    </div>
+									    <div class="col-md-7 mt-4">
+									        <input type="text" class="form-control" name="username" placeholder="Enter your name" th:field="*{username}">
+									    </div>
+										<div class="col-md-5 mt-4">
+									        <label><b>Company Name</b></label>
+									    </div>
+										<div class="col-md-7 mt-4">
+									        <input type="text" class="form-control" name="companyname" placeholder="Enter your Company Name">
+									    </div>
+							  		  <div class="col-md-5 mt-4">
+											<label><b>Email</b></label>
+									  </div>
+							  		  <div class="col-md-7 mt-4">
+							  		  		<input size="50" type="email" id="email2" class="form-control" name="email" placeholder="Enter your e-mail" th:field="*{email}">
+							  		  </div>
+									  
+									  <div class="col-md-5 mt-4">
+											<label><b>Mobile</b></label>
+									  </div>
+							  		  <div class="col-md-7 mt-4">
+											<input type="text" id="mobile" pattern="[0-9]{10}" class="form-control" name="mobile" placeholder="Enter your mobile No" th:field="*{mobile}">
+							  		  </div>
+									  
+									  <div class="col-md-5 mt-4">
+  					                      
+  					                  </div>
+									  <div class="col-md-7 mt-4">
+			  								<img  style="height:150px; width: 150px;" th:src="${imagePath}">
+			  							</div>
+										
+									  <div class="col-md-5 mt-1">
+					                      <label><b>Image</b></label>
+					                  </div>
+									  <div class="col-md-7 mt-1">
+										<input class="form-control" name="imageUrl" type="file" th:field="*{imageUrl}">
+									  </div>
+							  	</div>
+								<div class="row text-center">
+	  								<div class="col-md-12 mt-4">
+	  									<button type="submit" class="btn btn-success" style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
+	  									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
+	  										th:href="@{'/a2zbilling/admin/viewAdminProfile'}" class="btn btn-info"><b>Cancel</b></a>
+	  								</div>
+	  							</div>
+							  </form>
 						</div>
 					</div>
 

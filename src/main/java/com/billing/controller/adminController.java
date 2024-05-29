@@ -39,6 +39,7 @@ import com.billing.model.Size;
 import com.billing.model.Supplier;
 import com.billing.model.Unit;
 import com.billing.model.User;
+import com.billing.model.UserDto;
 import com.billing.repositories.BrandRepository;
 import com.billing.repositories.CategoryRepository;
 import com.billing.repositories.ColorRepository;
@@ -109,7 +110,9 @@ public class adminController {
 	public String viewAdminProfile(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		
+		System.out.println(user.getId()+"+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		
 	    model.addAttribute("user", user);
 	    
 	    Company company = companyRepo.getCompanyByUserId(user.getId());
@@ -142,6 +145,104 @@ public class adminController {
 		model.addAttribute("companySign", companySign);
 
 		return "/admin/view_Admin_Profile";
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/updateAdminProfile")
+	public String updateAdminProfile(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+
+	    model.addAttribute("user", user);
+	    
+	    Company company = companyRepo.getCompanyByUserId(user.getId());
+	    String companyName = company.getName();
+	    model.addAttribute("companyName", companyName);
+	    
+	    String adminImg = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+	    
+	    if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
+	    {
+	    	String image = user.getImageUrl();
+	    	adminImg = StringUtils.ImagePaths.userImageUrl + image;
+	    }
+
+		model.addAttribute("user", user);
+
+		model.addAttribute("companyName", companyName);
+
+		
+		model.addAttribute("imagePath", adminImg);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		String sign = company.getSignature();
+		String companySign = "/img/companysignature/" + sign;
+		model.addAttribute("companySign", companySign);
+
+		return "/admin/update_Admin_Profile";
+	}
+	
+	//created by Mahesh
+	@PostMapping("/updateAdminProfile")
+	public String updateProcessUser(@ModelAttribute UserDto userDto, HttpSession session) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+	    
+		
+		MultipartFile image = userDto.getImageUrl();
+		
+		if(!image.isEmpty()) {
+	        Date date = new Date();
+	        String storageFileName = date.getTime() + "_" + image.getOriginalFilename();
+        
+	         try{
+	            String uploadDir = "src/main/resources/static/img/userImage/";
+	            Path uploadPath = Paths.get(uploadDir);
+	
+	            if(!Files.exists(uploadPath))
+	            {
+	                Files.createDirectories(uploadPath);
+	            }
+	            try(InputStream inputStream = image.getInputStream()){
+	                Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
+	                        StandardCopyOption.REPLACE_EXISTING);
+	            }
+	        }
+	        catch (Exception ex)
+	        {
+	            System.out.println("Exception: "+ ex.getMessage());
+	        }
+	         
+	        user.setImageUrl(storageFileName);
+		}
+		
+		if(!userDto.getUsername().isEmpty() && userRepo.findByUsername(userDto.getUsername()) == null ) {
+			user.setUsername(userDto.getUsername());
+		}
+		if(!userDto.getEmail().isEmpty() && userRepo.findByEmail(userDto.getEmail()) == null) {
+			user.setEmail(userDto.getEmail());
+		}
+		if(!userDto.getMobile().isEmpty() && userRepo.findByMobile(userDto.getMobile()) == null) {
+			user.setMobile(userDto.getMobile());
+		}
+		
+		
+	    System.out.println("Company Name "+userDto.getCompanyname() + " " +user.getCompany().getName());
+	    Company company = user.getCompany();
+	    
+        if(!userDto.getCompanyname().isEmpty()) {
+        	company.setName(userDto.getCompanyname());
+        }
+        company.setUser(user);
+        
+		userRepo.save(user);
+		companyRepo.save(company);
+		
+		return "redirect:/a2zbilling/admin/viewAdminProfile";
 	}
 
 	@GetMapping("/")
