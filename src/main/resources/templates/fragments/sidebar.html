@@ -11,7 +11,7 @@
 				<span class="page-logo-text mr-1" style="font-size:30px" th:text="${companyName}"></span>
 			</div>
 			<div th:if="${companyName == null}">
-				<span class="page-logo-text mr-1" style="font-size:30px">A2Z Billing</span>
+				<span class="page-logo-text mr-1" style="font-size:30px" >A2Z Billing</span>
 			</div>
 			<span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
 			<i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
@@ -28,6 +28,7 @@
 				</a>
 			</div>
 		</div>
+		
 		<ul id="js-nav-menu" class="nav-menu">
 			<li class="active open">
 				<a th:href="@{/a2zbilling/admin/}" title="Application Intel" data-filter-tags="application intel">
@@ -204,25 +205,26 @@
 				</a>
 				<ul>
 					<li>
-						<a th:href="@{/a2zbilling/admin/purchasebill/list}" title="How it works"
+						<a th:href="@{/a2zbilling/admin/purchasebill/transection}" title="How it works"
 							data-filter-tags="purchase purchase bill" <span class="nav-link-text"
 							data-i18n="nav.theme_settings_how_it_works">PURCHASE BILL</span>
 						</a>
 					</li>
 					<li>
+					
 						<a href="#" title="How it works" data-filter-tags="theme import purchase">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">IMPORT
 								PURCHASE</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Layout Options" data-filter-tags="theme purchase order">
+						<a th:href="@{/a2zbilling/admin/purchaseorder/add}" title="Layout Options" data-filter-tags="theme purchase order">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">PURCHASE
 								ORDER</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="theme purchase return">
+						<a th:href="@{/a2zbilling/admin/purchasereturn/transection}" title="Theme Modes (beta)" data-filter-tags="theme purchase return">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">PURCHASE
 								RETURN</span>
 						</a>
@@ -382,7 +384,7 @@
 			</div>
 			<div class="modal-body">
 				<form th:action="@{/a2zbilling/admin/firm/edit}" method="post" enctype="multipart/form-data"
-					th:object="${company}" class="form-group">
+					th:object="${company}" class="form-group"> 
 					<div class="row">
 						<div class="col-md-12">
 							<input type="hidden" class="form-control" name="name" th:field="*{id}">
@@ -421,12 +423,12 @@
 								<input type="file" class="form-control" name="imageFile">
 							</div>
 						</div>
-						<div class="col-md-12">
+						<d0iv class="col-md-12">
 							<div class="form-group">
 								<label>Upload Signature</label>
 								<input type="file" class="form-control" name="signatureImage">
 							</div>
-						</div>
+						</d0iv>
 						<div class="col-md-12 mt-2">
 							<div class="text-center">
 								<button type="submit" class="btn btn-info text-center">ADD</button>
@@ -486,9 +488,8 @@
 </div>
 
 <!--  js code for gst  -->
-
+<!--
 <script>
-
 	function gstCalculator() {
 
 		var gstPercentage = parseFloat(document.getElementById("gstPercentage").value);
@@ -502,106 +503,7 @@
 		document.getElementById("cgstPercentage").value = cgst.toFixed(2);
 
 	}
-
 </script>
+-->
 
-<!-- Adding GST Modal -->
-<div class="modal fade" id="exampleModalForGST" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header align-items-center">
-				<h1 class="modal-title" id="exampleModalLabel">Add GST</h1>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
-					<div class="row">
-						<div class="col-md-12 mt-2">
-							<input type="hidden" class="form-control" name="name">
-							<div class="form-group">
-								<label>GST :</label>
-								<input type="text" class="form-control" onkeyup="gstCalculator()" id="gstPercentage"
-									name="gstRate" placeholder=" e.g. Government tax in %" required>
-							</div>
-						</div>
-						<div class="col-md-12 mt-2">
-							<div class="form-group">
-								<label>SGST :</label>
-								<input type="text" class="form-control" id="sgstPercentage" name="sgstRate"
-									placeholder="e.g. state government tax in %">
-							</div>
-						</div>
-						<div class="col-md-12 mt-2">
-							<div class="form-group">
-								<label>CGST :</label>
-								<input type="text" class="form-control" id="cgstPercentage" name="cgstRate"
-									placeholder="e.g. central government tax in %">
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12 mt-2">
-						<div class="text-center">
-							<button type="submit" class="btn btn-info text-center">Add</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-	</div>
-</div>
-
-
-<div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header align-items-center">
-				<h1 class="modal-title" id="exampleModalLabel">ADD CATEGORY</h1>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-
-				<div th:if="${session.message}">
-					<div class="alert alert-danger" role="alert">
-						<p th:text="${session.message}"></p>
-						<script th:inline="javascript">
-							setTimeout(function () {
-								window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-							}, 500);
-						</script>
-					</div>
-				</div>
-				<form th:action="@{/a2zbilling/admin/category/add}" method="post" class="form-group">
-					<div class="row">
-						<div class="col-md-12 mt-2">
-							<div class="form-group">
-								<label>Category Name :</label>
-								<input type="text" class="form-control" name="name" placeholder=" e.g.category name"
-									required>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12 mt-2">
-						<div class="text-center">
-							<button type="submit" class="btn btn-info text-center">ADD</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-	</div>
-</div>
 </div>

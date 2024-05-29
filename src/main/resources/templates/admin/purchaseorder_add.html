@@ -6,6 +6,7 @@
 <!-- Created by Younus -->
 
 <section>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 	<head>
 
@@ -63,35 +64,35 @@
 
 	</head>
 
+
 	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
 		<div class="col-md-12 ">
-			<h1 class="text-center pt-1">Purchase Bill</h1>
+			<h1 class="text-center pt-1">Purchase Order</h1>
 		</div>
 	</div>
 
 	<div class="row pb-3" style="background-color: #f5f0f0;">
+
 		<!-- //style="overflow-x: auto;" -->
 		<div class="col-md-12 mt-1">
 
-			<!--Purchase Bill Number Code-->
+			<!--Purchase Order Number Code-->
 			<div class="row d-flex justify-content-end">
 				<div class="col-md-3 mt-3 input-group ">
 					<div class="input-group-prepend">
 						<span class="input-group-text"
-							style="background-color: #715499; color: white ; border: 1px solid #715499 ;">Bill
-							No</span>
+							style="background-color: #B3409A; color: white ; border: 1px solid #694c94c4 ;">PO No</span>
 					</div>
-					<input id="purchaseorder" style="border: 1px solid #715499	 ;" type="text" class="form-control"
+					<input id="purchaseorder" style="border: 1px solid #B3409A ;" type="text" class="form-control"
 						readonly value="A2Z-PO-">
 				</div>
 			</div>
 
-			<!--Get Parties data from database-->
-
-			<div class="row ml-1 mr-1">
+			<!--Get Suppiler data from database-->
+			<div class="row ml-1 mr-1 mb-3">
 				<div class="input-group">
 					<div class="col-md-4 mt-3 input-group">
-						<label>Party Name :- </label>
+						<label>Supplier Name :- </label>
 						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
 							name="addSupplierProduct">
 							<option selected>Choose</option>
@@ -104,9 +105,7 @@
 						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
 							<i class="fa-solid fa-plus"></i>
 						</button>
-
 					</div>
-
 					<div class="col-md-3 mt-3 input-group">
 						<label>Mobile :- </label>
 						<input id="mobile1" readonly type="text" class="form-control">
@@ -115,17 +114,16 @@
 						<label>Email :- </label>
 						<input id="email1" readonly type="email" class="form-control">
 					</div>
-
 					<div class="col-md-2 mt-3 input-group">
 						<label>Date :- </label>
 						<input type="text" class="form-control" id="currentDateInput" readonly>
 					</div>
 				</div>
-				 
 			</div>
 
-			<table id="itemTable" class="table table-bordered" style="background-color: #694c94c4; color: white;">
-				<thead style="background-color: #694c94c4;">
+
+			<table id="itemTable" class="table table-bordered" style="background-color: #CD9BB1; color: white;">
+				<thead style="background-color: #B3409A;">
 					<tr>
 						<th></th>
 						<th scope="col">Item Name</th>
@@ -176,13 +174,13 @@
 		</div>
 
 		<!-- Add Row Button -->
-		<div class="col-md-12 mt-3 ">	
+		<div class="col-md-12 mt-3 ">
 			<button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add
 				Row</button>
 		</div>
 
 		<!-- Add Underline  -->
-		<div style="height: 0px; width: 100%; border: 1px solid #694c94c4; margin-top: 10px; "></div>
+		<div style="height: 0px; width: 100%; border: 1px solid #B3409A; margin-top: 10px; "></div>
 
 		<div class="invoice-container mt-5" style="background-color: #F9F9F9;">
 			<div class="container">
@@ -255,60 +253,52 @@
 		</div>
 
 
-		<!--Add Parties Modal -->
+		<!-- Add Supplier Modal -->
 		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
 			aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-
 					<div class="modal-header d-flex justify-content-center">
-						<h1 class="modal-title" id="exampleModalLabel">Add Party</h1>
+						<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
 					</div>
-
 					<div class="modal-body">
 						<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
 							class="form-group">
 							<div class="row pb-3" style="background-color: #f5f0f0;">
 								<div class="col-md-5 mt-4">
-									<label>Party Name</label>
+									<label>Supplier Name</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<input type="text" required class="form-control" name="name"
-										placeholder="Enter party name">
+										placeholder="Enter supplier name">
 								</div>
-
 								<div class="col-md-5 mt-4">
-									<label>Party email</label>
+									<label>Supplier Email</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<input size="50" type="email" required class="form-control" name="email"
-										placeholder="Enter party e-mail">
+										placeholder="Enter supplier e-mail">
 								</div>
-
 								<div class="col-md-5 mt-4">
-									<label>Party Mobile</label>
+									<label>Supplier Mobile</label>
 								</div>
 								<div class="col-md-7 mt-4">
-									<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control"
-										name="mobile" placeholder="Enter party mobile No">
+									<input type="text" pattern="[0-9]{10}" required class="form-control" name="mobile"
+										placeholder="Enter supplier mobile No">
 								</div>
-
-								<div class="col-md-5 mt-4">
+								<div class="col-md-5 mt-2">
 									<label>Address</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<textarea type="text" required class="form-control" name="address"
-										placeholder="Enter party address"></textarea>
+										placeholder="Enter supplier address"></textarea>
 								</div>
-
 								<div class="col-md-5 mt-2">
-									<label>Choose date</label>
+									<label>Choose Date</label>
 								</div>
 								<div class="col-md-7 mt-4">
 									<input type="date" class="form-control" name="addedDate">
 								</div>
-
-
 								<div class="modal-footer d-flex justify-content-end">
 									<button type="submit" class="btn btn-primary">Add</button>
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -316,17 +306,28 @@
 							</div>
 						</form>
 					</div>
-
 				</div>
-				  
 			</div>
 		</div>
 
+		<script>
+			$(document).ready(function () {
 
+				// Event listener for changing the selected option in the dropdown
+				$('#supplierSelect').change(function () {
+					var selectedOption = $(this).find('option:selected');
+					var phone = selectedOption.data('mobile');
+					var email = selectedOption.data('email');
 
+					$('#mobile1').val(phone);
+					$('#email1').val(email);
+				});
+			});
+		</script>
 
 
 		<script>
+
 			function addRow() {
 				var newRow = '<tr>' +
 					'<td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button></td>' +
@@ -549,6 +550,8 @@
 			document.getElementById('currentDateInput').value = formattedDate;
 
 		</script>
+
+
 	</div>
 	</form>
 	</div>

@@ -56,6 +56,7 @@ public class Company {
 		this.id = id;
 	}
 
+	//for Company Name
 	public String getName() {
 		return name;
 	}
