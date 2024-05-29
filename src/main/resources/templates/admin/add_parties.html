@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
+	<head>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <title>Show Address Row</title>
+	    <!-- Include Bootstrap CSS -->
+	    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	    <!-- Include jQuery -->
+	    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+<body>
 <section>
+	
 	<div class="contaier-fluid" style="line-height: 25px;">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
@@ -19,75 +31,262 @@
 				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;"><b>ADD PARTY</b></h1>
 			</div>
 		</div>
-		<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
+		<div style="background-color: #B7E1E4;">
+		<form th:action="@{/a2zbilling/admin/parties/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
-			<div class="row" style="background-color:#f5f0f0 ;">
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label><b>Name*</b></label>
-						<input required retype="text" class="form-control" placeholder="Please Enter a Name"
+			<div class="container pb-3">
+				<div class="row">
+					<div class="col-md-5 mt-4">
+						<label><b>Party Name*</b></label>
+						<input required type="text" class="form-control" placeholder="Please Enter a Name"
 							name="name">
 					</div>
-				</div>
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label><b>Email*</b></label>
-						<input required type="email" class="form-control" placeholder="Please Enter a Email"
-							name="email">
-					</div>
-				</div>
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
+					<div class="col-md-5 mt-4">
 						<label><b>Mobile*</b></label>
 						<input type="number" required class="form-control" placeholder="Please Enter a Mobile Number"
 							name="mobile" id="mobile">
-						<small id="mobileErrorMessage" class="text-danger"></small>
-					</div>
-				</div>
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label><b>Address</b></label>
-						<textarea required type="text" class="form-control" placeholder="Please Enter a Address"
-							name="address"></textarea>
 					</div>
 				</div>
 				
-				<div class="col-md-12 mt-2">
+				<div class="row">
+					<div class="col-md-5 mt-4">
+						<label><b>Party Group*</b></label>
+						<div class="input-group">
+							<select class="form-control">
+								<option>Select</option>
+								<option><button>General</button></option>
+							</select>
+							<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#partyGroupModal">
+								<i class="fa-solid fa-plus"></i> Party Group
+						   	</button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row text-center">
+					<div class="col-md-2 mt-4">
+						<a class="toggle-button form-control" id="partyAddressInfo" style="color: white;">Address</a>
+					</div>
+					<div class="col-md-2 mt-4">
+						<a class="toggle-button form-control" id="partyGstInfo" style="color: white;">GST</a>
+					</div>
+					<div class="col-md-3 mt-4">
+						<a class="toggle-button form-control" id="partyOpeningBalanceInfo" style="color: white;">Opening Balance</a>
+					</div>
+					<div class="col-md-3 mt-4">
+						<a class="toggle-button form-control" id="partyAdditionalInfo" style="color: white;">Additional Fields</a>
+					</div>															
+				</div>
+				
+				<div style="height: 0px; width: 100%; border: 1px solid black; margin: 20px auto;"></div>
+				
+				<div class="row" id="addressRow" style="display: none;">
+					<div class="col-md-5 mt-4">
+						<label><b>Billing Address*</b></label>
+						<textarea required type="text" class="form-control" placeholder="Billing Address"></textarea>
+					</div>
+					<div class="col-md-5 mt-4">
+						<label><b>Shipping Address*</b></label>
+						<textarea required type="text" class="form-control" placeholder="Shipping Address"></textarea>
+					</div>
+					<div class="col-md-5 mt-4">
+						<label><b>Email*</b></label>
+						<input type="email" required class="form-control" placeholder="Please Enter a Email Address"
+							name="email" id="email">
+					</div>
+				</div>
+					
+				
+				<div class="row" id="gstRow" style="display: none;">
+					<div class="col-md-5 mt-4">
+						<label><b>GST Type</b></label>
+						<select required class="form-control" id="businessType">
+							<option>Unregistered/Consumer</option>
+							<option value="regular">Registered Business - Regular</option>
+							<option>Registered Business - Composition</option>
+						</select>
+					</div>
+					<div class="col-md-5 mt-4" id="gstin" style="display: none;">
+						<label><b>GSTIN Number*</b></label>
+						<input type="text" class="form-control" placeholder="GSTIN Number">
+					</div>
+					<div class="col-md-5 mt-4">
+						<label><b>State</b></label>
+						<input type="text" class="form-control" placeholder="State">
+					</div>
+				</div>
+				
+				<div class="row" id="openingBalance" style="display: none;">
+					<div class="col-md-5 mt-4">
+						<label><b>Opening Balance*</b></label>
+						<input type="text" class="form-control" placeholder="Opening Balance">
+					</div>
+					<div class="col-md-5 mt-4">
+						<label><b>As Of Date</b></label>
+						<input type="date" class="form-control">
+					</div>
+					<div class="col-md-5 mt-4">
+						<select required class="form-control">
+							<option>Select</option>
+							<option value="toPay">To Pay</option>
+							<option value="toReceive">To Receive</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="row" id="additionalFields" style="display: none;">
+					<div class="col-md-5 mt-4">
+						<label><b>Aadhar No.</b></label>
+						<input type="text" class="form-control" placeholder="Aadhar No.">
+					</div>
+					<div class="col-md-5 mt-4">
+						<label><b>PAN No.</b></label>
+						<input type="text" class="form-control" placeholder="PAN No.">
+					</div>
+					<div class="col-md-5 mt-4">
+						<label><b>Driving Licence No.</b></label>
+						<input type="text" class="form-control" placeholder="Driving Licence No.">
+					</div>			
+				</div>
+				
+				<div class="col-md-12 mt-4">
 					<div class="text-center">
 						<button type="submit" class="btn btn-info text-center" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;"><b>Add</b></button>
 						<a th:href="@{'/a2zbilling/admin/parties/list'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><b>Cancel</b></a>
 					</div>
 				</div>
-
 			</div>
 		</form>
+	  </div>
 	</div>
+	
+	
+	
+	<!--Add Party Group Modal -->
+			<div class="modal fade" id="partyGroupModal" tabindex="-1" role="dialog" aria-labelledby="partyGroupModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+		
+				  <div class="modal-header d-flex justify-content-center" style="background-color:rgb(84,78,131); color: white;">
+					<h1 class="modal-title" id="exampleModalLabel">Add Party Group</h1>
+		  				<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+		  					<span aria-hidden="true">&times;</span>
+		  				</button>
+		  			</div>
+				  
+				  <div class="modal-body" style="background-color: #f5f0f0;">
+				  <form th:action="@{/a2zbilling/admin/partyGroup/add}" method="post" enctype="multipart/form-data" class="form-group">
+				  		<div class="row pb-3">
+							<div class="col-md-5 mt-4">
+						        <label><b>Party Name</b></label>
+						    </div>
+						    <div class="col-md-7 mt-4">
+						        <input type="text" required class="form-control" name="name1" placeholder="Enter your name">
+						    </div>
+							
+						  <div class="modal-footer d-flex justify-content-end">
+						      <button type="submit" class="btn btn-primary">Add</button>
+						      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						  </div>	  
+				  	</div>
+				  </form>
+				  </div>
+			    </div>
+			  </div>
+			</div>
+		
+	<style>
+		.toggle-button {
+		    background-color:black;
+		    border: 1px solid #ccc;
+		    padding: 10px 20px;
+		    cursor: pointer;
+		    margin: 5px;
+		}
+		
+		/* Active styles for the clicked button */
+		.toggle-button.active {
+		    background-color: blue;
+		    color: white;
+		}
+	</style>
+	
 	<script>
-	        // Function to validate the mobile number
-	        function validateMobileNumber() {
-	            var mobileInput = document.getElementById("mobile");
-	            var mobileErrorMessage = document.getElementById("mobileErrorMessage");
-	
-	            // Regular expression to validate mobile number
-	            var mobileRegex = /^\d{10}$/;
-	
-	            if (!mobileRegex.test(mobileInput.value)) {
-	                mobileErrorMessage.textContent = "Please enter a valid 10-digit mobile number";
-	                return false;
-	            } else {
-	                mobileErrorMessage.textContent = ""; // Clear any existing error message
-	                return true;
-	            }
-	        }
-	
-	        // Add event listener to validate mobile number when input changes
-	        document.getElementById("mobile").addEventListener("input", validateMobileNumber);
-	    </script>
+		document.addEventListener('DOMContentLoaded', () => {
+		    const buttons = document.querySelectorAll('.toggle-button');
+		
+		    buttons.forEach(button => {
+		        button.addEventListener('click', () => {
+		            // Remove 'active' class from all buttons
+		            buttons.forEach(btn => btn.classList.remove('active'));
+		            // Add 'active' class to the clicked button
+		            button.classList.add('active');
+		        });
+		    });
+		});
+	</script>
+	<script>
+        $(document).ready(function() {
+            $('#partyAddressInfo').click(function() {
+				$('#addressRow').show();
+				$('#gstRow').hide();
+				$('#openingBalance').hide();
+				$('#additionalFields').hide();
+            	});
+			$('#partyGstInfo').click(function() {
+				
+				$('#addressRow').hide();
+				$('#openingBalance').hide();
+				$('#additionalFields').hide();
+				$('#gstRow').show();
+	            });
+			$('#partyOpeningBalanceInfo').click(function() {
+				$('#addressRow').hide();
+				$('#gstRow').hide();
+				$('#additionalFields').hide();
+				$('#openingBalance').show();
+	            });
+			$('#partyAdditionalInfo').click(function() {
+				$('#addressRow').hide();
+				$('#gstRow').hide();
+				$('#openingBalance').hide();
+				$('#additionalFields').show();
+	            });
+			$('#businessType').change(function() {
+                var selectedValue = $(this).val();
+                if (selectedValue === 'regular') {
+                    $('#gstin').show();
+                } else {
+                    $('#gstin').hide();
+                }
+	            });
+        });
+    </script>
+	<script>
+        // Function to validate the mobile number
+        function validateMobileNumber() {
+            var mobileInput = document.getElementById("mobile");
+            var mobileErrorMessage = document.getElementById("mobileErrorMessage");
+
+            // Regular expression to validate mobile number
+            var mobileRegex = /^\d{10}$/;
+
+            if (!mobileRegex.test(mobileInput.value)) {
+                mobileErrorMessage.textContent = "Please enter a valid 10-digit mobile number";
+                return false;
+            } else {
+                mobileErrorMessage.textContent = ""; // Clear any existing error message
+                return true;
+            }
+        }
+
+        // Add event listener to validate mobile number when input changes
+        document.getElementById("mobile").addEventListener("input", validateMobileNumber);
+    </script>
+		
 </section>
 
 </body>
-<!-- END Body -->
-
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
-
 </html>
+
+

@@ -2,13 +2,12 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 	<head>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	
+	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>	
 		function deleteContactAlert(id) {
 
@@ -53,8 +52,8 @@
 
 		}
 	</script>
-	
 	<!-- BEGIN Page Wrapper -->
+	
 	<div th:if="${session.message}">
 		<div class="alert alert-primary" role="alert">
 			<p th:text="${session.message}"></p>
@@ -65,82 +64,95 @@
 			</script>
 		</div>
 	</div>
+<div class="contaier-fluid pb-2" style="background-color: #f5f0f0;">
+	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
+        <div class="col-md-12">
+            <h1 class="text-center mt-2"><b>Sales Return</b></h1>
+        </div>
+    </div>
 	
-		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
-	        <div class="col-md-12">
-	            <h1 class="text-center mt-2"><b>Sales Bill</b></h1>
-	        </div>
-	    </div>
-	<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
-		<div class="row">
-			<div class="col-md-4 mt-3 input-group">
-				<div class="col-md-4">
-		        	<label><b>Customer Name :- </b></label>
+			<div class="row">
+				<div class="col-md-4 mt-3 input-group">
+					<div class="col-md-4">
+			        	<label>Customer Name :- </label>
+					</div>
+					<div class="col-md-8">
+						<select id="customerSelect" class="form-select form-control" aria-label="Default select example" name="saleCustomer">
+				            <option selected>Choose</option>
+				            <!-- Dynamically populate options with customer data -->
+				            <option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}" 
+									th:attr="data-mobile=${customer.mobile}, 
+									data-email=${customer.email},
+									data-address=${customer.address}"></option>
+				        </select>
+					</div>
 				</div>
-				<div class="col-md-8 input-group">
-					<select id="customerSelect" class="form-select form-control" aria-label="Default select example" name="saleCustomer">
-			            <option selected>Choose</option>
-			            <!-- Dynamically populate options with customer data -->
-			            <option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}" 
-								th:attr="data-mobile=${customer.mobile}, 
-								data-email=${customer.email},
-								data-address=${customer.address}">
-						</option>
-			        </select>
-					<button class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
-						<i class="fa-solid fa-plus"></i>
-				   	</button>
+		
+			    <div class="col-md-4 mt-3 input-group">
+					<div>
+			        	<label>Mobile:- </label>
+					</div>
+					<div>
+			        	<input id="mobile" readonly type="text" class="form-control">
+					</div>
+			    </div>
+				<div class="col-md-4 mt-3 input-group ml-auto">
+					<div class="col-md-6">
+	               		<label>Sale Return No.:- </label>
+					</div>
+					<div class="col-md-6">
+				   		<input type="text" class="form-control" id="invoiceNo" readonly>
+					</div>
 				</div>
+			</div>
+			<div class="row">
+			    <div class="col-md-4 mt-1 input-group">
+					<div class="col-md-4">
+			        	<label>Email:- </label>
+					</div>
+					<div class="col-md-8">
+			        	<input id="email" readonly type="email" class="form-control">
+					</div>
+			    </div>
+				
+				<div class="col-md-4 mt-1 input-group ml-auto">
+					<div class="col-md-6">
+		               <label>Sale Bill No. :- </label>
+					</div>
+					<div class="col-md-6">
+					   <input type="text" class="form-control" id="invoiceNo">
+				 	</div>
+	           </div>
 			</div>
 			
-		    <div class="col-md-4 mt-3 input-group">
-				<div>
-		        	<label><b>Mobile :- </b></label>
+			<div class="row">
+				<div class="col-md-4 mt-1 input-group">
+					<div class="col-md-4">
+			        	<label>Address :- </label>
+					</div>
+					<div class="col-md-8">
+			        	<textarea id="address" readonly type="text" class="form-control"></textarea>
+					</div>
 				</div>
-				<div>
-		        	<input id="mobile1" readonly type="text" class="form-control">
-				</div>
-		    </div>
-			<div class="col-md-4 mt-3 input-group ml-auto">
-				<div class="col-md-4">
-	               <label><b>Sale Bill No. :- </b></label>
-				</div>
-				<div class="col-md-6">
-				   <input type="text" readonly class="form-control" id="invoiceNo">
-			 	</div>
-           </div>
-		</div>
-		<div class="row">
-		    <div class="col-md-4 mt-1 input-group">
-				<div class="col-md-4">
-		        	<label><b>Email :- </b></label>
-				</div>
-				<div class="col-md-8">
-		        	<input id="email1" readonly type="email" class="form-control">
-				</div>
-		    </div>
-			<div class="col-md-4 mt-1 input-group ml-auto">
-				<div class="col-md-4">
-					<label><b>Date :- </b></label>
-				</div>
-				<div class="col-md-6">
-		   			<input type="text" class="form-control" id="currentDateInput" readonly>
-				</div>
-           </div>	
-		</div>
-		
-		<div class="row">
-			<div class="col-md-4 mt-1 input-group">
-				<div class="col-md-4">
-		        	<label><b>Address :- </b></label>
-				</div>
-				<div class="col-md-8">
-		        	<textarea id="address" readonly type="text" class="form-control"></textarea>
-				</div>
+			   <div class="col-md-4 mt-1 input-group ml-auto">
+					<div class="col-md-6">
+						<label>Sale Bill Date:- </label>
+					</div>
+					<div class="col-md-6">
+	   			   		<input type="date" class="form-control" id="sellDate">
+					</div>
+   	           </div>
 			</div>
-		</div>
-
-			 
+			<div class="row">
+   				<div class="col-md-4 mt-1 input-group ml-auto">
+					<div class="col-md-6">
+   						<label>Date:- </label>
+					</div>
+					<div class="col-md-6">
+   			   			<input type="text" class="form-control" id="currentDateInput" readonly>
+					</div>
+   	           </div>	
+			</div>		 
 
 		<div class="row mt-4 ml-1 mr-1" >
 			<div class="col-md-12">
@@ -196,8 +208,8 @@
 			</div>
 		</div>
 		<!--                       -->
-		<div class="invoice-container mt-3">
-		    <div class="container ml-3 mr-3">
+		<div class="invoice-container mt-3 ml-3 mr-3">
+		    <div class="container">
 		        <div class="row d-flex justify-content-between">
 		            <div>
 		                <div class="form-group">
@@ -263,72 +275,8 @@
 				<div class="mr-2">
 					<button type="submit" class="btn btn-info text-center" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;"><b>Save</b></button>
 				</div>
-				<div>
-					<a th:href="@{'/a2zbilling/admin/sales/list'}"
-						style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" class="btn btn-info"><b>Cancel</b></a>
-				</div>
 			</div>
 		</div>
-	</div>
-	<!--Add Customer Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-			<div class="modal-header d-flex justify-content-center" style="background-color:rgb(84,78,131); color: white;">
-				<h1 class="modal-title" id="exampleModalLabel">Add Customer</h1>
-				<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-		  <div class="modal-body" style="background-color: #f5f0f0;">
-		  <form th:action="@{/a2zbilling/admin/customer/add}" method="post" enctype="multipart/form-data" class="form-group">
-		  		<div class="row pb-3">
-					<div class="col-md-5 mt-4">
-				        <label><b>Customer Name</b></label>
-				    </div>
-				    <div class="col-md-7 mt-4">
-				        <input type="text" required class="form-control" name="name1" placeholder="Enter your name">
-				    </div>
-					
-		  		  <div class="col-md-5 mt-4">
-						<label><b>Customer email</b></label>
-				  </div>
-		  		  <div class="col-md-7 mt-4">
-		  		  		<input size="50" type="email" required class="form-control" name="email1" placeholder="Enter your e-mail">
-		  		  </div>
-				  
-				  <div class="col-md-5 mt-4">
-						<label><b>Customer Mobile</b></label>
-				  </div>
-		  		  <div class="col-md-7 mt-4">
-						<input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
-		  		  </div>
-				  
-		  		  <div class="col-md-5 mt-2">
-		  		  		<label><b>Address</b></label>
-		  		  </div>
-				  <div class="col-md-7 mt-4">
-		  		  		<textarea type="text" required class="form-control" name="address" placeholder="Enter your address"></textarea>
-		  		  </div>
-				  
-		  		  <div class="col-md-5 mt-2">
-						<label><b>Choose date</b></label>
-		  		  </div>
-		  		  <div class="col-md-7 mt-4">
-						<input type="date" class="form-control" name="addedDate">
-		  		  </div>
-				  
-				  
-				  <div class="modal-footer d-flex justify-content-end">
-				      <button type="submit" class="btn btn-primary">Add</button>
-				      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				  </div>	  
-		  	</div>
-		  </form>
-		  </div>
-		  
-	    </div>
-	  </div>
 	</div>
 	
 	<script>
@@ -497,8 +445,8 @@
 	       var email = selectedOption.data('email');
 		   var address = selectedOption.data('address');
 	       
-	       $('#mobile1').val(phone);
-	       $('#email1').val(email);
+	       $('#mobile').val(phone);
+	       $('#email').val(email);
 		   $('#address').val(address);
 	   });
 	});
@@ -555,50 +503,90 @@
 	        totalAmountField.value = this.value;
 	    });
 	</script>
-	<script type="text/javascript">
-			$(document).ready(function() {
-			    var i = 1; // Initialize counter for row IDs
-			
-			    // Add new row when "Add Row" button is clicked
-			    $('#add').click(function() {
-			        i++; // Increment counter for new row ID
-			        $('#addrow').append(`
-			            <tr id="row${i}">
-			                <td><input id="barcode${i}" type="text" class="form-control"></td>
-			                <td>
-			                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="productSelect">
-			                        <option value="">Choose</option>
-			                        <!-- Populate options with product data -->
-			                        <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-			                            th:attr="data-price=${product.price},
-			                            data-quantity=${product.quantity},
-			                            data-size=${product.size.sizeValue}">
-			                        </option>
-			                    </select>
-			                </td>
-			                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="size${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="AQty${i}" type="number" class="form-control" readonly></td>
-			                <td><input id="Qty${i}" type="number" class="form-control"></td>
-			                <td><input id="taxinpercentage${i}" oninput="calculateTaxAmount(${i})" type="number" class="form-control"></td>
-			                <td><input id="taxinamount${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="price${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="total_amount${i}" type="text" class="form-control" readonly></td>
-			                <td>
-			                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
-			                </td>
-			            </tr>
-			        `);
-			    });
-			
-			    // Remove row when "Remove" button is clicked
-			    $(document).on('click', '.remove_row', function() {
-			        var row_id = $(this).attr('id');
-			        $(`#row${row_id}`).remove();
-			    });
-			});
-		</script>
+	
+	<script>
+	$(document).ready(function() {
+	    var i = 1;
+		var products = [];
+		
+		    // Function to fetch products from the server
+		    function fetchProducts() {
+				alert("/a2zbilling/admin/getProducts");
+		        return $.ajax({
+		            url: '/a2zbilling/admin/getProducts',// Replace with your server-side endpoint URL
+		            method: 'GET',
+		            dataType: 'json',
+					success: function(data) {
+						alert(data);
+		                console.log('Fetched products:', data);
+		            },
+		            error: function(error) {
+						alert(error);
+		                console.error('Error fetching products:', error);
+		            }
+		        });
+		    }
+	
+	    // Function to populate select options
+	    function populateSelectOptions(selectElement) {
+			alert("/a2zbilling/admin/getProducts........");
+	        products.forEach(function(product) {
+				
+	            var option = $('<option></option>').val(product.id).text(product.name);
+	            selectElement.append(option);
+	        });
+	    }
+		
+		// Fetch products from the server
+	   fetchProducts()
+	       .done(function(data) {
+	           products = data;
+			   alert(products);
+	           // Populate the initial select options for existing rows
+	           populateSelectOptions($('.productSelect'));
+	       })
+	       .fail(function(error) {
+			alert('Error fetching products: ' + JSON.stringify(error));
+	           console.error('Error fetching products:', error);
+	       });
+	
+	    $('#add').click(function() {
+	        i++;
+	        var newRow = $('<tr id="row' + i + '">' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td>' +
+	            '<select class="form-select form-control productSelect" aria-label="Default select example" name="productSelect">' +
+	            '<option selected>Choose</option>' +
+	            '</select>' +
+	            '</td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td><input type="text" class="form-control"></td>' +
+	            '<td>' +
+	            '<a id="' + i + '" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>' +
+	            '</td>' +
+	            '</tr>');
+	        $('#addrow').append(newRow);
+	
+	        // Populate the select options for the new row
+	        populateSelectOptions(newRow.find('.productSelect'));
+	    });
+	
+	    $(document).on('click', '.remove_row', function() {
+	        var row_id = $(this).attr('id');
+	        $('#row' + row_id).remove();
+	    });
+	
+	    // Populate the initial select options for existing rows
+	    populateSelectOptions($('.productSelect'));
+	});
+	</script>
 
 
 

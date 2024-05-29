@@ -1,4 +1,3 @@
-
 <aside class="page-sidebar" th:fragment="sidebar">
 	<div class="page-logo">
 		<!-- Modal -->
@@ -42,7 +41,7 @@
 					<span class="nav-link-text" data-i18n="nav.theme_settings">PRODUCTS</span>
 				</a>
 				<ul>
-
+	
 					<li>
 						<a th:href="@{/a2zbilling/admin/product/add}" title="Layout Options"
 							data-filter-tags="theme create product">
@@ -50,6 +49,7 @@
 						</a>
 					</li>
 					<li>
+					
 						<a th:href="@{/a2zbilling/admin/product/list}" title="How it works"
 							data-filter-tags="theme products">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ALL PRODUCTS</span>
@@ -106,7 +106,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Flavors & Editions" data-filter-tags="documentation sales return">
+						<a th:href="@{/a2zbilling/admin/sales/return}" title="Flavors & Editions" data-filter-tags="documentation sales return">
 							<span class="nav-link-text" data-i18n="nav.documentation_flavors_&_editions">SALES
 								RETURN</span>
 						</a>
@@ -169,10 +169,6 @@
 					<span class="nav-link-text" data-i18n="nav.theme_settings">PARTIES</span>
 				</a>
 			</li>
-
-
-
-
 			<li>
 				<a href="#" title="Theme Settings" data-filter-tags="purchase">
 					<i class="fa-solid fa-sitemap"></i>
@@ -192,12 +188,6 @@
 
 				</ul>
 			</li>
-
-
-
-
-
-
 			<li>
 				<a href="#" title="Theme Settings" data-filter-tags="purchase">
 					<i class="fa fa-shopping-cart"></i>
@@ -364,6 +354,12 @@
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ADD GST</span>
 						</a>
 					</li>
+					<li>
+					    <a href="#" title="How it works" data-filter-tags="master charges" data-toggle="modal"
+					       data-target="#exampleModalForCharges">
+					        <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ADD Charges</span>
+					    </a>
+					</li>
 				</ul>
 				<div class="filter-message js-filter-message bg-success-600"></div>
 			</li>
@@ -443,67 +439,4 @@
         <button type="button" class="btn btn-primary">Save changes</button>
       </div> -->
 	</div>
-</div>
-
-<!--  Modal for Unit adding  -->
-<div class="modal fade" id="exampleModalUnits" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header align-items-center">
-				<h1 class="modal-title" id="exampleModalLabel">ADD UNITS</h1>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<form th:action="@{/a2zbilling/admin/unit/add}" method="post" class="form-group">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-								<label>Unit</label>
-								<input type="text" class="form-control" name="unitName" required>
-							</div>
-						</div>
-						<div class="col-md-12">
-							<div class="form-group">
-								<label>Unit Code</label>
-								<input type="text" class="form-control" name="unitCode" required>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12 mt-2">
-						<div class="text-center">
-							<button type="submit" class="btn btn-info text-center">ADD</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-	</div>
-</div>
-
-<!--  js code for gst  -->
-<!--
-<script>
-	function gstCalculator() {
-
-		var gstPercentage = parseFloat(document.getElementById("gstPercentage").value);
-
-		// Calculate SGST and CGST (assuming equal division)
-		var sgst = gstPercentage / 2;
-		var cgst = gstPercentage / 2;
-
-		// Display SGST and CGST percentages
-		document.getElementById("sgstPercentage").value = sgst.toFixed(2);
-		document.getElementById("cgstPercentage").value = cgst.toFixed(2);
-
-	}
-</script>
--->
-
 </div>

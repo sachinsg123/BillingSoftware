@@ -173,135 +173,22 @@
 			});
 		});
 	</script>
-
-
-
-
-
-
 	<!-- this overlay is activated only when mobile menu is triggered -->
 	<div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
 	<!-- BEGIN Page Footer -->
-</section>
-</body>
-<!-- END Body -->
-
-
-<div class="contaier-fluid">
-	<div th:if="${session.message}">
-		<div class="alert alert-primary" role="alert">
-			<p th:text="${session.message}"></p>
-			<script th:inline="javascript">
-				setTimeout(function () {
-					window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-				}, 500);
-			</script>
-		</div>
-	</div>
-
-	<!-- Changes by Younus -->
-
-	<div class="row" style="background-color:rgb(84,78,130) ; color: #fff;">
-		<div class="col-md-12 mt-1">
-			<h1 class="text-center">Add Product</h1>
-		</div>
-	</div>
-	<form th:action="@{/a2zbilling/admin/product/add}" method="post" enctype="multipart/form-data" class="form-group">
-		<div class="row pb-3" style="background-color: #f5f0f0;">
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Name</label>
-					<input type="text" class="form-control" name="name">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<div class="form-group">
-					<label>Product Price</label>
-					<input type="text" class="form-control" name="price">
-				</div>
-			</div>
-			<div class="col-md-4 mt-4">
-				<label>Select Category</label>
-				<div class="form-group">
-					<select class="form-select form-control" aria-label="Default select example" name="category">
-						<option selected>Category</option>
-						<option th:each="category: ${categories}" th:value="${category.id}"
-							th:text="${category.CategoryName}"></option>
-					</select>
-				</div>
-			</div>
-			<div class="col-md-4 mt-2">
-				<div class="form-group">
-					<label>Product Size</label>
-					<input type="text" class="form-control" name="productSize">
-				</div>
-			</div>
-			<div class="col-md-4 mt-2">
-				<div class="form-group">
-					<label>Product Brand</label>
-					<input type="text" class="form-control" name="productBrand">
-				</div>
-			</div>
-			<div class="col-md-4 mt-2">
-				<div class="form-group">
-					<label>Product information</label>
-					<input type="text" class="form-control" name="about">
-				</div>
-			</div>
-			<div class="col-md-4 mt-3">
-				<div class="form-group">
-					<label>Choose Date</label>
-					<input type="date" class="form-control" name="addedDate">
-				</div>
-			</div>
-			<div class="col-md-4 mt-2">
-				<label>Color</label>
-				<div class="form-group mt-2">
-					<select class="form-select form-control" aria-label="Default select example" name="productColor">
-						<option selected>Choose</option>
-						<option th:each="color: ${colors}" th:value="${color.name}" th:text="${color.name}"></option>
-					</select>
-				</div>
-			</div>
-			<div class="col-md-4 mt-3">
-				<div class="form-group">
-					<label>Add Product Image</label>
-					<input type="file" class="form-control" name="imageFile">
-				</div>
-			</div>
-			<div class="col-md-12 mt-4">
-				<div class="text-center">
-					<button type="submit" class="btn btn-info text-center">Add</button>
-				</div>
-			</div>
-		</div>
-	</form>
-</div>
-<!-- this overlay is activated only when mobile menu is triggered -->
-<div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
-<!-- BEGIN Page Footer -->
-</section>
-</body>
-<!-- END Body -->
-
-
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
-
-</html>
-
 
 <!-- Add Supplier Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
 	aria-hidden="true">
 	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header d-flex justify-content-center">
+		<div class="modal-content" >
+			<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
 				<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="background-color: #f5f0f0;">
 				<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
 					class="form-group">
-					<div class="row pb-3" style="background-color: #f5f0f0;">
+					<div class="row pb-3" >
 						<div class="col-md-5 mt-4">
 							<label>Supplier Name</label>
 						</div>
