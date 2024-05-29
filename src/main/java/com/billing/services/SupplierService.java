@@ -10,6 +10,6 @@ public interface SupplierService {
 	
 	public Supplier updateSupplier(Supplier supplier);
 	
-//	//Changes by Younus
+//	//Created by Younus
 	public long getSupplierCount();
 }
