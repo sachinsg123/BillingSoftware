@@ -172,7 +172,6 @@ public class adminController {
 		model.addAttribute("email", email);
 
 		String companyName = company.getName();
-
 		model.addAttribute("company", company);
 		model.addAttribute("companyName", companyName);
 
@@ -344,7 +343,6 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-
 		String companyName = company.getName();
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -539,9 +537,7 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-
 		String companyName = company.getName();
-
 		model.addAttribute("companyName", companyName);
 
 		// Code to Render admin on our page
@@ -566,7 +562,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -588,7 +587,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -610,7 +612,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -632,7 +637,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -856,9 +864,7 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-
 		String companyName = company.getName();
-
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -889,9 +895,7 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-
 		String companyName = company.getName();
-
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -1053,7 +1057,7 @@ public class adminController {
 		return storageFileName;
 	}
 	/*
-	 * edit firm Changes -> I've corrected the typo in companyDto.getEmail() instead
+	 * edit firm Changes -> I've corrected the type in companyDto.getEmail() instead
 	 * of companyDto.getAddress() for setting the company's email. I've extracted
 	 * the logo upload logic into a separate method uploadLogo for better code
 	 * organization and reuse. The uploadLogo method handles the file upload process
@@ -1256,6 +1260,8 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1286,7 +1292,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1309,7 +1318,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1344,6 +1356,8 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1368,6 +1382,8 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1403,6 +1419,8 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1425,6 +1443,10 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1448,6 +1470,9 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		System.out.println("hellooooooo");
 		List<Customer> customers = customerRepo.findAll();
@@ -1481,6 +1506,9 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1504,6 +1532,9 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1527,6 +1558,8 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1550,6 +1583,10 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		// Step 1 - (To get supplier name data from db )for second step go to
 		// managestock.html
@@ -1593,6 +1630,7 @@ public class adminController {
 	public ResponseEntity<Customer> getCustomerDetails(@RequestParam("customerId") String customerId) {
 		int id = Integer.parseInt(customerId);
 		Customer customer = customerService.getCustomerById(id);
+		
 
 		System.out.println(customer.getName() + " " + customer.getEmail());
 
