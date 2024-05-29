@@ -1385,7 +1385,6 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -1407,6 +1406,11 @@ public class adminController {
 	// Created by Younus - add Purchase return
 	@GetMapping("/purchasereturn/add")
 	public String addPurchaseReturn(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 		
 		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
 		model.addAttribute("suppliers", suppliers);
@@ -1441,8 +1445,7 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-		
-		
+	
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
