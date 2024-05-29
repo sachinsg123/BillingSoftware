@@ -88,12 +88,12 @@
 
 			<!--Get Parties data from database-->
 
-			<div class="row ml-1 mr-1">
-				<div class="input-group">
-					<div class="col-md-4 mt-3 input-group">
+			<div class="row ml-1 mr-1" >
+				<div class="input-group" >
+					<div class="col-md-4 mt-3 input-group" >
 						<label>Party Name :- </label>
 						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
-							name="addSupplierProduct">
+							name="addSupplierProduct" >
 							<option selected>Choose</option>
 							<!-- Dynamically populate options with Supplier data -->
 							<option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
@@ -261,14 +261,14 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 
-					<div class="modal-header d-flex justify-content-center">
+					<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
 						<h1 class="modal-title" id="exampleModalLabel">Add Party</h1>
 					</div>
 
-					<div class="modal-body">
+					<div class="modal-body" style="background-color: #f5f0f0;">
 						<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
 							class="form-group">
-							<div class="row pb-3" style="background-color: #f5f0f0;">
+							<div class="row pb-3" >
 								<div class="col-md-5 mt-4">
 									<label>Party Name</label>
 								</div>
