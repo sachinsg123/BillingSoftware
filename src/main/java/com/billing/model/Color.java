@@ -49,7 +49,7 @@ public class Color{
 
 	@Override
 	public String toString() {
-		return "Color [id=" + id + ", name=" + name  + "]";
+		return "Color [id=" + id + ", name=" + name + "]";
 	}
 
 	

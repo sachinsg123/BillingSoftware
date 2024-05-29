@@ -7,7 +7,8 @@ Website: http://gootbootstrap.com
 Purchase: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0?ref=myorange
 License: You must have a valid license purchased only from wrapbootstrap.com (link above) in order to legally use this theme for your project.
 -->
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org">
     
 <!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/page_login.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:46:18 GMT -->
 <head>
@@ -33,7 +34,8 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
         <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="/css/fa-brands.css">
 		<script th:src="@{/js/script.js}" defer></script>
-    </head>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
     <!-- BEGIN Body -->
     <!-- Possible Classes
 
@@ -127,6 +129,17 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
         </script>
 		
         <div class="page-wrapper auth">
+			<div th:if="${session.message}">
+				<div class="alert alert-primary" role="alert">
+					<p th:text="${session.message}"></p>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						setTimeout(function () {
+							window.location.href = '/auth/clearSessionAttribute';
+						}, 2000); 
+					</script>
+				</div>
+			</div>
             <div class="page-inner bg-brand-gradient">
                 <div class="page-content-wrapper bg-transparent m-0">
                     <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient">
@@ -148,57 +161,58 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 					<div class="modal fade" id="createAccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					  <div class="modal-dialog" role="document">
 					    <div class="modal-content">
-							
-					      <div class="modal-header d-flex justify-content-center">
-					        <h1 class="modal-title" id="exampleModalLabel">Registration Form</h1>
-					      </div>
-						  
-						  <div class="modal-body">
+							<div class="modal-header" style="background-color:rgb(84,78,131); color: white;">
+								<h1 class="modal-title" id="exampleModalLabel"><b>Registration Form</b></h1>
+  								<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+  									<span aria-hidden="true">&times;</span>
+  								</button>
+  							</div>
+						  <div class="modal-body" style="background-color: #f5f0f0;">
 						  <form th:action="@{/auth/registration}" method="post" enctype="multipart/form-data" class="form-group">
-								<div class="row pb-3" style="background-color: #f5f0f0;">
+								<div class="row pb-3">
 									<div class="col-md-5 mt-4">
-								        <label>UserName</label>
+								        <label><b>UserName</b></label>
 								    </div>
 								    <div class="col-md-7 mt-4">
 								        <input type="text" required class="form-control" name="username" placeholder="Enter your name">
 								    </div>
 									
 									<div class="col-md-5 mt-4">
-								        <label>Company Name</label>
+								        <label><b>Company Name</b></label>
 								    </div>
 								    <div class="col-md-7 mt-4">
 								        <input type="text" required class="form-control" name="companyname" placeholder="Enter your Company Name">
 								    </div>
 									
 						  		  <div class="col-md-5 mt-4">
-										<label>Email</label>
+										<label><b>Email</b></label>
 								  </div>
 						  		  <div class="col-md-7 mt-4">
-						  		  		<input size="50" type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
+						  		  		<input size="50" type="email" id="email2" required class="form-control" name="email" placeholder="Enter your e-mail">
 						  		  </div>
 								  
 								  <div class="col-md-5 mt-4">
-										<label>Mobile</label>
+										<label><b>Mobile</b></label>
 								  </div>
 						  		  <div class="col-md-7 mt-4">
 										<input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
 						  		  </div>
 								  
 								  <div class="col-md-5 mt-2">
-				                      <label>Image</label>
+				                      <label><b>Image</b></label>
 				                  </div>
 								  <div class="col-md-7 mt-4">
 									<input class="form-control" name="imageUrl" type="file">
 								  </div>
 								  <div class="col-md-5 mt-2">
-  				                      <label>Password</label>
+  				                      <label><b>Password</b></label>
   				                  </div>
   								  <div class="col-md-7 mt-4">
-  									<input class="form-control" name="password" type="text" placeholder="Enter a Password" required>
+  									<input class="form-control" name="password" type="password" placeholder="Enter a Password" required>
   								  </div>
 								  
 								  <div class="modal-footer d-flex justify-content-end">
-								      <button type="submit" class="btn btn-primary">Add</button>
+								      <button type="submit" id="add" class="btn btn-primary">Add</button>
 								      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 								  </div>  
 						  	</div>
@@ -278,43 +292,48 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
             </div>
         </div>
 		
-		
-		<div class="modal fade" id="forgotPassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
+<!--Forgot Password Model -->	
+<div class="modal fade" id="forgotPassword" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+			<div class="modal-header d-flex justify-content-center" style="background-color:rgb(84,78,131); color: white;">
+				<h5 class="modal-title" id="forgotPasswordLabel">Forgot Password</h5>
+				<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+            <div class="modal-body" style="background-color: #f5f0f0;">
+                <form th:action="@{/auth/mobile}" method="post" enctype="multipart/form-data" class="form-group">
+                    <div class="container pb-3">
+						<div class="row">
+							<div class="col-md-5 mt-4">
+	                            <label><b>Email</b></label>
+	                        </div>
+							<div class="col-md-7 mt-4">
+						        <input type="email" id="email1" required class="form-control" name="email" placeholder="Enter your Email">
+						    </div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<button type="button" class="btn btn-primary" id="generateOTPButton">Generate OTP</button>
+							</div>
+						</div>
+						<div class="row mt-2 mb-2" id="otpRow" style="display: none;">
+							<div class="col-md-5 mt-4">
+								<label><b>Enter OTP</b></label>
+	                        </div>
+							<div class="col-md-7 mt-4">
+								<input type="text" id="OTP" required class="form-control" placeholder="Enter your OTP">
+						    </div>
+						</div>
 						
-				      <div class="modal-header d-flex justify-content-center">
-				        <h1 class="modal-title" id="exampleModalLabel">Forget Password</h1>
-				      </div>
-					  
-					  <div class="modal-body">
-					  <form th:action="@{/auth/mobile}" method="post" enctype="multipart/form-data" class="form-group">
-					  		<div class="row pb-3" style="background-color: #f5f0f0;">
-								
-							  <div class="col-md-5 mt-4">
-									<label>Email</label>
-							  </div>
-					  		  <div class="col-md-7 mt-4">
-									<input type="email" required class="form-control" name="email" placeholder="Enter your Email">
-					  		  </div>
-							  
-							  <div class="col-md-5 mt-4">
-							  		<a th:href="@{/auth/sendOTPEmail}" type="button" class="btn btn-primary">Generate OTP</a>
-								</div>
-								<!--<button onclick="showInput()">Add Input Field</button> -->
-								<div id="inputContainer"></div>
-								
-							  <div class="modal-footer d-flex justify-content-end">
-							      <button type="submit" class="btn btn-primary">Add</button>
-							      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							  </div>	  
-					  	</div>
-					  </form>
-					  </div>
-					  
-				    </div>
-				  </div>
-				</div>
+					</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
         <!-- BEGIN Color profile -->
         <!-- this area is hidden and will not be seen on screens or screen readers -->
         <!-- we use this only for CSS color refernce for JS stuff -->
@@ -443,6 +462,85 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
             });
 
         </script>
+		<script>
+			function isValidEmail(email) {
+		        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+		        return emailRegex.test(email);
+		    }
+			$('#add').click(function() {
+                var email = $('#email2').val();
+                if (email) {
+					if(isValidEmail(email)){
+						
+					}else{
+						alert('Please enter a valid email address.');
+					}
+				
+	            } else {
+	                alert('Please enter an email address.');
+	            }
+			});
+			
+		</script>
+		<script th:inline="javascript">
+		        /*<![CDATA[*/
+		        var baseUrl = /*[[@{/auth/sendOTPEmail}]]*/'';
+		        /*]]>*/
+				
+				function isValidEmail(email) {
+			        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+			        return emailRegex.test(email);
+			    }
+					
+		        $(document).ready(function() {
+		            $('#generateOTPButton').click(function() {
+		                var email = $('#email1').val();
+		                if (email) {
+						
+							if(isValidEmail(email))
+							{
+								$.ajax({
+			                        url: baseUrl,
+			                        type: 'POST',
+			                        data: { email: email},
+			                        success: function(response) {
+										if(response == 'Email Not Present')
+										{
+											alert('This Email Address User Not Present.');
+											return;
+										}
+										
+										$('#otpRow').show();
+			                        },
+			                        error: function(error) {
+			                            alert('Error: ' + error.responseText);
+										$('#otpRow').show();
+			                        }
+			                    });
+							}else{
+								alert('Please enter a valid email address.');
+							}
+							
+		                } else {
+		                    alert('Please enter an email address.');
+		                }
+		            });
+		        });
+		    </script>
+			<style>
+			  .alert-primary {
+			    background-color: #d4edda;
+			    border-color: #c3e6cb;
+			    color: #155724;
+			    padding: 15px;
+			    border-radius: 5px;
+			    position: fixed;
+			    top: 10%;
+			    right: 50px;
+			    transform: translateY(-50%);
+			    z-index: 9999;
+			  }
+			</style>
     </body>
     <!-- END Body -->
 
