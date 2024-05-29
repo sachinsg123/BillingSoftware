@@ -386,18 +386,13 @@ public class adminController {
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
 
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user.getImageUrl() != null) {
-			String Userimage = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + Userimage;
-		}
-
-		if (user.getImageUrl() != null) {
-			String Userimage = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + Userimage;
-		}
-
+		if(user.getImageUrl() != null)
+	    {
+	    	String Userimage = user.getImageUrl();
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + Userimage;
+	    }
 		model.addAttribute("imagePath", imgpath);
 
 		return "admin/edit_product";
@@ -497,8 +492,6 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/product/list";
 	}
 
-	// change by Mahesh
-
 	@GetMapping("/parties/delete")
 	public String deleteParties() {
 
@@ -568,10 +561,12 @@ public class adminController {
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+
 		if (user.getImageUrl() != null) {
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
+
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -593,10 +588,12 @@ public class adminController {
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+
 		if (user.getImageUrl() != null) {
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
+
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -618,10 +615,12 @@ public class adminController {
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+
 		if (user.getImageUrl() != null) {
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
+
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -643,10 +642,12 @@ public class adminController {
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+
 		if (user.getImageUrl() != null) {
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
+
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -1294,6 +1295,7 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
@@ -1303,6 +1305,7 @@ public class adminController {
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
 		model.addAttribute("imagePath", imgpath);
+
 
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
@@ -1315,6 +1318,7 @@ public class adminController {
 	// Created by Younus - Update PurchaseBill form
 	@GetMapping("/purchasebill/update")
 	public String updatePurchaseBill(Model model) {
+
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -1358,6 +1362,7 @@ public class adminController {
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
+
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1406,8 +1411,6 @@ public class adminController {
 		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
 		model.addAttribute("suppliers", suppliers);
 		
-	
-
 		// to render unit list on Purchase bill page
 		List<Unit> units = unitRepo.findAll();
 		model.addAttribute("units", units);
@@ -1416,11 +1419,6 @@ public class adminController {
 		List<Size> sizes = sizeRepo.findAll();
 		model.addAttribute("sizes", sizes);
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
@@ -1480,10 +1478,7 @@ public class adminController {
 
 		List<Product> products = productRepo.findAll();
 
-		model.addAttribute("products", products);
-
-		model.addAttribute("products", products);
-
+		model.addAttribute("products",products);
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
 			String image = user.getImageUrl();
@@ -1510,12 +1505,14 @@ public class adminController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
 		model.addAttribute("imagePath", imgpath);
+
 
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
@@ -1529,12 +1526,14 @@ public class adminController {
 	@GetMapping("/sales/update")
 	public String updatesales(Model model) {
 
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
+
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null) {
