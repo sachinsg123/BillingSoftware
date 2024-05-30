@@ -85,14 +85,13 @@
 								</script>
 							</div>
 						</div>
-						<div class="row" style="background-color:rgb(85,75,126);">
-							<div class="col-md-12 mt-2">
-								<h1 class="text-center" style="color: white;"><b>Update Profile</b></h1>
+						<div class="container-fluid pb-3" style="background-color:#f1f1f1" th:object="${user}">
+							<div class="row" style="background-color:rgb(85,75,126);">
+								<div class="col-md-12 mt-2">
+									<h1 class="text-center" style="color: white;"><b>Update Profile</b></h1>
+								</div>
 							</div>
-						</div>
 						
-
-						<div class="container mt-6 pb-3" style="background-color:rgb(231,252,227);" th:object="${user}">
 							  <form th:action="@{/a2zbilling/admin/updateAdminProfile}" method="post" enctype="multipart/form-data" class="form-group">
 									<div class="row pb-3">
 										
@@ -126,19 +125,19 @@
   					                      
   					                  </div>
 									  <div class="col-md-7 mt-4">
-			  								<img  style="height:150px; width: 150px;" th:src="${imagePath}">
+			  								<img id="profileImage" style="height:150px; width: 150px;" th:src="${imagePath}" onerror="this.onerror=null; this.src='/img/admin/admin.jpg';">
 			  							</div>
 										
 									  <div class="col-md-5 mt-1">
 					                      <label><b>Image</b></label>
 					                  </div>
 									  <div class="col-md-7 mt-1">
-										<input class="form-control" name="imageUrl" type="file" th:field="*{imageUrl}">
+										<input class="form-control" id="imageUrl" type="file">
 									  </div>
 							  	</div>
 								<div class="row text-center">
 	  								<div class="col-md-12 mt-4">
-	  									<button type="submit" class="btn btn-success" style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
+	  									<button type="submit" id="saveBtn" class="btn btn-success" style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
 	  									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
 	  										th:href="@{'/a2zbilling/admin/viewAdminProfile'}" class="btn btn-info"><b>Cancel</b></a>
 	  								</div>
@@ -1072,7 +1071,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- END Page Settings -->
+	<!-- END Page Settings -->	
 	<script>
 		(function (i, s, o, g, r, a, m) {
 			i['GoogleAnalyticsObject'] = r;

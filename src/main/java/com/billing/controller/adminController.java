@@ -113,8 +113,6 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		
-		System.out.println(user.getId()+"+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		
 	    model.addAttribute("user", user);
 	    
 	    Company company = companyRepo.getCompanyByUserId(user.getId());
