@@ -1317,19 +1317,25 @@ public class adminController {
 		Category cFound = categoryRepo.findByCategoryName(category.getCategoryName());
 
 		if (cFound == null) {
-
 			category.setStatus("Active");
 			category.setUser(user);
-
 			categoryRepo.save(category);
-
+			session.setAttribute("message", "Category added successfully!");	
 		} else if (category.getCategoryName().equals(cFound.getCategoryName())) {
-
-			session.setAttribute("message", "Category Already added !");
-
+			session.setAttribute("message", "Category already exists!");
 		}
 
-		return "redirect:/a2zbilling/admin/";
+		/*
+		 *  if (cFound == null) {
+	        category.setStatus("Active");
+	        category.setUser(user);
+	        categoryRepo.save(category);
+	        session.setAttribute("message", "Category added successfully!");
+	    } else if (category.getCategoryName().equals(cFound.getCategoryName())) {
+	        session.setAttribute("message", "Category already exists!");
+	    }
+		 */
+		return "redirect:/a2zbilling/admin/product/add";
 	}
 
 	@GetMapping("/category/list")
@@ -1593,7 +1599,6 @@ public class adminController {
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -1623,6 +1628,10 @@ public class adminController {
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
 		
 		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
 		model.addAttribute("suppliers", suppliers);
@@ -1660,8 +1669,7 @@ public class adminController {
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-		
-		
+	
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
