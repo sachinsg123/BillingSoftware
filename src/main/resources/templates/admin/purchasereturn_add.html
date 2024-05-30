@@ -1,10 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
-<!-- BEGIN Page Wrapper -->
-
-<!-- Created by Younus -->
-
 <section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<head>
@@ -43,6 +38,8 @@
 				margin-left: 10px;
 			}
 		</style>
+		
+		</head>
 
 		<div class="contaier-fluid">
 			<div th:if="${session.message}">
@@ -54,14 +51,12 @@
 
 							window.location.href = '/a2zbilling/admin/clearSessionAttribute';
 						}, 500);
-
-
-
 					</script>
 				</div>
 			</div>
-
-	</head>
+			</div>
+			
+			
 
 	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
 		<div class="col-md-12 ">
@@ -572,10 +567,8 @@
 			});
 		</script>
 
-
 	</div>
-	</form>
-	</div>
+	
 </section>
 </body>
 <!-- END Body -->
