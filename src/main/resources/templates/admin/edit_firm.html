@@ -1,73 +1,103 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-th:replace="fragments/base::layout(~{::section})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+    <meta charset="ISO-8859-1">
+    <title>Edit Firm</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
+
 <body>
+	
+    <section>
+        <div class="row mb-3 pt-1" style="background-color: rgb(84,78,130);color:#fff;">
+            <div class="col-md-12">
+                <h1 class="">EDIT FIRM</h1>
+            </div>
+        </div>
 
-<section>
- <div class="row">
-  <div class="col-md-12">
-  <h1 class="mb-5">EDIT FIRM</h1>
-   </div>
-    </div>
- <form th:action="@{/a2zbilling/admin/edit/firm}" method="post" enctype="multipart/form-data" th:object="${company}" class="form-group">
-   <div class="row">
-    <div class="col-md-12">
-    <input type="hidden" class="form-control" name="id" th:field="*{id}">
-    <div class="form-group">
-    <label>Firm Name</label>
-    <input type="text" class="form-control" name="name" th:field="*{name}" >
-    </div>
-    </div>
-      <div class="col-md-12">
-    <div class="form-group">
-    <label>email</label>
-    <input type="text" class="form-control" name="email">
-    </div>
-    </div>
-    <div class="col-md-12">
-    <div class="form-group">
-    <label>Mobile</label>
-    <input type="text" class="form-control" name="mobile">
-    </div>
-    </div>
-    <div class="col-md-12">
-    <div class="form-group">
-    <label>Address</label>
-    <input type="text" class="form-control" name="address">
-    </div>
-    </div>
-     <div class="col-md-12">
-    <div class="form-group">
-    <label>Description</label>
-    <input type="text" class="form-control" name="description">
-    </div>
-    </div>
-    <div class="col-md-12">
-    <div class="form-group">
-    <label>Firm logo</label>
-    <input type="file" class="form-control" name="imageFile">
-    </div>
-    </div>
-    <div class="col-md-12">
-    <div class="form-group">
-    <label>Upload Signature</label>
-    <input type="file" class="form-control" name="signatureImage">
-    </div>
-    </div>
-    <div class="col-md-12 mt-2">
-    <div class="text-center">
-    <button type="submit" class="btn btn-info text-center">Add</button>
-    </div>
-    </div>
-    </div>
-    </form>
+        <!-- Success message alert -->
+        <div th:if="${successMessage}" class="alert alert-success" role="alert" id="successMessage">
+            <span th:text="${successMessage}" style="font-weight: bold;"></span>
+        </div>
 
-</section>
+        <!-- Error message alert -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}"></span>
+        </div>
 
+        <form th:action="@{/a2zbilling/admin/edit/firm}" method="post" enctype="multipart/form-data"
+            th:object="${company}" class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="hidden" class="form-control" name="id" th:field="*{id}">
+                    <div class="form-group">
+                        <label>Firm Name</label>
+                        <input type="text" class="form-control" name="name" th:field="*{name}">
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-1">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" name="email" th:field="*{email}">
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-1">
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input type="text" class="form-control" name="mobile" th:field="*{phone}">
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-1">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="form-control" name="address" th:field="*{address}">
+                    </div>
+                </div>
+                <div class="col-md-12 mt-1">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" class="form-control" name="description" th:field="*{description}">
+                    </div>
+                </div>
+                <div class="col-md-12 mt-1">
+                    <div class="form-group">
+                        <label>Firm logo</label>
+                        <input type="file" class="form-control" name="imageFile" th:field="*{logo}">
+                    </div>
+                </div>
+                <div class="col-md-12 mt-1">
+                    <div class="form-group">
+                        <label>Upload Signature</label>
+                        <input type="file" class="form-control" name="signatureImage" th:field="*{signature}">
+                    </div>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info text-center mt-2">Save</button>
+                        <a th:href="@{'/a2zbilling/admin/'}" class="btn btn-info ml-3 mt-2">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <script>
+        // Hide the success message after 2 seconds
+        setTimeout(function() {
+            var successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                console.log('Success message found!'); // Log a message to the console
+                successMessage.style.display = 'none';
+            } else {
+                console.log('Success message not found!');
+            }
+        }, 2000);
+    </script>
 
 </body>
+
 </html>

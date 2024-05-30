@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" 
+ th:replace="fragments/base::layout(~{::section})">
+ 
+ <!-- Created by Younus -->
+ 
 <section>
 <script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
@@ -29,7 +33,7 @@
 
 
 					swalWithBootstrapButtons.fire(
-						'Supplier Deleted Successfully !',
+						'Purchase Bill Deleted Successfully !',
 
 					)
 				} else if (
@@ -38,7 +42,7 @@
 				) {
 					swalWithBootstrapButtons.fire(
 						'Cancelled',
-						'Supplier Not deleted',
+						'Purchase Bill Not deleted',
 						'error'
 					)
 				}
@@ -61,7 +65,7 @@
 		</div>
 		<div class="row" style="background-color: rgb(84,78,130);color:#fff;" >
 			<div class="col-md-12 mt-1">
-				<h1 class="text-center">Purchase List</h1>
+				<h1 class="text-center">Purchase Transection</h1>
 			</div>
 		</div>
 		<div style="background-color: #f5f0f0;">
@@ -70,6 +74,7 @@
 		 <form th:action="@{/search}" method="get">
 		 <div class="col-md-6" >
 
+        <!-- Search Bar --> 
         <input type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color:rgb(12,131,226) ;" name="query" placeholder="   Search">
         <!-- Search icon -->
         <i class="fas fa-search search-icon" style="font-size: 20px; color:rgb(12,131,226);" onclick="submitForm()"></i>
@@ -79,42 +84,60 @@
 		</div >
 			<div class="col-md-6 mt-3"  style="text-align: right;"> 
 			
-				<a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-plus"></i>
+				<a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i>	</i>
 					Add Purchase</a>
 			</div>
 		</div>
 		<div class="row mt-2" >
-			<div class="col-md-12">
-				<table class="table table-bordered">
-					<thead style="background-color: #e6ede8;">
+			<div class="col-md-12" >
+				<table class="table table-bordered" style="background-color: #8A72AA; color: #fff;">
+					<thead style="background-color: #715499;">
 						<tr>
 							<th scope="col">Date</th>
 							<th scope="col">Invoice No</th>
 							<th scope="col">Party Name</th>
+							<th scope="col">Item Name</th>
+							<th scope="col">Quantity</th>
+							<th scope="col">Tax Amount</th>
+							<th scope="col">Discount Amount</th>
 							<th scope="col">Payment Type</th>
-							<th scope="col">Amount</th>
+							<th scope="col">Net Payment</th>
 							<th scope="col">Balance Due</th>
+							<th scope="col">Amount Paid</th>
 							<!-- <th scope="col">Added By</th> -->
-							<th scope="col">Print</th>
+							
+							<th>  </tr>
+							
 						</tr>
 					</thead>
 					<tbody>
-					<!--
-						<tr th:each=" supplier : ${suppliers}">
-							<th scope="row" th:text="${supplier.id}"></th>
-							<td th:text="${supplier.name}"></td>
-							<td th:text="${supplier.email}"></td>
-							<td th:text="${supplier.mobile}"></td>
-							<td th:text="${supplier.address}"></td>
-							<td th:text="${supplier.addedDate}"></td>
-							<!-- <td th:text="${supplier.user.username}"></td> 
-							<td><a th:href="@{'/a2zbilling/admin/supplier/update/'+ ${supplier.id} }"
-									class="btn btn-info">Edit</a>
-								<a th:onclick="|deleteContactAlert(${supplier.id})|" class="btn btn-danger">Del</a>
-							</td>
-						</tr>
+					<tr>
+					
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>	
+					<td> </td>
+					<td> 
+					<div class="dropdown">
+								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fa-solid fa-ellipsis-vertical"></i>
+								  </button>
+								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					
+								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/purchasebill/update}">Update</a>
+								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#">Delete</a>
+								  </div>
+								</div>
+					</td>
+					</tr>
 					</tbody>
-					-->
 				</table>
 			</div>
 		</div>

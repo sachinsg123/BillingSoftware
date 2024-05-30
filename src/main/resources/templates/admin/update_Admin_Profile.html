@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+
+
+<body class="mod-bg-1 mod-nav-link">
+	<script>
+
+		'use strict';
+
+		var classHolder = document.getElementsByTagName("BODY")[0],
+			/** 
+			 * Load from localstorage
+			 **/
+			themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
+				{},
+			themeURL = themeSettings.themeURL || '',
+			themeOptions = themeSettings.themeOptions || '';
+		/** 
+		 * Load theme options
+		 **/
+		if (themeSettings.themeOptions) {
+			classHolder.className = themeSettings.themeOptions;
+			console.log("%c✔ Theme settings loaded", "color: #148f32");
+		}
+		else {
+			console.log("%c✔ Heads up! Theme settings is empty or does not exist, loading default settings...", "color: #ed1c24");
+		}
+		if (themeSettings.themeURL && !document.getElementById('mytheme')) {
+			var cssfile = document.createElement('link');
+			cssfile.id = 'mytheme';
+			cssfile.rel = 'stylesheet';
+			cssfile.href = themeURL;
+			document.getElementsByTagName('head')[0].appendChild(cssfile);
+
+		}
+		else if (themeSettings.themeURL && document.getElementById('mytheme')) {
+			document.getElementById('mytheme').href = themeSettings.themeURL;
+		}
+		/** 
+		 * Save to localstorage 
+		 **/
+		var saveSettings = function () {
+			themeSettings.themeOptions = String(classHolder.className).split(/[^\w-]+/).filter(function (item) {
+				return /^(nav|header|footer|mod|display)-/i.test(item);
+			}).join(' ');
+			if (document.getElementById('mytheme')) {
+				themeSettings.themeURL = document.getElementById('mytheme').getAttribute("href");
+			};
+			localStorage.setItem('themeSettings', JSON.stringify(themeSettings));
+		}
+		/** 
+		 * Reset settings
+		 **/
+		var resetSettings = function () {
+			localStorage.setItem("themeSettings", "");
+		}
+
+	</script>
+	<!-- BEGIN Page Wrapper -->
+	  <section>
+					<div class="contaier-fluid">
+						<div th:if="${session.message}">
+							<div class="alert alert-primary" role="alert">
+								<p th:text="${session.message}"></p>
+								<script th:inline="javascript">
+									/*<![CDATA[*/
+									setTimeout(function () {
+
+										window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+									}, 500);
+
+								</script>
+							</div>
+						</div>
+						<div class="row" style="background-color:rgb(85,75,126);">
+							<div class="col-md-12 mt-2">
+								<h1 class="text-center" style="color: white;"><b>Update Profile</b></h1>
+							</div>
+						</div>
+						
+
+						<div class="container mt-6 pb-3" style="background-color:rgb(231,252,227);" th:object="${user}">
+							  <form th:action="@{/a2zbilling/admin/updateAdminProfile}" method="post" enctype="multipart/form-data" class="form-group">
+									<div class="row pb-3">
+										
+										<div class="col-md-5 mt-4">
+									        <label><b>UserName</b></label>
+									    </div>
+									    <div class="col-md-7 mt-4">
+									        <input type="text" class="form-control" name="username" placeholder="Enter your name" th:field="*{username}">
+									    </div>
+										<div class="col-md-5 mt-4">
+									        <label><b>Company Name</b></label>
+									    </div>
+										<div class="col-md-7 mt-4">
+									        <input type="text" class="form-control" name="companyname" placeholder="Enter your Company Name">
+									    </div>
+							  		  <div class="col-md-5 mt-4">
+											<label><b>Email</b></label>
+									  </div>
+							  		  <div class="col-md-7 mt-4">
+							  		  		<input size="50" type="email" id="email2" class="form-control" name="email" placeholder="Enter your e-mail" th:field="*{email}">
+							  		  </div>
+									  
+									  <div class="col-md-5 mt-4">
+											<label><b>Mobile</b></label>
+									  </div>
+							  		  <div class="col-md-7 mt-4">
+											<input type="text" id="mobile" pattern="[0-9]{10}" class="form-control" name="mobile" placeholder="Enter your mobile No" th:field="*{mobile}">
+							  		  </div>
+									  
+									  <div class="col-md-5 mt-4">
+  					                      
+  					                  </div>
+									  <div class="col-md-7 mt-4">
+			  								<img  style="height:150px; width: 150px;" th:src="${imagePath}">
+			  							</div>
+										
+									  <div class="col-md-5 mt-1">
+					                      <label><b>Image</b></label>
+					                  </div>
+									  <div class="col-md-7 mt-1">
+										<input class="form-control" name="imageUrl" type="file" th:field="*{imageUrl}">
+									  </div>
+							  	</div>
+								<div class="row text-center">
+	  								<div class="col-md-12 mt-4">
+	  									<button type="submit" class="btn btn-success" style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
+	  									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
+	  										th:href="@{'/a2zbilling/admin/viewAdminProfile'}" class="btn btn-info"><b>Cancel</b></a>
+	  								</div>
+	  							</div>
+							  </form>
+						</div>
+					</div>
+					</section>
+				</body>
+<!-- END Body -->
+
+<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+
+</html>

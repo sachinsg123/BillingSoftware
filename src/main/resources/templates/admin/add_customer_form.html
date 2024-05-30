@@ -11,12 +11,15 @@
 		 <p th:text="${session.message}"></p>
 		<script th:inline="javascript">
 		/*<![CDATA[*/
-		setTimeout(function() {
+		setTimeout(function() {a
 			
 			window.location.href = '/a2zbilling/admin/clearSessionAttribute';
 		}, 500); 
 		
 		</script> 
+		
+		<!-- Changes by Younus -->
+		
 		  </div>
 		</div>
 		<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
@@ -25,7 +28,7 @@
 		  </div>
 		   </div>
 		<form th:action="@{/a2zbilling/admin/customer/add}" method="post" enctype="multipart/form-data" class="form-group">
-		 <div class="row" style="background-color: #f5f0f0;">
+		 <div class="row pb-3" style="background-color: #f5f0f0;">
 		  <div class="col-md-4 mt-4">
 		  <div class="form-group">
 		  <label>Customer Name</label>
@@ -58,7 +61,7 @@
 		  </div>
 		  <div class="col-md-12">
 		  <div class="text-center">
-		  <button type="submit" class="btn btn-info text-center mt-5">Add</button>
+		  <button type="submit"  class="btn btn-info text-center mt-5">Add</button>
 		  </div>
 		  </div>
 		  </div>

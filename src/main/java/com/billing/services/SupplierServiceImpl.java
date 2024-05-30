@@ -27,7 +27,7 @@ public class SupplierServiceImpl implements SupplierService {
 		return null;
 	}
 
-	// Changes by Younus
+	// Created by Younus
 	@Override
 	public long getSupplierCount() {
 		int count = 0;

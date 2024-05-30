@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -32,18 +33,18 @@ public class Product{
 	@JoinColumn(name="brand_id")
 	private Brand brand;
 	
-
-	
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
-	
 	
 	private String addedDate;
 	
 	private String status;
 	
 	private String imageUrl;
+	
+	@ManyToMany(mappedBy ="product")
+	private List<Charges> charges = new ArrayList<Charges>();
 	
 	@ManyToMany
 	@JoinTable(name="product_customer",
@@ -77,6 +78,30 @@ public class Product{
     @ManyToOne
     @JoinColumn(name="gst_id")
     private GSTRate gst ;
+
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
+	}
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
+	public GSTRate getGst() {
+		return gst;
+	}
+
+	public void setGst(GSTRate gst) {
+		this.gst = gst;
+	}
 
 	public int getId() {
 		return id;
@@ -208,41 +233,7 @@ public class Product{
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", quantity=" + quantity + ", color=" + color + ", price="
-				+ price + ", user=" + user + ", addedDate=" + addedDate + ", status=" + status
-				+ ", imageUrl=" + imageUrl + ", customer=" + customer + ", category=" + category + ", stock=" + stock
-				+ ", size=" + size + ", about=" + about + ", supplier=" + supplier + ", unit=" + unit + ", gst=" + gst
-				+"category ="+ category + "]";
-		}
-/*	public Rating getRating() {
-		return rating;
-	}
-
-	public void setRating(Rating rating) {
-		this.rating = rating;
-	}
-
-	public Stock getStock() {
-		return stock;
-	}
-
-	public void setStock(Stock stock) {
-		this.stock = stock;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
+		return "Product [id=" + id + ", name=" + name + "]";
 	}
 	
-	*/
-	
-	
-	
-	
-	
-
 }

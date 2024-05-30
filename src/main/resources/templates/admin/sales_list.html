@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+<section>
+	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	<script>
+		function deleteContactAlert() {
+
+			const swalWithBootstrapButtons = Swal.mixin({
+				customClass: {
+					confirmButton: 'btn btn-success',
+					cancelButton: 'btn btn-danger'
+				},
+				buttonsStyling: true
+
+			})
+
+			swalWithBootstrapButtons.fire({
+				title: 'Are you sure?',
+				text: "You Wont To Delete!!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'No, cancel!',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.isConfirmed) {
+
+
+					window.location = "/a2zbilling/admin/sales/delete";
+
+
+					swalWithBootstrapButtons.fire(
+						'Transaction Deleted Successfully !',
+
+					)
+				} else if (
+					/* Read more about handling dismissals below */
+					result.dismiss === Swal.DismissReason.cancel
+				) {
+					swalWithBootstrapButtons.fire(
+						'Cancelled',
+						'Transaction Not deleted',
+						'error'
+					)
+				}
+			})
+
+		}
+	</script>
+	<!-- BEGIN Page Wrapper -->
+	<div class="contaier-fluid">
+		<div th:if="${session.message}">
+			<div class="alert alert-primary" role="alert">
+				<p th:text="${session.message}"></p>
+				<script th:inline="javascript">
+					setTimeout(function () {
+						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+					}, 500); 
+				</script>
+			</div>
+		</div>
+		<div class="row" style="background-color:rgb(84,78,131);">
+			<div class="col-md-12 mt-2">
+				<h1 class="text-center" style="color: white;"><b>Sales Transaction</b></h1>
+			</div>
+		</div>
+		
+		<div class="row text-right">
+			<div class="col-md-12 mt-3">
+				<a th:href="@{'/a2zbilling/admin/sales/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Sales</a>
+			</div>
+		</div>
+		<div class="row mt-2">
+			<div class="col-md-12">
+				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
+					<thead class="thead-dark">
+						<tr style="text-align: center;">
+							<!-- <th scope="col">Supplier Id</th> -->
+							<th style="border: 1px solid black;" scope="col">Data</th>
+							<th style="border: 1px solid black;" scope="col">Invoice No</th>
+							<th style="border: 1px solid black;" scope="col">Party Name</th>
+							<th style="border: 1px solid black;" scope="col">Payment Type</th>
+							<th style="border: 1px solid black;" scope="col">Amount</th>
+							<th style="border: 1px solid black;" scope="col">Balance Due</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr style="text-align: center;">
+							<td>14/04/2000</td>
+							<td>02</td>
+							<td>Mahesh</td>
+							<td>Cash</td>
+							<td>35000</td>
+							<td>0</td>
+							<td>
+								<div class="dropdown">
+								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fa-solid fa-ellipsis-vertical"></i>
+								  </button>
+								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>
+									<a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/return}"><b>Sales Return</b></a>
+								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#"><b>Delete</b></a>
+								  </div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+</body>
+<!-- END Body -->
+<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+
+</html>

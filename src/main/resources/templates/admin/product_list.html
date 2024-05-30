@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-th:replace="fragments/base::layout(~{::section})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+
+<head>
+</head>
+<!-- Changes by Younus -->
+
 <body>
-<section>
-   <div class="contaier-fluid">
-                     <!--   <div th:if="${session.message}">
+
+	<section>
+		<div class="contaier-fluid">
+			<!--   <div th:if="${session.message}">
                        <div class="alert alert-primary" role="alert">
                       <p th:text="${session.message}"></p>
                       <script th:inline="javascript">
@@ -14,57 +19,63 @@ th:replace="fragments/base::layout(~{::section})">
                     </script> 
                       </div>
                      </div> -->
-                     <div class="row" style="background-color:rgb(84,78,130);color: #fff;" >
-	                     <div class="col-md-12 mt-1">
-	                     <h1 class="text-center">All Products</h1>
-	                      </div>
-	                       </div>
-	                       <div class="row" style="background-color: #f5f0f0;">
-	                       <div class="col-md-12">
-	                       <table class="table table-bordered">
-						  <thead style="background-color: #e6ede8;">
-						    <tr>
-						      <th scope="col">Product Id</th>
-						      <th scope="col">Name</th>
-						      <th scope="col">Category</th>
-						      <th scope="col">Color</th>
-						      <th scope="col">price</th>
-						      <th scope="col">Added Date</th>
-						      <th scope="col">Stock</th>
-						      <th scope="col">Added by</th>
-						      <th scope="col">Supplied by</th>
-						      <th scope="col">sales rate</th>
-						      <th scope="col">Customer Name</th>
-						      <th scope="col">Customer Mobile</th>
-						      <th scope="col">Edit</th>
-						    </tr>
-						  </thead>
-						  <tbody>
-						    <tr th:each=" product : ${products}">
-						      <th scope="row" th:text="${product.id}"></th>
-						      <td th:text="${product.name}"></td>
-						      <td th:text="${product.category?.categoryName}"></td>
-						      <td>color</td>
-						      <td th:text="${product.price}"></td>
-						      <td th:text="${product.addedDate}"></td>
-						      <td th:text="${product.stock}"></td>
-						      <td> added by</td>
-						      <td> supplier</td>
-                              <td> sales rate</td>	
-                              <td th:text="${product.customer}"></td>	
-                              <td>customer mobile</td>
-                              <td><a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                              <a class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                              </td> 				      
-						    </tr>
-						  </tbody>
-						</table>
-	                       </div>
-	                       </div>
-                     </div>
-                 </section>                
-                  </body>
-    <!-- END Body -->
+			<div class="row" style="background-color:rgb(84,78,130);color: #fff;">
+				<div class="col-md-12 mt-1">
+					<h1 class="text-center">All Products</h1>
+				</div>
+			</div>
+			<div class="row" style="background-color: #f5f0f0;">
+				<div class="col-md-12 mt-3">
+					<table class="table table-bordered table-hover">
+						<thead style="background-color: #e6ede8; ">
+							<tr>
+								<th scope="col">Product Id</th>
+								<th scope="col">Name</th>
+								<th scope="col">Category</th>
+								<th scope="col">Color</th>
+								<th scope="col">price</th>
+								<th scope="col">Added Date</th>
+								<th scope="col">Stock</th>
+								<th scope="col">Added by</th>
+								<th scope="col">Supplied by</th>
+								<th scope="col">sales rate</th>
+								<th scope="col">Customer Name</th>
+								<th scope="col">Customer Mobile</th>
+								<th scope="col">Edit</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each=" product : ${products}">
+								<th scope="row" th:text="${product.id}"></th>
+								<td th:text="${product.name}"></td>
+								<td th:text="${product.category?.categoryName}"></td>
+								<td th:text="${product.color?.name}">color</td>
+								<td th:text="${product.price}"></td>
+								<td th:text="${product.addedDate}"></td>
+								<td th:text="${product.quantity}"></td>
+								<td th:text="${product.addedDate}"> added by</td>
+								<td> supplier</td>
+								<td> sales rate</td>
+								<td th:text="${product.customer}"></td>
+								<td>customer mobile</td>
+								<td>
+									<div class="input-group">									
+										<a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}"
+											class="btn btn-success"><i class="fa fa-edit"></i></a>
 
+										<a class="btn btn-danger ml-2"><i class="fa fa-trash"></i></a>
+
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+<!-- END Body -->
 <!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+
 </html>

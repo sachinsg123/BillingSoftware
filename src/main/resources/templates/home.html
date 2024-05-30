@@ -385,7 +385,7 @@ th:fragment="layout(content)">
                                        <i class="fal fa-plus icon-stack-1x opacity-100 color-white"></i>
                                    </div>
                                    <span class="app-list-name">
-                                       Add Business
+                                       Edit Business
                                    </span>
                                </a>
                            </li>
@@ -396,6 +396,7 @@ th:fragment="layout(content)">
        </div>
        <!-- model stART  -->
        <!-- Button trigger modal -->
+       
 <!-- Modal For edit firm -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -467,6 +468,7 @@ th:fragment="layout(content)">
       </div> -->
     </div>
   </div>
+  
   <!--  Modal for Unit adding  -->
   <div class="modal fade" id="exampleModalUnits" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -582,17 +584,17 @@ th:fragment="layout(content)">
   				</div>
   
   
+  <!--Add Category Module -> Changes by Younus-->
   <div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header align-items-center">
+      <div class="modal-header align-items-center" style="background-color: #534F84;color: #fff;">
         <h1 class="modal-title" id="exampleModalLabel">Add Category</h1>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      
            <div th:if="${session.message}">
                        <div class="alert alert-danger" role="alert">
                       <p th:text="${session.message}"></p>
@@ -603,9 +605,11 @@ th:fragment="layout(content)">
                     </script> 
                       </div>
                      </div>
+                     
+                     
                  <form th:action="@{/a2zbilling/admin/category/add}" method="post" class="form-group">
-	                    <div class="row">
-	                     <div class="col-md-12 mt-2">
+	                    <div class="row" >
+	                     <div class="col-md-12 mt-2" >
 	                     <div class="form-group">
 	                     <label>Category Name :</label>
 	                     <input type="text" class="form-control" name="categoryName" placeholder=" e.g.category name" required>
@@ -614,7 +618,7 @@ th:fragment="layout(content)">
 	                     </div>
 	                     <div class="col-md-12 mt-2">
 	                     <div class="text-center">
-	                     <button type="submit" class="btn btn-info text-center">Add</button>
+	                     <button type="submit" class="btn btn-info text-center mt-3">Add</button>
 	                     </div>
 	                     </div>
 	                     </form>
