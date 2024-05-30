@@ -113,6 +113,10 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 	    model.addAttribute("user", user);
 	    
 	    Company company = companyRepo.getCompanyByUserId(user.getId());
@@ -151,7 +155,11 @@ public class adminController {
 	public String updateAdminProfile(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 	    model.addAttribute("user", user);
 	    
 	    Company company = companyRepo.getCompanyByUserId(user.getId());
@@ -315,6 +323,10 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
@@ -441,9 +453,12 @@ public class adminController {
 		model.addAttribute("products", allProducts);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 
@@ -469,8 +484,11 @@ public class adminController {
 	public String productEditForm(@PathVariable("id") String id, Model model) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
@@ -607,7 +625,11 @@ public class adminController {
 	public String updateTransactions(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 
 		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
@@ -631,8 +653,11 @@ public class adminController {
 	public String customerAddForm(Model model) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -662,6 +687,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -689,6 +718,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -715,6 +748,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -742,6 +779,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -806,9 +847,12 @@ public class adminController {
 		model.addAttribute("customers", activeCustomers);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
 		String companyName = company.getName();
@@ -836,9 +880,12 @@ public class adminController {
 		model.addAttribute("customer", customerGet);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
 		String companyName = company.getName();
@@ -913,9 +960,12 @@ public class adminController {
 	public String addSupplierForm(Model model) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
 		String companyName = company.getName();
@@ -971,13 +1021,15 @@ public class adminController {
 	@GetMapping("/supplier/list")
 	public String listOfSuppliers(Model model) {
 
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
-
-		model.addAttribute("suppliers", suppliers);
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+		model.addAttribute("suppliers", suppliers);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -1003,13 +1055,16 @@ public class adminController {
 	@GetMapping("/supplier/update/{id}")
 	public String updateSupplier(@PathVariable("id") int id, Model model) {
 
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Optional<Supplier> supplierGet = supplierRepo.findById(id);
 		Supplier supplier = supplierGet.get();
 		model.addAttribute("supplier", supplier);
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -1078,7 +1133,10 @@ public class adminController {
 		System.out.println(auth.getName());
 		User user = userRepo.findByUsername(auth.getName());
 		String username = auth.getName();
+		String email = user.getEmail();
 		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		model.addAttribute("company", company);
 
@@ -1281,8 +1339,11 @@ public class adminController {
 		model.addAttribute("categories", categories);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
@@ -1315,9 +1376,12 @@ public class adminController {
 		model.addAttribute("category", catFound);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
 		String companyName = company.getName();
@@ -1381,7 +1445,11 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -1416,6 +1484,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
@@ -1442,9 +1514,12 @@ public class adminController {
 	@GetMapping("/purchasebill/update")
 	public String updatePurchaseBill(Model model) {
 
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
@@ -1482,6 +1557,11 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -1509,7 +1589,11 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -1534,6 +1618,10 @@ public class adminController {
 	public String addPurchaseReturn(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
 		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
@@ -1567,6 +1655,10 @@ public class adminController {
 	public String updatePurchaseReturn(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
 		
@@ -1593,6 +1685,10 @@ public class adminController {
 	public String salesList(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
 		String companyName = company.getName();
@@ -1625,6 +1721,10 @@ public class adminController {
 	public String addSales(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
 		String companyName = company.getName();
@@ -1669,6 +1769,10 @@ public class adminController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
 		String companyName = company.getName();
@@ -1696,6 +1800,10 @@ public class adminController {
 	public String returnsales(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
 		List<Customer> customers = customerRepo.showAllCustomerBYActive();
@@ -1728,14 +1836,17 @@ public class adminController {
 		return "admin/sales_return";
 
 	}
-	
 
 	// Created by Younus - add Item
 	@GetMapping("/Item/add")
 	public String addItem(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -1759,9 +1870,12 @@ public class adminController {
 	// Created by Younus - to Manage Stock
 	@GetMapping("/managestock")
 	public String manageStock(Model model) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
 		
