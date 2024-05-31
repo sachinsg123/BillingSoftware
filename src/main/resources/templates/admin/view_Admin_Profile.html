@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 <!-- <div th:replace="fragments/head :: head"></div> -->
@@ -85,57 +86,53 @@
 								</script>
 							</div>
 						</div>
-						<div class="row" style="background-color:rgb(85,75,126);">
-							<div class="col-md-12 mt-2">
-								<h1 class="text-center" style="color: white;"><b>Admin Profile</b></h1>
-							</div>
-						</div>
-
-						<div class="row mt-4" style="background-color:rgb(231,252,227);" th:object="${user}">
-							<div class="col-md-6 mt-2">
-								<div class="form-group mt-6">
-									<h2>
-										<b><span th:text="${companyName}"></span></b>
-									</h2>
+						<div class="container-fluid pb-4" style="background-color:#F1F1F1" th:object="${user}">
+							<div class="row" style="background-color:rgb(85,75,126);">
+								<div class="col-md-12 mt-2">
+									<h1 class="text-center" style="color: white;"><b>Admin Profile</b></h1>
 								</div>
 							</div>
 							
-							<div class="col-md-6 text-center">
-								<img  style="height:150px; width: 150px; margin-left: 200px;" th:src="${imagePath}">
+							<div class="row">
+								<div class="col-md-6 mt-6">
+									<h1 style="margin-top: 30px; margin-left: 50px;">
+										<b><span th:text="${companyName}"></span></b>
+									</h1>
+								</div>
+								<div class="col-md-6 mt-2 text-right">
+									<img  style="height:150px; width: 150px;" th:src="${imagePath}" onerror="this.onerror=null; this.src='/img/admin/admin.jpg';">
+								</div>
 							</div>
 							
-						</div>
-						
-
-						<div class="container mt-6 pb-3" style="background-color:rgb(231,252,227);" th:object="${user}">
+							
 							
 							<div class="row">
 								<input type="hidden" name="id" th:field="*{id}">
 								<div class="col-md-4 mt-4">
 									<label><b>Name :- </b></label>
-									<input class="form-control" name="name" readonly th:field="*{username}">
+									<input style="background-color: white;" class="form-control" name="name" readonly th:field="*{username}">
 								</div>
 								<div class="col-md-4 mt-4">
 									<label><b>Mobile :- </b></label>
-									<input class="form-control" name="mobile" readonly th:field="*{mobile}">
+									<input style="background-color: white;" class="form-control" name="mobile" readonly th:field="*{mobile}">
 								</div>
 								<div class="col-md-4 mt-4">
 									<label><b>Email :- </b></label>
-									<input class="form-control" name="email" readonly th:field="*{email}">
+									<input style="background-color: white;" class="form-control" name="email" readonly th:field="*{email}">
 								</div>
 							</div>
 					
 							<div class="row">
 								<div class="col-md-4 mt-4">
 									<label><b>Role :- </b></label>
-									<input class="form-control" name="role" readonly th:field="*{role}">
+									<input style="background-color: white;" class="form-control" name="role" readonly th:field="*{role}">
 								</div>
 							</div>
 							
 							<div class="row text-center">
 								<div class="col-md-12 mt-4">
 									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
-										th:href="@{'/a2zbilling/admin/updateAdminProfile'}" class="btn btn-info"><b>Update</b></a>
+										th:href="@{'/a2zbilling/admin/updateAdminProfile'}" id="updateBtn" class="btn btn-info"><b>Update</b></a>
 									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
 										th:href="@{'/a2zbilling/admin/'}" class="btn btn-info"><b>Cancel</b></a>
 								</div>
@@ -145,8 +142,6 @@
 					
 					</section>
 
-				
-				
 </body>
 <!-- END Body -->
 

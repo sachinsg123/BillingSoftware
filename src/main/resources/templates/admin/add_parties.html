@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- Created By Mahesh -->
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 	<head>
 	    <meta charset="UTF-8">
@@ -14,7 +14,7 @@
 <body>
 <section>
 	
-	<div class="contaier-fluid" style="line-height: 25px;">
+	<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
@@ -31,10 +31,8 @@
 				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;"><b>ADD PARTY</b></h1>
 			</div>
 		</div>
-		<div style="background-color: #B7E1E4;">
 		<form th:action="@{/a2zbilling/admin/parties/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
-			<div class="container pb-3">
 				<div class="row">
 					<div class="col-md-5 mt-4">
 						<label><b>Party Name*</b></label>
@@ -155,9 +153,7 @@
 						<a th:href="@{'/a2zbilling/admin/parties/list'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><b>Cancel</b></a>
 					</div>
 				</div>
-			</div>
 		</form>
-	  </div>
 	</div>
 	
 	

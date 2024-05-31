@@ -181,14 +181,14 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
 	aria-hidden="true">
 	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header d-flex justify-content-center">
+		<div class="modal-content" >
+			<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
 				<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="background-color: #f5f0f0;">
 				<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
 					class="form-group">
-					<div class="row pb-3" style="background-color: #f5f0f0;">
+					<div class="row pb-3" >
 						<div class="col-md-5 mt-4">
 							<label>Supplier Name</label>
 						</div>
@@ -237,14 +237,14 @@
 <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel"
 	aria-hidden="true">
 	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header d-flex justify-content-center">
+		<div class="modal-content" style="background-color: #f5f0f0;">
+			<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
 				<h1 class="modal-title" id="addCategoryModalLabel">Add Category</h1>
 			</div>
 			<div class="modal-body">
 				<form th:action="@{/a2zbilling/admin/category/add}" method="post" enctype="multipart/form-data"
 					class="form-group">
-					<div class="row pb-3" style="background-color: #f5f0f0;">
+					<div class="row pb-3" >
 						<div class="col-md-5 mt-4">
 							<label>Category Name</label>
 						</div>

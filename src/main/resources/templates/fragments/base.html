@@ -528,13 +528,59 @@ th:fragment="layout(content)">
   					</div>
   				</div>
   
+  <!-- Adding Charges Modal -->
+  <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog"
+  					aria-labelledby="exampleModalLabel" aria-hidden="true">
+  					<div class="modal-dialog" role="document">
+  						<div class="modal-content">
+  							<div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
+  								<h1 class="modal-title" id="exampleModalLabel">Add Charges</h1>
+  								<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+  									<span aria-hidden="true">&times;</span>
+  								</button>
+  							</div>
+  							<div class="modal-body" style="background-color:#f5f0f0;">
+  								<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
+  									<div class="row">
+  										<div class="col-md-12 mt-2">
+  											<input type="hidden" class="form-control" name="name">
+  											<div class="form-group">
+  												<label><b>Name :</b></label>
+  												<input type="text" class="form-control" onkeyup="gstCalculator()"
+  													id="gstPercentage" name="gstRate"
+  													placeholder="Charges Name" required>
+  											</div>
+  										</div>
+  										<div class="col-md-12 mt-2">
+  											<div class="form-group">
+  												<label><b>Price :</b></label>
+  												<input type="text" class="form-control" id="sgstPercentage"
+  													name="sgstRate" placeholder="Enter price">
+  											</div>
+  										</div>
+  										
+  									</div>
+  									<div class="col-md-12 mt-4">
+  										<div class="text-center">
+  											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+  										</div>
+  									</div>
+  								</form>
+  							</div>
+  						</div>
+  						<!--    <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> -->
+  					</div>
+  				</div>
   
   
    <!--Add Category Module -> Changes by Younus-->
   <div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header align-items-center" style="background-color: #534F84;color: #fff;">
+    <div class="modal-content" style="background-color: #f5f0f0;">
+      <div class="modal-header align-items-center" style="background-color: 	#534F84;color: #fff;">
         <h1 class="modal-title" id="exampleModalLabel">Add Category</h1>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -554,7 +600,7 @@ th:fragment="layout(content)">
                      
                      
                  <form th:action="@{/a2zbilling/admin/category/add}" method="post" class="form-group">
-	                    <div class="row" >
+	                    <div class="row"  >
 	                     <div class="col-md-12 mt-2" >
 	                     <div class="form-group">
 	                     <label>Category Name :</label>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- Created By Mahesh -->
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 	<head>
 	    <meta charset="UTF-8">
@@ -14,7 +14,6 @@
 <body>
 <section>
 	
-	<div class="contaier-fluid" style="line-height: 25px;">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
@@ -26,15 +25,15 @@
 				</script>
 			</div>
 		</div>
+	<div class="container-fluid pb-3" style="background-color:#f1f1f1; line-height: 25px;">
 		<div class="row" style="background-color:rgb(84,78,131);">
 			<div class="col-md-12 mt-1">
 				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;"><b>UPDATE PARTY</b></h1>
 			</div>
 		</div>
-		<div style="background-color: #f5f0f0;">
+		
 		<form th:action="@{/a2zbilling/admin/parties/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
-			<div class="container pb-3">
 				<div class="row">
 					<div class="col-md-5 mt-4">
 						<label><b>Party Name*</b></label>
@@ -155,42 +154,40 @@
 						<a th:href="@{'/a2zbilling/admin/parties/list'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><b>Cancel</b></a>
 					</div>
 				</div>
-			</div>
 		</form>
-	  </div>
 	</div>
 	
 	
 	
 	<!--Add Party Group Modal -->
-			<div class="modal fade" id="partyGroupModal" tabindex="-1" role="dialog" aria-labelledby="partyGroupModalLabel" aria-hidden="true">
-			  <div class="modal-dialog" role="document">
-			    <div class="modal-content">
+	<div class="modal fade" id="partyGroupModal" tabindex="-1" role="dialog" aria-labelledby="partyGroupModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+			
+	      <div class="modal-header d-flex justify-content-center">
+	        <h1 class="modal-title" id="exampleModalLabel">Add Party Group</h1>
+	      </div>
+		  
+		  <div class="modal-body">
+		  <form th:action="@{/a2zbilling/admin/partyGroup/add}" method="post" enctype="multipart/form-data" class="form-group">
+		  		<div class="row pb-3" style="background-color: #f5f0f0;">
+					<div class="col-md-5 mt-4">
+				        <label>Party Name</label>
+				    </div>
+				    <div class="col-md-7 mt-4">
+				        <input type="text" required class="form-control" name="name1" placeholder="Enter your name">
+				    </div>
 					
-			      <div class="modal-header d-flex justify-content-center">
-			        <h1 class="modal-title" id="exampleModalLabel">Add Party Group</h1>
-			      </div>
-				  
-				  <div class="modal-body">
-				  <form th:action="@{/a2zbilling/admin/partyGroup/add}" method="post" enctype="multipart/form-data" class="form-group">
-				  		<div class="row pb-3" style="background-color: #f5f0f0;">
-							<div class="col-md-5 mt-4">
-						        <label>Party Name</label>
-						    </div>
-						    <div class="col-md-7 mt-4">
-						        <input type="text" required class="form-control" name="name1" placeholder="Enter your name">
-						    </div>
-							
-						  <div class="modal-footer d-flex justify-content-end">
-						      <button type="submit" class="btn btn-primary">Add</button>
-						      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						  </div>	  
-				  	</div>
-				  </form>
-				  </div>
-			    </div>
-			  </div>
-			</div>
+				  <div class="modal-footer d-flex justify-content-end">
+				      <button type="submit" class="btn btn-primary">Add</button>
+				      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				  </div>	  
+		  	</div>
+		  </form>
+		  </div>
+	    </div>
+	  </div>
+	</div>
 		
 	<style>
 		.toggle-button {
