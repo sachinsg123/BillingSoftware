@@ -38,6 +38,7 @@ import com.billing.model.Company;
 import com.billing.model.CompanyDto;
 import com.billing.model.Customer;
 import com.billing.model.GSTRate;
+import com.billing.model.Parties;
 import com.billing.model.Product;
 import com.billing.model.Size;
 import com.billing.model.Supplier;
@@ -50,6 +51,7 @@ import com.billing.repositories.ColorRepository;
 import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
 import com.billing.repositories.GSTRepository;
+import com.billing.repositories.PartiesRepository;
 import com.billing.repositories.ProductRepository;
 import com.billing.repositories.SizeRepository;
 import com.billing.repositories.SupplierRepository;
@@ -108,6 +110,9 @@ public class adminController {
 
 	@Autowired
 	private BrandRepository brandRepo;
+	
+	@Autowired
+	private PartiesRepository partiesRepo;
 
 	// Created by Mahesh
 	@GetMapping("/viewAdminProfile")
@@ -615,13 +620,6 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/product/list";
 	}
 
-	@GetMapping("/parties/delete")
-	public String deleteParties() {
-
-		return "redirect:/a2zbilling/admin/parties/list";
-
-	}
-
 	// Created by Mahesh
 	@GetMapping("/parties/transactions/update")
 	public String updateTransactions(Model model) {
@@ -651,37 +649,7 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/parties/transactions/list";
 	}
 
-	@GetMapping("/customer/add")
-	public String customerAddForm(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		// Code to Render admin on our page
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-	    {
-	    	String image = user.getImageUrl();
-	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-	    }
-
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "/admin/add_customer_form";
-
-	}
+	
 
 	// Created by Mahesh
 	@GetMapping("/parties/add")
@@ -713,10 +681,35 @@ public class adminController {
 
 		return "admin/add_parties";
 	}
+	
+	// changes By Mahesh
+	@PostMapping("/parties/add")
+	public String partiesAddingProcess(@ModelAttribute Parties parties, HttpSession session, HttpServletRequest request) throws URISyntaxException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		if (parties.getDate().isEmpty()) {
 
+			Date d = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			String formattedDate = formatter.format(d);
+			parties.setDate(formattedDate);
+		}
+		parties.setStatus("Active");
+		
+		partiesRepo.save(parties);
+		
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        return "redirect:" + endpoint;
+		
+	}
+	
 	// Created by Mahesh
-	@GetMapping("/parties/update")
-	public String updateParties(Model model) {
+	@GetMapping("/parties/update/{id}")
+	public String updateParties(@PathVariable("id") int id, Model model) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -740,10 +733,54 @@ public class adminController {
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-
+		
+		Parties partie = partiesRepo.findById(id).get();
+		model.addAttribute("partie",partie);
+		
 		return "admin/update_parties";
 	}
 
+	// changes By Mahesh
+	@PostMapping("/parties/update")
+	public String partiesUpdateProcess(@ModelAttribute Parties parties, HttpSession session) {
+		Parties partie = partiesRepo.findById(parties.getId()).get();
+		
+		System.out.println(partie);
+		
+		partie.setName(parties.getName());
+		partie.setEmail(parties.getEmail());
+		partie.setMobile(parties.getMobile());
+		partie.setBillingAddress(parties.getBillingAddress());
+		partie.setShippingAddress(parties.getShippingAddress());
+		partie.setState(parties.getState());
+		partie.setDate(parties.getDate());
+		partie.setGstType(parties.getGstType());
+		partie.setGstinNumber(parties.getGstinNumber());
+		partie.setAdharNumber(parties.getAdharNumber());
+		partie.setPanNumber(parties.getPanNumber());
+		partie.setDrivingLicenceNumber(parties.getDrivingLicenceNumber());
+		partie.setPartyGroup(parties.getPartyGroup());
+		partie.setPayment(parties.getPayment());
+		partie.setOpeningBalance(parties.getOpeningBalance());
+		
+		partiesRepo.save(partie);
+		
+		return "redirect:/a2zbilling/admin/parties/list";
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/parties/delete/{id}")
+	public String deleteParties(@PathVariable("id") int id) {
+
+		Parties partie = partiesRepo.findById(id).get();
+
+		partie.setStatus("InActive");
+
+		partiesRepo.save(partie);
+		return "redirect:/a2zbilling/admin/parties/list";
+
+	}
+	
 	// Created by Mahesh
 	@GetMapping("/parties/list")
 	public String listOfParties(Model model) {
@@ -758,6 +795,9 @@ public class adminController {
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
+		
+		List<Parties> parties = partiesRepo.showAllActiveParties();
+		model.addAttribute("parties",parties);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 
@@ -806,6 +846,38 @@ public class adminController {
 		return "admin/transactions_list";
 	}
 
+	@GetMapping("/customer/add")
+	public String customerAddForm(Model model) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		// Code to Render admin on our page
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
+	    {
+	    	String image = user.getImageUrl();
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
+	    }
+
+		model.addAttribute("imagePath", imgpath);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		return "/admin/add_customer_form";
+
+	}
+	
 	@PostMapping("/customer/add")
 	public String addingProcessCustomer(@ModelAttribute Customer customer, Model model, HttpSession session, HttpServletRequest request) throws URISyntaxException {
 
@@ -1939,36 +2011,4 @@ public class adminController {
 
 	}
 
-	// created by Mahesh
-	@GetMapping("/generetOTP/{mobile}")
-	public ResponseEntity<String> generetOTP(@PathVariable("mobile") String mobileNumber) {
-		User user = userRepo.findByMobile(mobileNumber); // Implement this method in your UserRepository
-        if (user == null) {
-            return ResponseEntity.badRequest().body("Invalid mobile number");
-        }
-  
-		return ResponseEntity.ok("OK");
-
-	}
-	
-	// created by Mahesh
-	@GetMapping("/getProducts")
-	@ResponseBody
-    public List<Product> getProducts() {
-        List<Product> products = productRepo.findAll();
-        System.out.println("List Of Product Return" + products.get(0));
-        
-        return products;
-    }
-
-	@GetMapping("/customerDetails")
-	public ResponseEntity<Customer> getCustomerDetails(@RequestParam("customerId") String customerId) {
-		int id = Integer.parseInt(customerId);
-		Customer customer = customerService.getCustomerById(id);
-		
-
-		System.out.println(customer.getName() + " " + customer.getEmail());
-
-		return ResponseEntity.ok(customer);
-	}
 }
