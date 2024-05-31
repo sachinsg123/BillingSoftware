@@ -2,11 +2,12 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 
 <style>
-    /* Define a custom class for the button */
-    .styled-button {
-        width: 150px; /* Set the desired width */
-        /* Add other styles here */
-    }
+	/* Define a custom class for the button */
+	.styled-button {
+		width: 150px;
+		/* Set the desired width */
+		/* Add other styles here */
+	}
 </style>
 <section>
 
@@ -33,40 +34,40 @@
 		<form th:action="@{/a2zbilling/admin/product/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
 			<div class="row pb-3" style="background-color: #f5f0f0;">
-			
-			<div class="input-group">
-				<div class="col-md-4 mt-3 input-group">
-					<label>Supplier Name :- </label>
-					<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
-						name="addSupplierProduct">
-						<option selected>Choose</option>
-						<!-- Dynamically populate options with Supplier data -->
-						<option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
-							th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
-					</select>
+
+				<div class="input-group">
+					<div class="col-md-4 mt-3 input-group">
+						<label>Supplier Name :- </label>
+						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
+							name="addSupplierProduct">
+							<option selected>Choose</option>
+							<!-- Dynamically populate options with Supplier data -->
+							<option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
+								th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
+						</select>
 
 
-					<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
-						<i class="fa-solid fa-plus"></i>
-					</button>
+						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
+							<i class="fa-solid fa-plus"></i>
+						</button>
 
+					</div>
+
+					<div class="col-md-3 mt-3 input-group">
+						<label>Mobile :- </label>
+						<input id="mobile1" readonly type="text" class="form-control">
+					</div>
+					<div class="col-md-3 mt-3 input-group">
+						<label>Email :- </label>
+						<input id="email1" readonly type="email" class="form-control">
+					</div>
+
+					<div class="col-md-2 mt-3 input-group">
+						<label>Date :- </label>
+						<input type="text" class="form-control" id="currentDateInput" readonly>
+					</div>
 				</div>
 
-				<div class="col-md-3 mt-3 input-group">
-					<label>Mobile :- </label>
-					<input id="mobile1" readonly type="text" class="form-control">
-				</div>
-				<div class="col-md-3 mt-3 input-group">
-					<label>Email :- </label>
-					<input id="email1" readonly type="email" class="form-control">
-				</div>
-
-				<div class="col-md-2 mt-3 input-group">
-					<label>Date :- </label>
-					<input type="text" class="form-control" id="currentDateInput" readonly>
-				</div>
-			</div>
-			
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
 						<label>Product Name</label>
@@ -135,8 +136,8 @@
 				</div>
 				<div class="col-md-4 mt-3">
 					<div class="form-group">
-						<label>Add Product Image</label>
-						<input type="file"  class="form-control" name="imageFile">
+						<label>Add Product Images (max-3)</label>
+						<input type="file" class="form-control" name="imageFile" multiple accept="image/*" onchange="limitFiles(this)">
 					</div>
 				</div>
 				<div class="col-md-12 mt-4 ">
@@ -147,6 +148,19 @@
 			</div>
 		</form>
 	</div>
+	
+	<script>
+		function limitFiles(input) {
+			// Get the number of files selected
+			var files = input.files.length;
+
+			// If more than 3 files are selected, alert the user and clear the file input
+			if (files > 3) {
+				alert("Please select up to 3 images.");
+				input.value = '';
+			}
+		}
+	</script>
 
 
 	<script>
@@ -177,91 +191,92 @@
 	<div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
 	<!-- BEGIN Page Footer -->
 
-<!-- Add Supplier Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content" >
-			<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
-				<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
-			</div>
-			<div class="modal-body" style="background-color: #f5f0f0;">
-				<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
-					class="form-group">
-					<div class="row pb-3" >
-						<div class="col-md-5 mt-4">
-							<label>Supplier Name</label>
+	<!-- Add Supplier Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
+					<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
+				</div>
+				<div class="modal-body" style="background-color: #f5f0f0;">
+					<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
+						class="form-group">
+						<div class="row pb-3">
+							<div class="col-md-5 mt-4">
+								<label>Supplier Name</label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input type="text" required class="form-control" name="name"
+									placeholder="Enter supplier name">
+							</div>
+							<div class="col-md-5 mt-4">
+								<label>Supplier Email</label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input size="50" type="email" required class="form-control" name="email"
+									placeholder="Enter supplier e-mail">
+							</div>
+							<div class="col-md-5 mt-4">
+								<label>Supplier Mobile</label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input type="text" pattern="[0-9]{10}" required class="form-control" name="mobile"
+									placeholder="Enter supplier mobile No">
+							</div>
+							<div class="col-md-5 mt-2">
+								<label>Address</label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<textarea type="text" required class="form-control" name="address"
+									placeholder="Enter supplier address"></textarea>
+							</div>
+							<div class="col-md-5 mt-2">
+								<label>Choose Date</label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input type="date" class="form-control" name="addedDate">
+							</div>
+							<div class="modal-footer d-flex justify-content-end">
+								<button type="submit" class="btn btn-primary">Add</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							</div>
 						</div>
-						<div class="col-md-7 mt-4">
-							<input type="text" required class="form-control" name="name" placeholder="Enter supplier name">
-						</div>
-						<div class="col-md-5 mt-4">
-							<label>Supplier Email</label>
-						</div>
-						<div class="col-md-7 mt-4">
-							<input size="50" type="email" required class="form-control" name="email"
-								placeholder="Enter supplier e-mail">
-						</div>
-						<div class="col-md-5 mt-4">
-							<label>Supplier Mobile</label>
-						</div>
-						<div class="col-md-7 mt-4">
-							<input type="text" pattern="[0-9]{10}" required class="form-control" name="mobile"
-								placeholder="Enter supplier mobile No">
-						</div>
-						<div class="col-md-5 mt-2">
-							<label>Address</label>
-						</div>
-						<div class="col-md-7 mt-4">
-							<textarea type="text" required class="form-control" name="address"
-								placeholder="Enter supplier address"></textarea>
-						</div>
-						<div class="col-md-5 mt-2">
-							<label>Choose Date</label>
-						</div>
-						<div class="col-md-7 mt-4">
-							<input type="date" class="form-control" name="addedDate">
-						</div>
-						<div class="modal-footer d-flex justify-content-end">
-							<button type="submit" class="btn btn-primary">Add</button>
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<!-- Add Category Modal -->
-<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content" style="background-color: #f5f0f0;">
-			<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
-				<h1 class="modal-title" id="addCategoryModalLabel">Add Category</h1>
-			</div>
-			<div class="modal-body">
-				<form th:action="@{/a2zbilling/admin/category/add}" method="post" enctype="multipart/form-data"
-					class="form-group">
-					<div class="row pb-3" >
-						<div class="col-md-5 mt-4">
-							<label>Category Name</label>
+	<!-- Add Category Modal -->
+	<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" style="background-color: #f5f0f0;">
+				<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
+					<h1 class="modal-title" id="addCategoryModalLabel">Add Category</h1>
+				</div>
+				<div class="modal-body">
+					<form th:action="@{/a2zbilling/admin/category/add}" method="post" enctype="multipart/form-data"
+						class="form-group">
+						<div class="row pb-3">
+							<div class="col-md-5 mt-4">
+								<label>Category Name</label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input type="text" required class="form-control" name="categoryName"
+									placeholder="Enter category name">
+							</div>
+							<div class="modal-footer d-flex justify-content-end">
+								<button type="submit" class="btn btn-primary">Add</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							</div>
 						</div>
-						<div class="col-md-7 mt-4">
-							<input type="text" required class="form-control" name="categoryName"
-								placeholder="Enter category name">
-						</div>
-						<div class="modal-footer d-flex justify-content-end">
-							<button type="submit" class="btn btn-primary">Add</button>
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
 </section>
 

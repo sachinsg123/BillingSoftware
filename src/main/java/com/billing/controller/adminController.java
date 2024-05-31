@@ -3,6 +3,8 @@ package com.billing.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -805,7 +807,7 @@ public class adminController {
 	}
 
 	@PostMapping("/customer/add")
-	public String addingProcessCustomer(@ModelAttribute Customer customer, Model model, HttpSession session) {
+	public String addingProcessCustomer(@ModelAttribute Customer customer, Model model, HttpSession session, HttpServletRequest request) throws URISyntaxException {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user1 = userRepo.findByUsername(auth.getName());
@@ -833,8 +835,17 @@ public class adminController {
 		model.addAttribute("imagePath", imgpath);
 
 		session.setAttribute("message", "Customer Added Successfully");
+		
+		session.setAttribute("message", "Supplier added Successfully");
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        
+        return "redirect:"+endpoint;
 
-		return "redirect:/a2zbilling/admin/customer/add";
+		//return "redirect:/a2zbilling/admin/customer/add";
 
 	}
 
@@ -990,7 +1001,7 @@ public class adminController {
 
 	// changes By Mahesh
 	@PostMapping("/supplier/add")
-	public String supplierAddingProcess(@ModelAttribute Supplier supplier, HttpSession session) {
+	public String supplierAddingProcess(@ModelAttribute Supplier supplier,HttpSession session, HttpServletRequest request) throws URISyntaxException {
 
 		if (supplier.getAddedDate().isEmpty()) {
 
@@ -1012,9 +1023,17 @@ public class adminController {
 
 		supplierRepo.save(supplier);
 
-		session.setAttribute("message", "supplier added Successfully");
-
-		return "redirect:/a2zbilling/admin/supplier/add";
+		session.setAttribute("message", "Supplier added Successfully");
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        
+        return "redirect:"+endpoint;
+        
+        
+		//return "redirect:/a2zbilling/admin/supplier/add";
 	}
 
 	// change by Mahesh
@@ -1046,6 +1065,8 @@ public class adminController {
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
+		
+		
 
 		return "admin/supplier_list";
 
@@ -1858,6 +1879,10 @@ public class adminController {
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
+		
+		// To get product Name data from db
+				List<Product> products = productRepo.findAll();
+				model.addAttribute("products", products);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())

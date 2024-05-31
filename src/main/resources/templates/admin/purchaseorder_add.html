@@ -309,6 +309,19 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Add Print Buttons -->
+		<div class="col-md-12 mt-3 text-center">
+			<button type="button" class="btn btn-primary" onclick="printBill()">Print</button>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script>
+			// Function to print the bill
+			function printBill() {
+				window.print();
+			}
+		</script>
 
 		<script>
 			$(document).ready(function () {

@@ -20,9 +20,9 @@
 					</script>
 				</div>
 			</div>
-			
+
 			<!-- Created by Younus -->
-			
+
 			<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
 				<div class="col-md-12 ">
 					<h1 class="text-center pt-1">Add Item</h1>
@@ -31,6 +31,20 @@
 			<form th:action="@{/a2zbilling/admin/Item/add}" method="post" enctype="multipart/form-data"
 				class="form-group">
 				<div class="row pb-3" style="background-color: #f5f0f0;">
+
+					<div class="col-md-4 mt-4">
+						<div class="form-group">
+							<label>Product/Brand Name</label>
+							<select id="productSelect" class="form-select form-control"
+								aria-label="Default select example" name="getProduct">
+								<option selected>Select</option>
+								<!-- Dynamically populate options with product data -->
+								<option th:each="product:${products}" th:text="${product.name}">
+								</option>
+							</select>
+						</div>
+					</div>
+
 					<div class="col-md-4 mt-4">
 						<div class="form-group">
 							<label>Item Name</label>
@@ -78,7 +92,7 @@
 						<div class="form-group">
 							<label>Min Stock Qty</label>
 							<input type="number" required class="form-control" name="name"
-								placeholder="Enter min stock q	ty">
+								placeholder="Enter min stock qty">
 						</div>
 					</div>
 
@@ -118,6 +132,7 @@
 								onchange="limitFiles(this)">
 						</div>
 					</div>
+					
 
 					<script>
 						function limitFiles(input) {
@@ -130,16 +145,46 @@
 								input.value = '';
 							}
 						}
-					</script>
+					</script>	
 
 					<div class="col-md-12 mt-6">
 						<div class="text-center">
 							<button type="submit" class="btn btn-info text-center ml-3">Save</button>
-							<button type="submit" class="btn btn-info text-center ml-3 " name="saveAndNew">Save & New</button>
+							<button type="submit" class="btn btn-info text-center ml-3 " name="saveAndNew">Save &
+								New</button>
+							<!--	<button type="button" class="btn btn-info text-center ml-3" onclick="saveAndNew()">Save &
+								New</button>
 							<!-- <a th:href="@{'/a2zbilling/admin/purchasebill/add'}"
-								class="btn btn-info ml-3 ">Cancel</a> -->	
+								class="btn btn-info ml-3 ">Cancel</a> -->
 						</div>
 					</div>
+					<!-- 
+						Java Script functionality for save & New Button
+						<script>
+						function submitForm(event) {
+							event.preventDefault(); // Prevent form submission
+
+							// Process form data (save the item)
+
+							// Optionally, show a success message or perform other actions
+
+							// Clear the form fields if "Save & New" is not clicked
+							if (!event.submitter || event.submitter.name !== 'saveAndNew') {
+								document.getElementById('purchase-bill-form').reset();
+							}
+						}
+
+						function saveAndNew() {
+							// Submit the form with a hidden input indicating "Save & New" action
+							const form = document.getElementById('purchase-bill-form');
+							const input = document.createElement('input');
+							input.type = 'hidden';
+							input.name = 'saveAndNew';
+							input.value = 'true';
+							form.appendChild(input);
+							form.submit();
+						}
+					</script>-->
 				</div>
 			</form>
 		</div>
