@@ -3,7 +3,7 @@
 <section>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
-		function deleteContactAlert() {
+		function deleteContactAlert(id) {
 
 			const swalWithBootstrapButtons = Swal.mixin({
 				customClass: {
@@ -26,11 +26,11 @@
 				if (result.isConfirmed) {
 
 
-					window.location = "/a2zbilling/admin/parties/delete";
+					window.location = "/a2zbilling/admin/parties/delete/" + id + " ";
 
 
 					swalWithBootstrapButtons.fire(
-						'Parties Deleted Successfully !',
+						'Parties Deleted Successfully!!',
 
 					)
 				} else if (
@@ -82,9 +82,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr style="text-align: center;">
-							<td>ABC</td>
-							<td>XYZ</td>
+						<tr th:each="partie : ${parties}" style="text-align: center;">
+							<td th:text="${partie.name}"></td>
+							<td th:text="${partie.openingBalance}"></td>
 							<td>
 								<div class="dropdown">
 								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -92,8 +92,8 @@
 								  </button>
 								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/transactions/list}"><b>View Transactions</b></a>
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/update}"><b>Edit</b></a>
-								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#"><b>Delete</b></a>
+								    <a class="dropdown-item" th:href="@{'/a2zbilling/admin/parties/update/' + ${partie.id} }"><b>Edit</b></a>
+								    <a class="dropdown-item" th:onclick="|deleteContactAlert(${partie.id})|"><b>Delete</b></a>
 								  </div>
 								</div>
 							</td>

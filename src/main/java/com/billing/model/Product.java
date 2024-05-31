@@ -78,6 +78,9 @@ public class Product{
     @ManyToOne
     @JoinColumn(name="gst_id")
     private GSTRate gst ;
+    
+    @ManyToMany(mappedBy = "products")
+    private List<PartiesTransaction> transactions = new ArrayList<>();
 
 	public List<Charges> getCharges() {
 		return charges;
