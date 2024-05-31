@@ -183,7 +183,7 @@
 						   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 					               th:attr="data-price=${product.price},
 					                         data-quantity=${product.quantity},
-					                         data-size=${product.size.sizeValue}">
+					                         data-size=${product.size?.sizeValue}">
 					       </option>
 			           	</select>
 					</td>
@@ -511,17 +511,17 @@
 		
 		    // Function to fetch products from the server
 		    function fetchProducts() {
-				alert("/a2zbilling/admin/getProducts");
+				
 		        return $.ajax({
 		            url: '/a2zbilling/admin/getProducts',// Replace with your server-side endpoint URL
 		            method: 'GET',
 		            dataType: 'json',
 					success: function(data) {
-						alert(data);
+						
 		                console.log('Fetched products:', data);
 		            },
 		            error: function(error) {
-						alert(error);
+						
 		                console.error('Error fetching products:', error);
 		            }
 		        });
@@ -529,7 +529,7 @@
 	
 	    // Function to populate select options
 	    function populateSelectOptions(selectElement) {
-			alert("/a2zbilling/admin/getProducts........");
+			
 	        products.forEach(function(product) {
 				
 	            var option = $('<option></option>').val(product.id).text(product.name);
@@ -541,12 +541,12 @@
 	   fetchProducts()
 	       .done(function(data) {
 	           products = data;
-			   alert(products);
+			   
 	           // Populate the initial select options for existing rows
 	           populateSelectOptions($('.productSelect'));
 	       })
 	       .fail(function(error) {
-			alert('Error fetching products: ' + JSON.stringify(error));
+			
 	           console.error('Error fetching products:', error);
 	       });
 	

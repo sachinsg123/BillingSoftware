@@ -1,10 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
-<!-- BEGIN Page Wrapper -->
-
-<!-- Created by Younus -->
-
 <section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<head>
@@ -43,6 +38,8 @@
 				margin-left: 10px;
 			}
 		</style>
+		
+		</head>
 
 		<div class="contaier-fluid">
 			<div th:if="${session.message}">
@@ -54,14 +51,12 @@
 
 							window.location.href = '/a2zbilling/admin/clearSessionAttribute';
 						}, 500);
-
-
-
 					</script>
 				</div>
 			</div>
-
-	</head>
+			</div>
+			
+			
 
 	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
 		<div class="col-md-12 ">
@@ -164,13 +159,13 @@
 						<td>
 							<select name="size[]" class="form-control" required>
 								<option value="None">Select Size</option>
-								<option th:each="size : ${sizes}" value="${size.id}" th:text="${size.sizeValue}"
+								<option th:each="size : ${sizes}" value="${size.id}" th:text="${size.sizeValue}">
 									</select>
 						</td>
 						<td>
 							<select name="unit[]" class="form-control" required>
 								<option value="None">Select Unit</option>
-								<option th:each="unit : ${units}" value="${unit.id}" th:text="${unit.unitName}"
+								<option th:each="unit : ${units}" value="${unit.id}" th:text="${unit.unitName}">
 									</select>
 						</td>
 
@@ -332,6 +327,19 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Add Print Buttons -->
+		<div class="col-md-12 mt-3 text-center">
+			<button type="button" class="btn btn-primary" onclick="printBill()">Print</button>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script>
+			// Function to print the bill
+			function printBill() {
+				window.print();
+			}
+		</script>
 
 		<script>
 
@@ -572,10 +580,8 @@
 			});
 		</script>
 
-
 	</div>
-	</form>
-	</div>
+	
 </section>
 </body>
 <!-- END Body -->

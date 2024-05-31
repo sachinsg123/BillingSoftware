@@ -16,482 +16,397 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 
 		'use strict';
 
-		var classHolder = document.getElementsByTagName("BODY")[0],
-			/** 
-			 * Load from localstorage
-			 **/
-			themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
-				{},
-			themeURL = themeSettings.themeURL || '',
-			themeOptions = themeSettings.themeOptions || '';
-		/** 
-		 * Load theme options
-		 **/
-		if (themeSettings.themeOptions) {
-			classHolder.className = themeSettings.themeOptions;
-			console.log("%c✔ Theme settings loaded", "color: #148f32");
-		}
-		else {
-			console.log("%c✔ Heads up! Theme settings is empty or does not exist, loading default settings...", "color: #ed1c24");
-		}
-		if (themeSettings.themeURL && !document.getElementById('mytheme')) {
-			var cssfile = document.createElement('link');
-			cssfile.id = 'mytheme';
-			cssfile.rel = 'stylesheet';
-			cssfile.href = themeURL;
-			document.getElementsByTagName('head')[0].appendChild(cssfile);
-
-		}
-		else if (themeSettings.themeURL && document.getElementById('mytheme')) {
-			document.getElementById('mytheme').href = themeSettings.themeURL;
-		}
-		/** 
-		 * Save to localstorage 
-		 **/
-		var saveSettings = function () {
-			themeSettings.themeOptions = String(classHolder.className).split(/[^\w-]+/).filter(function (item) {
-				return /^(nav|header|footer|mod|display)-/i.test(item);
-			}).join(' ');
-			if (document.getElementById('mytheme')) {
-				themeSettings.themeURL = document.getElementById('mytheme').getAttribute("href");
-			};
-			localStorage.setItem('themeSettings', JSON.stringify(themeSettings));
-		}
-		/** 
-		 * Reset settings
-		 **/
-		var resetSettings = function () {
-			localStorage.setItem("themeSettings", "");
-		}
-
-	</script>
-	<!-- BEGIN Page Wrapper -->
-	<div class="page-wrapper">
-		<div class="page-inner">
-			<!-- BEGIN Left Aside -->
-			<div th:replace="fragments/sidebar :: sidebar"></div>
-			<!-- END Left Aside -->
-			<div class="page-content-wrapper">
-				<!-- BEGIN Page Header -->
-				<div th:replace="fragments/header ::header"></div>
-				<!-- END Page Header -->
-				<!-- BEGIN Page Content -->
-				<!-- the #js-page-content id is needed for some plugins to initialize -->
-
-				<main id="js-page-content" role="main" class="page-content">
-					<ol class="breadcrumb page-breadcrumb">
-						<li class="breadcrumb-item"><a href="javascript:void(0);">Admin Dashboard</a></li>
-						<li class="position-absolute pos-top pos-right d-none d-sm-block"><span
-								class="js-get-date"></span></li>
-					</ol>
-					<div class="subheader">
-						<h1 class="subheader-title">
-							<i class='subheader-icon fal fa-chart-area'></i>
-							Dashboard
-						</h1>
-					</div>
-					<div class="row">
-						<div class="col-sm-6 col-xl-3">
-							<div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-								<div class="">
-									<h3 class="display-4 d-block l-h-n m-0 fw-500">
-
-										<span th:text="${customercount}">0</span>
-
-										<small class="m-0 l-h-n">Customers</small>
-									</h3>
-								</div>
-								<i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1"
-									style="font-size:6rem"></i>
-							</div>
-						</div>
-						<div class="col-sm-6 col-xl-3">
-							<div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
-								<div class="">
-									<h3 class="display-4 d-block l-h-n m-0 fw-500">
-
-										<span th:text="${suppliercount}">0</span>
-
-										<small class="m-0 l-h-n">Suppliers</small>
-									</h3>
-								</div>
-								<i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4"
-									style="font-size: 6rem;"></i>
-							</div>
-						</div>
-						<div class="col-sm-6 col-xl-3">
-							<div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
-								<div class="">
-									<h3 class="display-4 d-block l-h-n m-0 fw-500">
-										150
-										<small class="m-0 l-h-n">Purchase Invoices</small>
-									</h3>
-								</div>
-								<i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6"
-									style="font-size: 8rem;"></i>
-							</div>
-						</div>
-						<div class="col-sm-6 col-xl-3">
-							<div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
-								<div class="">
-									<h3 class="display-4 d-block l-h-n m-0 fw-500">
-										2000
-										<small class="m-0 l-h-n">Sales Invoices</small>
-									</h3>
-								</div>
-								<i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4"
-									style="font-size: 6rem;"></i>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div id="panel-1" class="panel">
-								<div class="panel-hdr">
-									<h2>
-										Marketing profits
-									</h2>
-								</div>
-								<div class="panel-container show">
-									<div class="panel-content bg-subtlelight-fade">
-										<div id="js-checkbox-toggles" class="d-flex mb-3">
-											<div class="custom-control custom-switch mr-2">
-												<input type="checkbox" class="custom-control-input" name="gra-0"
-													id="gra-0" checked="checked">
-												<label class="custom-control-label" for="gra-0">Target Profit</label>
-											</div>
-											<div class="custom-control custom-switch mr-2">
-												<input type="checkbox" class="custom-control-input" name="gra-1"
-													id="gra-1" checked="checked">
-												<label class="custom-control-label" for="gra-1">Actual Profit</label>
-											</div>
-											<div class="custom-control custom-switch mr-2">
-												<input type="checkbox" class="custom-control-input" name="gra-2"
-													id="gra-2" checked="checked">
-												<label class="custom-control-label" for="gra-2">User Signups</label>
-											</div>
-										</div>
-										<div id="flot-toggles" class="w-100 mt-4" style="height: 300px"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div id="panel-2" class="panel panel-locked" data-panel-sortable data-panel-collapsed
-								data-panel-close>
-								<div class="panel-hdr">
-									<h2>
-										Returning <span class="fw-300"><i>Target</i></span>
-									</h2>
-								</div>
-								<div class="panel-container show">
-									<div class="panel-content poisition-relative">
-										<div
-											class="p-1 position-absolute pos-right pos-top mt-3 mr-3 z-index-cloud d-flex align-items-center justify-content-center">
-											<div
-												class="border-faded border-top-0 border-left-0 border-bottom-0 py-2 pr-4 mr-3 hidden-sm-down">
-												<div class="text-right fw-500 l-h-n d-flex flex-column">
-													<div class="h3 m-0 d-flex align-items-center justify-content-end">
-														<div class='icon-stack mr-2'>
-															<i
-																class="base base-7 icon-stack-3x opacity-100 color-success-600"></i>
-															<i
-																class="base base-7 icon-stack-2x opacity-100 color-success-500"></i>
-															<i
-																class="fal fa-arrow-up icon-stack-1x opacity-100 color-white"></i>
-														</div>
-														$44.34 / GE
-													</div>
-													<span class="m-0 fs-xs text-muted">Increased Profit as per redux
-														margins and estimates</span>
-												</div>
-											</div>
-											<div class="js-easy-pie-chart color-info-400 position-relative d-inline-flex align-items-center justify-content-center"
-												data-percent="35" data-piesize="95" data-linewidth="10"
-												data-scalelength="5">
-												<div class="js-easy-pie-chart color-success-400 position-relative position-absolute pos-left pos-right pos-top pos-bottom d-flex align-items-center justify-content-center"
-													data-percent="65" data-piesize="60" data-linewidth="5"
-													data-scalelength="1" data-scalecolor="#fff">
-													<div
-														class="position-absolute pos-top pos-left pos-right pos-bottom d-flex align-items-center justify-content-center fw-500 fs-xl text-dark">
-														78%</div>
-												</div>
-											</div>
-										</div>
-										<div id="flot-area" style="width:100%; height:300px;"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div id="panel-3" class="panel panel-locked" data-panel-sortable data-panel-collapsed
-								data-panel-close>
-								<div class="panel-hdr">
-									<h2>
-										Effective <span class="fw-300"><i>Marketing</i></span>
-									</h2>
-								</div>
-								<div class="panel-container show">
-									<div class="panel-content poisition-relative">
-										<div class="pb-5 pt-3">
-											<div class="row">
-												<div class="col-6 col-xl-3 d-sm-flex align-items-center">
-													<div class="p-2 mr-3 bg-info-200 rounded">
-														<span class="peity-bar"
-															data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,5,8,2</span>
-													</div>
-													<div>
-														<label class="fs-sm mb-0">Bounce Rate</label>
-														<h4 class="font-weight-bold mb-0">37.56%</h4>
-													</div>
-												</div>
-												<div class="col-6 col-xl-3 d-sm-flex align-items-center">
-													<div class="p-2 mr-3 bg-info-300 rounded">
-														<span class="peity-bar"
-															data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">5,3,1,7,9</span>
-													</div>
-													<div>
-														<label class="fs-sm mb-0">Sessions</label>
-														<h4 class="font-weight-bold mb-0">759</h4>
-													</div>
-												</div>
-												<div class="col-6 col-xl-3 d-sm-flex align-items-center">
-													<div class="p-2 mr-3 bg-success-300 rounded">
-														<span class="peity-bar"
-															data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,3,5,5</span>
-													</div>
-													<div>
-														<label class="fs-sm mb-0">New Sessions</label>
-														<h4 class="font-weight-bold mb-0">12.17%</h4>
-													</div>
-												</div>
-												<div class="col-6 col-xl-3 d-sm-flex align-items-center">
-													<div class="p-2 mr-3 bg-success-500 rounded">
-														<span class="peity-bar"
-															data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">6,4,7,5,6</span>
-													</div>
-													<div>
-														<label class="fs-sm mb-0">Clickthrough</label>
-														<h4 class="font-weight-bold mb-0">19.77%</h4>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div id="flotVisit" style="width:100%; height:208px;"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<div id="panel-4" class="panel">
-								<div class="panel-hdr">
-									<h2>
-										Sale <span class="fw-300"><i>Records</i></span>
-									</h2>
-								</div>
-								<div class="panel-container show">
-									<div class="panel-content">
-										<table id="dt-basic-example"
-											class="table table-bordered table-hover table-striped w-100">
-											<thead class="bg-warning-200">
-												<tr>
-													<th>CustomerID</th>
-													<th>Name</th>
-													<th>PurchaseDate</th>
-													<th>CustomerEmail</th>
-													<th>CustomerCVV</th>
-													<th>Country</th>
-													<th>InvoiceAmount</th>
-													<th>Controls</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>268410636</td>
-													<td>Cooley, Walker J.</td>
-													<td>03-13-19</td>
-													<td>odio.auctor@orcilobortis.edu</td>
-													<td>717</td>
-													<td>Timor-Leste</td>
-													<td>$7,007</td>
-													<td>1</td>
-												</tr>
-												<tr>
-													<td>077610947</td>
-													<td>Wise, Ruby R.</td>
-													<td>04-10-19</td>
-													<td>mi.Aliquam@afeugiat.edu</td>
-													<td>715</td>
-													<td>Burkina Faso</td>
-													<td>$7,052</td>
-													<td>1</td>
-												</tr>
-												<tr>
-													<td>959104621</td>
-													<td>Orr, Isabella V.</td>
-													<td>05-14-20</td>
-													<td>amet.lorem@risus.edu</td>
-													<td>256</td>
-													<td>Sri Lanka</td>
-													<td>$6,697</td>
-													<td>1</td>
-												</tr>
-												<tr>
-													<td>756590147</td>
-													<td>Schwartz, Xander P.</td>
-													<td>11-05-18</td>
-													<td>sagittis.placerat.Cras@nonlaciniaat.com</td>
-													<td>963</td>
-													<td>Liberia</td>
-													<td>$8,117</td>
-													<td>1</td>
-												</tr>
-												<tr>
-													<td>533801387</td>
-													<td>Gilmore, Cedric O.</td>
-													<td>01-16-20</td>
-													<td>consectetuer.adipiscing@semegestasblandit.co.uk</td>
-													<td>754</td>
-													<td>Svalbard and Jan Mayen Islands</td>
-													<td>$5,328</td>
-													<td>1</td>
-												</tr>
-												<tr>
-													<td>403080948</td>
-													<td>Foley, Cynthia M.</td>
-													<td>07-14-18</td>
-													<td>a.auctor.non@nuncrisus.net</td>
-													<td>826</td>
-													<td>Afghanistan</td>
-													<td>$6,823</td>
-													<td>1</td>
-												</tr>
-										</table>
-										<!-- datatable end -->
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</main>
-				<!-- this overlay is activated only when mobile menu is triggered -->
-				<div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div>
-				<!-- END Page Content -->
-				<!-- BEGIN Page Footer -->
-
-				<!-- END Page Footer -->
-				<!-- BEGIN Shortcuts -->
-				<div class="modal fade modal-backdrop-transparent" id="modal-shortcut" tabindex="-1" role="dialog"
-					aria-labelledby="modal-shortcut" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-top modal-transparent" role="document">
-						<div class="modal-content">
-							<div class="modal-body">
-								<ul class="app-list w-auto h-auto p-0 text-left">
-									<li>
-										<a href="intel_introduction.html" class="app-list-item text-white border-0 m-0">
-											<div class="icon-stack">
-												<i class="base base-7 icon-stack-3x opacity-100 color-primary-500 "></i>
-												<i class="base base-7 icon-stack-2x opacity-100 color-primary-300 "></i>
-												<i class="fal fa-home icon-stack-1x opacity-100 color-white"></i>
-											</div>
-											<span class="app-list-name">
-												Home
-											</span>
-										</a>
-									</li>
-									<li>
-										<a th:href="@{/a2zbilling/admin/edit/firm}"
-											class="app-list-item text-white border-0 m-0">
-											<div class="icon-stack">
-												<i class="base base-7 icon-stack-2x opacity-100 color-primary-300"></i>
-												<i class="fal fa-plus icon-stack-1x opacity-100 color-white"></i>
-											</div>
-											<span class="app-list-name">
-												Add Business
-											</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- model stART  -->
-				<!-- Button trigger modal -->
-
-				<!-- Modal For edit firm -->
-				<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-					aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-header align-items-center">
-								<h1 class="modal-title" id="exampleModalLabel">Edit Firm</h1>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form th:action="@{/a2zbilling/admin/firm/edit}" method="post"
-									enctype="multipart/form-data" class="form-group">
-									<div class="row">
-										<div class="col-md-12">
-											<input type="hidden" class="form-control" name="companyId">
-											<div class="form-group">
-												<label>Firm Name</label>
-												<input type="text" class="form-control" name="name"
-													th:field="*{companyName}">
-											</div>
-										</div>
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>email</label>
-												<input type="text" class="form-control" name="email">
-											</div>
-										</div>
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>Mobile</label>
-												<input type="text" class="form-control" name="mobile">
-											</div>
-										</div>
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>Address</label>
-												<input type="text" class="form-control" name="address">
-											</div>
-										</div>
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>Description</label>
-												<input type="text" class="form-control" name="description">
-											</div>
-										</div>
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>Firm logo</label>
-												<input type="file" class="form-control" name="imageFile">
-											</div>
-										</div>
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>Upload Signature</label>
-												<input type="file" class="form-control" name="signatureImage">
-											</div>
-										</div>
-										<div class="col-md-12 mt-2">
-											<div class="text-center">
-												<button type="submit" class="btn btn-info text-center">Add</button>
-											</div>
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-						<!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-					</div>
+        </script>
+        <!-- BEGIN Page Wrapper -->
+        <div class="page-wrapper">
+            <div class="page-inner">
+                <!-- BEGIN Left Aside -->
+                 <div th:replace="fragments/sidebar :: sidebar"></div>
+                <!-- END Left Aside -->
+                <div class="page-content-wrapper">
+                    <!-- BEGIN Page Header -->
+                    <div th:replace="fragments/header ::header"></div>
+                    <!-- END Page Header -->
+                    <!-- BEGIN Page Content -->
+                    <!-- the #js-page-content id is needed for some plugins to initialize -->
+                    
+                    <main id="js-page-content" role="main" class="page-content">
+                        <ol class="breadcrumb page-breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin Dashboard</a></li>
+                            <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+                        </ol>
+                        <div class="subheader">
+                            <h1 class="subheader-title">
+                                <i class='subheader-icon fal fa-chart-area'></i>
+                                 Dashboard
+                            </h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                    <div class="">
+                                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                        
+                                           <span th:text="${customercount}">0</span>
+                                           
+                                            <small class="m-0 l-h-n">Customers</small>
+                                        </h3>
+                                    </div>
+                                    <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
+                                    <div class="">
+                                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                            
+                                            <span th:text="${suppliercount}">0</span>
+                                            
+                                            <small class="m-0 l-h-n">Suppliers</small>
+                                        </h3>
+                                    </div>
+                                    <i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
+                                    <div class="">
+                                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                            150
+                                            <small class="m-0 l-h-n">Purchase Invoices</small>
+                                        </h3>
+                                    </div>
+                                    <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
+                                    <div class="">
+                                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                            2000
+                                            <small class="m-0 l-h-n">Sales Invoices</small>
+                                        </h3>
+                                    </div>
+                                    <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="panel-1" class="panel">
+                                    <div class="panel-hdr">
+                                        <h2>
+                                            Marketing profits
+                                        </h2>
+                                    </div>
+                                    <div class="panel-container show">
+                                        <div class="panel-content bg-subtlelight-fade">
+                                            <div id="js-checkbox-toggles" class="d-flex mb-3">
+                                                <div class="custom-control custom-switch mr-2">
+                                                    <input type="checkbox" class="custom-control-input" name="gra-0" id="gra-0" checked="checked">
+                                                    <label class="custom-control-label" for="gra-0">Target Profit</label>
+                                                </div>
+                                                <div class="custom-control custom-switch mr-2">
+                                                    <input type="checkbox" class="custom-control-input" name="gra-1" id="gra-1" checked="checked">
+                                                    <label class="custom-control-label" for="gra-1">Actual Profit</label>
+                                                </div>
+                                                <div class="custom-control custom-switch mr-2">
+                                                    <input type="checkbox" class="custom-control-input" name="gra-2" id="gra-2" checked="checked">
+                                                    <label class="custom-control-label" for="gra-2">User Signups</label>
+                                                </div>
+                                            </div>
+                                            <div id="flot-toggles" class="w-100 mt-4" style="height: 300px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="panel-2" class="panel panel-locked" data-panel-sortable data-panel-collapsed data-panel-close>
+                                    <div class="panel-hdr">
+                                        <h2>
+                                            Returning <span class="fw-300"><i>Target</i></span>
+                                        </h2>
+                                    </div>
+                                    <div class="panel-container show">
+                                        <div class="panel-content poisition-relative">
+                                            <div class="p-1 position-absolute pos-right pos-top mt-3 mr-3 z-index-cloud d-flex align-items-center justify-content-center">
+                                                <div class="border-faded border-top-0 border-left-0 border-bottom-0 py-2 pr-4 mr-3 hidden-sm-down">
+                                                    <div class="text-right fw-500 l-h-n d-flex flex-column">
+                                                        <div class="h3 m-0 d-flex align-items-center justify-content-end">
+                                                            <div class='icon-stack mr-2'>
+                                                                <i class="base base-7 icon-stack-3x opacity-100 color-success-600"></i>
+                                                                <i class="base base-7 icon-stack-2x opacity-100 color-success-500"></i>
+                                                                <i class="fal fa-arrow-up icon-stack-1x opacity-100 color-white"></i>
+                                                            </div>
+                                                            $44.34 / GE
+                                                        </div>
+                                                        <span class="m-0 fs-xs text-muted">Increased Profit as per redux margins and estimates</span>
+                                                    </div>
+                                                </div>
+                                                <div class="js-easy-pie-chart color-info-400 position-relative d-inline-flex align-items-center justify-content-center" data-percent="35" data-piesize="95" data-linewidth="10" data-scalelength="5">
+                                                    <div class="js-easy-pie-chart color-success-400 position-relative position-absolute pos-left pos-right pos-top pos-bottom d-flex align-items-center justify-content-center" data-percent="65" data-piesize="60" data-linewidth="5" data-scalelength="1" data-scalecolor="#fff">
+                                                        <div class="position-absolute pos-top pos-left pos-right pos-bottom d-flex align-items-center justify-content-center fw-500 fs-xl text-dark">78%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="flot-area" style="width:100%; height:300px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="panel-3" class="panel panel-locked" data-panel-sortable data-panel-collapsed data-panel-close>
+                                    <div class="panel-hdr">
+                                        <h2>
+                                            Effective <span class="fw-300"><i>Marketing</i></span>
+                                        </h2>
+                                    </div>
+                                    <div class="panel-container show">
+                                        <div class="panel-content poisition-relative">
+                                            <div class="pb-5 pt-3">
+                                                <div class="row">
+                                                    <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                                        <div class="p-2 mr-3 bg-info-200 rounded">
+                                                            <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,5,8,2</span>
+                                                        </div>
+                                                        <div>
+                                                            <label class="fs-sm mb-0">Bounce Rate</label>
+                                                            <h4 class="font-weight-bold mb-0">37.56%</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                                        <div class="p-2 mr-3 bg-info-300 rounded">
+                                                            <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">5,3,1,7,9</span>
+                                                        </div>
+                                                        <div>
+                                                            <label class="fs-sm mb-0">Sessions</label>
+                                                            <h4 class="font-weight-bold mb-0">759</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                                        <div class="p-2 mr-3 bg-success-300 rounded">
+                                                            <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,3,5,5</span>
+                                                        </div>
+                                                        <div>
+                                                            <label class="fs-sm mb-0">New Sessions</label>
+                                                            <h4 class="font-weight-bold mb-0">12.17%</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                                        <div class="p-2 mr-3 bg-success-500 rounded">
+                                                            <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">6,4,7,5,6</span>
+                                                        </div>
+                                                        <div>
+                                                            <label class="fs-sm mb-0">Clickthrough</label>
+                                                            <h4 class="font-weight-bold mb-0">19.77%</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="flotVisit" style="width:100%; height:208px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div id="panel-4" class="panel">
+                                    <div class="panel-hdr">
+                                        <h2>
+                                            Sale <span class="fw-300"><i>Records</i></span>
+                                        </h2>
+                                    </div>
+                                    <div class="panel-container show">
+                                        <div class="panel-content">
+                                            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                                <thead class="bg-warning-200">
+                                                    <tr>
+                                                        <th>CustomerID</th>
+                                                        <th>Name</th>
+                                                        <th>PurchaseDate</th>
+                                                        <th>CustomerEmail</th>
+                                                        <th>CustomerCVV</th>
+                                                        <th>Country</th>
+                                                        <th>InvoiceAmount</th>
+                                                        <th>Controls</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>268410636</td>
+                                                        <td>Cooley, Walker J.</td>
+                                                        <td>03-13-19</td>
+                                                        <td>odio.auctor@orcilobortis.edu</td>
+                                                        <td>717</td>
+                                                        <td>Timor-Leste</td>
+                                                        <td>$7,007</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>077610947</td>
+                                                        <td>Wise, Ruby R.</td>
+                                                        <td>04-10-19</td>
+                                                        <td>mi.Aliquam@afeugiat.edu</td>
+                                                        <td>715</td>
+                                                        <td>Burkina Faso</td>
+                                                        <td>$7,052</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>959104621</td>
+                                                        <td>Orr, Isabella V.</td>
+                                                        <td>05-14-20</td>
+                                                        <td>amet.lorem@risus.edu</td>
+                                                        <td>256</td>
+                                                        <td>Sri Lanka</td>
+                                                        <td>$6,697</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>756590147</td>
+                                                        <td>Schwartz, Xander P.</td>
+                                                        <td>11-05-18</td>
+                                                        <td>sagittis.placerat.Cras@nonlaciniaat.com</td>
+                                                        <td>963</td>
+                                                        <td>Liberia</td>
+                                                        <td>$8,117</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>533801387</td>
+                                                        <td>Gilmore, Cedric O.</td>
+                                                        <td>01-16-20</td>
+                                                        <td>consectetuer.adipiscing@semegestasblandit.co.uk</td>
+                                                        <td>754</td>
+                                                        <td>Svalbard and Jan Mayen Islands</td>
+                                                        <td>$5,328</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>403080948</td>
+                                                        <td>Foley, Cynthia M.</td>
+                                                        <td>07-14-18</td>
+                                                        <td>a.auctor.non@nuncrisus.net</td>
+                                                        <td>826</td>
+                                                        <td>Afghanistan</td>
+                                                        <td>$6,823</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                            </table>
+                                            <!-- datatable end -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <!-- this overlay is activated only when mobile menu is triggered -->
+       <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
+       <!-- BEGIN Page Footer -->
+      
+       <!-- END Page Footer -->
+       <!-- BEGIN Shortcuts -->
+       <div class="modal fade modal-backdrop-transparent" id="modal-shortcut" tabindex="-1" role="dialog" aria-labelledby="modal-shortcut" aria-hidden="true">
+           <div class="modal-dialog modal-dialog-top modal-transparent" role="document">
+               <div class="modal-content">
+                   <div class="modal-body">
+                       <ul class="app-list w-auto h-auto p-0 text-left">
+                           <li>
+                               <a href="intel_introduction.html" class="app-list-item text-white border-0 m-0">
+                                   <div class="icon-stack">
+                                       <i class="base base-7 icon-stack-3x opacity-100 color-primary-500 "></i>
+                                       <i class="base base-7 icon-stack-2x opacity-100 color-primary-300 "></i>
+                                       <i class="fal fa-home icon-stack-1x opacity-100 color-white"></i>
+                                   </div>
+                                   <span class="app-list-name">
+                                       Home
+                                   </span>
+                               </a>
+                           </li>
+                           <li>
+                               <a th:href="@{/a2zbilling/admin/edit/firm}" class="app-list-item text-white border-0 m-0">
+                                   <div class="icon-stack">
+                                       <i class="base base-7 icon-stack-2x opacity-100 color-primary-300"></i>
+                                       <i class="fal fa-plus icon-stack-1x opacity-100 color-white"></i>
+                                   </div>
+                                   <span class="app-list-name">
+                                       Edit Business
+                                   </span>
+                               </a>
+                           </li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- model stART  -->
+       <!-- Button trigger modal -->
+       
+<!-- Modal For edit firm -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header align-items-center">
+        <h1 class="modal-title" id="exampleModalLabel">Edit Firm</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                 <form th:action="@{/a2zbilling/admin/firm/edit}" method="post" enctype="multipart/form-data" class="form-group">
+	                    <div class="row">
+	                     <div class="col-md-12">
+	                     <input type="hidden" class="form-control" name="companyId">
+	                     <div class="form-group">
+	                     <label>Firm Name</label>
+	                     <input type="text" class="form-control" name="name" th:field="*{companyName}">
+	                     </div>
+	                     </div>
+	                       <div class="col-md-12">
+	                     <div class="form-group">
+	                     <label>email</label>
+	                     <input type="text" class="form-control" name="email">
+	                     </div>
+	                     </div>
+	                     <div class="col-md-12">
+	                     <div class="form-group">
+	                     <label>Mobile</label>
+	                     <input type="text" class="form-control" name="mobile">
+	                     </div>
+	                     </div>
+	                     <div class="col-md-12">
+	                     <div class="form-group">
+	                     <label>Address</label>
+	                     <input type="text" class="form-control" name="address">
+	                     </div>
+	                     </div>
+	                      <div class="col-md-12">
+	                     <div class="form-group">
+	                     <label>Description</label>
+	                     <input type="text" class="form-control" name="description">
+	                     </div>
+	                     </div>
+	                     <div class="col-md-12">
+	                     <div class="form-group">
+	                     <label>Firm logo</label>
+	                     <input type="file" class="form-control" name="imageFile">
+	                     </div>
+	                     </div>
+	                     <div class="col-md-12">
+	                     <div class="form-group">
+	                     <label>Upload Signature</label>
+	                     <input type="file" class="form-control" name="signatureImage">
+	                     </div>
+	                     </div>
+	                     <div class="col-md-12 mt-2">
+	                     <div class="text-center">
+	                     <button type="submit" class="btn btn-info text-center">Add</button>
+	                     </div>
+	                     </div>
+	                     </div>
+	                     </form>
+                  </div>
+                </div>
+  					</div>
 				</div>
 
 				<!--  Modal for Unit adding  -->
@@ -528,6 +443,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 									<div class="col-md-12 mt-4">
 										<div class="text-center">
 											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+											 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
 										</div>
 									</div>
 								</form>
@@ -603,6 +519,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 									<div class="col-md-12 mt-4">
 										<div class="text-center">
 											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+											 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
 										</div>
 									</div>
 								</form>
@@ -652,6 +569,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
   									<div class="col-md-12 mt-4">
   										<div class="text-center">
   											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+  											 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
   										</div>
   									</div>
   								</form>
@@ -703,6 +621,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 									<div class="col-md-12 mt-2">
 										<div class="text-center">
 											<button type="submit" class="btn btn-info text-center mt-3">Add</button>
+											 <button type="button" class="btn btn-secondary text-center mt-3" data-dismiss="modal" >Close</button>
 										</div>
 									</div>
 								</form>

@@ -5,7 +5,7 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	</head>
-<section>
+ <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	
@@ -171,7 +171,7 @@
 						   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 					               th:attr="data-price=${product.price},
 					                         data-quantity=${product.quantity},
-					                         data-size=${product.size.sizeValue}">
+					                         data-size=${product.size?.sizeValue}">
 					       </option>
 			           	</select>
 					</td>
@@ -330,6 +330,19 @@
 	    </div>
 	  </div>
 	</div>
+	
+	<!-- Add Print Buttons -->
+		<div class="col-md-12 mt-3 text-center">
+			<button type="button" class="btn btn-primary" onclick="printBill()">Print Bill</button>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script>
+			// Function to print the bill
+			function printBill() {
+				window.print();
+			}
+		</script>
 	
 	<script>
 		
