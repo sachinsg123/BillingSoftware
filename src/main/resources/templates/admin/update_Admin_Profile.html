@@ -132,7 +132,7 @@
 					                      <label><b>Image</b></label>
 					                  </div>
 									  <div class="col-md-7 mt-1">
-										<input class="form-control" id="imageUrl" type="file">
+										<input name="imageUrl" class="form-control" id="imageUrl" type="file">
 									  </div>
 							  	</div>
 								<div class="row text-center">
@@ -1558,6 +1558,12 @@
 
 		});
 
+	</script>
+	<script>
+		let profileImage = document.getElementById("profileImage");
+		let inputFile = document.getElementById("imageUrl");		
+		inputFile.onchange = function(){
+			profileImage.src = URL.createObjectURL(inputFile.files[0]);			}					
 	</script>
 </body>
 <!-- END Body -->

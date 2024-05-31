@@ -36,13 +36,11 @@
 				<div class="row">
 					<div class="col-md-5 mt-4">
 						<label><b>Party Name*</b></label>
-						<input required type="text" class="form-control" placeholder="Please Enter a Name"
-							name="name">
+						<input name="name" required type="text" class="form-control" placeholder="Please Enter a Name">
 					</div>
 					<div class="col-md-5 mt-4">
 						<label><b>Mobile*</b></label>
-						<input type="number" required class="form-control" placeholder="Please Enter a Mobile Number"
-							name="mobile" id="mobile">
+						<input name="mobile" type="text" required class="form-control" placeholder="Please Enter a Mobile Number" id="mobile">
 					</div>
 				</div>
 				
@@ -50,9 +48,9 @@
 					<div class="col-md-5 mt-4">
 						<label><b>Party Group*</b></label>
 						<div class="input-group">
-							<select class="form-control">
+							<select name="partyGroup" class="form-control">
 								<option>Select</option>
-								<option><button>General</button></option>
+								<option value="General"><button>General</button></option>
 							</select>
 							<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#partyGroupModal">
 								<i class="fa-solid fa-plus"></i> Party Group
@@ -81,16 +79,15 @@
 				<div class="row" id="addressRow" style="display: none;">
 					<div class="col-md-5 mt-4">
 						<label><b>Billing Address*</b></label>
-						<textarea required type="text" class="form-control" placeholder="Billing Address"></textarea>
+						<textarea name="billingAddress" required type="text" class="form-control" placeholder="Billing Address"></textarea>
 					</div>
 					<div class="col-md-5 mt-4">
 						<label><b>Shipping Address*</b></label>
-						<textarea required type="text" class="form-control" placeholder="Shipping Address"></textarea>
+						<textarea name="shippingAddress" required type="text" class="form-control" placeholder="Shipping Address"></textarea>
 					</div>
 					<div class="col-md-5 mt-4">
 						<label><b>Email*</b></label>
-						<input type="email" required class="form-control" placeholder="Please Enter a Email Address"
-							name="email" id="email">
+						<input name="email" type="email" required class="form-control" placeholder="Please Enter a Email Address" id="email">
 					</div>
 				</div>
 					
@@ -98,33 +95,33 @@
 				<div class="row" id="gstRow" style="display: none;">
 					<div class="col-md-5 mt-4">
 						<label><b>GST Type</b></label>
-						<select required class="form-control" id="businessType">
-							<option>Unregistered/Consumer</option>
-							<option value="regular">Registered Business - Regular</option>
-							<option>Registered Business - Composition</option>
+						<select name="gstType" required class="form-control" id="businessType">
+							<option value="unregistered/Consumer">Unregistered/Consumer</option>
+							<option value="registeredBusinessRegular">Registered Business - Regular</option>
+							<option value="registeredBusinessComposition">Registered Business - Composition</option>
 						</select>
 					</div>
 					<div class="col-md-5 mt-4" id="gstin" style="display: none;">
 						<label><b>GSTIN Number*</b></label>
-						<input type="text" class="form-control" placeholder="GSTIN Number">
+						<input name="gstinNumber" type="text" class="form-control" placeholder="GSTIN Number">
 					</div>
 					<div class="col-md-5 mt-4">
 						<label><b>State</b></label>
-						<input type="text" class="form-control" placeholder="State">
+						<input name="state" type="text" class="form-control" placeholder="State">
 					</div>
 				</div>
 				
 				<div class="row" id="openingBalance" style="display: none;">
 					<div class="col-md-5 mt-4">
 						<label><b>Opening Balance*</b></label>
-						<input type="text" class="form-control" placeholder="Opening Balance">
+						<input name="openingBalance" type="text" class="form-control" placeholder="Opening Balance">
 					</div>
 					<div class="col-md-5 mt-4">
 						<label><b>As Of Date</b></label>
-						<input type="date" class="form-control">
+						<input name="date" type="date" class="form-control">
 					</div>
 					<div class="col-md-5 mt-4">
-						<select required class="form-control">
+						<select name="payment" required class="form-control">
 							<option>Select</option>
 							<option value="toPay">To Pay</option>
 							<option value="toReceive">To Receive</option>
@@ -135,15 +132,15 @@
 				<div class="row" id="additionalFields" style="display: none;">
 					<div class="col-md-5 mt-4">
 						<label><b>Aadhar No.</b></label>
-						<input type="text" class="form-control" placeholder="Aadhar No.">
+						<input name="adharNumber" type="text" class="form-control" placeholder="Aadhar No.">
 					</div>
 					<div class="col-md-5 mt-4">
 						<label><b>PAN No.</b></label>
-						<input type="text" class="form-control" placeholder="PAN No.">
+						<input name="panNumber" type="text" class="form-control" placeholder="PAN No.">
 					</div>
 					<div class="col-md-5 mt-4">
 						<label><b>Driving Licence No.</b></label>
-						<input type="text" class="form-control" placeholder="Driving Licence No.">
+						<input name="drivingLicenceNumber" type="text" class="form-control" placeholder="Driving Licence No.">
 					</div>			
 				</div>
 				
@@ -250,7 +247,7 @@
 	            });
 			$('#businessType').change(function() {
                 var selectedValue = $(this).val();
-                if (selectedValue === 'regular') {
+                if (selectedValue === 'registeredBusinessRegular') {
                     $('#gstin').show();
                 } else {
                     $('#gstin').hide();
