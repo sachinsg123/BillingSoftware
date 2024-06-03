@@ -2,12 +2,59 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 
 <head>
-</head>
-<!-- Changes by Younus -->
 
+<link href="./css/billing_style/productstyle.css" rel="stylesheet" type="text/css">
+</head>
 <body>
 
 	<section>
+	
+	   <script>
+
+			function deleteProductAlert(id) {
+
+				const swalWithBootstrapButtons = Swal.mixin({
+					customClass: {
+						confirmButton: 'btn btn-success m-2',
+						cancelButton: 'btn btn-danger'
+					},
+					buttonsStyling: false
+				})
+
+				swalWithBootstrapButtons.fire({
+					title: 'Are you sure?',
+					text: "You won't be able to revert this!",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Yes, delete it!',
+					cancelButtonText: 'No, cancel!',
+					reverseButtons: true
+				}).then((result) => {
+					if (result.isConfirmed) {
+
+
+						window.location = "/a2zbilling/admin/product/delete/" + id + " ";
+
+
+						swalWithBootstrapButtons.fire(
+							'Product Deleted Successfully !',
+
+						)
+					} else if (
+						/* Read more about handling dismissals below */
+						result.dismiss === Swal.DismissReason.cancel
+					) {
+						swalWithBootstrapButtons.fire(
+							'Cancelled',
+							'Product Not deleted',
+							'error'
+						)
+					}
+				})
+
+			}
+
+		</script>
 		<div class="contaier-fluid">
 			<!--   <div th:if="${session.message}">
                        <div class="alert alert-primary" role="alert">
@@ -45,7 +92,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each=" product : ${products}">
+							<tr th:each=" product : ${productPage.content}">
 								<th scope="row" th:text="${product.id}"></th>
 								<td th:text="${product.name}"></td>
 								<td th:text="${product.category?.categoryName}"></td>
@@ -61,15 +108,22 @@
 								<td>
 									<div class="input-group">									
 										<a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}"
-											class="btn btn-success"><i class="fa fa-edit"></i></a>
+											class="btn btn-success" style="height:35px; width:35px; border-radius:50%; text-align:center; margin-bottom:5px"><i class="fa fa-edit"></i></a>
 
-										<a class="btn btn-danger ml-2"><i class="fa fa-trash"></i></a>
+										<a th:onclick="|deleteProductAlert(${product.id})|"class="btn btn-danger" style="height:35px; width:35px; border-radius:50%; text-align:center"><i class="fa fa-trash"></i></a>
 
 									</div>
 								</td>
 							</tr>
 						</tbody>
 					</table>
+		 <div>
+        <span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${productPage.totalPages}"></span>
+      </div>
+     <div>
+        <a th:if="${productPage.hasPrevious()}" th:href="@{/a2zbilling/admin/product/list(page=${currentPage - 1}, size=${productPage.size})}">Previous</a>
+        <a th:if="${productPage.hasNext()}" th:href="@{/a2zbilling/admin/product/list(page=${currentPage + 1}, size=${productPage.size})}">Next</a>
+    </div>
 				</div>
 			</div>
 		</div>
