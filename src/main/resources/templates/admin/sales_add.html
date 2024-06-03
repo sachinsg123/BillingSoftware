@@ -32,7 +32,7 @@
 				if (result.isConfirmed) {
 
 
-					window.location = "/a2zbilling/admin/supplier/delete/" + id + " ";
+					window.location = "/a2zbilling/admin/sales/delete/" + id + " ";
 
 
 					swalWithBootstrapButtons.fire(
@@ -66,19 +66,21 @@
 		</div>
 	</div>
 	
-		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
-	        <div class="col-md-12">
-	            <h1 class="text-center mt-2"><b>Sales Bill</b></h1>
-	        </div>
-	    </div>
-	<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
+		
+<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
+	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
+        <div class="col-md-12">
+            <h1 class="text-center mt-2"><b>Sales Bill</b></h1>
+        </div>
+    </div>
+	<form th:action="@{/a2zbilling/admin/sales/add}" method="post" enctype="multipart/form-data" class="form-group">
 		<div class="row">
 			<div class="col-md-4 mt-3 input-group">
 				<div class="col-md-4">
 		        	<label><b>Customer Name :- </b></label>
 				</div>
 				<div class="col-md-8 input-group">
-					<select id="customerSelect" class="form-select form-control" aria-label="Default select example" name="saleCustomer">
+					<select required id="customerSelect" class="form-select form-control" aria-label="Default select example" name="customer">
 			            <option selected>Choose</option>
 			            <!-- Dynamically populate options with customer data -->
 			            <option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}" 
@@ -106,7 +108,7 @@
 	               <label><b>Sale Bill No. :- </b></label>
 				</div>
 				<div class="col-md-6">
-				   <input type="text" readonly class="form-control" id="invoiceNo">
+				   <input name="saleBillNo" type="text" class="form-control" id="saleBillNo">
 			 	</div>
            </div>
 		</div>
@@ -124,7 +126,7 @@
 					<label><b>Date :- </b></label>
 				</div>
 				<div class="col-md-6">
-		   			<input type="text" class="form-control" id="currentDateInput" readonly>
+		   			<input name="date" type="text" class="form-control" id="currentDateInput" readonly>
 				</div>
            </div>	
 		</div>
@@ -145,7 +147,7 @@
 		<div class="row mt-4 ml-1 mr-1" >
 			<div class="col-md-12">
 				<table class="table table-bordered" style="background-color:#86A6AE;">
-					<thead style="color: white;">
+					<thead style="color: black;">
 						<tr>
 							<th scope="col">Barcode</th>
 							<th scope="col">Product Name</th>
@@ -158,15 +160,13 @@
 							<th scope="col">Tax in Amount</th>
 							<th scope="col">Selling Price</th>
 							<th scope="col">Total Amount</th>
-							<th scope="col">  </tr>
-							
-						</tr>
+							<th scope="col"></tr>
 					</thead>
 					<tbody id="addrow">
 					<tr>
-					<td><input id="barcode" type="text" class="form-control" ></td>
+					<td><input id="barcode" type="text" class="form-control"></td>
 					<td>
-						<select	id="productSelect" class="form-select form-control" aria-label="Default select example" name="productSelect">
+						<select required id="productSelect" class="form-select form-control" aria-label="Default select example" name="products">
 				           <option selected>Choose</option>
 						   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 					               th:attr="data-price=${product.price},
@@ -179,9 +179,9 @@
 					<td><input id="sgst" type="text" class="form-control" readonly></td>
 					<td><input id="size" type="text" class="form-control" readonly></td>
 					<td><input id="AQty" type="number" class="form-control" readonly></td>
-					<td><input id="Qty" type="number" class="form-control"></td>
-					<td><input id="taxinpercentage" oninput="calculateTaxAmount()" type="number" class="form-control"></td>
-					<td><input id="taxinamount" type="text" class="form-control" readonly></td>
+					<td><input id="Qty" name="quantity" type="number" class="form-control"></td>
+					<td><input id="taxinpercentage" name="taxInPercentage" oninput="calculateTaxAmount()" type="number" class="form-control"></td>
+					<td><input id="taxinamount" name="taxInAmount" type="text" class="form-control" readonly></td>
 					<td><input id="price" type="text" class="form-control" readonly></td>
 					<td><input id="total_amount" type="text" class="form-control" readonly></td>
 					<td>
@@ -195,35 +195,34 @@
 				<button type="button" class="btn btn-success" id="add" style="color: white;"><b><i class="fa-solid fa-plus"></i> Add Row</b></button>
 			</div>
 		</div>
-		<!--                       -->
+		
 		<div class="invoice-container mt-3">
 		    <div class="container ml-3 mr-3">
 		        <div class="row d-flex justify-content-between">
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Total amount:</label>
-		                    <input id="totalAmountField" type="text" required class="form-control" name=""
-		                        placeholder="Total amount" readonly>
+		                    <input id="totalAmountField" type="text" required class="form-control" name="totalAmount" placeholder="Total amount" readonly>
 		                </div>
 		            </div>
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Discount (Rs):</label>
-		                    <input id="discountAmountField" type="number" class="form-control" name="discount"
+		                    <input id="discountAmountField" type="text" class="form-control" name="discountInAmount"
 		                        placeholder="Discount amount" oninput="updatePercentageAmount()">
 		                </div>
 		            </div>
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Discount %:</label>
-		                    <input id="discountPercentField" type="number" class="form-control" name="discount%"
+		                    <input id="discountPercentField" type="text" class="form-control" name="discountInPercentage"
 		                        placeholder="Discount %" oninput="updateDiscountedAmount()">
 		                </div>
 		            </div>
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Payment mode:</label>
-		                    <select class="form-control" name="type" required>
+		                    <select class="form-control" name="paymentMode" required>
 		                        <option value="cash">Cash</option>
 		                        <option value="cheque">Cheque</option>
 		                        <option value="online">Online</option>
@@ -235,28 +234,28 @@
 		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Paid:</label>
-		                    <input id="paidAmountField" type="number" required class="form-control" name="paid" placeholder="Amount paid" oninput="updateDues()">
+		                    <input id="paidAmountField" type="number" required class="form-control" name="amountPaid" placeholder="Amount paid" oninput="updateDues()">
 		                </div>
 		            </div>
 		            <div style="margin-left: 110px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Dues:</label>
-		                    <input id="duesAmountField" type="number" required class="form-control" name="dues" placeholder="Dues" readonly>
+		                    <input id="duesAmountField" type="number" required class="form-control" name="dueAmount" placeholder="Dues" readonly>
 		                </div>
 		            </div>
 		            <div style="margin-left: 110px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Net Payment:</label>
-		                    <input id="netPaymentField" type="number" required class="form-control" name="netpayment" placeholder="Final Amount" readonly>
+		                    <input id="netPaymentField" type="number" required class="form-control" name="netPayment" placeholder="Final Amount" readonly>
 		                </div>
 		            </div>
 		        </div>
 		    </div>
 		</div>
-		
+			
 		<div class="col-md-12 mt-2">
 			<div class="text-right mr-6 mt-4">
-				<img th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
+				<img name="SignatureImage" th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
 			</div>
 			
 			<div class="row justify-content-center">
@@ -269,7 +268,8 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</form>
+</div>
 	<!--Add Customer Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -330,6 +330,19 @@
 	    </div>
 	  </div>
 	</div>
+	
+	<!-- Add Print Buttons -->
+		<div class="col-md-12 mt-3 text-center">
+			<button type="button" class="btn btn-primary" onclick="printBill()">Print Bill</button>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script>
+			// Function to print the bill
+			function printBill() {
+				window.print();
+			}
+		</script>
 	
 	<script>
 		
@@ -421,7 +434,7 @@
 			    }
 			}
 
-		function updateDiscountedAmount() {
+		function updateDiscountedAmount(){
 				const totalAmountField = document.getElementById('totalAmountField');
 		        const discountPercentField = document.getElementById('discountPercentField');
 		        const discountAmountField = document.getElementById('discountAmountField');
@@ -562,18 +575,14 @@
 			    // Add new row when "Add Row" button is clicked
 			    $('#add').click(function() {
 			        i++; // Increment counter for new row ID
+			        var opts = $("#productSelect").html();
+			        var cgst = $("#cgst").value;
 			        $('#addrow').append(`
 			            <tr id="row${i}">
 			                <td><input id="barcode${i}" type="text" class="form-control"></td>
 			                <td>
 			                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="productSelect">
-			                        <option value="">Choose</option>
-			                        <!-- Populate options with product data -->
-			                        <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-			                            th:attr="data-price=${product.price},
-			                            data-quantity=${product.quantity},
-			                            data-size=${product.size.sizeValue}">
-			                        </option>
+			                        ${opts}
 			                    </select>
 			                </td>
 			                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
@@ -599,9 +608,6 @@
 			    });
 			});
 		</script>
-
-
-
 	<script>
         // Get the current date
         var currentDate = new Date();

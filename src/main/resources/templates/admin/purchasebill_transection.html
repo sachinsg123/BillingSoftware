@@ -1,152 +1,151 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" 
- th:replace="fragments/base::layout(~{::section})">
- 
- <!-- Created by Younus -->
- 
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+
+<!-- Created by Younus -->
+
 <section>
 <script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
-	<script>
-		function deleteContactAlert(id) {
+<script>
+    function deleteContactAlert(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
 
-			const swalWithBootstrapButtons = Swal.mixin({
-				customClass: {
-					confirmButton: 'btn btn-success',
-					cancelButton: 'btn btn-danger'
-				},
-				buttonsStyling: false
-			})
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location = "/a2zbilling/admin/supplier/delete/" + id;
 
-			swalWithBootstrapButtons.fire({
-				title: 'Are you sure?',
-				text: "You won't be able to revert this!",
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonText: 'Yes, delete it!',
-				cancelButtonText: 'No, cancel!',
-				reverseButtons: true
-			}).then((result) => {
-				if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                    'Purchase Bill Transection Deleted Successfully!'
+                )
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Purchase Bill Transection Not deleted',
+                    'error'
+                )
+            }
+        })
+    }
+</script>
+<!-- BEGIN Page Wrapper -->
 
+	<style>
+	    .table tbody tr:hover {
+	        background-color: #e0e0e0;
+	        color: #000;
+	    }
+	</style>
 
-					window.location = "/a2zbilling/admin/supplier/delete/" + id + " ";
-
-
-					swalWithBootstrapButtons.fire(
-						'Purchase Bill Deleted Successfully !',
-
-					)
-				} else if (
-					/* Read more about handling dismissals below */
-					result.dismiss === Swal.DismissReason.cancel
-				) {
-					swalWithBootstrapButtons.fire(
-						'Cancelled',
-						'Purchase Bill Not deleted',
-						'error'
-					)
-				}
-			})
-
-		}
-	</script>
-	<!-- BEGIN Page Wrapper -->
-
-	<div class="contaier-fluid">
-		<div th:if="${session.message}">
-			<div class="alert alert-primary" role="alert">
-				<p th:text="${session.message}"></p>
-				<script th:inline="javascript">
-					setTimeout(function () {
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500);
-				</script>
-			</div>
-		</div>
-		<div class="row" style="background-color: rgb(84,78,130);color:#fff;" >
-			<div class="col-md-12 mt-1">
-				<h1 class="text-center">Purchase Transection</h1>
-			</div>
-		</div>
-		<div style="background-color: #f5f0f0;">
-		<div class="row pb-3">
-		<div  class="col-md-6">
-		 <form th:action="@{/search}" method="get">
-		 <div class="col-md-6" >
-
-        <!-- Search Bar --> 
-        <input type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color:rgb(12,131,226) ;" name="query" placeholder="   Search">
-        <!-- Search icon -->
-        <i class="fas fa-search search-icon" style="font-size: 20px; color:rgb(12,131,226);" onclick="submitForm()"></i>
-		 </div>
-		
-    </form>
-		</div >
-			<div class="col-md-6 mt-3"  style="text-align: right;"> 
-			
-				<a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i>	</i>
-					Add Purchase</a>
-			</div>
-		</div>
-		<div class="row mt-2" >
-			<div class="col-md-12" >
-				<table class="table table-bordered" style="background-color: #8A72AA; color: #fff;">
-					<thead style="background-color: #715499;">
-						<tr>
-							<th scope="col">Date</th>
-							<th scope="col">Invoice No</th>
-							<th scope="col">Party Name</th>
-							<th scope="col">Item Name</th>
-							<th scope="col">Quantity</th>
-							<th scope="col">Tax Amount</th>
-							<th scope="col">Discount Amount</th>
-							<th scope="col">Payment Type</th>
-							<th scope="col">Net Payment</th>
-							<th scope="col">Balance Due</th>
-							<th scope="col">Amount Paid</th>
-							<!-- <th scope="col">Added By</th> -->
-							
-							<th>  </tr>
-							
-						</tr>
-					</thead>
-					<tbody>
-					<tr>
-					
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>	
-					<td> </td>
-					<td> 
-					<div class="dropdown">
-								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fa-solid fa-ellipsis-vertical"></i>
-								  </button>
-								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/purchasebill/update}">Update</a>
-								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#">Delete</a>
-								  </div>
-								</div>
-					</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div >
-	</div>
+<div class="container-fluid">
+    <div th:if="${session.message}">
+        <div class="alert alert-primary" role="alert">
+            <p th:text="${session.message}"></p>
+            <script th:inline="javascript">
+                setTimeout(function () {
+                    window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+                }, 500);
+            </script>
+        </div>
+    </div>
+    <div class="row" style="background-color: rgb(84,78,130); color: #fff;">
+        <div class="col-md-12 mt-1">
+            <h1 class="text-center">Purchase Transaction</h1>
+        </div>
+    </div>
+    <div style="background-color: #f5f0f0;">
+        <div class="row pb-3">
+            <div class="col-md-6">
+                <form th:action="@{/search}" method="get">
+                    <div class="col-md-6">
+                        <!-- Search Bar -->
+                        <input type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);" name="query" placeholder="   Search">
+                        <!-- Search icon -->
+                        <i class="fas fa-search search-icon" style="font-size: 20px; color: rgb(12,131,226);" onclick="submitForm()"></i>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 mt-3" style="text-align: right;">
+                <a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Purchase</a>
+            </div>
+        </div>
+        <div class="row mt-2 pb-3">
+            <div class="col-md-12">
+                <table class="table table-bordered" style="background-color: #8A72AA; color: #fff;">
+                    <thead style="background-color: #715499;">
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Invoice No</th>
+                            <th scope="col">Party Name</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Quantity</th>
+                            <!--<th scope="col">Tax Status</th>-->
+                            <th scope="col">Discount Amount</th>
+                            <th scope="col">Payment Type</th>
+                            <th scope="col">Net Payment</th>
+                            <th scope="col">Balance Due</th>
+                            <th scope="col">Amount Paid</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="party : ${parties}" style="text-align: center; border: 1px solid black;">
+                            <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
+                            <td th:text="${party.parties.name}"><input class="form-control" value="" readonly></td>
+                            <td>
+                                <ul style="list-style-type: none; padding: 0; margin: 0;">
+                                    <li th:each="product : ${party.products}">
+                                        <span th:text="${product.name}"></span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td th:text="${party.quantity}"><input class="form-control" value="" readonly></td>
+                            <!--<td>
+                                <select class="form-control">
+                                    <option value="including_tax">Including Tax</option>
+                                    <option value="excluding_tax">Excluding Tax</option>
+                                </select>
+                            </td>-->
+                            <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" th:href="@{/a2zbilling/admin/purchasebill/update}">Update</a>
+                                        <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </section>
 </body>
 <!-- END Body -->
-
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
 
 </html>

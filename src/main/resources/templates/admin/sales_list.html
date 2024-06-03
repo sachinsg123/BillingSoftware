@@ -3,7 +3,7 @@
 <section>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
-		function deleteContactAlert() {
+		function deleteContactAlert(id) {
 
 			const swalWithBootstrapButtons = Swal.mixin({
 				customClass: {
@@ -26,11 +26,11 @@
 				if (result.isConfirmed) {
 
 
-					window.location = "/a2zbilling/admin/sales/delete";
+					window.location = "/a2zbilling/admin/sales/delete/" + id + " ";
 
 
 					swalWithBootstrapButtons.fire(
-						'Transaction Deleted Successfully !',
+						'Sale Order Deleted Successfully !',
 
 					)
 				} else if (
@@ -77,22 +77,34 @@
 						<tr style="text-align: center;">
 							<!-- <th scope="col">Supplier Id</th> -->
 							<th style="border: 1px solid black;" scope="col">Data</th>
-							<th style="border: 1px solid black;" scope="col">Invoice No</th>
-							<th style="border: 1px solid black;" scope="col">Party Name</th>
+							<th style="border: 1px solid black;" scope="col">Sale Bill No</th>
+							<th style="border: 1px solid black;" scope="col">Customer Name</th>
+							<th style="border: 1px solid black;" scope="col">Product Name</th>
+							<th style="border: 1px solid black;" scope="col">Order QTY</th>
 							<th style="border: 1px solid black;" scope="col">Payment Type</th>
-							<th style="border: 1px solid black;" scope="col">Amount</th>
+							<th style="border: 1px solid black;" scope="col">Paid Amount</th>
 							<th style="border: 1px solid black;" scope="col">Balance Due</th>
+							<th style="border: 1px solid black;" scope="col">Amount</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr style="text-align: center;">
-							<td>14/04/2000</td>
-							<td>02</td>
-							<td>Mahesh</td>
-							<td>Cash</td>
-							<td>35000</td>
-							<td>0</td>
+						<tr th:each="sale : ${sales}" style="text-align: center;">
+							<td th:text="${sale.date}"></td>
+							<td th:text="${sale.saleBillNo}"></td>
+							<td th:text="${sale.customer?.name}"></td>
+							<td>							
+								<ul style="list-style-type: none; padding: 0; margin: 0;">
+								    <li th:each="product : ${sale.products}">
+								        <span th:text="${product.name}">Sale ID</span>
+								    </li>
+								</ul>
+							</td>
+							<td th:text="${sale.quantity}"></td>
+							<td th:text="${sale.paymentMode}"></td>
+							<td th:text="${sale.amountPaid}"></td>
+							<td th:text="${sale.dueAmount}"></td>
+							<td th:text="${sale.totalAmount}"></td>
 							<td>
 								<div class="dropdown">
 								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -101,7 +113,7 @@
 								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>
 									<a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/return}"><b>Sales Return</b></a>
-								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#"><b>Delete</b></a>
+								    <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
 								  </div>
 								</div>
 							</td>
