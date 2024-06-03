@@ -39,6 +39,7 @@ import com.billing.model.CompanyDto;
 import com.billing.model.Customer;
 import com.billing.model.GSTRate;
 import com.billing.model.Parties;
+import com.billing.model.PartiesTransaction;
 import com.billing.model.Product;
 import com.billing.model.Sales;
 import com.billing.model.Size;
@@ -53,6 +54,7 @@ import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
 import com.billing.repositories.GSTRepository;
 import com.billing.repositories.PartiesRepository;
+import com.billing.repositories.PartiesTransectionRepository;
 import com.billing.repositories.ProductRepository;
 import com.billing.repositories.SalesRepository;
 import com.billing.repositories.SizeRepository;
@@ -117,6 +119,9 @@ public class adminController {
 	private PartiesRepository partiesRepo;
 	
 	@Autowired
+	private PartiesTransectionRepository partiesTransectionRepo;
+
+  @Autowired
 	private SalesRepository salesRepo;
 
 	// Created by Mahesh
@@ -948,7 +953,6 @@ public class adminController {
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
 		String companyName = company.getName();
-
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -957,6 +961,10 @@ public class adminController {
 	    	String image = user.getImageUrl();
 	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
+		
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
 
 		model.addAttribute("imagePath", imgpath);
 
@@ -1561,6 +1569,10 @@ public class adminController {
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
+		
+		List<PartiesTransaction> parties=partiesTransectionRepo.findAll();
+		model.addAttribute("parties", parties);
+		
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
@@ -1589,6 +1601,14 @@ public class adminController {
 		// to render list on Purchase bill page
 		List<Size> sizes = sizeRepo.findAll();
 		model.addAttribute("sizes", sizes);
+		
+		// To get product Name data from db
+		List<Product> products = productRepo.findAll();
+		model.addAttribute("products", products);
+		
+		// To get Parties Name data from db
+		List<Parties> parties=partiesRepo.showAllActiveParties();
+		model.addAttribute("parties", parties);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -1615,6 +1635,34 @@ public class adminController {
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchasebill_add";
+
+	}
+		@PostMapping("/purchasebill/add")
+        public String addPurchaseBillProcess(@ModelAttribute PartiesTransaction partiesTransaction, Model model) {
+		
+			partiesTransaction.setStatus("Active");
+			partiesTransectionRepo.save(partiesTransaction);
+			
+			
+			/*
+			 * System.out.println(partiesTransaction.getTotalAmount());
+			 * System.out.println(partiesTransaction.getBillNo());
+			 * System.out.println(partiesTransaction.getDate());
+			 * System.out.println(partiesTransaction.getDiscountInPercentage());
+			 * System.out.println(partiesTransaction.getDiscountInRupees());
+			 * System.out.println(partiesTransaction.getDues());
+			 * System.out.println(partiesTransaction.getId());
+			 * System.out.println(partiesTransaction.getNetPayment());
+			 * System.out.println(partiesTransaction.getPaid());
+			 * System.out.println(partiesTransaction.getPaymentMode());
+			 * System.out.println(partiesTransaction.getTaxInPercentage());
+			 * System.out.println(partiesTransaction.getTaxInRupees());
+			 * System.out.println(partiesTransaction.getParties());
+			 */
+		
+
+		return "redirect:/a2zbilling/admin/purchasebill/transection";
+		
 
 	}
 

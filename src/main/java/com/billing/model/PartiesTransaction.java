@@ -23,6 +23,8 @@ public class PartiesTransaction {
 	
 	private String date;
 	
+	private String quantity;
+
 	private String discountInRupees;
 	
 	private String discountInPercentage;
@@ -37,6 +39,10 @@ public class PartiesTransaction {
 	
 	private String dues;
 	
+	private String totalAmount;
+	
+	private String status;
+
 	private String netPayment;
 	
 	@ManyToOne
@@ -154,6 +160,28 @@ public class PartiesTransaction {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-
 	
+	public String getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(String totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
 }
