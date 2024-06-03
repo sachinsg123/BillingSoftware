@@ -934,7 +934,7 @@ public class adminController {
 	@GetMapping("/customer/list")
 	public String getAllCustomers(Model model) {
 
-//		List<Customer> customers = customerService.getAllCustomers();
+        //List<Customer> customers = customerService.getAllCustomers();
 		List<Customer> activeCustomers = customerService.getActiveCustomers();
 		model.addAttribute("customers", activeCustomers);
 
