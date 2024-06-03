@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Customer {
@@ -34,12 +36,23 @@ public class Customer {
 
 	@ManyToMany(mappedBy = "customer")
 	private List<Product> products = new ArrayList<Product>();
+	
+	@OneToMany(mappedBy = "customer")
+	private List<Sales> sales = new ArrayList<>();
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "customer_user", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<User> user = new ArrayList<User>();
 
 	private String status;
+
+	public List<Sales> getSales() {
+		return sales;
+	}
+
+	public void setSales(List<Sales> sales) {
+		this.sales = sales;
+	}
 
 	public int getId() {
 		return id;
@@ -124,8 +137,7 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", password="
-				+ password + ", address=" + address + ", addedDate=" + addedDate + ", products=" + products + ", user="
-				+ user + ", status=" + status + "]";
+				+ password + ", address=" + address + ", addedDate=" + addedDate + ", products=" + products + ", status=" + status + "]";
 	}
 
 }

@@ -41,6 +41,7 @@ import com.billing.model.GSTRate;
 import com.billing.model.Parties;
 import com.billing.model.PartiesTransaction;
 import com.billing.model.Product;
+import com.billing.model.Sales;
 import com.billing.model.Size;
 import com.billing.model.Supplier;
 import com.billing.model.Unit;
@@ -55,6 +56,7 @@ import com.billing.repositories.GSTRepository;
 import com.billing.repositories.PartiesRepository;
 import com.billing.repositories.PartiesTransectionRepository;
 import com.billing.repositories.ProductRepository;
+import com.billing.repositories.SalesRepository;
 import com.billing.repositories.SizeRepository;
 import com.billing.repositories.SupplierRepository;
 import com.billing.repositories.UnitRepository;
@@ -118,6 +120,9 @@ public class adminController {
 	
 	@Autowired
 	private PartiesTransectionRepository partiesTransectionRepo;
+
+  @Autowired
+	private SalesRepository salesRepo;
 
 	// Created by Mahesh
 	@GetMapping("/viewAdminProfile")
@@ -211,7 +216,6 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 	    
-		
 		MultipartFile image = userDto.getImageUrl();
 		
 		if(!image.isEmpty()) {
@@ -655,7 +659,6 @@ public class adminController {
 	}
 
 	
-
 	// Created by Mahesh
 	@GetMapping("/parties/add")
 	public String addParties(Model model) {
@@ -759,12 +762,18 @@ public class adminController {
 		partie.setShippingAddress(parties.getShippingAddress());
 		partie.setState(parties.getState());
 		partie.setDate(parties.getDate());
-		partie.setGstType(parties.getGstType());
+		
+		if(!parties.getGstType().isEmpty()) {
+			partie.setGstType(parties.getGstType());
+		}
 		partie.setGstinNumber(parties.getGstinNumber());
 		partie.setAdharNumber(parties.getAdharNumber());
 		partie.setPanNumber(parties.getPanNumber());
 		partie.setDrivingLicenceNumber(parties.getDrivingLicenceNumber());
-		partie.setPartyGroup(parties.getPartyGroup());
+		
+		if(!parties.getPartyGroup().isEmpty()) {
+			partie.setPartyGroup(parties.getPartyGroup());
+		}
 		partie.setPayment(parties.getPayment());
 		partie.setOpeningBalance(parties.getOpeningBalance());
 		
@@ -1843,6 +1852,9 @@ public class adminController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 		
+		List<Sales> sales = salesRepo.showAllActiveSales();
+		model.addAttribute("sales", sales);
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
 	    {
@@ -1910,8 +1922,44 @@ public class adminController {
 		return "admin/sales_add";
 
 	}
+	
+	// changes By Mahesh
+	@PostMapping("/sales/add")
+	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session) {
+		
+		sales.setStatus("Active");
+		
+		if(sales.getSignatureImage() == null)
+		{
+			sales.setSignatureImage("");
+		}
+		
+		Customer customer = sales.getCustomer();
+		List<Product> products = sales.getProducts();
+		
+		salesRepo.save(sales);
+		customer.getSales().add(sales);
+		List<Product> customerProduct = customer.getProducts();
+		for(Product product:products)
+		{
+			customerProduct.add(product);
+			product.getCustomer().add(customer);
+			productRepo.save(product);
+		}
+		customer.setProducts(customerProduct);
+		customerRepo.save(customer);
+		
+		
+		for(Product product:products)
+		{
+			product.getSales().add(sales);
+			productRepo.save(product);
+		}
+		
+		return "redirect:/a2zbilling/admin/sales/list";
+	}
 
-	// Created by Mahesh - Update PurchaseBill form
+	// Created by Mahesh
 	@GetMapping("/sales/update")
 	public String updatesales(Model model) {
 
@@ -1941,6 +1989,19 @@ public class adminController {
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/sales_update";
+
+	}
+	
+	// Created by Mahesh
+	@GetMapping("/sales/delete/{id}")
+	public String deleteSales(@PathVariable("id") int id) {
+
+		Sales sales = salesRepo.findById(id).get();
+
+		sales.setStatus("InActive");
+
+		salesRepo.save(sales);
+		return "redirect:/a2zbilling/admin/sales/list";
 
 	}
 	

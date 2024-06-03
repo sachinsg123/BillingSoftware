@@ -48,8 +48,8 @@ public class Product{
 	
 	@ManyToMany
 	@JoinTable(name="product_customer",
-	joinColumns = @JoinColumn(name="customer_id")
-	,inverseJoinColumns = @JoinColumn(name="product_id"))
+	joinColumns = @JoinColumn(name="product_id")
+	,inverseJoinColumns = @JoinColumn(name="customer_id"))
 	private List<Customer> customer = new ArrayList<Customer>();
 	
 	@ManyToOne
@@ -77,10 +77,29 @@ public class Product{
     
     @ManyToOne
     @JoinColumn(name="gst_id")
-    private GSTRate gst ;
+    private GSTRate gst;
     
     @ManyToMany(mappedBy = "products")
     private List<PartiesTransaction> transactions = new ArrayList<>();
+    
+    @ManyToMany(mappedBy = "products")
+    private List<Sales> sales = new ArrayList<>();
+
+	public List<PartiesTransaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(List<PartiesTransaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public List<Sales> getSales() {
+		return sales;
+	}
+
+	public void setSales(List<Sales> sales) {
+		this.sales = sales;
+	}
 
 	public List<Charges> getCharges() {
 		return charges;
