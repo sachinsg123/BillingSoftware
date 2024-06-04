@@ -29,7 +29,7 @@
 				cancelButtonText: 'No, cancel!',
 				reverseButtons: true
 			}).then((result) => {
-				if (result.isConfirmed) {
+				if (result.isConfirmed){
 
 
 					window.location = "/a2zbilling/admin/sales/delete/" + id + " ";
@@ -53,7 +53,6 @@
 
 		}
 	</script>
-	
 	<!-- BEGIN Page Wrapper -->
 	<div th:if="${session.message}">
 		<div class="alert alert-primary" role="alert">
@@ -600,7 +599,6 @@
 			            </tr>
 			        `);
 			    });
-			
 			    // Remove row when "Remove" button is clicked
 			    $(document).on('click', '.remove_row', function() {
 			        var row_id = $(this).attr('id');
