@@ -100,7 +100,7 @@
 							<select id="partiesSelect" class="form-select form-control"
 								aria-label="Default select example" name="parties">  <!--addPartiesProduct-->
 								<option selected>Choose</option>
-								<!-- Dynamically populate options with Supplier data -->
+								<!-- Dynamically populate options with Parties data -->
 								<option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
 									th:attr="data-mobile=${party.mobile}, data-email=${party.email}"></option>
 							</select>

@@ -105,12 +105,28 @@
 						<input type="text" required class="form-control" name="productSize">
 					</div>
 				</div>
+				
+				
 				<div class="col-md-4 mt-2">
+					<label>Product Brand</label>
 					<div class="form-group">
-						<label>Product Brand</label>
-						<input type="text" required class="form-control" name="productBrand">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<button type="button" class="btn btn-info" data-toggle="modal"
+									data-target="#exampleModalBrand">
+									<i class="fa-solid fa-plus"></i>
+								</button>
+							</div>
+							<select class="form-select form-control" aria-label="Default select example"
+								name="name">
+								<!--<option selected>Brand</option>-->
+								<option th:each="brand:${brands}" th:text="${brand.name}"></option>
+							</select>
+						</div>
 					</div>
 				</div>
+				
+				
 				<div class="col-md-4 mt-2">
 					<div class="form-group">
 						<label>Product information</label>

@@ -56,9 +56,7 @@
 								aria-label="Default select example" name="getProduct">
 								<option selected>Select</option>
 								<!-- Dynamically populate options with product data -->
-								<option th:each="product:${products}" 
-									th:text="${product.name}">
-									</option>
+								<option th:each="product:${products}" th:text="${product.name}"></option>
 							</select>
 						</div>
 					</div>
