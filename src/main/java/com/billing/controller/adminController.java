@@ -696,7 +696,6 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if (parties.getDate().isEmpty()) {
-
 			Date d = new Date();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			String formattedDate = formatter.format(d);
@@ -1640,27 +1639,10 @@ public class adminController {
 		@PostMapping("/purchasebill/add")
         public String addPurchaseBillProcess(@ModelAttribute PartiesTransaction partiesTransaction, Model model) {
 		
-			partiesTransaction.setStatus("Active");
-			partiesTransectionRepo.save(partiesTransaction);
-			
-			
-			/*
-			 * System.out.println(partiesTransaction.getTotalAmount());
-			 * System.out.println(partiesTransaction.getBillNo());
-			 * System.out.println(partiesTransaction.getDate());
-			 * System.out.println(partiesTransaction.getDiscountInPercentage());
-			 * System.out.println(partiesTransaction.getDiscountInRupees());
-			 * System.out.println(partiesTransaction.getDues());
-			 * System.out.println(partiesTransaction.getId());
-			 * System.out.println(partiesTransaction.getNetPayment());
-			 * System.out.println(partiesTransaction.getPaid());
-			 * System.out.println(partiesTransaction.getPaymentMode());
-			 * System.out.println(partiesTransaction.getTaxInPercentage());
-			 * System.out.println(partiesTransaction.getTaxInRupees());
-			 * System.out.println(partiesTransaction.getParties());
-			 */
+			partiesTransaction.setStatus("Active"); 
 		
-
+			partiesTransectionRepo.save(partiesTransaction);
+			 
 		return "redirect:/a2zbilling/admin/purchasebill/transection";
 		
 
@@ -1849,11 +1831,11 @@ public class adminController {
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-		
 		List<Sales> sales = salesRepo.showAllActiveSales();
 		model.addAttribute("sales", sales);
+		
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
@@ -1925,14 +1907,9 @@ public class adminController {
 	
 	// changes By Mahesh
 	@PostMapping("/sales/add")
-	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session) {
+	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session, HttpServletRequest request) throws URISyntaxException {
 		
 		sales.setStatus("Active");
-		
-		if(sales.getSignatureImage() == null)
-		{
-			sales.setSignatureImage("");
-		}
 		
 		Customer customer = sales.getCustomer();
 		List<Product> products = sales.getProducts();
@@ -1955,8 +1932,13 @@ public class adminController {
 			product.getSales().add(sales);
 			productRepo.save(product);
 		}
-		
-		return "redirect:/a2zbilling/admin/sales/list";
+
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        return "redirect:" + endpoint;
 	}
 
 	// Created by Mahesh
@@ -2006,10 +1988,11 @@ public class adminController {
 	}
 	
 	//create by Mahesh
-	@GetMapping("/sales/return")
-	public String returnsales(Model model) {
+	@GetMapping("/sales/return/{id}")
+	public String returnsales(@PathVariable("id") int id, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -2022,6 +2005,9 @@ public class adminController {
 		List<Product> products = productRepo.findAll();
 		model.addAttribute("products",products);
 		
+		Sales sale = salesRepo.findById(id).get();
+		model.addAttribute("sale", sale);
+				
 		
 		String signature = company.getSignature();
 		if(signature != null)

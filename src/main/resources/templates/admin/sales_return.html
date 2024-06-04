@@ -70,15 +70,17 @@
             <h1 class="text-center mt-2"><b>Sales Return</b></h1>
         </div>
     </div>
-	
+	<form th:action="@{/a2zbilling/admin/sales/return}" method="post" th:object="${sale}"
+								enctype="multipart/form-data" class="form-group">
 			<div class="row">
 				<div class="col-md-4 mt-3 input-group">
+					<input type="hidden" name="id" th:field="*{id}" />
 					<div class="col-md-4">
 			        	<label>Customer Name :- </label>
 					</div>
 					<div class="col-md-8">
-						<select id="customerSelect" class="form-select form-control" aria-label="Default select example" name="saleCustomer">
-				            <option selected>Choose</option>
+						<select id="customerSelect" class="form-select form-control" aria-label="Default select example" name="customer">
+				            <option selected th:text="*{customer.name}">Select</option>
 				            <!-- Dynamically populate options with customer data -->
 				            <option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}" 
 									th:attr="data-mobile=${customer.mobile}, 
@@ -93,7 +95,7 @@
 			        	<label>Mobile:- </label>
 					</div>
 					<div>
-			        	<input id="mobile" readonly type="text" class="form-control">
+			        	<input id="mobile" readonly type="text" class="form-control" th:field="*{customer.mobile}">
 					</div>
 			    </div>
 				<div class="col-md-4 mt-3 input-group ml-auto">
@@ -101,7 +103,7 @@
 	               		<label>Sale Return No.:- </label>
 					</div>
 					<div class="col-md-6">
-				   		<input type="text" class="form-control" id="invoiceNo" readonly>
+				   		<input type="text" class="form-control" id="saleReturnNo" readonly>
 					</div>
 				</div>
 			</div>
@@ -111,7 +113,7 @@
 			        	<label>Email:- </label>
 					</div>
 					<div class="col-md-8">
-			        	<input id="email" readonly type="email" class="form-control">
+			        	<input id="email" readonly type="email" class="form-control" th:field="*{customer.email}">
 					</div>
 			    </div>
 				
@@ -120,7 +122,7 @@
 		               <label>Sale Bill No. :- </label>
 					</div>
 					<div class="col-md-6">
-					   <input type="text" class="form-control" id="invoiceNo">
+					   <input type="text" class="form-control" id="invoiceNo" name="saleBillNo" th:field="*{saleBillNo}">
 				 	</div>
 	           </div>
 			</div>
@@ -131,7 +133,7 @@
 			        	<label>Address :- </label>
 					</div>
 					<div class="col-md-8">
-			        	<textarea id="address" readonly type="text" class="form-control"></textarea>
+			        	<textarea id="address" readonly type="text" class="form-control" th:field="*{customer.address}"></textarea>
 					</div>
 				</div>
 			   <div class="col-md-4 mt-1 input-group ml-auto">
@@ -139,7 +141,7 @@
 						<label>Sale Bill Date:- </label>
 					</div>
 					<div class="col-md-6">
-	   			   		<input type="date" class="form-control" id="sellDate">
+	   			   		<input type="date" class="form-control" id="sellDate" th:field="*{date}">
 					</div>
    	           </div>
 			</div>
@@ -149,7 +151,7 @@
    						<label>Date:- </label>
 					</div>
 					<div class="col-md-6">
-   			   			<input type="text" class="form-control" id="currentDateInput" readonly>
+   			   			<input name="date" type="text" class="form-control" id="currentDateInput" readonly>
 					</div>
    	           </div>	
 			</div>		 
@@ -191,9 +193,9 @@
 					<td><input id="sgst" type="text" class="form-control" readonly></td>
 					<td><input id="size" type="text" class="form-control" readonly></td>
 					<td><input id="AQty" type="number" class="form-control" readonly></td>
-					<td><input id="Qty" type="number" class="form-control"></td>
-					<td><input id="taxinpercentage" oninput="calculateTaxAmount()" type="number" class="form-control"></td>
-					<td><input id="taxinamount" type="text" class="form-control" readonly></td>
+					<td><input id="Qty" type="number" class="form-control" name="quantity" th:field="*{quantity}"></td>
+					<td><input id="taxinpercentage" oninput="calculateTaxAmount()" type="number" class="form-control" name="taxInPercentage" th:field="*{taxInPercentage}"></td>
+					<td><input id="taxinamount" type="text" class="form-control" readonly name="taxInAmount" th:field="*{taxInAmount}"></td>
 					<td><input id="price" type="text" class="form-control" readonly></td>
 					<td><input id="total_amount" type="text" class="form-control" readonly></td>
 					<td>
@@ -214,28 +216,28 @@
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Total amount:</label>
-		                    <input id="totalAmountField" type="text" required class="form-control" name=""
-		                        placeholder="Total amount" readonly>
+		                    <input id="totalAmountField" type="text" required class="form-control" name="totalAmount"
+		                        placeholder="Total amount" readonly th:field="*{totalAmount}">
 		                </div>
 		            </div>
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Discount (Rs):</label>
-		                    <input id="discountAmountField" type="number" class="form-control" name="discount"
-		                        placeholder="Discount amount" oninput="updatePercentageAmount()">
+		                    <input id="discountAmountField" type="text" class="form-control" name="discountInAmount"
+		                        placeholder="Discount amount" oninput="updatePercentageAmount()" th:field="*{discountInAmount}">
 		                </div>
 		            </div>
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Discount %:</label>
-		                    <input id="discountPercentField" type="number" class="form-control" name="discount%"
-		                        placeholder="Discount %" oninput="updateDiscountedAmount()">
+		                    <input id="discountPercentField" type="text" class="form-control" name="discountInPercentage"
+		                        placeholder="Discount %" oninput="updateDiscountedAmount()" th:field="*{discountInPercentage}">
 		                </div>
 		            </div>
 		            <div>
 		                <div class="form-group">
 		                    <label class="invoice-label">Payment mode:</label>
-		                    <select class="form-control" name="type" required>
+		                    <select class="form-control" name="paymentMode" required th:field="*{paymentMode}">
 		                        <option value="cash">Cash</option>
 		                        <option value="cheque">Cheque</option>
 		                        <option value="online">Online</option>
@@ -247,19 +249,19 @@
 		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Paid:</label>
-		                    <input id="paidAmountField" type="number" required class="form-control" name="paid" placeholder="Amount paid" oninput="updateDues()">
+		                    <input id="paidAmountField" type="number" required class="form-control" name="amountPaid" placeholder="Amount paid" oninput="updateDues()" th:field="*{amountPaid}">
 		                </div>
 		            </div>
 		            <div style="margin-left: 110px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Dues:</label>
-		                    <input id="duesAmountField" type="number" required class="form-control" name="dues" placeholder="Dues" readonly>
+		                    <input id="duesAmountField" type="number" required class="form-control" name="dueAmount" placeholder="Dues" readonly th:field="*{dueAmount}">
 		                </div>
 		            </div>
 		            <div style="margin-left: 110px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Net Payment:</label>
-		                    <input id="netPaymentField" type="number" required class="form-control" name="netpayment" placeholder="Final Amount" readonly>
+		                    <input id="netPaymentField" type="number" required class="form-control" name="netPayment" placeholder="Final Amount" readonly th:field="*{netPayment}">
 		                </div>
 		            </div>
 		        </div>
@@ -268,7 +270,7 @@
 		
 		<div class="col-md-12 mt-2">
 			<div class="text-right mr-6 mt-4">
-				<img th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
+				<img th:src="*{SignatureImage}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
 			</div>
 			
 			<div class="row justify-content-center">
@@ -277,7 +279,8 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</form>
+</div>
 	
 	<script>
 		
