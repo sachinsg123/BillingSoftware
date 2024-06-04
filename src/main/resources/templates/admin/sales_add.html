@@ -160,9 +160,7 @@
 							<th scope="col">Tax in Amount</th>
 							<th scope="col">Selling Price</th>
 							<th scope="col">Total Amount</th>
-							<th scope="col">  </tr>
-							
-						</tr>
+							<th scope="col"></tr>
 					</thead>
 					<tbody id="addrow">
 					<tr>
@@ -437,7 +435,7 @@
 			    }
 			}
 
-		function updateDiscountedAmount() {
+		function updateDiscountedAmount(){
 				const totalAmountField = document.getElementById('totalAmountField');
 		        const discountPercentField = document.getElementById('discountPercentField');
 		        const discountAmountField = document.getElementById('discountAmountField');
@@ -567,18 +565,14 @@
 			    // Add new row when "Add Row" button is clicked
 			    $('#add').click(function() {
 			        i++; // Increment counter for new row ID
+			        var opts = $("#productSelect").html();
+			        var cgst = $("#cgst").value;
 			        $('#addrow').append(`
 			            <tr id="row${i}">
 			                <td><input id="barcode${i}" type="text" class="form-control"></td>
 			                <td>
 			                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="productSelect">
-			                        <option value="">Choose</option>
-			                        <!-- Populate options with product data -->
-			                        <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-			                            th:attr="data-price=${product.price},
-			                            data-quantity=${product.quantity},
-			                            data-size=${product.size.sizeValue}">
-			                        </option>
+			                        ${opts}
 			                    </select>
 			                </td>
 			                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
@@ -604,9 +598,6 @@
 			    });
 			});
 		</script>
-
-
-
 	<script>
         // Get the current date
         var currentDate = new Date();

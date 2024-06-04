@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 
-<!-- BEGIN Page Wrapper -->
-
-<!-- Created by Younus -->
-
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -450,7 +446,7 @@
 
 
 	<script>
-		function addRow() {
+		function addRow(){
 			var newRow = '<tr>' +
 				'<td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button></td>' +
 				'<td><input class="form-control" type="text" name="item[]" required></td>' +
