@@ -106,15 +106,15 @@
                         <tr th:each="party : ${parties}" style="text-align: center; border: 1px solid black;">
                             <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
-                            <td th:text="${party.parties.name}"><input class="form-control" value="" readonly></td>
+                            <td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
                             <td>
                                 <ul style="list-style-type: none; padding: 0; margin: 0;">
-                                    <li th:each="product : ${party.products}">
-                                        <span th:text="${product.name}"></span>
+                                    <li th:each="product : ${party?.products}">
+                                        <span th:text="${product?.name}"></span>
                                     </li>
                                 </ul>
                             </td>
-                            <td th:text="${party.quantity}"><input class="form-control" value="" readonly></td>
+                            <td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
                             <!--<td>
                                 <select class="form-control">
                                     <option value="including_tax">Including Tax</option>

@@ -47,6 +47,12 @@
 				</div>
 				
 				<div class="row">
+					
+					<div class="col-md-5 mt-4">
+						<label><b>Email*</b></label>
+						<input name="email" type="email" required class="form-control" placeholder="Please Enter a Email Address" th:field="*{email}">
+					</div>
+					<!--	
 					<div class="col-md-5 mt-4">
 						<label><b>Party Group*</b></label>
 						<div class="input-group">
@@ -59,6 +65,7 @@
 						   	</button>
 						</div>
 					</div>
+					-->
 				</div>
 				
 				<div class="row text-center">
@@ -71,7 +78,7 @@
 					<div class="col-md-3 mt-4">
 						<a class="toggle-button form-control" id="partyOpeningBalanceInfo" style="color: white;">Opening Balance</a>
 					</div>
-					<div class="col-md-3 mt-4">
+					<div class="col-md-3 mt-4" style="display: none;">
 						<a class="toggle-button form-control" id="partyAdditionalInfo" style="color: white;">Additional Fields</a>
 					</div>															
 				</div>
@@ -87,10 +94,7 @@
 						<label><b>Shipping Address*</b></label>
 						<textarea name="shippingAddress" required type="text" class="form-control" placeholder="Shipping Address" th:field="*{shippingAddress}"></textarea>
 					</div>
-					<div class="col-md-5 mt-4">
-						<label><b>Email*</b></label>
-						<input name="email" type="email" required class="form-control" placeholder="Please Enter a Email Address" th:field="*{email}">
-					</div>
+					
 				</div>
 					
 				

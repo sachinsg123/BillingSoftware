@@ -160,9 +160,7 @@
 							<th scope="col">Tax in Amount</th>
 							<th scope="col">Selling Price</th>
 							<th scope="col">Total Amount</th>
-							<th scope="col">  </tr>
-							
-						</tr>
+							<th scope="col"></tr>
 					</thead>
 					<tbody id="addrow">
 					<tr>
@@ -177,7 +175,7 @@
 					       </option>
 			           	</select>
 					</td>
-					<td><input id="cgst" type="text" class="form-control"  readonly></td>
+					<td><input id="cgst" type="text" class="form-control" readonly></td>
 					<td><input id="sgst" type="text" class="form-control" readonly></td>
 					<td><input id="size" type="text" class="form-control" readonly></td>
 					<td><input id="AQty" type="number" class="form-control" readonly></td>
@@ -257,7 +255,8 @@
 			
 		<div class="col-md-12 mt-2">
 			<div class="text-right mr-6 mt-4">
-				<img name="SignatureImage" th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
+				<img th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
+				<input style="display: none;" name="SignatureImage" class="form-control" id="imageUrl" type="text" th:value="${companySignImgPath}">
 			</div>
 			
 			<div class="row justify-content-center">
@@ -435,7 +434,7 @@
 			    }
 			}
 
-		function updateDiscountedAmount() {
+		function updateDiscountedAmount(){
 				const totalAmountField = document.getElementById('totalAmountField');
 		        const discountPercentField = document.getElementById('discountPercentField');
 		        const discountAmountField = document.getElementById('discountAmountField');
@@ -483,21 +482,10 @@
 				   {
 					AQty = 0;
 				   }
-				   if(Cgst == null)
-   				   {
-   					Cgst = 0;
-   				   }
-				   if(Sgst == null)
-  				   {
-  					Sgst = 0;
-  				   }
 				   
-					
 			       $('#price').val(price);
 				   $('#size').val(size);
 				   $('#AQty').val(AQty);
-				   $('#cgst').val(Cgst);
-				   $('#sgst').val(Sgst);
 			   });
 			});
 		</script>
@@ -576,18 +564,14 @@
 			    // Add new row when "Add Row" button is clicked
 			    $('#add').click(function() {
 			        i++; // Increment counter for new row ID
+			        var opts = $("#productSelect").html();
+			        var cgst = $("#cgst").value;
 			        $('#addrow').append(`
 			            <tr id="row${i}">
 			                <td><input id="barcode${i}" type="text" class="form-control"></td>
 			                <td>
 			                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="productSelect">
-			                        <option value="">Choose</option>
-			                        <!-- Populate options with product data -->
-			                        <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-			                            th:attr="data-price=${product.price},
-			                            data-quantity=${product.quantity},
-			                            data-size=${product.size.sizeValue}">
-			                        </option>
+			                        ${opts}
 			                    </select>
 			                </td>
 			                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
@@ -613,9 +597,6 @@
 			    });
 			});
 		</script>
-
-
-
 	<script>
         // Get the current date
         var currentDate = new Date();

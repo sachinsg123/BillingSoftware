@@ -1,6 +1,5 @@
 package com.billing.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -9,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,15 +22,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.billing.model.Brand;
 import com.billing.model.BrandDto;
 import com.billing.model.Category;
-import com.billing.model.Color;
 import com.billing.model.Company;
 import com.billing.model.CompanyDto;
 import com.billing.model.Customer;
@@ -64,12 +58,13 @@ import com.billing.services.CustomerServiceImpl;
 import com.billing.services.ProductServiceImpl;
 import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/a2zbilling/admin")
-public class adminController {
+public class adminController{
 
 	@Autowired
 	private ProductRepository productRepo;
@@ -120,78 +115,72 @@ public class adminController {
 	@Autowired
 	private PartiesTransectionRepository partiesTransectionRepo;
 
-	@Autowired
+  @Autowired
 	private SalesRepository salesRepo;
-
-	// Created by Mahesh
+	
 	@GetMapping("/viewAdminProfile")
 	public String viewAdminProfile(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		model.addAttribute("user", user);
 
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		String adminImg = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			adminImg = StringUtils.ImagePaths.userImageUrl + image;
-		}
-
-		model.addAttribute("user", user);
+	    model.addAttribute("user", user);
+	    
+	    Company company = companyRepo.getCompanyByUserId(user.getId());
+	    String companyName = company.getName();
+	    model.addAttribute("companyName", companyName);
+	    
+	    String adminImg = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+	    
+	    if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
+	    {
+	    	String image = user.getImageUrl();
+	    	adminImg = StringUtils.ImagePaths.userImageUrl + image;
+	    }
 
 		model.addAttribute("companyName", companyName);
 
 		model.addAttribute("imagePath", adminImg);
-
-		// Changes by Younus - code to render business logo
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-
-		// Changes by Younus -code to render Signature
 		String sign = company.getSignature();
 		String companySign = "/img/companysignature/" + sign;
 		model.addAttribute("companySign", companySign);
 
 		return "/admin/view_Admin_Profile";
 	}
-
-	// Created by Mahesh
+	
 	@GetMapping("/updateAdminProfile")
 	public String updateAdminProfile(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
+
+	    model.addAttribute("user", user);
+	    
+	    Company company = companyRepo.getCompanyByUserId(user.getId());
+	    String companyName = company.getName();
+	    model.addAttribute("companyName", companyName);
+	    
+	    String adminImg = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+	    
+	    if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
+	    {
+	    	String image = user.getImageUrl();
+	    	adminImg = StringUtils.ImagePaths.userImageUrl + image;
+	    }
+
 		model.addAttribute("user", user);
 
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
-
-		String adminImg = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			adminImg = StringUtils.ImagePaths.userImageUrl + image;
-		}
-
-		model.addAttribute("user", user);
-
-		model.addAttribute("companyName", companyName);
-
 		model.addAttribute("imagePath", adminImg);
 
 		String image = company.getLogo();
@@ -203,60 +192,65 @@ public class adminController {
 		model.addAttribute("companySign", companySign);
 
 		return "/admin/update_Admin_Profile";
-	}
 
-	// created by Mahesh
+	}
+	
+	
 	@PostMapping("/updateAdminProfile")
 	public String updateProcessUser(@ModelAttribute UserDto userDto, HttpSession session) {
-
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+	    
 		MultipartFile image = userDto.getImageUrl();
-
-		if (!image.isEmpty()) {
-			Date date = new Date();
-			String storageFileName = date.getTime() + "_" + image.getOriginalFilename();
-
-			try {
-				String uploadDir = "src/main/resources/static/img/userImage/";
-				Path uploadPath = Paths.get(uploadDir);
-				
-				if (!Files.exists(uploadPath)) {
-					Files.createDirectories(uploadPath);
-				}
-				try (InputStream inputStream = image.getInputStream()) {
-					Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
-							StandardCopyOption.REPLACE_EXISTING);
-				}
-			} catch (Exception ex) {
-				System.out.println("Exception: " + ex.getMessage());
-			}
-
-			user.setImageUrl(storageFileName);
+		
+		if(!image.isEmpty()) {
+	        Date date = new Date();
+	        String storageFileName = date.getTime() + "_" + image.getOriginalFilename();
+        
+	         try{
+	            String uploadDir = "src/main/resources/static/img/userImage/";
+	            Path uploadPath = Paths.get(uploadDir);
+	
+	            if(!Files.exists(uploadPath))
+	            {
+	                Files.createDirectories(uploadPath);
+	            }
+	            try(InputStream inputStream = image.getInputStream()){
+	                Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
+	                        StandardCopyOption.REPLACE_EXISTING);
+	            }
+	        }
+	        catch (Exception ex)
+	        {
+	            System.out.println("Exception: "+ ex.getMessage());
+	        }
+	         
+	        user.setImageUrl(storageFileName);
 		}
-
-		if (!userDto.getUsername().isEmpty() && userRepo.findByUsername(userDto.getUsername()) == null) {
+		
+		if(!userDto.getUsername().isEmpty() && userRepo.findByUsername(userDto.getUsername()) == null ) {
 			user.setUsername(userDto.getUsername());
 		}
-		if (!userDto.getEmail().isEmpty() && userRepo.findByEmail(userDto.getEmail()) == null) {
+		if(!userDto.getEmail().isEmpty() && userRepo.findByEmail(userDto.getEmail()) == null) {
 			user.setEmail(userDto.getEmail());
 		}
-		if (!userDto.getMobile().isEmpty() && userRepo.findByMobile(userDto.getMobile()) == null) {
+		if(!userDto.getMobile().isEmpty() && userRepo.findByMobile(userDto.getMobile()) == null) {
 			user.setMobile(userDto.getMobile());
 		}
-
-		System.out.println("Company Name " + userDto.getCompanyname() + " " + user.getCompany().getName());
-		Company company = user.getCompany();
-
-		if (!userDto.getCompanyname().isEmpty()) {
-			company.setName(userDto.getCompanyname());
-		}
-		company.setUser(user);
-
+		
+		
+	    System.out.println("Company Name "+userDto.getCompanyname() + " " +user.getCompany().getName());
+	    Company company = user.getCompany();
+	    
+        if(!userDto.getCompanyname().isEmpty()) {
+        	company.setName(userDto.getCompanyname());
+        }
+        company.setUser(user);
+        
 		userRepo.save(user);
 		companyRepo.save(company);
-
+		
 		return "redirect:/a2zbilling/admin/viewAdminProfile";
 	}
 
@@ -279,6 +273,8 @@ public class adminController {
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
+
+
 		model.addAttribute("imagePath", imgpath);
 
 		String username = auth.getName();
@@ -286,782 +282,44 @@ public class adminController {
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+
+
 		String companyName = company.getName();
 		model.addAttribute("company", company);
 		model.addAttribute("companyName", companyName);
 
-		// Changes by Younus - code to render business logo
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
+		model.addAttribute("imagePath", imgpath);
+
+
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
 
-		// Changes by Younus -code to render Signature
+		
 		String sign = company.getSignature();
 		String companySign = "/img/companysignature/" + sign;
 		model.addAttribute("companySign", companySign);
 
-		// Changes by Younus -(For Customer Count- Dynamically)
+		
 		long customercount = customerService.getCustomerCount();
 		model.addAttribute("customercount", customercount);
 
-		// Changes by Younus -(For Supplier Count- Dynamically)
+		
 		long suppliercount = supplierService.getSupplierCount();
 		model.addAttribute("suppliercount", suppliercount);
 
 		return "home";
 
 	}
-
-	@GetMapping("/product/add")
-	public String addProductByAdmin(Model model) {
-
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
-		model.addAttribute("suppliers", suppliers);
-
-		List<Customer> customerList = customerRepo.findAll();
-		model.addAttribute("customers", customerList);
-
-		List<Category> categoryList = categoryRepo.findAll();
-		model.addAttribute("categories", categoryList);
-
-		List<Color> colors = colorRepo.findAll();
-		model.addAttribute("colors", colors);
-		
-		List<Brand> brands = brandRepo.showAllActiveBrand();
-		model.addAttribute("brands", brands);
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		String companyName = company.getName();
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		model.addAttribute("companyName", companyName);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "admin/add_product_form";
-
-	}
-
-	@PostMapping("/product/add")
-	public String processProductAdding(@ModelAttribute Product product,
-			@RequestParam("imageFile") MultipartFile imageFile, @RequestParam("productSize") String productSizeValue,
-			@RequestParam("productColor") String colorName, @RequestParam("productBrand") String brandName,
-			HttpSession session) throws IOException {
-
-		if (imageFile.getOriginalFilename().isEmpty()) {
-
-			// imageFile.getOriginalFilename();
-			product.setImageUrl("default.png");
-		} else {
-			// String uploadDir = "./static/productImages";
-			String fileName = imageFile.getOriginalFilename();
-			// Path filePath = Paths.get(StringUtils.ImagePaths.productImageUrl).getFile();
-			File filePath = new ClassPathResource("/static/img/products/").getFile();
-			Path path = Paths.get(filePath.getAbsolutePath() + File.separator + fileName);
-			Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-			System.out.println(fileName);
-			System.out.println(path);
-			System.out.println(filePath);
-			product.setImageUrl(fileName);
-		}
-		
-		// adding size
-		Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
-
-		if (sizeOccured != null) {
-
-			product.setSize(sizeOccured);
-		} else {
-
-			Size s = new Size();
-			s.setSizeValue(productSizeValue);
-			sizeRepo.save(s);
-			product.setSize(s);
-		}
-
-		// adding color
-		Color colorFound = colorRepo.findByName(colorName);
-		Color noColorChoosed = colorRepo.findByName("No color choosed");
-
-		if (colorFound != null) {
-
-			product.setColor(colorFound);
-		} else if (colorName.equals("No choosed color")) {
-
-			product.setColor(noColorChoosed);
-
-		} else {
-			Color co = new Color();
-			co.setName(colorName);
-			colorRepo.save(co);
-			product.setColor(co);
-		}
-
-		// add brand into product
-		Brand brandFound = brandRepo.findByName(brandName);
-
-		if (brandFound != null) {
-
-			product.setBrand(brandFound);
-		} else {
-
-			Brand b = new Brand();
-			b.setName(brandName);
-			b.setLogo("default.png");
-			brandRepo.save(b);
-			product.setBrand(b);
-		}
-
-		Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
-
-		if (cat == null) {
-
-			product.setCategory(null);
-		}
-
-		product.setCategory(cat);
-		product.setStatus("Active");
-
-		productRepo.save(product);
-
-		System.out.println(product);
-		session.setAttribute("message", "Product Added Successfully");
-
-		return "redirect:/a2zbilling/admin/product/add";
-
-	}
-
-	// showing all products
-	@GetMapping("/product/list")
-	public String showAllProduct(Model model) {
-
-		List<Product> allProducts = productService.getAllProducts();
-		model.addAttribute("products", allProducts);
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		model.addAttribute("companyName", companyName);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "admin/product_list";
-	}
-
-	// update form handler
-	@GetMapping("/product/edit/{id}")
-	public String productEditForm(@PathVariable("id") String id, Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		String companyName = company.getName();
-
-		model.addAttribute("companyName", companyName);
-		Optional<Product> Founded = productRepo.findById(Integer.parseInt(id));
-		Product product = Founded.get();
-		model.addAttribute("product", product);
-		List<Category> categories = categoryRepo.findAll();
-		model.addAttribute("categories", categories);
-		List<Color> colors = colorRepo.findAll();
-		model.addAttribute("colors", colors);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String Userimage = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + Userimage;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		return "admin/edit_product";
-
-	}
-
-	@PostMapping("/product/edit")
-	public String productUpdateProcess(@ModelAttribute Product product,
-			@RequestParam("imageFile") MultipartFile imageFile, @RequestParam("productSize") String productSizeValue,
-			@RequestParam("productColor") String colorName, @RequestParam("productBrand") String brandName)
-			throws IOException {
-
-		System.out.println("data getting " + product);
-		Optional<Product> found = productRepo.findById(product.getId());
-		Product productFound = found.get();
-		productFound.setId(product.getId());
-		productFound.setName(product.getName());
-		productFound.setAddedDate(product.getAddedDate());
-		productFound.setImageUrl(product.getImageUrl());
-		if (imageFile.getOriginalFilename().isEmpty()) {
-
-			// imageFile.getOriginalFilename();
-			product.setImageUrl("default.png");
-		} else {
-//			   String uploadDir = "./static/productImages";
-			String fileName = imageFile.getOriginalFilename();
-//			   Path filePath = Paths.get(StringUtils.ImagePaths.productImageUrl).getFile();
-			File filePath = new ClassPathResource("/static/img/products/").getFile();
-			Path path = Paths.get(filePath.getAbsolutePath() + File.separator + fileName);
-			Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-			System.out.println(fileName);
-			System.out.println(path);
-			System.out.println(filePath);
-			product.setImageUrl(fileName);
-		}
-		Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
-
-		if (sizeOccured != null) {
-
-			product.setSize(sizeOccured);
-		} else {
-
-			Size s = new Size();
-			s.setSizeValue(productSizeValue);
-//			sizeRepo.save(s);
-			product.setSize(s);
-		}
-
-		// adding color
-		Color colorFound = colorRepo.findByName(colorName);
-		Color noColorChoosed = colorRepo.findByName("No color choosed");
-
-		if (colorFound != null) {
-
-			product.setColor(colorFound);
-		} else if (colorName.equals("No choosed color")) {
-
-			product.setColor(noColorChoosed);
-
-		} else {
-			Color co = new Color();
-			co.setName(colorName);
-//			colorRepo.save(co);
-			product.setColor(co);
-		}
-
-		// add brand into product
-		Brand brandFound = brandRepo.findByName(brandName);
-
-		if (brandFound != null) {
-
-			product.setBrand(brandFound);
-		} else {
-
-			Brand b = new Brand();
-			b.setName(brandName);
-			b.setLogo("default.png");
-//			brandRepo.save(b);
-			product.setBrand(b);
-		}
-
-		Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
-
-		if (cat == null) {
-
-			product.setCategory(null);
-		}
-
-		product.setCategory(cat);
-		product.setStatus("Active");
-
-		System.out.println(product);
-
-//		productRepo.save(product);		
-
-		return "redirect:/a2zbilling/admin/product/list";
-	}
-
-	// Created by Mahesh
-	@GetMapping("/parties/transactions/update")
-	public String updateTransactions(Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		return "admin/update_transactions";
-	}
-
-	// Created by Mahesh
-	@GetMapping("/parties/transactions/delete")
-	public String deleteTransaction() {
-
-		return "redirect:/a2zbilling/admin/parties/transactions/list";
-	}
-
-	// Created by Mahesh
-	@GetMapping("/parties/add")
-	public String addParties(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "admin/add_parties";
-	}
-
-	// changes By Mahesh
-	@PostMapping("/parties/add")
-	public String partiesAddingProcess(@ModelAttribute Parties parties, HttpSession session, HttpServletRequest request)
-			throws URISyntaxException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		if (parties.getDate().isEmpty()) {
-
-			Date d = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String formattedDate = formatter.format(d);
-			parties.setDate(formattedDate);
-		}
-		parties.setStatus("Active");
-
-		partiesRepo.save(parties);
-
-		String referer = request.getHeader("referer");
-		java.net.URI uri = new java.net.URI(referer);
-		String path = uri.getPath();
-		String query = uri.getQuery();
-		String endpoint = path + (query != null ? "?" + query : "");
-		return "redirect:" + endpoint;
-
-	}
-
-	// Created by Mahesh
-	@GetMapping("/parties/update/{id}")
-	public String updateParties(@PathVariable("id") int id, Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		Parties partie = partiesRepo.findById(id).get();
-		model.addAttribute("partie", partie);
-
-		return "admin/update_parties";
-	}
-
-	// changes By Mahesh
-	@PostMapping("/parties/update")
-	public String partiesUpdateProcess(@ModelAttribute Parties parties, HttpSession session) {
-		Parties partie = partiesRepo.findById(parties.getId()).get();
-
-		System.out.println(partie);
-
-		partie.setName(parties.getName());
-		partie.setEmail(parties.getEmail());
-		partie.setMobile(parties.getMobile());
-		partie.setBillingAddress(parties.getBillingAddress());
-		partie.setShippingAddress(parties.getShippingAddress());
-		partie.setState(parties.getState());
-		partie.setDate(parties.getDate());
-
-		if (!parties.getGstType().isEmpty()) {
-			partie.setGstType(parties.getGstType());
-		}
-		partie.setGstinNumber(parties.getGstinNumber());
-		partie.setAdharNumber(parties.getAdharNumber());
-		partie.setPanNumber(parties.getPanNumber());
-		partie.setDrivingLicenceNumber(parties.getDrivingLicenceNumber());
-
-		if (!parties.getPartyGroup().isEmpty()) {
-			partie.setPartyGroup(parties.getPartyGroup());
-		}
-		partie.setPayment(parties.getPayment());
-		partie.setOpeningBalance(parties.getOpeningBalance());
-
-		partiesRepo.save(partie);
-
-		return "redirect:/a2zbilling/admin/parties/list";
-	}
-
-	// Created by Mahesh
-	@GetMapping("/parties/delete/{id}")
-	public String deleteParties(@PathVariable("id") int id) {
-
-		Parties partie = partiesRepo.findById(id).get();
-
-		partie.setStatus("InActive");
-
-		partiesRepo.save(partie);
-		return "redirect:/a2zbilling/admin/parties/list";
-
-	}
-
-	// Created by Mahesh
-	@GetMapping("/parties/list")
-	public String listOfParties(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		List<Parties> parties = partiesRepo.showAllActiveParties();
-		model.addAttribute("parties", parties);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "admin/parties_list";
-	}
-
-	// Created by Mahesh
-	@GetMapping("/parties/transactions/list")
-	public String listOfPartiesTransactions(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "admin/transactions_list";
-	}
-
-	@GetMapping("/customer/add")
-	public String customerAddForm(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		// Code to Render admin on our page
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "/admin/add_customer_form";
-
-	}
-
-	@PostMapping("/customer/add")
-	public String addingProcessCustomer(@ModelAttribute Customer customer, Model model, HttpSession session,
-			HttpServletRequest request) throws URISyntaxException {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user1 = userRepo.findByUsername(auth.getName());
-
-		String user = auth.getName();
-
-		User addedByUser = userRepo.findByUsername(user);
-
-		List<User> userList = new ArrayList<User>();
-		userList.add(addedByUser);
-
-		customer.setUser(userList);
-
-		customer.setStatus("Active");
-
-		Customer customer2 = customerService.addCustomer(customer);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-
-		if (user1.getImageUrl() != null && !user1.getImageUrl().isEmpty()) {
-			String image = user1.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		session.setAttribute("message", "Customer Added Successfully");
-
-		session.setAttribute("message", "Supplier added Successfully");
-		String referer = request.getHeader("referer");
-		java.net.URI uri = new java.net.URI(referer);
-		String path = uri.getPath();
-		String query = uri.getQuery();
-		String endpoint = path + (query != null ? "?" + query : "");
-
-		return "redirect:" + endpoint;
-
-	}
-
-	// Get all customers
-	@GetMapping("/customer/list")
-	public String getAllCustomers(Model model) {
-
-		// List<Customer> customers = customerService.getAllCustomers();
-		List<Customer> activeCustomers = customerService.getActiveCustomers();
-		model.addAttribute("customers", activeCustomers);
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		model.addAttribute("imagePath", imgpath);
-
-		return "admin/customer_list";
-
-	}
-
-	// update customer form
-	@GetMapping("/customer/update/{id}")
-	public String updateCustomerDetails(@PathVariable("id") Integer customerId, Model model) {
-
-		Customer customerGet = customerService.getCustomerById(customerId);
-		model.addAttribute("customer", customerGet);
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		String companyName = company.getName();
-
-		model.addAttribute("companyName", companyName);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "/admin/update_customer";
-	}
-
-	@PostMapping("/customer/update")
-	public String customerUpdateProcessing(@ModelAttribute Customer customer, Model model, HttpSession session) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-
-		Optional<Customer> customerFound = customerRepo.findById(customer.getId());
-		Customer customerGet = customerFound.get();
-		customerGet.setName(customer.getName());
-		customerGet.setEmail(customer.getEmail());
-		customerGet.setMobile(customer.getMobile());
-		customerGet.setAddress(customer.getAddress());
-
-		if (!customer.getAddedDate().isEmpty()) {
-
-			customerGet.setAddedDate(customer.getAddedDate());
-		}
-		customerGet.setAddedDate(customerGet.getAddedDate());
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-
-		model.addAttribute("imagePath", imgpath);
-
-		customerRepo.save(customerGet);
-
-		return "redirect:/a2zbilling/admin/customer/list";
-
-	}
-
-	// delete customer
-	@GetMapping("/customer/delete/{id}")
-	public String deleteCustomerById(@PathVariable("id") int id) {
-
-		Customer customerFetched = customerService.getCustomerById(id);
-
-		customerFetched.setStatus("inActive");
-		customerRepo.save(customerFetched);
-
-		return "redirect:/a2zbilling/admin/customer/list";
-	}
-
-	// Changes By Mahesh
-	@GetMapping("/supplier/add")
-	public String addSupplierForm(Model model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		String companyName = company.getName();
-
-		model.addAttribute("companyName", companyName);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		}
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
-		return "admin/add_supplier";
-
-	}
-
-	// changes By Mahesh
+	
 	@PostMapping("/supplier/add")
 	public String supplierAddingProcess(@ModelAttribute Supplier supplier, HttpSession session,
 			HttpServletRequest request) throws URISyntaxException {
@@ -1094,10 +352,9 @@ public class adminController {
 		String endpoint = path + (query != null ? "?" + query : "");
 
 		return "redirect:" + endpoint;
-
 	}
 
-	// change by Mahesh
+	
 	@GetMapping("/supplier/list")
 	public String listOfSuppliers(Model model) {
 
@@ -1127,10 +384,8 @@ public class adminController {
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/supplier_list";
-
 	}
-
-	// change by Mahesh
+	
 	@GetMapping("/supplier/update/{id}")
 	public String updateSupplier(@PathVariable("id") int id, Model model) {
 
@@ -1159,13 +414,10 @@ public class adminController {
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-
 		return "admin/update_supplier";
 
 	}
 
-	// update supplier processing
-	// change by Mahesh
 	@PostMapping({ "/supplier/update", "/supplier/update/" })
 	public String supplierUpdateProcess(@ModelAttribute Supplier supplier, HttpSession session) {
 
@@ -1234,8 +486,6 @@ public class adminController {
 
 	}
 
-	// Changes by Younus - Edit & store user data dynamically into db
-
 	@PostMapping("/edit/firm")
 	public String editFirm(@ModelAttribute CompanyDto companyDto, RedirectAttributes redirectAttributes) {
 		// Retrieve the currently logged-in user data
@@ -1272,7 +522,7 @@ public class adminController {
 			}
 		}
 
-		// Handle Signature Upload
+		
 		if (companyDto.getSignature() != null && !companyDto.getSignature().isEmpty()) {
 			try {
 				MultipartFile signFile = companyDto.getSignature();
@@ -1334,7 +584,7 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/";
 	}
 
-	// adding gst by admin
+	
 	@PostMapping("/gst/add")
 	public String gstAddingByAdmin(@ModelAttribute GSTRate gst) {
 
@@ -1391,6 +641,7 @@ public class adminController {
 		} else if (category.getCategoryName().equals(cFound.getCategoryName())) {
 			session.setAttribute("message", "Category already exists!");
 		}
+
 		return "redirect:/a2zbilling/admin/product/add";
 	}
 
@@ -1479,9 +730,7 @@ public class adminController {
 		categoryRepo.save(categoryF);
 
 		return "redirect:/a2zbilling/admin/category/list";
-
 	}
-
 	// clear session
 	@GetMapping("/clearSessionAttribute")
 	public String clearSession(HttpSession session, HttpServletRequest request) {
@@ -1498,8 +747,7 @@ public class adminController {
 
 		return "redirect:/a2zbilling/admin/customer/add";
 	}
-
-	// Created by Younus - Get Purchase bill list
+	
 	@GetMapping("/purchasebill/transection")
 	public String purchaseBillList(Model model) {
 
@@ -1531,7 +779,6 @@ public class adminController {
 		return "admin/purchasebill_transection";
 	}
 
-	// Created by Younus - add Purchase bill
 	@GetMapping("/purchasebill/add")
 	public String addPurchaseBill(Model model) {
 
@@ -1575,7 +822,6 @@ public class adminController {
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchasebill_add";
-
 	}
 
 	@PostMapping("/purchasebill/add")
@@ -1587,8 +833,6 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/purchasebill/transection";
 
 	}
-
-	// Created by Younus - Update PurchaseBill form
 	@GetMapping("/purchasebill/update")
 	public String updatePurchaseBill(Model model) {
 
@@ -1617,8 +861,7 @@ public class adminController {
 		return "admin/purchasebill_update";
 
 	}
-
-	// Created by Younus - add Purchase order
+	
 	@GetMapping("/purchaseorder/add")
 	public String addPurchaseOrder(Model model) {
 
@@ -1659,8 +902,7 @@ public class adminController {
 		return "admin/purchaseorder_add";
 
 	}
-
-	// Created by Younus - Get Purchase return list
+	
 	@GetMapping("/purchasereturn/transection")
 	public String purchaseReturnList(Model model) {
 
@@ -1687,8 +929,6 @@ public class adminController {
 
 		return "admin/purchasereturn_transection";
 	}
-
-	// Created by Younus - add Purchase return
 	@GetMapping("/purchasereturn/add")
 	public String addPurchaseReturn(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1728,7 +968,6 @@ public class adminController {
 
 	}
 
-	// Created by Younus - Update PurchaseReturn form
 	@GetMapping("/purchasereturn/update")
 	public String updatePurchaseReturn(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1756,8 +995,7 @@ public class adminController {
 		return "admin/purchasereturn_update";
 
 	}
-
-	// Created by Mahesh - get sale list
+	
 	@GetMapping("/sales/list")
 	public String salesList(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1794,8 +1032,7 @@ public class adminController {
 		return "admin/sales_list";
 
 	}
-
-	// Created by Mahesh - add sales
+	
 	@GetMapping("/sales/add")
 	public String addSales(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1835,14 +1072,12 @@ public class adminController {
 		return "admin/sales_add";
 
 	}
-
-	// changes By Mahesh
+	
 	@PostMapping("/sales/add")
-	public String salesAddingProcess(@ModelAttribute Sales sales, HttpSession session) {
-
+	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session, HttpServletRequest request) throws URISyntaxException {
+		
 		sales.setStatus("Active");
-
-		if (sales.getSignatureImage() == null) {
+  if (sales.getSignatureImage() == null) {
 			sales.setSignatureImage("");
 		}
 
@@ -1865,12 +1100,16 @@ public class adminController {
 			productRepo.save(product);
 		}
 
-		return "redirect:/a2zbilling/admin/sales/list";
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        return "redirect:" + endpoint;
 	}
-
-	// Created by Mahesh
+	
 	@GetMapping("/sales/update")
-	public String updatesales(Model model) {
+	public String updatesales(Model model){
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -1898,7 +1137,6 @@ public class adminController {
 
 	}
 
-	// Created by Mahesh
 	@GetMapping("/sales/delete/{id}")
 	public String deleteSales(@PathVariable("id") int id) {
 
@@ -1911,11 +1149,14 @@ public class adminController {
 
 	}
 
-	// create by Mahesh
-	@GetMapping("/sales/return")
-	public String returnsales(Model model) {
+	
+	//create by Mahesh
+	@GetMapping("/sales/return/{id}")
+	public String returnsales(@PathVariable("id") int id, Model model) {
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1926,8 +1167,11 @@ public class adminController {
 		model.addAttribute("customers", customers);
 
 		List<Product> products = productRepo.findAll();
-		model.addAttribute("products", products);
 
+		model.addAttribute("products",products);
+		
+		Sales sale = salesRepo.findById(id).get();
+		model.addAttribute("sale", sale);
 		String signature = company.getSignature();
 		if (signature != null) {
 			String companySignImgPath = StringUtils.ImagePaths.companySignImageUrl + signature;
@@ -1946,10 +1190,8 @@ public class adminController {
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/sales_return";
-
 	}
-
-	// Created by Younus - add Item
+	
 	@GetMapping("/Item/add")
 	public String addItem(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1981,8 +1223,7 @@ public class adminController {
 		return "admin/Item_add";
 
 	}
-
-	// Created by Younus - to Manage Stock
+	
 	@GetMapping("/managestock")
 	public String manageStock(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1996,16 +1237,15 @@ public class adminController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		// Step 1 - (To get supplier name data from db )for second step go to
-		// managestock.html
+		
 		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
 		model.addAttribute("suppliers", suppliers);
 
-		// To get product Name data from db
+		
 		List<Product> products = productRepo.findAll();
 		model.addAttribute("products", products);
 
-		// To get product Name data from db
+		
 		List<Category> categorys = categoryRepo.findAll();
 		model.addAttribute("categorys", categorys);
 
