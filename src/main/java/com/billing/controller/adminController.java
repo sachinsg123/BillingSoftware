@@ -273,8 +273,6 @@ public class adminController{
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
-
-
 		model.addAttribute("imagePath", imgpath);
 
 		String username = auth.getName();
@@ -282,37 +280,28 @@ public class adminController{
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 
-
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-
 		String companyName = company.getName();
 		model.addAttribute("company", company);
 		model.addAttribute("companyName", companyName);
 
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		String imgpath1 = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+			imgpath1 = StringUtils.ImagePaths.userImageUrl + image;
 		}
-		model.addAttribute("imagePath", imgpath);
-
+		model.addAttribute("imagePath", imgpath1);
 
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
 
-		
 		String sign = company.getSignature();
 		String companySign = "/img/companysignature/" + sign;
 		model.addAttribute("companySign", companySign);
 
-		
 		long customercount = customerService.getCustomerCount();
 		model.addAttribute("customercount", customercount);
 
-		
 		long suppliercount = supplierService.getSupplierCount();
 		model.addAttribute("suppliercount", suppliercount);
 
