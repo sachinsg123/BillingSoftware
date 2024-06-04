@@ -18,6 +18,8 @@ public class Brand{
 	
 	private String name;
 	
+	private String status;
+
 	private String logo;
 		
 	@OneToMany(mappedBy="brand")
@@ -56,14 +58,19 @@ public class Brand{
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	@Override
 	public String toString() {
-		return "Brand [id=" + id + ", name=" + name + ", logo=" + logo + ", products=" + products + "]";
+		return "Brand [id=" + id + ", name=" + name + ", status=" + status + ", logo=" + logo + ", products=" + products
+				+ "]";
 	}
-	
-	
-	
-	
 
 }

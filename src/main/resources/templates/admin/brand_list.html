@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+
+<body>
+	<section>
+		<script>
+
+			function deleteContactAlert(id) {
+
+				const swalWithBootstrapButtons = Swal.mixin({
+					customClass: {
+						confirmButton: 'btn btn-success',
+						cancelButton: 'btn btn-danger'
+					},
+					buttonsStyling: false
+				})
+
+				swalWithBootstrapButtons.fire({
+					title: 'Are you sure?',
+					text: "You won't be able to revert this!",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Yes, delete it!',
+					cancelButtonText: 'No, cancel!',
+					reverseButtons: true
+				}).then((result) => {
+					if (result.isConfirmed) {
+
+
+						window.location = "/a2zbilling/admin/brand/delete/" + id + " ";
+
+
+						swalWithBootstrapButtons.fire(
+							'Brand Deleted Successfully !',
+
+						)
+					} else if (
+						/* Read more about handling dismissals below */
+						result.dismiss === Swal.DismissReason.cancel
+					) {
+						swalWithBootstrapButtons.fire(
+							'Cancelled',
+							'Brand Not deleted',
+							'error'
+						)
+					}
+				})
+
+			}
+
+		</script>
+		<div class="contaier-fluid">
+			<div class="row">
+				<div class="col-md-12" style="background-color: #534F84;color: #fff;">
+					<h1 class="text-center">BRAND LIST</h1>
+				</div>
+			</div>
+
+			<div class="d-flex justify-content-end mt-3 mb-2">
+				<button type="button" class="btn btn-info ml-2" enctype="multipart/form-data" data-toggle="modal"
+					data-target="#exampleModalBrand">
+					<i class="fa-solid fa-circle-plus"></i> Add Brand
+				</button>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12" style="background-color: #f5f0f0;">
+				<table class="table table-bordered table-hover">
+					<thead style="background-color: #EEEEF0;">
+						<tr>
+							<th scope="col" name="id">ID</th>
+							<th scope="col" name="name">Brand Name</th>
+							<th scope="col" type="file">Logo </th>
+							<!--<th scope="col" type="file" >Logo</th>-->
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="brand : ${brands}">
+							<th scope="row" th:text="${brand.id}"></th>
+							<td th:text="${brand.name}"></td>
+
+							<td>
+								<!--Code to get images from database-->
+								<img th:src="@{'/img/brandlogo/' + ${brand.logo}}" style="height:80px; width: 80px;"
+									onerror="this.onerror=null; this.src='/img/admin/admin.jpg';">
+							</td>
+							<!--<td> </td>-->
+							<td>
+								<a th:href="@{'/a2zbilling/admin/brand/update/'+ ${brand.id}}" class="btn btn-info"><i
+										class="fa fa-edit"></i></a>
+								<a th:onclick="|deleteContactAlert(${brand.id})|" class="btn btn-danger"><i
+										style="background-color: Red;" class="fa-solid fa-trash"></i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		</div>
+	</section>
+</body>
+<!-- END Body -->
+
+<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+
+</html>
