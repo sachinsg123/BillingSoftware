@@ -583,6 +583,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
   				</div>
   				
   				
+  				
 
 				<!--Add Category Module -> Changes by Younus-->
 				<div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog"
@@ -633,6 +634,49 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
       </div> -->
 					</div>
 				</div>
+				
+				<!--Add Brand Module -> Created by Younus-->
+				<div class="modal fade" id="exampleModalBrand" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content" style="background-color: #f5f0f0;">
+							<div class="modal-header align-items-center" style="background-color: #534F84;color: #fff;">
+								<h1 class="modal-title" id="exampleModalLabel">Add Brand</h1>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form th:action="@{/a2zbilling/admin/brand/add}" method="post" enctype="multipart/form-data" class="form-group">
+									<div class="row" style="background-color: #f5f0f0;">
+										<div class="col-md-12 mt-2">
+											<div class="form-group">
+												<label>Brand Name :</label>
+												<input type="text" class="form-control" name="name"
+													placeholder=" e.g.CottenKing" required>
+											</div>
+										</div>
+										
+										<div class="col-md-12 mt-2">
+											<div class="form-group">
+												<label>Logo :</label>
+												<input type="file" class="form-control" id="logo" name="logo"
+													placeholder="Select logo">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 mt-2">
+										<div class="text-center">
+											<button type="submit" class="btn btn-info text-center mt-3">Add</button>
+											 <button type="button" class="btn btn-secondary text-center mt-3" data-dismiss="modal" >Close</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 			</div>
 			<!-- END Shortcuts -->
 			<!-- BEGIN Color profile -->
