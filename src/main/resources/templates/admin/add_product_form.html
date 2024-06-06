@@ -38,7 +38,7 @@
 					<div class="col-md-4 mt-3 input-group">
 						<label>Supplier Name :- </label>
 						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
-							name="addSupplierProduct">
+							name="supplier">
 							<option selected>Choose</option>
 							<!-- Dynamically populate options with Supplier data -->
 							<option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
@@ -66,20 +66,39 @@
 						<input type="text" class="form-control" id="currentDateInput" readonly>
 					</div>
 				</div>
+				
+				<div class="col-md-4 mt-4">
+					<label>Product Brand</label>
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<button type="button" class="btn btn-info" data-toggle="modal"
+									data-target="#exampleModalBrand">
+									<i class="fa-solid fa-plus"></i>
+								</button>
+							</div>
+							<select class="form-select form-control" aria-label="Default select example"
+								name="productBrand">
+								<!--<option selected>Brand</option>-->
+								<option th:each="brand:${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+							</select>
+						</div>
+					</div>	
+				</div>
 
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
 						<label>Product Name</label>
-						<input type="text" required class="form-control" name="name">
+						<input type="text" required class="form-control" name="name" placeholder="Enter product name">
 					</div>
 				</div>
 				<div class="col-md-4 mt-4">
 					<div class="form-group">
 						<label>Product Price</label>
-						<input type="text" required class="form-control" name="price">
+						<input type="text" required class="form-control" name="price" placeholder="Enter product price">
 					</div>
 				</div>
-				<div class="col-md-4 mt-4">
+				<div class="col-md-4 mt-2">	
 					<label>Select Category</label>
 					<div class="form-group">
 						<div class="input-group">
@@ -98,25 +117,29 @@
 						</div>
 					</div>
 				</div>
+				
+				<div class="col-md-4 mt-2">
+					<div class="form-group">
+						<label>Quantity</label>
+						<input type="text" required class="form-control" name="quantity" id="productQuantity" placeholder="Enter product quantity">
+					</div>
+				</div>
+				
 				<div class="col-md-4 mt-2">
 					<div class="form-group">
 						<label>Product Size</label>
-						<input type="text" required class="form-control" name="productSize">
+						<input type="text" required class="form-control" name="productSize" placeholder="Enter product size">
 					</div>
 				</div>
-				<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Product Brand</label>
-						<input type="text" required class="form-control" name="productBrand">
-					</div>
-				</div>
+				
+				
 				<div class="col-md-4 mt-2">
 					<div class="form-group">
 						<label>Product information</label>
-						<input type="text" class="form-control" name="about">
+						<input type="text" class="form-control" name="about" placeholder="Enter about product">
 					</div>
 				</div>
-				<div class="col-md-4 mt-3">
+				<div class="col-md-4 mt-2">
 					<div class="form-group">
 						<label>choose date</label>
 						<input type="date" class="form-control" name="addedDate">
@@ -124,7 +147,7 @@
 				</div>
 				<div class="col-md-4 mt-2">
 					<label>Color</label>
-					<div class="form-group mt-2">
+					<div class="form-group">
 						<select class="form-select form-control" aria-label="Default select example"
 							name="productColor">
 							<option selected>Choose</option>
@@ -133,12 +156,19 @@
 						</select>
 					</div>
 				</div>
-				<div class="col-md-4 mt-3">
+				<div class="col-md-4 mt-2">
 					<div class="form-group">
 						<label>Add Product Images (max-3)</label>
 						<input type="file" class="form-control" name="imageFile" multiple accept="image/*" onchange="limitFiles(this)">
 					</div>
 				</div>
+			<!--	<div class="col-md-4 mt-3">
+					<div class="form-group">
+						<label>Minimum Stock Qty</label>
+						<input type="number" required class="form-control" name="minStockQty" id="minStockQty" placeholder="Enter min stock qty">
+					</div>
+				</div>-->
+				
 				<div class="col-md-12 mt-4 ">
 					<div class="text-center">
 						<button type="submit" class="btn btn-info text-center">Add</button>
@@ -159,22 +189,17 @@
 				input.value = '';
 			}
 		}
-	</script>
 
+		function checkStockLevels() {
+			var quantity = parseInt(document.getElementById('productQuantity').value);
+			var minStockQty = parseInt(document.getElementById('minStockQty').value);
 
-	<script>
-		// Get the current date
-		var currentDate = new Date();
+			if (!isNaN(quantity) && !isNaN(minStockQty) && quantity <= minStockQty) {
+				alert("Please restock the product.");
+			}
+		}
 
-		// Format the date as desired (e.g., "2024-04-26")
-		var formattedDate = currentDate.toISOString().split('T')[0];
-
-		// Set the value of the input field to the formatted date
-		document.getElementById('currentDateInput').value = formattedDate;
-	</script>
-	<script>
 		$(document).ready(function () {
-
 			// Event listener for changing the selected option in the dropdown
 			$('#supplierSelect').change(function () {
 				var selectedOption = $(this).find('option:selected');
@@ -184,8 +209,17 @@
 				$('#mobile1').val(phone);
 				$('#email1').val(email);
 			});
+
+			// Check stock levels when quantity or minimum stock quantity changes
+			$('#productQuantity, #minStockQty').on('input', checkStockLevels);
+
+			// Set the current date
+			var currentDate = new Date();
+			var formattedDate = currentDate.toISOString().split('T')[0];
+			document.getElementById('currentDateInput').value = formattedDate;
 		});
 	</script>
+
 	<!-- this overlay is activated only when mobile menu is triggered -->
 	<div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
 	<!-- BEGIN Page Footer -->

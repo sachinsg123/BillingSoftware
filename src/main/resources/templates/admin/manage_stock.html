@@ -48,17 +48,27 @@
 						</div>
 					</div>
 					
+					<div class="col-md-4 mt-4">
+						<div class="form-group">
+							<label>Brand Name</label>
+							<select id="brandSelect" class="form-select form-control"
+								aria-label="Default select example" name="getProduct">
+								<option selected>Select</option>
+								<!-- Dynamically populate options with product data -->
+								<option th:each="brand:${brands}" th:text="${brand.name}"></option>
+							</select>
+						</div>
+					</div>
+					
 					
 					<div class="col-md-4 mt-4">
 						<div class="form-group">
-							<label>Product/Brand Name</label>
+							<label>Product Name</label>
 							<select id="productSelect" class="form-select form-control"
 								aria-label="Default select example" name="getProduct">
 								<option selected>Select</option>
 								<!-- Dynamically populate options with product data -->
-								<option th:each="product:${products}" 
-									th:text="${product.name}">
-									</option>
+								<option th:each="product:${products}" th:text="${product.name}"></option>
 							</select>
 						</div>
 					</div>
