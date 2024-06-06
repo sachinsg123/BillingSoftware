@@ -1237,6 +1237,9 @@ public class adminController{
 		
 		List<Category> categorys = categoryRepo.findAll();
 		model.addAttribute("categorys", categorys);
+		
+		List<Brand> brands=brandRepo.showAllActiveBrand();
+		model.addAttribute("brands", brands);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
