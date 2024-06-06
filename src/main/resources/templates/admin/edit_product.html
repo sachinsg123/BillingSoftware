@@ -9,16 +9,6 @@
 <body>
 	<section>
 		<div class="contaier-fluid">
-			<!--  <div th:if="${session.message}">
-        <div class="alert alert-primary" role="alert">
-       <p th:text="${session.message}"></p>
-       <script th:inline="javascript">
-       setTimeout(function() {
-          window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-  }, 500); 
-     </script>
-      </div> 
-        </div> -->
 			<div class="row" style="background-color:  rgb(84,78,130);color:#fff;">
 				<div class="col-md-12 mt-1">
 					<h1 class="text-center">Update Product</h1>
@@ -27,6 +17,14 @@
 			<form th:action="@{/a2zbilling/admin/product/edit}" method="post" enctype="multipart/form-data"
 				th:object="${product}" class="form-group">
 				<div class="row pb-3" style="background-color: #f5f0f0;">
+					
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Brand Name</label>
+							<input type="text" class="form-control" name="productBrand" th:field="*{brand.name}">
+						</div>
+					</div>
+					
 					<div class="col-md-4 mt-3">
 						<input type="hidden" name="id" th:field="*{id}" />
 						<div class="form-group">
@@ -40,9 +38,17 @@
 							<input type="text" class="form-control" name="price" th:field="*{price}">
 						</div>
 					</div>
+					
+					<div class="col-md-4 mt-2">
+						<div class="form-group">
+							<label>Quantity</label>
+							<input type="text" class="form-control" name="quantity" th:field="*{quantity}">
+						</div>
+					</div>
+					
 					<div class="col-md-4 mt-2">
 						<label>Select Category</label>
-						<div class="form-group mt-2">
+						<div class="form-group">
 							<select class="form-select form-control" aria-label="Default select example"
 								name="category">
 								<option selected>Category</option>
@@ -51,33 +57,23 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-md-4 mt-1">
+					<div class="col-md-4 mt-2">
 						<div class="form-group">
 							<label>Product Size</label>
 							<input type="text" class="form-control" name="productSize" th:field="*{size.sizeValue}">
 						</div>
 					</div>
-					<div class="col-md-4 mt-1">
-						<div class="form-group">
-							<label>Product Brand</label>
-							<input type="text" class="form-control" name="productBrand" th:field="*{brand.name}">
-						</div>
-					</div>
-					<div class="col-md-4 mt-1">
-						<div class="form-group">
-							<label>Product information</label>
-							<input type="text" class="form-control" name="about">
-						</div>
-					</div>
+					
 					<div class="col-md-4 mt-2">
 						<div class="form-group">
-							<label>choose date</label>
-							<input type="date" class="form-control" name="addedDate">
+							<label>Supplier Name</label>
+							<input type="text" class="form-control" name="Supplier" th:field="*{supplier.name}">
 						</div>
 					</div>
-					<div class="col-md-4 ">
+					
+					<div class="col-md-4 mt-2 ">
 						<label>Color</label>
-						<div class="form-group mt-2">
+						<div class="form-group ">
 							<select class="form-select form-control" aria-label="Default select example"
 								name="productColor">
 								<option selected>Choose</option>
@@ -86,6 +82,14 @@
 							</select>
 						</div>
 					</div>
+					
+					<div class="col-md-4 mt-2">
+						<div class="form-group">
+							<label>Added Date</label>
+							<input type="date" class="form-control" name="addedDate">
+						</div>
+					</div>
+					
 					<div class="col-md-4 mt-2">
 						<div class="form-group">
 							<label>Add Product Image</label>

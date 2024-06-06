@@ -29,6 +29,7 @@ import com.billing.model.Company;
 import com.billing.model.Customer;
 import com.billing.model.Product;
 import com.billing.model.Size;
+import com.billing.model.Stock;
 import com.billing.model.Supplier;
 import com.billing.model.User;
 import com.billing.repositories.BrandRepository;
@@ -39,6 +40,7 @@ import com.billing.repositories.CustomerRepository;
 import com.billing.repositories.GSTRepository;
 import com.billing.repositories.ProductRepository;
 import com.billing.repositories.SizeRepository;
+import com.billing.repositories.StockRepository;
 import com.billing.repositories.SupplierRepository;
 import com.billing.repositories.UnitRepository;
 import com.billing.repositories.UserRepository;
@@ -111,6 +113,9 @@ public class ProductController {
 
 		List<Color> colors = colorRepo.findAll();
 		model.addAttribute("colors", colors);
+		
+		List<Brand> brands=brandRepo.showAllActiveBrand();
+		model.addAttribute("brands", brands);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -154,10 +159,10 @@ public class ProductController {
 			// imageFile.getOriginalFilename();
 			product.setImageUrl("default.png");
 		} else {
-			// String uploadDir = "./static/productImages";
+			// String uploadDir = "./static/productimages";
 			String fileName = imageFile.getOriginalFilename();
 			// Path filePath = Paths.get(StringUtils.ImagePaths.productImageUrl).getFile();
-			File filePath = new ClassPathResource("/static/img/products/").getFile();
+			File filePath = new ClassPathResource("/static/img/productimages/").getFile();
 			Path path = Paths.get(filePath.getAbsolutePath() + File.separator + fileName);
 			Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
@@ -184,6 +189,7 @@ public class ProductController {
 			sizeRepo.save(s);
 			product.setSize(s);
 		}
+		
 
 		// adding color
 		Color colorFound = colorRepo.findByName(colorName);
