@@ -163,31 +163,31 @@
 							<th scope="col"></tr>
 					</thead>
 					<tbody id="addrow">
-					<tr>
-					<td><input id="barcode" type="text" class="form-control"></td>
-					<td>
-						<select required id="productSelect" class="form-select form-control" aria-label="Default select example" name="products">
-				           <option selected>Choose</option>
-						   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-					               th:attr="data-price=${product.price},
-					                         data-quantity=${product.quantity},
-					                         data-size=${product.size?.sizeValue}">
-					       </option>
-			           	</select>
-					</td>
-					<td><input id="cgst" type="text" class="form-control" readonly></td>
-					<td><input id="sgst" type="text" class="form-control" readonly></td>
-					<td><input id="size" type="text" class="form-control" readonly></td>
-					<td><input id="AQty" type="number" class="form-control" readonly></td>
-					<td><input id="Qty" name="quantity" type="number" class="form-control"></td>
-					<td><input id="taxinpercentage" name="taxInPercentage" oninput="calculateTaxAmount()" type="number" class="form-control"></td>
-					<td><input id="taxinamount" name="taxInAmount" type="text" class="form-control" readonly></td>
-					<td><input id="price" type="text" class="form-control" readonly></td>
-					<td><input id="total_amount" type="text" class="form-control" readonly></td>
-					<td>
-						<a id="1" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
-					</td>
-					</tr>
+						<tr>
+							<td><input id="barcode" type="text" class="form-control"></td>
+							<td>
+								<select required id="productSelect" class="form-select form-control" aria-label="Default select example" name="products">
+						           <option selected>Choose</option>
+								   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
+							               th:attr="data-price=${product.price},
+							                         data-quantity=${product.quantity},
+							                         data-size=${product.size?.sizeValue}">
+							       </option>
+					           	</select>
+							</td>
+							<td><input id="cgst" type="text" class="form-control" readonly></td>
+							<td><input id="sgst" type="text" class="form-control" readonly></td>
+							<td><input id="size" type="text" class="form-control" readonly></td>
+							<td><input id="AQty" type="number" class="form-control" readonly></td>
+							<td><input id="Qty" name="quantity" type="number" class="form-control"></td>
+							<td><input id="taxinpercentage" name="taxInPercentage" oninput="calculateTaxAmount()" type="number" class="form-control"></td>
+							<td><input id="taxinamount" name="taxInAmount" type="text" class="form-control" readonly></td>
+							<td><input id="price" type="text" class="form-control" readonly></td>
+							<td><input id="total_amount" type="text" class="form-control" readonly></td>
+							<td>
+								<a id="1" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -270,6 +270,10 @@
 			</div>
 		</div>
 	</form>
+	
+	<div class="col-md-12 mt-3 text-center">
+		<button type="button" class="btn btn-primary" onclick="printBill()">Print Bill</button>
+	</div>
 </div>
 	<!--Add Customer Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
@@ -333,20 +337,17 @@
 	</div>
 	
 	<!-- Add Print Buttons -->
-		<div class="col-md-12 mt-3 text-center">
-			<button type="button" class="btn btn-primary" onclick="printBill()">Print Bill</button>
-		</div>
+		
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-		<script>
-			// Function to print the bill
-			function printBill() {
-				window.print();
-			}
-		</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+	<script>
+		// Function to print the bill
+		function printBill() {
+			window.print();
+		}
+	</script>
 	
 	<script>
-		
 		const taxinpercentage = document.getElementById('taxinpercentage');
 		const discountAmountField = document.getElementById('discountAmountField');
 		const discountPercentField = document.getElementById('discountPercentField');
@@ -385,9 +386,21 @@
 				
 				document.getElementById('taxinamount').value = taxAmount.toFixed(2);
 				document.getElementById('total_amount').value = totalAmount.toFixed(2);
-				document.getElementById('totalAmountField').value = totalAmount.toFixed(2);
+				
+				calculateTotalAmount();
+				//document.getElementById('totalAmountField').value = totalAmount.toFixed(2)
 	        }
-					
+		function calculateTotalAmount() {
+			    let totalAmount = 0;
+			    $('#addrow tr').each(function() {
+			        let row = $(this);
+			        let rowTotalAmount = parseFloat(row.find('#total_amount').val());
+			        if (!isNaN(rowTotalAmount)) {
+			            totalAmount += rowTotalAmount;
+			        }
+			    });
+			    $('#totalAmountField').val(totalAmount.toFixed(2));
+			}	
 		function updateDues() {
                 var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
                 var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
@@ -483,10 +496,20 @@
 				   {
 					AQty = 0;
 				   }
+				   if(Cgst == null)
+				   {
+					Cgst = 0;
+   				   }
+				   if(Sgst == null)
+   				   {
+   					Sgst = 0;
+      			   }
 				   
 			       $('#price').val(price);
 				   $('#size').val(size);
 				   $('#AQty').val(AQty);
+				   $('#cgst').val(Cgst);
+				   $('#sgst').val(Sgst);
 			   });
 			});
 		</script>
@@ -519,38 +542,21 @@
 			if(parseFloat(AQtyInput.value) < parseFloat(QtyInput.value))
 			{
 				alert("Please Enter Quantity less than Available Quantity");
-				QtyInput.value="";
+				QtyInput.value=	parseFloat(AQtyInput.value);
 			}
+			else calculateTaxAmount();
 		});
 		QtyInput.addEventListener('input', function() {
 			if(parseFloat(QtyInput.value) < 0)
 			{
-				alert("Please Enter Quantity > 0");
+				alert("Please enter quantity greater than 0");
 				QtyInput.value="";
 			}
+			else calculateTaxAmount();
+			
 		});
 		
-		QtyInput.addEventListener('input', function() {
-		    // Parse the values to numbers
-		    const sellingPrice = parseFloat(sellingPriceInput.value);
-		    const quantity = parseFloat(QtyInput.value);
-		    
-		    // Check if the values are valid numbers
-		    if (!isNaN(sellingPrice) && !isNaN(quantity)) {
-		        // Calculate the total amount
-		        const totalAmount = sellingPrice * quantity;
-		        
-		        // Assign the total amount to the total amount input field
-		        totalAmountInput.value = totalAmount.toFixed(2); // Format to two decimal places
-				
-				totalAmountField.value = totalAmount.toFixed(2);
-		    } else {
-		        // If either input is not a valid number, set the total amount input field to empty
-		        totalAmountInput.value = '';
-				
-				totalAmountField.value = '';
-		    }
-		});
+		
 
 	    // Add an event listener to the first input field
 	    totalAmountInput.addEventListener('input', function() {
@@ -559,45 +565,133 @@
 	    });
 	</script>
 	<script type="text/javascript">
-			$(document).ready(function() {
-			    var i = 1; // Initialize counter for row IDs
+		$(document).ready(function() {
+			var i = 1; // Initialize counter for row IDs
 			
-			    // Add new row when "Add Row" button is clicked
-			    $('#add').click(function() {
-			        i++; // Increment counter for new row ID
-			        var opts = $("#productSelect").html();
-			        var cgst = $("#cgst").value;
-			        $('#addrow').append(`
-			            <tr id="row${i}">
-			                <td><input id="barcode${i}" type="text" class="form-control"></td>
-			                <td>
-			                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="productSelect">
-			                        ${opts}
-			                    </select>
-			                </td>
-			                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="size${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="AQty${i}" type="number" class="form-control" readonly></td>
-			                <td><input id="Qty${i}" type="number" class="form-control"></td>
-			                <td><input id="taxinpercentage${i}" oninput="calculateTaxAmount(${i})" type="number" class="form-control"></td>
-			                <td><input id="taxinamount${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="price${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="total_amount${i}" type="text" class="form-control" readonly></td>
-			                <td>
-			                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
-			                </td>
-			            </tr>
-			        `);
+			// Function to add event listeners to a specific row
+			window.calculateTaxAmount2 = function(index) {
+			        $(`#Qty${index}`).on('input', function() {
+			            var AQty = parseFloat($(`#AQty${index}`).val()) || 0;
+			            var Qty = parseFloat($(`#Qty${index}`).val()) || 0;
+						var TaxInPercentage = parseFloat($(`#taxinpercentage${index}`).val()) || 0;
+			
+			            if (Qty > AQty) {
+			                alert("Please enter quantity less than available quantity");
+			                $(this).val(AQty);
+			            } else if (Qty < 0) {
+			                alert("Please enter quantity greater than 0");
+			                $(this).val(0);
+			            }
+						if(TaxInPercentage < 0)
+						{
+							alert("Please enter Tax greater than 0");
+							$(this).val(0);
+						}
+						
+			            calculateTaxAmount1(index);
+			        });
+			   }
+			
+		    // Add new row when "Add Row" button is clicked
+		    $('#add').click(function() {
+		        i++; // Increment counter for new row ID
+		        var opts = $("#productSelect").html();
+		        $('#addrow').append(`
+		            <tr id="row${i}">
+		                <td><input id="barcode${i}" type="text" class="form-control"></td>
+		                <td>
+		                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
+		                        ${opts}
+		                    </select>
+		                </td>
+		                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
+		                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>
+		                <td><input id="size${i}" type="text" class="form-control" readonly></td>
+		                <td><input id="AQty${i}" type="number" class="form-control" readonly></td>
+		                <td><input id="Qty${i}" name="quantity" type="number" oninput="calculateTaxAmount1(${i})" class="form-control"></td>
+		                <td><input id="taxinpercentage${i}" name="taxInPercentage" oninput="calculateTaxAmount1(${i})" type="number" class="form-control"></td>
+		                <td><input id="taxinamount${i}" name="taxInAmount" type="text" class="form-control" readonly></td>
+		                <td><input id="price${i}" type="text" class="form-control" readonly></td>
+		                <td><input id="total_amount${i}" type="text" class="form-control" readonly></td>
+		                <td>
+		                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
+		                </td>
+		            </tr>
+		        `);
+		
+		        // Call the function to add the change event listener for the newly added row
+		        addChangeListener(i);
+		    });
+		
+		    // Function to add change event listener for product selection
+		    function addChangeListener(index) {
+		        $(`#productSelect${index}`).change(function() {
+		            var selectedOption = $(this).find('option:selected');
+		            var price = selectedOption.data('price');
+		            var quantity = selectedOption.data('quantity');
+		            var size = selectedOption.data('size');
+									   
+		            $(`#price${index}`).val(price);
+		            $(`#AQty${index}`).val(quantity);
+		            $(`#size${index}`).val(size);
+		        });
+		    }
+			// Function to calculate tax amount and total amount
+			window.calculateTaxAmount1 = function(index) {
+	            var price = parseFloat($(`#price${index}`).val());
+	            var Qty = parseFloat($(`#Qty${index}`).val());
+	            var taxPercent = parseFloat($(`#taxinpercentage${index}`).val());
+				var AQty = parseFloat($(`#AQty${index}`).val());
+				
+				if (Qty > AQty) {
+	                alert("Please enter quantity less than available quantity");
+					$(`#Qty${index}`).val(AQty);
+					return;
+	            } else if (Qty < 0) {
+	                alert("Please enter quantity greater than 0");
+					$(`#Qty${index}`).val(0);
+					return;
+	            }
+				if(taxPercent < 0)
+				{
+					alert("Please enter Tax greater than 0");
+					$(`#taxinpercentage${index}`).val(0);
+					$(`#taxinamount${index}`).val(0);
+					return;
+				}
+
+	            var taxAmount = (price * Qty * taxPercent) / 100;
+	            var totalAmount = (price * Qty) + taxAmount;
+	
+	            $(`#taxinamount${index}`).val(taxAmount.toFixed(2));
+	            $(`#total_amount${index}`).val(totalAmount.toFixed(2));
+				
+				// Update the overall total amount
+				calculateOverallTotal();
+	        };
+			
+			// Function to calculate the overall total amount for all rows
+	        function calculateOverallTotal() {
+				var overallTotal = 0;
+				
+			    $('#addrow tr').each(function() {
+			        var totalAmount = parseFloat($(this).find('[id^="total_amount"]').val()) || 0;
+			        overallTotal += totalAmount;
 			    });
 			
-			    // Remove row when "Remove" button is clicked
-			    $(document).on('click', '.remove_row', function() {
-			        var row_id = $(this).attr('id');
-			        $(`#row${row_id}`).remove();
-			    });
-			});
-		</script>
+			    $('#totalAmountField').val(overallTotal.toFixed(2));
+	        }
+				
+			
+		    // Remove row when "Remove" button is clicked
+		    $(document).on('click', '.remove_row', function() {
+		        var row_id = $(this).attr('id');
+		        $(`#row${row_id}`).remove();
+				
+				calculateOverallTotal();
+		    });
+		});
+	</script>
 	<script>
         // Get the current date
         var currentDate = new Date();
