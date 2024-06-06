@@ -58,7 +58,6 @@ import com.billing.services.CustomerServiceImpl;
 import com.billing.services.ProductServiceImpl;
 import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -142,19 +141,21 @@ public class adminController{
 	    	adminImg = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 
+		model.addAttribute("user", user);
 		model.addAttribute("companyName", companyName);
-
 		model.addAttribute("imagePath", adminImg);
+
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
+
 		String sign = company.getSignature();
 		String companySign = "/img/companysignature/" + sign;
 		model.addAttribute("companySign", companySign);
 
 		return "/admin/view_Admin_Profile";
 	}
-	
+
 	@GetMapping("/updateAdminProfile")
 	public String updateAdminProfile(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -171,7 +172,6 @@ public class adminController{
 	    model.addAttribute("companyName", companyName);
 	    
 	    String adminImg = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-	    
 	    if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
 	    {
 	    	String image = user.getImageUrl();
@@ -179,7 +179,6 @@ public class adminController{
 	    }
 
 		model.addAttribute("user", user);
-
 		model.addAttribute("companyName", companyName);
 		model.addAttribute("imagePath", adminImg);
 
@@ -195,15 +194,12 @@ public class adminController{
 
 	}
 	
-	
 	@PostMapping("/updateAdminProfile")
 	public String updateProcessUser(@ModelAttribute UserDto userDto, HttpSession session) {
-		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 	    
 		MultipartFile image = userDto.getImageUrl();
-		
 		if(!image.isEmpty()) {
 	        Date date = new Date();
 	        String storageFileName = date.getTime() + "_" + image.getOriginalFilename();
@@ -225,7 +221,6 @@ public class adminController{
 	        {
 	            System.out.println("Exception: "+ ex.getMessage());
 	        }
-	         
 	        user.setImageUrl(storageFileName);
 		}
 		
@@ -239,8 +234,6 @@ public class adminController{
 			user.setMobile(userDto.getMobile());
 		}
 		
-		
-	    System.out.println("Company Name "+userDto.getCompanyname() + " " +user.getCompany().getName());
 	    Company company = user.getCompany();
 	    
         if(!userDto.getCompanyname().isEmpty()) {
@@ -256,7 +249,6 @@ public class adminController{
 
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		System.out.println(auth.getPrincipal());
 		System.out.println(auth.getName());
@@ -264,9 +256,7 @@ public class adminController{
 		User user = userRepo.findByUsername(auth.getName());
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-//		String companyName = company.getName();
-
-		// Code to render Admin logo
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
@@ -306,22 +296,18 @@ public class adminController{
 		model.addAttribute("suppliercount", suppliercount);
 
 		return "home";
-
 	}
 	
 	@PostMapping("/supplier/add")
-	public String supplierAddingProcess(@ModelAttribute Supplier supplier, HttpSession session,
-			HttpServletRequest request) throws URISyntaxException {
-
+	public String supplierAddingProcess(@ModelAttribute Supplier supplier,HttpSession session, HttpServletRequest request) throws URISyntaxException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	
 		if (supplier.getAddedDate().isEmpty()) {
-
 			Date d = new Date();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			String formattedDate = formatter.format(d);
 			supplier.setAddedDate(formattedDate);
 		}
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		if (auth != null) {
 			String admin = auth.getName();
@@ -330,7 +316,6 @@ public class adminController{
 		}
 
 		supplier.setStatus("Active");
-
 		supplierRepo.save(supplier);
 
 		session.setAttribute("message", "Supplier added Successfully");
@@ -342,13 +327,12 @@ public class adminController{
 
 		return "redirect:" + endpoint;
 	}
-
 	
 	@GetMapping("/supplier/list")
 	public String listOfSuppliers(Model model) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -374,12 +358,12 @@ public class adminController{
 
 		return "admin/supplier_list";
 	}
-	
+
 	@GetMapping("/supplier/update/{id}")
 	public String updateSupplier(@PathVariable("id") int id, Model model) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -404,25 +388,22 @@ public class adminController{
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
 		return "admin/update_supplier";
-
 	}
-
+  
 	@PostMapping({ "/supplier/update", "/supplier/update/" })
 	public String supplierUpdateProcess(@ModelAttribute Supplier supplier, HttpSession session) {
-
 		Optional<Supplier> supplierGet = supplierRepo.findById(supplier.getId());
 		Supplier supp = supplierGet.get();
 		supp.setName(supplier.getName());
 		supp.setEmail(supplier.getEmail());
+		
 		if (!supplier.getAddedDate().isEmpty()) {
-
 			supp.setAddedDate(supplier.getAddedDate());
 		}
 		supp.setAddress(supplier.getAddress());
 		supp.setMobile(supplier.getMobile());
 
 		supplierRepo.save(supp);
-
 		session.setAttribute("message", "supplier Updated Successfully --!");
 
 		return "redirect:/a2zbilling/admin/supplier/list";
@@ -431,16 +412,13 @@ public class adminController{
 	// change by Mahesh
 	@GetMapping("/supplier/delete/{id}")
 	public String deleteSupplier(@PathVariable("id") int id) {
-
 		Optional<Supplier> supplierGet = supplierRepo.findById(id);
 		Supplier supplier = supplierGet.get();
 
 		supplier.setStatus("InActive");
-
 		supplierRepo.save(supplier);
 
 		return "redirect:/a2zbilling/admin/supplier/list";
-
 	}
 
 	// edit firm form
@@ -770,7 +748,6 @@ public class adminController{
 
 	@GetMapping("/purchasebill/add")
 	public String addPurchaseBill(Model model) {
-
 		// to render unit list on Purchase bill page
 		List<Unit> units = unitRepo.findAll();
 		model.addAttribute("units", units);
@@ -812,21 +789,20 @@ public class adminController{
 
 		return "admin/purchasebill_add";
 	}
-
+	
 	@PostMapping("/purchasebill/add")
-	public String addPurchaseBillProcess(@ModelAttribute PartiesTransaction partiesTransaction, Model model) {
-
+  public String addPurchaseBillProcess(@ModelAttribute PartiesTransaction partiesTransaction, Model model) {
+	
 		partiesTransaction.setStatus("Active");
 		partiesTransectionRepo.save(partiesTransaction);
-
-		return "redirect:/a2zbilling/admin/purchasebill/transection";
-
+	return "redirect:/a2zbilling/admin/purchasebill/transection";
 	}
+	
 	@GetMapping("/purchasebill/update")
 	public String updatePurchaseBill(Model model) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -848,11 +824,12 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchasebill_update";
-
 	}
 	
 	@GetMapping("/purchaseorder/add")
 	public String addPurchaseOrder(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
 
 		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
 		model.addAttribute("suppliers", suppliers);
@@ -865,8 +842,6 @@ public class adminController{
 		List<Size> sizes = sizeRepo.findAll();
 		model.addAttribute("sizes", sizes);
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -889,14 +864,13 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchaseorder_add";
-
 	}
 	
 	@GetMapping("/purchasereturn/transection")
 	public String purchaseReturnList(Model model) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -982,7 +956,6 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchasereturn_update";
-
 	}
 	
 	@GetMapping("/sales/list")
@@ -1019,7 +992,6 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/sales_list";
-
 	}
 	
 	@GetMapping("/sales/add")
@@ -1251,7 +1223,7 @@ public class adminController{
 		return "admin/manage_stock";
 
 	}
-
+  
 	// Created by Younus - get Brand list
 	@GetMapping("/brand/list")
 	public String brandList(Model model) {
@@ -1390,5 +1362,4 @@ public class adminController{
 		
 		return "redirect:/a2zbilling/admin/brand/list";
 	}
-
 }

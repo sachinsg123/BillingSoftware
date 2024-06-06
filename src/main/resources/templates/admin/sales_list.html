@@ -100,7 +100,11 @@
 								    </li>
 								</ul>
 							</td>
-							<td th:text="${sale.quantity}"></td>
+							<td> 
+								<th:block th:each="qty : ${#strings.arraySplit(sale.quantity, ',')}">
+							        <span th:text="${qty}"></span><br>
+							    </th:block>
+							</td>
 							<td th:text="${sale.paymentMode}"></td>
 							<td th:text="${sale.amountPaid}"></td>
 							<td th:text="${sale.dueAmount}"></td>
