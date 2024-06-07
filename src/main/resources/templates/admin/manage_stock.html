@@ -6,7 +6,7 @@
 
 <body>
 	<section>
-		<div class="contaier-fluid">
+		<div class="container-fluid pb-4" style="background-color: #f5f0f0; line-height: 25px;">
 			<div th:if="${session.message}">
 				<div class="alert alert-primary" role="alert">
 					<p th:text="${session.message}"></p>
@@ -30,48 +30,33 @@
 			</div>
 			<form th:action="@{/a2zbilling/admin/Item/add}" method="post" enctype="multipart/form-data"
 				class="form-group">
-				<div class="row pb-3" style="background-color: #f5f0f0;">
 				
-				<!-- Step 2 for step 1 -> go to manage stock controller -->
-					<div class="col-md-4 mt-4">
-						<div class="form-group">
-
-							<label>Supplier Name </label>
-							<select id="supplierSelect" class="form-select form-control"
-								aria-label="Default select example" name="addSupplierProduct">
-								<option selected>Select</option>
-								<!-- Dynamically populate options with Supplier data -->
-								<option th:each="supplier:${suppliers}" th:value="${supplier.id}"
-									th:text="${supplier.name}"
-									th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
-							</select>
-						</div>
-					</div>
-					
-					<div class="col-md-4 mt-4">
-						<div class="form-group">
-							<label>Brand Name</label>
-							<select id="brandSelect" class="form-select form-control"
-								aria-label="Default select example" name="getProduct">
-								<option selected>Select</option>
-								<!-- Dynamically populate options with product data -->
-								<option th:each="brand:${brands}" th:text="${brand.name}"></option>
-							</select>
-						</div>
-					</div>
-					
-					
-					<div class="col-md-4 mt-4">
-						<div class="form-group">
-							<label>Product Name</label>
-							<select id="productSelect" class="form-select form-control"
-								aria-label="Default select example" name="getProduct">
-								<option selected>Select</option>
-								<!-- Dynamically populate options with product data -->
-								<option th:each="product:${products}" th:text="${product.name}"></option>
-							</select>
-						</div>
-					</div>
+				<div class="row">
+		            <div class="col-md-4 mt-4">
+		                <label>Product Name</label>
+		                <select id="productSelect" class="form-select form-control" aria-label="Default select example" name="getProduct">
+		                    <option selected>Select</option>
+		                    <option th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"></option>
+		                </select>
+		            </div>
+		            <div class="col-md-4 mt-4">
+		                <label>Supplier Name</label>
+		                <select id="supplierSelect" class="form-select form-control" aria-label="Default select example" name="addSupplierProduct">
+		                    <option selected>Select</option>
+		                    <option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
+		                            th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
+		                </select>
+		            </div>
+		            <div class="col-md-4 mt-4">
+		                <label>Brand Name</label>
+		                <select id="brandSelect" class="form-select form-control" aria-label="Default select example" name="getProduct">
+		                    <option selected>Select</option>
+		                    <option th:each="brand:${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+		                </select>
+		            </div>
+		        </div>
+				
+				<div class="row">
 					<div class="col-md-4 mt-4">
 						<div class="form-group">
 							<label>Product Category </label>
@@ -152,6 +137,44 @@
 				</div>
 			</form>
 		</div>
+		
+		<script>
+		     $(document).ready(function() {
+		         $('#productSelect').change(function() {
+		             var productId = $(this).val();
+		             if (productId !== 'Select') {
+		                 updateSuppliers(productId);
+		                 updateBrands(productId);
+		             }
+		         });
+		
+		         function updateSuppliers(productId) {
+		             // Assuming you have a map of productId to supplierIds
+		             var suppliersMap = /*[[${suppliersMapJson}]]*/ {}; // Get this map from your backend
+		             var supplierSelect = $('#supplierSelect');
+		             supplierSelect.find('option').not(':first').remove();
+		
+		             if (suppliersMap[productId]) {
+		                 suppliersMap[productId].forEach(function(supplier) {
+		                     supplierSelect.append(new Option(supplier.name, supplier.id));
+		                 });
+		             }
+		         }
+		
+		         function updateBrands(productId) {
+		             // Assuming you have a map of productId to brandIds
+		             var brandsMap = /*[[${brandsMapJson}]]*/ {}; // Get this map from your backend
+		             var brandSelect = $('#brandSelect');
+		             brandSelect.find('option').not(':first').remove();
+		
+		             if (brandsMap[productId]) {
+		                 brandsMap[productId].forEach(function(brand) {
+		                     brandSelect.append(new Option(brand.name, brand.id));
+		                 });
+		             }
+		         }
+		     });
+		 </script>
 	</section>
 
 

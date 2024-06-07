@@ -973,7 +973,7 @@ public class adminController{
 
 		List<Sales> sales = salesRepo.showAllActiveSales();
 		model.addAttribute("sales", sales);
-
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
@@ -1035,17 +1035,18 @@ public class adminController{
 	}
 	
 	@PostMapping("/sales/add")
-	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session, HttpServletRequest request) throws URISyntaxException {
+	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session, HttpServletRequest request, Model model) throws URISyntaxException {
 		
 		sales.setStatus("Active");
-  if (sales.getSignatureImage() == null) {
+		if (sales.getSignatureImage() == null) {
 			sales.setSignatureImage("");
 		}
 
 		Customer customer = sales.getCustomer();
 		List<Product> products = sales.getProducts();
-
+		
 		salesRepo.save(sales);
+		
 		customer.getSales().add(sales);
 		List<Product> customerProduct = customer.getProducts();
 		for (Product product : products) {
@@ -1114,7 +1115,6 @@ public class adminController{
 	//create by Mahesh
 	@GetMapping("/sales/return/{id}")
 	public String returnsales(@PathVariable("id") int id, Model model) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		
@@ -1151,6 +1151,46 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/sales_return";
+	}
+	
+	@PostMapping("/sales/return")
+	public String returnsalesProcess(@ModelAttribute Sales sale, Model model) {
+		Sales sales = salesRepo.findById(sale.getId()).get();
+		
+		sales.setDate("");
+		sales.setDate(sale.getDate());
+		sales.setQuantity(sale.getQuantity());
+		sales.setTaxInAmount(sale.getTaxInAmount());
+		sales.setTaxInPercentage(sale.getTaxInPercentage());
+		sales.setDiscountInAmount(sale.getDiscountInAmount());
+		sales.setDiscountInPercentage(sale.getDiscountInPercentage());
+		sales.setPaymentMode(sale.getPaymentMode());
+		sales.setAmountPaid(sale.getAmountPaid());
+		sales.setDueAmount(sale.getDueAmount());
+		sales.setNetPayment(sale.getNetPayment());
+		sales.setTotalAmount(sale.getTotalAmount());
+		sales.setSignatureImage(sale.getSignatureImage());
+		
+//		new products and customer
+		Customer customer = sale.getCustomer();
+		List<Product> products = sale.getProducts();
+		
+//		old products and customer
+		List<Product> SalesProduct = sales.getProducts();
+		Customer SalesCustomer = sales.getCustomer();
+		
+//		for (Product product : SalesProduct) {
+//			if(SalesCustomer.getProducts().contains(product))
+//			{
+//				
+//			}
+//		}
+//		
+		sales.setProducts(products);
+		sales.setCustomer(customer);
+		
+		salesRepo.save(sales);
+		return "redirect:/a2zbilling/admin/sales/list";
 	}
 	
 	@GetMapping("/Item/add")

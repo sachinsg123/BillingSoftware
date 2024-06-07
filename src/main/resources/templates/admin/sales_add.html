@@ -144,7 +144,7 @@
 			 
 
 		<div class="row mt-4 ml-1 mr-1" >
-			<div class="col-md-12">
+			<div class="col-md-12 table-responsive" style="max-height: 400px; overflow-y: auto; max-width: 100%; overflow-x: auto;">
 				<table class="table table-bordered" style="background-color:#86A6AE;">
 					<thead style="color: black;">
 						<tr>
@@ -163,9 +163,9 @@
 					</thead>
 					<tbody id="addrow">
 						<tr>
-							<td><input id="barcode" type="text" class="form-control"></td>
+							<td><input id="barcode" type="text" style="width: 70px;" class="form-control"></td>
 							<td>
-								<select required id="productSelect" class="form-select form-control" aria-label="Default select example" name="products">
+								<select required id="productSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="products">
 						           <option selected>Choose</option>
 								   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 							               th:attr="data-price=${product.price},
@@ -174,15 +174,15 @@
 							       </option>
 					           	</select>
 							</td>
-							<td><input id="cgst" type="text" class="form-control" readonly></td>
-							<td><input id="sgst" type="text" class="form-control" readonly></td>
-							<td><input id="size" type="text" class="form-control" readonly></td>
-							<td><input id="AQty" type="number" class="form-control" readonly></td>
-							<td><input id="Qty" name="quantity" type="number" class="form-control"></td>
-							<td><input id="taxinpercentage" name="taxInPercentage" oninput="calculateTaxAmount()" type="number" class="form-control"></td>
-							<td><input id="taxinamount" name="taxInAmount" type="text" class="form-control" readonly></td>
-							<td><input id="price" type="text" class="form-control" readonly></td>
-							<td><input id="total_amount" type="text" class="form-control" readonly></td>
+							<td><input id="cgst" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="sgst" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="size" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="AQty" type="number" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="Qty" name="quantity" type="number" style="width: 70px;" class="form-control"></td>
+							<td><input id="taxinpercentage" name="taxInPercentage" oninput="calculateTaxAmount()" type="number" style="width: 70px;" class="form-control"></td>
+							<td><input id="taxinamount" name="taxInAmount" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="price" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="total_amount" type="text" style="width: 70px;" class="form-control" readonly></td>
 							<td>
 								<a id="1" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
 							</td>

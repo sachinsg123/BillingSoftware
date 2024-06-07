@@ -84,7 +84,7 @@
 							<th style="border: 1px solid black;" scope="col">Payment Type</th>
 							<th style="border: 1px solid black;" scope="col">Paid Amount</th>
 							<th style="border: 1px solid black;" scope="col">Balance Due</th>
-							<th style="border: 1px solid black;" scope="col">Amount</th>
+							<th style="border: 1px solid black;" scope="col">Net Amount</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -108,7 +108,7 @@
 							<td th:text="${sale.paymentMode}"></td>
 							<td th:text="${sale.amountPaid}"></td>
 							<td th:text="${sale.dueAmount}"></td>
-							<td th:text="${sale.totalAmount}"></td>
+							<td th:text="${sale.netPayment}"></td>
 							<td>
 								<div class="dropdown">
 								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -116,7 +116,7 @@
 								  </button>
 								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>
-									<a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Return</b></a>
+									<a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Sales Return</b></a>
 								    <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
 								  </div>
 								</div>

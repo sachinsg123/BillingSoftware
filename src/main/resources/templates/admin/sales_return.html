@@ -79,13 +79,16 @@
 			        	<label>Customer Name :- </label>
 					</div>
 					<div class="col-md-8">
-						<select id="customerSelect" class="form-select form-control" aria-label="Default select example" name="customer">
-				            <option selected th:text="*{customer.name}">Select</option>
+						<select id="customerSelect" class="form-select form-control" th:field="*{customer}" aria-label="Default select example" name="customer">
+							<option value="" disabled selected>Choose</option>
 				            <!-- Dynamically populate options with customer data -->
-				            <option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}" 
+				            <option th:each="customer:${customers}" 
+									th:value="${customer.id}" 
+									th:text="${customer.name}" 
 									th:attr="data-mobile=${customer.mobile}, 
-									data-email=${customer.email},
-									data-address=${customer.address}"></option>
+										data-email=${customer.email},
+										data-address=${customer.address}">
+							</option>
 				        </select>
 					</div>
 				</div>
@@ -178,16 +181,16 @@
 				    <tbody id="addrow">
 				        <tr th:each="product,iterStat : ${sale.products}">
 				            <td><input id="barcode" style="width: 70px;" type="text" class="form-control"></td>
-				            <td>
-				                <select id="productSelect" style="width: 90px;" class="form-select form-control" aria-label="Default select example" name="products">
-				                    <option selected th:text="${product?.name}">Choose</option>
-				                    <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-				                            th:attr="data-price=${product.price},
-				                            data-quantity=${product.quantity},
-				                            data-size=${product.size?.sizeValue}">
-				                    </option>
-				                </select>
-				            </td>
+							<td>
+			                    <select id="productSelect" style="width: 90px;" name="products" class="form-select form-control" aria-label="Default select example">
+			                        <option th:text="${product?.name}" selected>Choose</option>
+			                        <option th:each="p : ${products}" 
+			                                th:value="${p.id}" 
+			                                th:text="${p.name}"
+			                                th:attr="data-price=${p.price}, data-quantity=${p.quantity}, data-size=${p.size?.sizeValue}">
+			                        </option>
+			                    </select>
+			                </td>
 				            <td><input id="cgst" style="width: 70px;" type="text" class="form-control" readonly></td>
 				            <td><input id="sgst" style="width: 70px;" type="text" class="form-control" readonly></td>
 				            <td><input id="size" style="width: 70px;" type="text" th:value="${product?.size?.sizeValue ?: '0'}" class="form-control" readonly></td>
@@ -269,12 +272,17 @@
 		
 		<div class="col-md-12 mt-2">
 			<div class="text-right mr-6 mt-4">
-				<img th:src="*{SignatureImage}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
+				<img th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
+				<input style="display: none;" name="SignatureImage" class="form-control" id="imageUrl" type="text" th:value="${companySignImgPath}">
 			</div>
 			
 			<div class="row justify-content-center">
 				<div class="mr-2">
 					<button type="submit" class="btn btn-info text-center" style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;"><b>Save</b></button>
+				</div>
+				<div>
+					<a th:href="@{'/a2zbilling/admin/sales/list'}"
+						style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" class="btn btn-info"><b>Cancel</b></a>
 				</div>
 			</div>
 		</div>
@@ -509,8 +517,8 @@
 	       var email = selectedOption.data('email');
 		   var address = selectedOption.data('address');
 	       
-	       $('#mobile1').val(phone);
-	       $('#email1').val(email);
+	       $('#mobile').val(phone);
+	       $('#email').val(email);
 		   $('#address').val(address);
 	   });
 	});
@@ -624,6 +632,7 @@
 					
 					// Update the overall total amount
 					calculateOverallTotal();
+					
 		        };
 				
 				// Function to calculate the overall total amount for all rows
@@ -636,6 +645,7 @@
 				    });
 				
 				    $('#totalAmountField').val(overallTotal.toFixed(2));
+					updateNetPayment();
 		        }
 					
 				
