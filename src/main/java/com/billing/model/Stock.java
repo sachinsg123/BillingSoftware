@@ -1,5 +1,7 @@
 package com.billing.model;
 
+import java.sql.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,10 +14,24 @@ public class Stock {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private int quantity;
+	private Date date;
+	
+	private String quantity;
+	
+	private String minQuantity;
+
+	private String taxInPercentage;
 	
 	@OneToOne(mappedBy = "stock")
 	private Product product;
+
+	public String getTaxInPercentage() {
+		return taxInPercentage;
+	}
+
+	public void setTaxInPercentage(String taxInPercentage) {
+		this.taxInPercentage = taxInPercentage;
+	}
 
 	public int getId() {
 		return id;
@@ -24,12 +40,27 @@ public class Stock {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public Date getDate() {
+		return date;
+	}
 
-	public int getQuantity() {
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public String getMinQuantity() {
+		return minQuantity;
+	}
+
+	public void setMinQuantity(String minQuantity) {
+		this.minQuantity = minQuantity;
+	}
+	public String getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(String quantity) {
 		this.quantity = quantity;
 	}
 
