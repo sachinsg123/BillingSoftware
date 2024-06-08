@@ -70,294 +70,6 @@ th:fragment="layout(content)">
             <div class="page-inner">
                 <!-- BEGIN Left Aside -->
                  <div th:replace="fragments/sidebar :: sidebar"></div>
-                <!-- <aside class="page-sidebar">
-                    <div class="page-logo">
-                         Modal
-                        <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
-                            <img src="/img/favicon/a2zlogo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
-                            <div th:if="${companyName != null}">
-                            <span class="page-logo-text mr-1" style="font-size:30px" th:text="${companyName}"></span>
-                            </div>
-                            <div th:if="${companyName == null}">
-                            <span class="page-logo-text mr-1" style="font-size:30px">A2Z Billing</span>
-                            </div>
-                             <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
-                            <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
-                        </a>
-                    </div>
-                    BEGIN PRIMARY NAVIGATION
-                    <nav id="js-primary-nav" class="primary-nav" role="navigation">
-                        <div class="nav-filter">
-                            <div class="position-relative">
-                                <input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
-                                <a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
-                                    <i class="fal fa-chevron-up"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <ul id="js-nav-menu" class="nav-menu">
-                            <li class="active open">
-                                <a th:href="@{/a2zbilling/admin/}" title="Application Intel" data-filter-tags="application intel">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                    <span class="nav-link-text" data-i18n="nav.application_intel">Dashboard</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" title="Theme Settings" data-filter-tags="theme product">
-                                    <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Product</span>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a th:href="@{/a2zbilling/admin/product/list}" title="How it works" data-filter-tags="theme products">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">Products</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/a2zbilling/admin/product/add}" title="Layout Options" data-filter-tags="theme create product">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Create Product</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="" title="Theme Modes (beta)" data-filter-tags="theme category" data-toggle="modal" data-target="#exampleModalCategory">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Add Category</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/a2zbilling/admin/category/list}" title="Saving to Database" data-filter-tags="theme sub category">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_saving_to_database">All Categories</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Skin Options" data-filter-tags="theme brands">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_skin_options">Brands</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="settings_saving_db.html" title="Saving to Database" data-filter-tags="theme print barcode">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_saving_to_database">Print Barcode</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Saving to Database" data-filter-tags="theme import products">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_saving_to_database">Import Products</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#" title="Documentation" data-filter-tags="sales">
-                                    <i class="fal fa-book"></i>
-                                    <span class="nav-link-text" data-i18n="nav.documentation">Sales</span>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="#" title="General Docs" data-filter-tags="sales">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_general_docs">Sales</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Project Structure" data-filter-tags="sales invoices">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_project_structure">Invoices</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Flavors & Editions" data-filter-tags="documentation sales return">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_flavors_&_editions">Sales Return</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Community Support" data-filter-tags="documentation quotation">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_community_support">Quotation</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Premium Support" data-filter-tags="documentation premium support">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_premium_support">POS</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Licensing" data-filter-tags="sales return">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_licensing">Return</span>
-                                        </a>
-                                        <ul>
-											<li>
-										   <a href="#" title="transfer list" data-filter-tags="sales sales return">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_licensing">Sales Return</span>
-                                          </a>
-											</li>
-											<li>
-										   <a href="#" title="transfer list" data-filter-tags="sales purchase return">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_licensing">Purchase Return</span>
-                                          </a>
-											</li>
-										</ul>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Build Notes" data-filter-tags="sales build notes">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_build_notes">Transfer</span>
-                                            
-                                        </a>
-                                        <ul>
-											<li>
-										   <a href="#" title="transfer list" data-filter-tags="sales transfer list">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_licensing">Transfer List</span>
-                                          </a>
-											</li>
-											<li>
-										   <a href="#" title="transfer list" data-filter-tags="sales transfer list">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_licensing">Import Transfer</span>
-                                          </a>
-											</li>
-										</ul>
-                                    </li>
-                                </ul>
-                            </li>
-                              <li>
-                                <a href="#" title="Theme Settings" data-filter-tags="theme Finance and account">
-                                    <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Purchase</span>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="#" title="How it works" data-filter-tags="theme import purchase">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">Import Purchase</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Layout Options" data-filter-tags="theme purchase order">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Purchase Order</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Theme Modes (beta)" data-filter-tags="theme purchase return">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Purchase Return</span>
-                                        </a>
-                                    </li>
-                                    </ul>
-                                    </li>
-                                    
-                                 <li>
-                                <a href="#" title="Theme Settings" data-filter-tags="theme ">
-                                    <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Finance & Accounts</span>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="#" title="How it works" data-filter-tags="theme expense">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">Expense</span>
-                                        </a>
-                                        <ul>
-											<li>
-                                        <a href="#" title="Layout Options" data-filter-tags="theme expenses">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Expenses</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Theme Modes (beta)" data-filter-tags="theme expense category">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Expense Category</span>
-                                        </a>
-                                    </li>
-										</ul>
-                                    </li>
-                                   </ul>
-                                   </li>
-                              <li>
-                                <a href="#" title="Theme Settings" data-filter-tags="stock ">
-                                    <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Stock</span>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="#" title="How it works" data-filter-tags="stock manage">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">Manage Stock</span>
-                                        </a>
-											<li>
-                                        <a href="#" title="Layout Options" data-filter-tags="stock adjustment">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Stock Adjustment</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Theme Modes (beta)" data-filter-tags="stock transfer">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Stock Transfer</span>
-                                        </a>
-                                    </li>
-										</ul>
-                                    </li>
-                                 <li>
-                                <a href="#" title="Theme Settings" data-filter-tags="peoples">
-                                    <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Peoples</span>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="#" title="How it works" data-filter-tags="peoples customer">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">Customers</span>
-                                        </a>
-                                        <ul>
-                                       <li>
-                                        <a th:href="@{/a2zbilling/admin/customer/add}" title="Layout Options" data-filter-tags="peoples customer">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Add Customer</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/a2zbilling/admin/customer/list}" title="Layout Options" data-filter-tags="peoples customer">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">All Customers</span>
-                                        </a>
-                                    </li>
-                                        </ul>
-                                        </li>
-									<li>
-                                        <a href="#" title="Layout Options" data-filter-tags="peoples suppliers">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Suppliers</span>
-                                        </a>
-                                        <ul>
-                                         <li>
-                                        <a  th:href="@{/a2zbilling/admin/supplier/add}" title="Layout Options" data-filter-tags="peoples suppliers">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">New Supplier</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/a2zbilling/admin/supplier/list}" title="Layout Options" data-filter-tags="peoples customer">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">All Suppliers</span>
-                                        </a>
-                                    </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Theme Modes (beta)" data-filter-tags="peoples stores">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Stores</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Theme Modes (beta)" data-filter-tags="peoples warehouses">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Warehouses</span>
-                                        </a>
-                                    </li>
-										</ul>
-                                    </li>
-                                     <li>
-                                <a href="#" title="Theme Settings" data-filter-tags="master">
-                                    <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Master</span>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="#" title="How it works" data-filter-tags="master units" data-toggle="modal" data-target="#exampleModalUnits">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">Add Units</span>
-                                        </a>
-                                    </li>
-                                       <li>
-                                        <a href="#" title="Layout Options" data-filter-tags="master gst" data-toggle="modal" data-target="#exampleModalForGST">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Add GST</span>
-                                        </a>
-                                    </li>
-                                   </ul>
-                        <div class="filter-message js-filter-message bg-success-600"></div>
-                    </nav>
-                    END PRIMARY NAVIGATION
-                </aside> -->
-                
                 <!-- END Left Aside -->
                 <div class="page-content-wrapper">
                     <!-- BEGIN Page Header -->
@@ -527,9 +239,8 @@ th:fragment="layout(content)">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
         </div> -->
-  					</div>
-  				</div>
-  
+       </div>
+       </div>
   <!-- Adding Charges Modal -->
   <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog"
   					aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -560,7 +271,6 @@ th:fragment="layout(content)">
   													name="sgstRate" placeholder="Enter price">
   											</div>
   										</div>
-  										
   									</div>
   									<div class="col-md-12 mt-4">
   										<div class="text-center">
@@ -575,10 +285,8 @@ th:fragment="layout(content)">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
         </div> -->
-  					</div>
-  				</div>
-  
-  
+        </div>
+       </div>
    <!--Add Category Module -> Changes by Younus-->
   <div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -626,8 +334,7 @@ th:fragment="layout(content)">
       </div> -->
     </div>
   </div>
-  
-  				<!--Add Brand Module -> Created by Younus-->
+  <!--Add Brand Module -> Created by Younus-->
 				<div class="modal fade" id="exampleModalBrand" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog" role="document">
@@ -680,10 +387,8 @@ th:fragment="layout(content)">
 						</div>
 					</div>
 				</div>
-				
-				
-</div>
-                    <!-- END Shortcuts -->
+             </div>
+             <!-- END Shortcuts -->
                     <!-- BEGIN Color profile -->
                     <!-- this area is hidden and will not be seen on screens or screen readers -->
                     <!-- we use this only for CSS color refernce for JS stuff -->
@@ -753,30 +458,6 @@ th:fragment="layout(content)">
                 </div>
             </div>
         </div>
-        <!-- END Page Wrapper -->
-        <!-- BEGIN Quick Menu -->
-        <!-- to add more items, please make sure to change the variable '$menu-items: number;' in your _page-components-shortcut.scss -->
-        <nav class="shortcut-menu d-none d-sm-block">
-            <input type="checkbox" class="menu-open" name="menu-open" id="menu_open" />
-            <label for="menu_open" class="menu-open-button ">
-                <span class="app-shortcut-icon d-block"></span>
-            </label>
-            <a href="#" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Scroll Top">
-                <i class="fal fa-arrow-up"></i>
-            </a>
-            <a href="page_login.html" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Logout">
-                <i class="fal fa-sign-out"></i>
-            </a>
-            <a href="#" class="menu-item btn" data-action="app-fullscreen" data-toggle="tooltip" data-placement="left" title="Full Screen">
-                <i class="fal fa-expand"></i>
-            </a>
-            <a href="#" class="menu-item btn" data-action="app-print" data-toggle="tooltip" data-placement="left" title="Print page">
-                <i class="fal fa-print"></i>
-            </a>
-            <a href="#" class="menu-item btn" data-action="app-voice" data-toggle="tooltip" data-placement="left" title="Voice command">
-                <i class="fal fa-microphone"></i>
-            </a>
-        </nav>
         <!-- END Quick Menu -->
         <!-- BEGIN Messenger -->
         <div class="modal fade js-modal-messenger modal-backdrop-transparent" tabindex="-1" role="dialog" aria-hidden="true">
@@ -832,7 +513,7 @@ th:fragment="layout(content)">
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" class="d-table w-100 px-2 py-2 text-dark hover-white" data-filter-tags="oliver kopyuv online">
+                                          <a href="#" class="d-table w-100 px-2 py-2 text-dark hover-white" data-filter-tags="oliver kopyuv online">
                                                 <div class="d-table-cell align-middle status status-success status-sm ">
                                                     <span class="profile-image-md rounded-circle d-block" style="background-image:url('/img/demo/avatars/avatar-b.png'); background-size: cover;"></span>
                                                 </div>
@@ -1602,12 +1283,8 @@ th:fragment="layout(content)">
                                 return "\n\t\t\t\t\t\t<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>\n\t\t\t\t\t\t\t<i class=\"fal fa-times\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<div class='dropdown d-inline-block dropleft'>\n\t\t\t\t\t\t\t<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>\n\t\t\t\t\t\t\t\t<i class=\"fal fa-ellipsis-v\"></i>\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<div class='dropdown-menu'>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>";
                             },
                         },
-
                     ]
-
                 });
-
-
                 /* flot toggle example */
                 var flot_toggle = function()
                 {

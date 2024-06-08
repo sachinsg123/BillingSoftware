@@ -510,7 +510,6 @@ public class adminController{
 				redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload logo: " + ex.getMessage());
 			}
 		}
-
 		
 		if (companyDto.getSignature() != null && !companyDto.getSignature().isEmpty()) {
 			try {
@@ -917,6 +916,7 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchasereturn_transection";
+		
 	}
 	@GetMapping("/purchasereturn/add")
 	public String addPurchaseReturn(Model model) {
@@ -1319,11 +1319,9 @@ public class adminController{
 
 	    // Redirect to the referer URL
 	    return "redirect:" + endpoint;
-
 	    
 	}
-
-
+	
 	//Craeted by Younus - Update Brand
 	@GetMapping("/brand/update/{id}")
 	public String updateBrandList(@PathVariable int id, Model model) {
