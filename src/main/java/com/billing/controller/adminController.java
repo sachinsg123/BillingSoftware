@@ -714,7 +714,7 @@ public class adminController{
 
 		return "redirect:/a2zbilling/admin/customer/add";
 	}
-	
+	//Created by Younus - to update transections
 	@GetMapping("/purchasebill/transection")
 	public String purchaseBillList(Model model) {
 
@@ -729,8 +729,8 @@ public class adminController{
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		List<PartiesTransaction> parties = partiesTransectionRepo.findAll();
-		model.addAttribute("parties", parties);
+		List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection();
+		model.addAttribute("partiesTransactions", partiesTransactions);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
@@ -763,6 +763,7 @@ public class adminController{
 		// To get Parties Name data from db
 		List<Parties> parties = partiesRepo.showAllActiveParties();
 		model.addAttribute("parties", parties);
+		
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -798,10 +799,13 @@ public class adminController{
 	return "redirect:/a2zbilling/admin/purchasebill/transection";
 	}
 	
-	@GetMapping("/purchasebill/update")
-	public String updatePurchaseBill(Model model) {
+	@GetMapping("/purchasebill/update/{id}")
+	public String updatePurchaseBill(@PathVariable("id") int id, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
+		PartiesTransaction partiesTransactions = partiesTransectionRepo.findById(id).get();
+		model.addAttribute("partiesTransactions", partiesTransactions);
 		
 		String username = auth.getName();
 		String email = user.getEmail();
@@ -922,6 +926,7 @@ public class adminController{
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
 		model.addAttribute("imagePath", imgpath);
+		
 
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
@@ -943,6 +948,8 @@ public class adminController{
 
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
+		
+		
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
@@ -956,6 +963,16 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchasereturn_update";
+	}
+	
+	@GetMapping("/purchasebill/delete/{id}")
+	public String deletePurchasebillById(@PathVariable("id") int id) {
+
+		PartiesTransaction partiesTransaction=partiesTransectionRepo.findById(id).get();
+		partiesTransaction.setStatus("InActive");
+		partiesTransectionRepo.save(partiesTransaction);
+		
+		return "redirect:/a2zbilling/admin/purchasebill/transection";
 	}
 	
 	@GetMapping("/sales/list")

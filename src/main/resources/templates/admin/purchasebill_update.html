@@ -23,7 +23,7 @@
 		if (themeSettings.themeOptions) {
 			classHolder.className = themeSettings.themeOptions;
 			console.log("%c✔ Theme settings loaded", "color: #148f32");
-		}
+		}	
 		else {
 			console.log("%c✔ Heads up! Theme settings is empty or does not exist, loading default settings...", "color: #ed1c24");
 		}
@@ -56,7 +56,8 @@
 		var resetSettings = function () {
 			localStorage.setItem("themeSettings", "");
 		}
-		// Function to validate the mobile number
+		
+	
 
 	</script>
 	<!-- BEGIN Page Wrapper -->
@@ -90,46 +91,46 @@
 						</div>
 						<div class="row" style="background-color:rgb(85,75,126);">
 							<div class="col-md-12 mt-1">
-								<h1 class="text-center" style="color: white;">Update Purchase Transection</h1>
+								<h1 class="text-center" style="color: white;">Update Purchase Transaction</h1>
 							</div>
 						</div>
-						<form th:action="@{/a2zbilling/admin/purchasebill/update}" method="post"
-							enctype="multipart/form-data" class="form-group">
+						<form th:action="@{/a2zbilling/admin/purchasebill/update}" method="post" th:object="${partiesTransactions}"
+							enctype="multipart/form-data" class="form-group" >
 							<div class="row pb-3" style="background-color:#f5f0f0;">
-								<div class="col-md-4">
-									<input type="hidden" name="id" />
-									<div class="form-group mt-4">
+							
+							
+							<div class="col-md-4  mt-4">
+									<div class="form-group">
 										<label>Date</label>
-										<input required type="Date" class="form-control" name="date">
+											<input type="date" class="form-control" id="currentDateInput" name="addedDate" >
 									</div>
 								</div>
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Invoice No</label>
-										<input required type="No" class="form-control" name="invoiceno">
+										<input required type="text" class="form-control" name="billNo" th:field="*{billNo}">
 									</div>
 								</div>
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Party Name</label>
-										<input required type="Name" class="form-control" name="partyname">
+										<input required type="text" class="form-control" th:field="*{parties.name}" name="parties" id="partiesSelect">
 									</div>
 								</div>
 
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Product Name</label>
-										<input required type="Name" class="form-control" name="partyname">
+										<input required type="text" class="form-control" name="products"  id="productSelect">
 									</div>
 								</div>
 
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Quantity</label>
-										<input required type="Name" class="form-control" name="partyname">
+										<input required type="text" class="form-control" name="quantity" th:field="*{quantity}" id="Qty">
 									</div>
 								</div>
-
 								<!--<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Tax Amount</label>
@@ -140,14 +141,14 @@
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Discount Amount</label>
-										<input required type="Name" class="form-control" name="partyname">
+										<input required type="text" class="form-control" name="discountInRupees" th:field="*{discountInRupees}">
 									</div>
 								</div>
 
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label class="invoice-label">Payment mode</label>
-										<select class="form-control" name="type" required>
+										<select class="form-control" th:field="*{paymentMode}" name="paymentMode" required>
 											<option value="cash">Cash</option>
 											<option value="cheque">Cheque</option>
 											<option value="online">Online</option>
@@ -157,22 +158,23 @@
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Net Amount</label>
-										<input required type="Amount" class="form-control" name="amount">
+										<input required type="text" class="form-control" name="netPayment" th:field="*{netPayment}">
 									</div>
 								</div>
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Balance Due</label>
-										<input required type="Amount" class="form-control" name="balanccedue">
+										<input required type="text" class="form-control" name="dues" th:field="*{dues}">
 									</div>
 								</div>
 
 								<div class="col-md-4 mt-4">
 									<div class="form-group">
 										<label>Amount Paid</label>
-										<input required type="Amount" class="form-control" name="balanccedue">
+										<input required type="text" class="form-control" name="paid" th:field="*{paid}">
 									</div>
 								</div>
+									
 								<div class="col-md-12 mt-4">
 									<div class="text-center">
 										<button type="submit" style="color: white;"
@@ -186,6 +188,11 @@
 					</div>
 
 				</main>
+				<script>
+					var currentDate = new Date();
+					var formattedDate = currentDate.toISOString().split('T')[0];
+					document.getElementById('currentDateInput').value = formattedDate;
+				</script>
 				<!-- this overlay is activated only when mobile menu is triggered -->
 				<div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div>
 				<!-- END Page Content -->

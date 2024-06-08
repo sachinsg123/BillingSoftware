@@ -63,7 +63,7 @@
 
 					<div class="col-md-2 mt-3 input-group">
 						<label>Date :- </label>
-						<input type="text" class="form-control" id="currentDateInput" readonly>
+						<input name="addedDate" type="text" class="form-control" id="currentDateInput" readonly>
 					</div>
 				</div>
 				
@@ -78,7 +78,7 @@
 								</button>
 							</div>
 							<select class="form-select form-control" aria-label="Default select example"
-								name="productBrand">
+								name="brand">
 								<!--<option selected>Brand</option>-->
 								<option th:each="brand:${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
 							</select>
@@ -135,16 +135,16 @@
 				
 				<div class="col-md-4 mt-2">
 					<div class="form-group">
-						<label>Product information</label>
+						<label>About Product</label>
 						<input type="text" class="form-control" name="about" placeholder="Enter about product">
 					</div>
 				</div>
-				<div class="col-md-4 mt-2">
+				<!--<div class="col-md-4 mt-2">
 					<div class="form-group">
 						<label>choose date</label>
 						<input type="date" class="form-control" name="addedDate">
 					</div>
-				</div>
+				</div>-->
 				<div class="col-md-4 mt-2">
 					<label>Color</label>
 					<div class="form-group">
@@ -156,12 +156,12 @@
 						</select>
 					</div>
 				</div>
-				<div class="col-md-4 mt-2">
+				<!--<div class="col-md-4 mt-2">
 					<div class="form-group">
-						<label>Add Product Images (max-3)</label>
+						<label>Add Product Image</label>
 						<input type="file" class="form-control" name="imageFile" multiple accept="image/*" onchange="limitFiles(this)">
 					</div>
-				</div>
+				</div>-->
 			<!--	<div class="col-md-4 mt-3">
 					<div class="form-group">
 						<label>Minimum Stock Qty</label>
@@ -179,17 +179,6 @@
 	</div>
 	
 	<script>
-		function limitFiles(input) {
-			// Get the number of files selected
-			var files = input.files.length;
-
-			// If more than 3 files are selected, alert the user and clear the file input
-			if (files > 3) {
-				alert("Please select up to 3 images.");
-				input.value = '';
-			}
-		}
-
 		function checkStockLevels() {
 			var quantity = parseInt(document.getElementById('productQuantity').value);
 			var minStockQty = parseInt(document.getElementById('minStockQty').value);
