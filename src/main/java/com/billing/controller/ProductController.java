@@ -149,29 +149,18 @@ public class ProductController {
 	}
 
 	@PostMapping("/product/add")
-	public String processProductAdding(@ModelAttribute Product product,
-			@RequestParam("imageFile") MultipartFile imageFile, @RequestParam("productSize") String productSizeValue,
-			@RequestParam("productColor") String colorName, @RequestParam("productBrand") String brandName,
+	public String processProductAdding(@ModelAttribute Product product, @RequestParam("productSize") String productSizeValue,
+			@RequestParam("productColor") String colorName, 
 			HttpSession session) throws IOException {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
 
-		if (imageFile.getOriginalFilename().isEmpty()) {
-
-			// imageFile.getOriginalFilename();
-			product.setImageUrl("default.png");
-		} else {
-			// String uploadDir = "./static/productimages";
-			String fileName = imageFile.getOriginalFilename();
-			// Path filePath = Paths.get(StringUtils.ImagePaths.productImageUrl).getFile();
-			File filePath = new ClassPathResource("/static/img/productimages/").getFile();
-			Path path = Paths.get(filePath.getAbsolutePath() + File.separator + fileName);
-			Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-			System.out.println(fileName);
-			System.out.println(path);
-			System.out.println(filePath);
-			product.setImageUrl(fileName);
-		}
-
+		
+		user.getProducts().add(product);
+		userRepo.save(user);
+		
+		product.setUser(user);
 		/*
 		 * String supplierName=product.getSupplier().getName();
 		 * System.out.println(supplierName);
@@ -190,7 +179,7 @@ public class ProductController {
 			product.setSize(s);
 		}
 		
-
+		
 		// adding color
 		Color colorFound = colorRepo.findByName(colorName);
 		Color noColorChoosed = colorRepo.findByName("No color choosed");
@@ -209,21 +198,25 @@ public class ProductController {
 			product.setColor(co);
 		}
 
-		// add brand into product
-		Brand brandFound = brandRepo.findByName(brandName);
+		/*
+		 * // add brand into product Brand brandFound = brandRepo.findByName(brandName);
+		 * 
+		 * if (brandFound != null) {
+		 * 
+		 * product.setBrand(brandFound); } else {
+		 * 
+		 * Brand b = new Brand(); b.setName(brandName); b.setLogo("default.png");
+		 * brandRepo.save(b); product.setBrand(b); }
+		 */
+		
+		Brand brand = product.getBrand();
+		brand.getProducts().add(product);
+		brandRepo.save(brand);
+		product.setBrand(brand);
+		
+		
 
-		if (brandFound != null) {
-
-			product.setBrand(brandFound);
-		} else {
-
-			Brand b = new Brand();
-			b.setName(brandName);
-			b.setLogo("default.png");
-			brandRepo.save(b);
-			product.setBrand(b);
-		}
-
+		
 		Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
 
 		if (cat == null) {
@@ -254,9 +247,11 @@ public class ProductController {
 			model.addAttribute("email", email);
 
 			Company company = companyRepo.getCompanyByUserId(user.getId());
-
 			String companyName = company.getName();
-
+			
+			List<Brand> brands = brandRepo.showAllActiveBrand();
+			model.addAttribute("brands", brands);
+			
 			model.addAttribute("companyName", companyName);
 			Optional<Product> Founded = productRepo.findById(Integer.parseInt(id));
 			Product product = Founded.get();
@@ -266,6 +261,9 @@ public class ProductController {
 			List<Color> colors = colorRepo.findAll();
 			model.addAttribute("colors", colors);
 
+			List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+			model.addAttribute("suppliers", suppliers);
+			
 			String image = company.getLogo();
 			String companyLogo = "/img/companylogo/" + image;
 			model.addAttribute("companyLogo", companyLogo);
@@ -284,94 +282,61 @@ public class ProductController {
 		}
 
 		@PostMapping("/product/edit")
-		public String productUpdateProcess(@ModelAttribute Product product,
-				@RequestParam("imageFile") MultipartFile imageFile, @RequestParam("productSize") String productSizeValue,
-				@RequestParam("productColor") String colorName, @RequestParam("productBrand") String brandName)
+		public String productUpdateProcess(@ModelAttribute Product product)
 				throws IOException {
 
 			System.out.println("data getting " + product);
 			Optional<Product> found = productRepo.findById(product.getId());
 			Product productFound = found.get();
-			productFound.setId(product.getId());
+			
 			productFound.setName(product.getName());
 			productFound.setAddedDate(product.getAddedDate());
-			productFound.setImageUrl(product.getImageUrl());
-			if (imageFile.getOriginalFilename().isEmpty()) {
-
-				// imageFile.getOriginalFilename();
-				product.setImageUrl("default.png");
-			} else {
-//				   String uploadDir = "./static/productImages";
-				String fileName = imageFile.getOriginalFilename();
-//				   Path filePath = Paths.get(StringUtils.ImagePaths.productImageUrl).getFile();
-				File filePath = new ClassPathResource("/static/img/products/").getFile();
-				Path path = Paths.get(filePath.getAbsolutePath() + File.separator + fileName);
-				Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-				System.out.println(fileName);
-				System.out.println(path);
-				System.out.println(filePath);
-				product.setImageUrl(fileName);
-			}
-			Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
-
-			if (sizeOccured != null) {
-
-				product.setSize(sizeOccured);
-			} else {
-
-				Size s = new Size();
-				s.setSizeValue(productSizeValue);
+			productFound.setQuantity(product.getQuantity());
+			productFound.setPrice(product.getPrice());
+			productFound.setSupplier(product.getSupplier());
+			productFound.setAbout(product.getAbout());
+			
+//			Size sizeOccured = sizeRepo.findBySizeValue(productSize);
+//
+//			if (sizeOccured != null) {
+//				productFound.setSize(sizeOccured);
+//			} else {
+//
+//				Size s = new Size();
+//				s.setSizeValue(productSize);
 //				sizeRepo.save(s);
-				product.setSize(s);
-			}
+//				productFound.setSize(s);
+//			}
 
 			// adding color
-			Color colorFound = colorRepo.findByName(colorName);
-			Color noColorChoosed = colorRepo.findByName("No color choosed");
-
-			if (colorFound != null) {
-
-				product.setColor(colorFound);
-			} else if (colorName.equals("No choosed color")) {
-
-				product.setColor(noColorChoosed);
-
-			} else {
-				Color co = new Color();
-				co.setName(colorName);
-//				colorRepo.save(co);
-				product.setColor(co);
-			}
-
-			// add brand into product
-			Brand brandFound = brandRepo.findByName(brandName);
-
-			if (brandFound != null) {
-
-				product.setBrand(brandFound);
-			} else {
-
-				Brand b = new Brand();
-				b.setName(brandName);
-				b.setLogo("default.png");
-//				brandRepo.save(b);
-				product.setBrand(b);
-			}
+			
+			 Color color = product.getColor();
+			 if(color != null)
+			 {
+				 color.getProducts().add(product);
+				 colorRepo.save(color);
+				 
+				 productFound.setColor(color);
+			 }
+			 
+			 Brand brand = product.getBrand();
+			 if(brand != null)
+			 {
+				 brand.getProducts().add(product);
+				 brandRepo.save(brand);
+				 productFound.setBrand(brand);
+			 }
 
 			Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
-
-			if (cat == null) {
-
-				product.setCategory(null);
+			if (cat != null) {
+				productFound.setCategory(cat);
 			}
 
-			product.setCategory(cat);
-			product.setStatus("Active");
+			productFound.setStatus("Active");
 
 			System.out.println(product);
 
-	   //		productRepo.save(product);		
+	  		productRepo.save(productFound);		
 
 			return "redirect:/a2zbilling/admin/product/list";
 		}
@@ -383,7 +348,7 @@ public class ProductController {
 			Optional<Product> productGet= productRepo.findById(Integer.parseInt(id));
 			Product product = productGet.get();
 			
-			product.setStatus("deleted");
+			product.setStatus("InActive");
 			
 			productRepo.save(product);
 			

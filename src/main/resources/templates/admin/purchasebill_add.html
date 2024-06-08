@@ -141,10 +141,11 @@
 							<th scope="col">Total Amount</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="addrow">
 						<tr>
-							<td><button type="button" class="btn btn-danger btn-sm text-white"><i
+							<td><button type="button" class="btn btn-danger btn-sm text-white">	<i
 										class="fa-solid fa-trash"></i></button></td>
+										
 							<td><select id="productSelect" class="form-select form-control"
 									aria-label="Default select example" name="products">
 									<option selected>Select</option>
@@ -153,48 +154,46 @@
 										th:attr="data-price=${product.price},data-quantity=${product.quantity} ">
 
 									</option>
-								</select></td>
-							<td><input id="AQty" class="form-control" min="1" type="number" name="" required
+								</select>
+							</td>
+							
+							<td><input id="AQty" class="form-control" min="1" type="number" name="Aquantity" required
 									oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
 
 							<td>
-								<input id="Qty" class="form-control" type="number" name="quantity[]" required
-									oninput="quantity(this)">
+								<input id="Qty" class="form-control" type="number" name="quantity" required
+									oninput="calculateTotalAmount(this)">
 							</td>
 
 							<td>
-								<select name="size[]" class="form-control" required>
+								<select id="size" name="size[]" class="form-control" required>
 									<option value="None">Select Size</option>
 									<option th:each="size : ${sizes}" value="${size.id}" th:text="${size.sizeValue}">
-								</select>
+								</select >
 							</td>
 							<td>
-								<select name="unit[]" class="form-control" required>
+								<select id="unit" name="unit[]" class="form-control" required>
 									<option value="None">Select Unit</option>
 									<option th:each="unit : ${units}" value="${unit.id}" th:text="${unit.unitName}">
-								</select>
+								</select >
 							</td>
-
-
-
-							<td><input id="price" class="form-control" type="number" name="price[]" required
+							<td><input id="price" class="form-control" type="number" name="price" required
 									oninput="calculateTotalAmount(this)"></td>
-							<td><input id="taxPercentField" class="form-control" type="text" name="taxInPercentage"
+							<td><input id="taxinpercentage" class="form-control" type="text" name="taxInPercentage"
 									required oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>
-							<td><input id="taxAmountField" class="form-control" type="text" name="taxInRupees" required>
+							<td><input id="taxinamount" class="form-control" type="text" name="taxInRupees" required>
 							</td>
-							<td><input class="form-control" type="number" name="total_amount[]" required readonly></td>
+							<td><input class="form-control" id="total_amount" type="number" name="total_Amount" required readonly></td>
 						</tr>
-					</tbody>
+					</tbody >
 				</table>
 
 			</div>
 
 			<!-- Add Row Button -->
 			<div class="col-md-12 mt-3 ">
-				<button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i>
-					Add
-					Row</button>
+				<button type="button" id="add" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i>
+					Add Row</button>
 			</div>
 
 			<!-- Add Underline  -->
@@ -394,23 +393,7 @@
 		// Set the value of the input field to the formatted date
 		document.getElementById('currentDateInput').value = formattedDate;
 	</script>
-
-
-	<!--Get parties mobile number and Email from Database-->
-	<script>
-		$(document).ready(function () {
-
-			// Event listener for changing the selected option in the dropdown
-			$('#partiesSelect').change(function () {
-				var selectedOption = $(this).find('option:selected');
-				var phone = selectedOption.data('mobile');
-				var email = selectedOption.data('email');
-
-				$('#mobile1').val(phone);
-				$('#email1').val(email);
-			});
-		});
-	</script>
+	
 
 
 
@@ -443,36 +426,163 @@
 		});
 
 	</script>
-
-
+	
 	<script>
-		function addRow(){
-			var newRow = '<tr>' +
-				'<td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button></td>' +
-				'<td><input class="form-control" type="text" name="item[]" required></td>' +
-				'<td><input class="form-control" type="number" name="" required oninput="calculateTotalAmount(this)"></td>' +
-				'<td><input class="form-control" type="number" name="quantity[]" required oninput="calculateTotalAmount(this)"></td>' +
-				'<td><input class="form-control" type="text" name="size[]" required></td>' +
-				'<td>' +
-				'<select class="form-control" name="unit[]" required>' +
-				'<option value="None">NONE</option>' +
-				'<option value="kg">Kilogram (kg)</option>' +
-				'<option value="lit">Liter (lit)</option>' +
-				'<option value="pic">Pieces (pic)</option>' +
-				'</select>' +
-				'</td>' +
-				'<td><input class="form-control" type="number" name="price[]" required oninput="calculateTotalAmount(this)"></td>' +
-				'<td><input class="form-control" type="number" name="tax_percent[]" required oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>' +
-				'<td><input class="form-control" type="number" name="tax_amount[]" required></td>' +
-				'<td><input class="form-control" type="number" name="total_amount[]" required readonly></td>' +
-				'</tr>';
+	// !--Get parties mobile number and Email from Database-->
+	
+		$(document).ready(function () {
 
-			var tbody = document.querySelector('#itemtable tbody');
-			tbody.insertAdjacentHTML('beforeend', newRow);
+			// Event listener for changing the selected option in the dropdown
+			$('#partiesSelect').change(function () {
+				var selectedOption = $(this).find('option:selected');
+				var phone = selectedOption.data('mobile');
+				var email = selectedOption.data('email');
 
-			// Update row index for other rows
-			updateRowIndexes();
-		}
+				$('#mobile1').val(phone);
+				$('#email1').val(email);
+			});
+		});
+	</script>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var i = 1; // Initialize counter for row IDs
+			// Function to add event listeners to a specific row
+			window.calculateTaxAmount2 = function(index) {
+			        $(`#Qty${index}`).on('input', function() {
+			            var AQty = parseFloat($(`#AQty${index}`).val()) || 0;
+			            var Qty = parseFloat($(`#Qty${index}`).val()) || 0;
+						var TaxInPercentage = parseFloat($(`#taxinpercentage${index}`).val()) || 0;
+			
+			            if (Qty > AQty) {
+			                alert("Please enter quantity less than available quantity");
+			                $(this).val(AQty);
+			            } else if (Qty < 0) {
+			                alert("Please enter quantity greater than 0");
+			                $(this).val(0);
+			            }
+						if(TaxInPercentage < 0)
+						{
+							alert("Please enter Tax greater than 0");
+							$(this).val(0);
+						}
+						
+			            calculateTaxAmount1(index);
+			        });
+			   }
+			
+		    // Add new row when "Add Row" button is clicked
+		    $('#add').click(function() {
+		        i++; // Increment counter for new row ID
+		        var opts = $("#productSelect").html();
+		        var units = $("#unit").html();
+		        var sizes = $("#size").html();
+		        $('#addrow').append(`
+		            <tr id="row${i}">
+		                <td>
+		                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
+		                </td>
+		                <td>
+		                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
+		                        ${opts}
+		                    </select>
+		                </td>
+		                <td><input id="AQty${i}" type="number" class="form-control" readonly></td>
+		                <td><input id="Qty${i}" name="quantity" type="number" oninput="calculateTaxAmount1(${i})" class="form-control"></td>
+		                <td>
+		                	<select id="size${i}" class="form-select form-control" aria-label="Default select example" name="size">
+		                        ${sizes}
+		                    </select>
+		                </td>
+		                <td>
+		                	<select id="unit${i}" class="form-select form-control" aria-label="Default select example" name="unit">
+		                        ${units}
+		                    </select>
+		                </td>
+		                 <td><input id="price${i}" type="text" class="form-control" readonly></td>
+		                <td><input id="taxinpercentage${i}" name="taxInPercentage" oninput="calculateTaxAmount1(${i})" type="number" class="form-control"></td>
+		                <td><input id="taxinamount${i}" name="taxInRupees" type="text" class="form-control" readonly></td>
+		                
+		                <td><input id="total_amount${i}" name"totalAmount" type="text" class="form-control" readonly></td>
+		                
+		            </tr>
+		        `);
+		
+		        // Call the function to add the change event listener for the newly added row
+		        addChangeListener(i);
+		    });
+		
+		    // Function to add change event listener for product selection
+		    function addChangeListener(index) {
+		        $(`#productSelect${index}`).change(function() {
+		            var selectedOption = $(this).find('option:selected');
+		            var price = selectedOption.data('price');
+		            var quantity = selectedOption.data('quantity');
+		            var size = selectedOption.data('size');
+									   
+		            $(`#price${index}`).val(price);
+		            $(`#AQty${index}`).val(quantity);
+		            $(`#size${index}`).val(size);
+		        });
+		    }
+			// Function to calculate tax amount and total amount
+			window.calculateTaxAmount1 = function(index) {
+	            var price = parseFloat($(`#price${index}`).val());
+	            var Qty = parseFloat($(`#Qty${index}`).val());
+	            var taxPercent = parseFloat($(`#taxinpercentage${index}`).val());
+				var AQty = parseFloat($(`#AQty${index}`).val());
+				
+				if (Qty > AQty) {
+	                alert("Please enter quantity less than available quantity");
+					$(`#Qty${index}`).val(AQty);
+					return;
+	            } else if (Qty < 0) {
+	                alert("Please enter quantity greater than 0");
+					$(`#Qty${index}`).val(0);
+					return;
+	            }
+				if(taxPercent < 0)
+				{
+					alert("Please enter Tax greater than 0");
+					$(`#taxinpercentage${index}`).val(0);
+					$(`#taxinamount${index}`).val(0);
+					return;
+				}
+
+	            var taxAmount = (price * Qty * taxPercent) / 100;
+	            var totalAmount = (price * Qty) + taxAmount;
+	
+	            $(`#taxinamount${index}`).val(taxAmount.toFixed(2));
+	            $(`#total_amount${index}`).val(totalAmount.toFixed(2));
+				
+				// Update the overall total amount
+				calculateOverallTotal();
+	        };
+			
+			// Function to calculate the overall total amount for all rows
+	        function calculateOverallTotal() {
+				var overallTotal = 0;
+				
+			    $('#addrow tr').each(function() {
+			        var totalAmount = parseFloat($(this).find('[id^="total_amount"]').val()) || 0;
+			        overallTotal += totalAmount;
+			    });
+			
+			    $('#totalAmountField').val(overallTotal.toFixed(2));
+	        }
+				
+			
+		    // Remove row when "Remove" button is clicked
+		    $(document).on('click', '.remove_row', function() {
+		        var row_id = $(this).attr('id');
+		        $(`#row${row_id}`).remove();
+				
+				calculateOverallTotal();
+		    });
+		});
+	</script>
+	<script>
+				
 
 		function removeRow(btn) {
 			var row = btn.parentNode.parentNode;
@@ -487,8 +597,8 @@
 
 		function calculateTotalAmount(input) {
 			var row = input.parentNode.parentNode;
-			var price = parseFloat(row.querySelector('[name="price[]"]').value);
-			var quantity = parseFloat(row.querySelector('[name="quantity[]"]').value);
+			var price = parseFloat(row.querySelector('[name="price"]').value);
+			var quantity = parseFloat(row.querySelector('[name="quantity"]').value);
 
 			// Validate quantity
 			if (quantity <= 0) {
@@ -499,7 +609,7 @@
 
 			var taxAmount = parseFloat(row.querySelector('[name="taxInRupees"]').value);
 			var totalAmount = (price * quantity) + taxAmount;
-			row.querySelector('[name="total_amount[]"]').value = totalAmount.toFixed(2);
+			row.querySelector('[name="total_Amount"]').value = totalAmount.toFixed(2);
 			updateTotalAmount();
 			updateDiscountedAmount();
 			updateDues();
@@ -508,8 +618,8 @@
 		function calculateTaxAmount(input) {
 			var row = input.parentNode.parentNode;
 			var taxPercent = parseFloat(input.value);
-			var price = parseFloat(row.querySelector('[name="price[]"]').value);
-			var quantity = parseFloat(row.querySelector('[name="quantity[]"]').value);
+			var price = parseFloat(row.querySelector('[name="price"]').value);
+			var quantity = parseFloat(row.querySelector('[name="quantity"]').value);
 			var taxAmount = (price * quantity * taxPercent) / 100;
 			row.querySelector('[name="taxInRupees"]').value = taxAmount.toFixed(2);
 			updateTotalAmount();
@@ -519,7 +629,7 @@
 
 		function updateTotalAmount() {
 			var totalAmount = 0;
-			var totalAmountInputs = document.querySelectorAll('[name="total_amount[]"]');
+			var totalAmountInputs = document.querySelectorAll('[name="total_Amount"]');
 			totalAmountInputs.forEach(function (input) {
 				totalAmount += parseFloat(input.value);
 			});
@@ -667,6 +777,8 @@
 
 		// Set the value of the input field to the formatted date
 		document.getElementById('currentDateInput').value = formattedDate;
+		
+			
 
 	</script>
 

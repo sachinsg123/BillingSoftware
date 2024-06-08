@@ -81,7 +81,7 @@
 								<th scope="col">Product Name</th>
 								<th scope="col">Category</th>
 								<th scope="col">Color</th>
-								<th scope="col">price</th>
+								
 								<th scope="col">Added Date</th>
 								<th scope="col">Quantity</th>
 								<th scope="col">Added by</th>
@@ -99,10 +99,10 @@
 								<td th:text="${product.name}"></td>
 								<td th:text="${product.category?.categoryName}"></td>
 								<td th:text="${product.color?.name}">color</td>
-								<td th:text="${product.price}"></td>
+								
 								<td th:text="${product.addedDate}"></td>
 								<td th:text="${product.quantity}"></td>
-								<td >Admin</td>
+								<td>Admin</td>
 								<td th:text="${product.supplier?.name}"> </td >
 								<td th:text="${product?.price}"></td >
 								<!--<td th:text="${product.customer}"></td>
