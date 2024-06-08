@@ -157,52 +157,51 @@
 			</div>		 
 
 		<div class="row mt-4 ml-1 mr-1" >
-			<div class="col-md-12">
+			<div class="col-md-12 table-responsive" style="max-height: 400px; overflow-y: auto;">
 				<table class="table table-bordered" style="background-color:#86A6AE;">
-					<thead style="color: white;">
-						<tr>
-							<th scope="col">Barcode</th>
-							<th scope="col">Product Name</th>
-							<th scope="col">CGST</th>
-							<th scope="col">SGST</th>
-							<th scope="col">Product Size</th>
-							<th scope="col">Available Qty</th>
-							<th scope="col">QTY</th>
-							<th scope="col">Tax(%)</th>
-							<th scope="col">Tax in Amount</th>
-							<th scope="col">Selling Price</th>
-							<th scope="col">Total Amount</th>
-							<th scope="col">  </tr>
-							
-						</tr>
-					</thead>
-					<tbody id="addrow">
-					<tr>
-					<td><input id="barcode" type="text" class="form-control" ></td>
-					<td>
-						<select	id="productSelect" class="form-select form-control" aria-label="Default select example" name="productSelect">
-				           <option selected>Choose</option>
-						   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-					               th:attr="data-price=${product.price},
-					                         data-quantity=${product.quantity},
-					                         data-size=${product.size?.sizeValue}">
-					       </option>
-			           	</select>
-					</td>
-					<td><input id="cgst" type="text" class="form-control"  readonly></td>
-					<td><input id="sgst" type="text" class="form-control" readonly></td>
-					<td><input id="size" type="text" class="form-control" readonly></td>
-					<td><input id="AQty" type="number" class="form-control" readonly></td>
-					<td><input id="Qty" type="number" class="form-control" name="quantity" th:field="*{quantity}"></td>
-					<td><input id="taxinpercentage" oninput="calculateTaxAmount()" type="number" class="form-control" name="taxInPercentage" th:field="*{taxInPercentage}"></td>
-					<td><input id="taxinamount" type="text" class="form-control" readonly name="taxInAmount" th:field="*{taxInAmount}"></td>
-					<td><input id="price" type="text" class="form-control" readonly></td>
-					<td><input id="total_amount" type="text" class="form-control" readonly></td>
-					<td>
-						<a id="1" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
-					</td>
-					</tr>
-					</tbody>
+				    <thead style="color: white;">
+				        <tr>
+				            <th scope="col">Barcode</th>
+				            <th scope="col">Product Name</th>
+				            <th scope="col">CGST</th>
+				            <th scope="col">SGST</th>
+				            <th scope="col">Product Size</th>
+				            <th scope="col">Available Qty</th>
+				            <th scope="col">QTY</th>
+				            <th scope="col">Tax(%)</th>
+				            <th scope="col">Tax in Amount</th>
+				            <th scope="col">Selling Price</th>
+				            <th scope="col">Total Amount</th>
+				            <th scope="col"> </tr>
+				        </tr>
+				    </thead>
+				    <tbody id="addrow">
+				        <tr th:each="product,iterStat : ${sale.products}">
+				            <td><input id="barcode" style="width: 70px;" type="text" class="form-control"></td>
+				            <td>
+				                <select id="productSelect" style="width: 90px;" class="form-select form-control" aria-label="Default select example" name="products">
+				                    <option selected th:text="${product?.name}">Choose</option>
+				                    <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
+				                            th:attr="data-price=${product.price},
+				                            data-quantity=${product.quantity},
+				                            data-size=${product.size?.sizeValue}">
+				                    </option>
+				                </select>
+				            </td>
+				            <td><input id="cgst" style="width: 70px;" type="text" class="form-control" readonly></td>
+				            <td><input id="sgst" style="width: 70px;" type="text" class="form-control" readonly></td>
+				            <td><input id="size" style="width: 70px;" type="text" th:value="${product?.size?.sizeValue ?: '0'}" class="form-control" readonly></td>
+				            <td><input id="AQty" style="width: 70px;" type="number" th:value="${product?.quantity ?: '0'}" class="form-control" readonly></td>
+				            <td><input id="Qty" style="width: 70px;" type="number" name="quantity" th:value="${#strings.arraySplit(sale?.quantity, ',')[iterStat.index]}" class="form-control"  oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
+				            <td><input id="taxinpercentage" style="width: 70px;" name="taxInPercentage" type="number" th:value="${#strings.arraySplit(sale?.taxInPercentage, ',')[iterStat.index]}" class="form-control" oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
+				            <td><input id="taxinamount" style="width: 70px;" name="taxInAmount" type="text" class="form-control" readonly th:value="${#strings.arraySplit(sale?.taxInAmount, ',')[iterStat.index]}"></td>
+				            <td><input id="price" style="width: 70px;" type="text" th:value="${product?.price}" class="form-control" readonly></td>
+				            <td><input id="total_amount" style="width: 70px;" class="form-control" type="text" readonly></td>
+				            <td>
+				                <a id="deleteBtn" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
+				            </td>
+				        </tr>
+				    </tbody>
 				</table>
 			</div>
 			<div class="col-md-2 mt-2 pb-2">
@@ -281,18 +280,108 @@
 		</div>
 	</form>
 </div>
-	
-	<script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#addrow').on('click', '#deleteBtn', function() {
+            $(this).closest('tr').remove();
+			calculateTotalAmount();
+			updateNetPayment();
+        });
+		calculateTotalAmountOnLoad();
+		calculateTotalAmount();
 		
+		$('#totalAmountField, #discountAmountField').on('input', updateNetPayment);
+		
+	   // Call updateDues whenever the paid amount changes
+	   $('#paidAmountField').on('input', updateDues);
+    });
+	
+	function updateNetPayment() {
+	    let totalAmount = parseFloat($('#totalAmountField').val());
+	    let discountAmount = parseFloat($('#discountAmountField').val());
+	    let paidAmount = parseFloat($('#paidAmountField').val());
+	
+	    let netPayment = totalAmount - discountAmount;
+	    let dues = netPayment - paidAmount;
+	
+	    $('#netPaymentField').val(netPayment.toFixed(2));
+	    $('#duesAmountField').val(dues.toFixed(2));
+	}
+	function calculatetaxInAmountAndTotalAmount(input) {
+	        var row = $(input).closest('tr');
+	        var price = parseFloat(row.find('#price').val());
+			var AQty = parseFloat(row.find('#AQty').val());
+	        var qty = parseFloat(row.find('#Qty').val());
+	        var taxPercentage = parseFloat(row.find('#taxinpercentage').val());
+			if(qty > AQty)
+			{
+				alert("Please Enter Quantity less than Available Quantity");
+				row.find('#Qty').val(AQty);
+				return;
+			}
+			if(taxPercentage < 0)
+			{
+				alert("Please Enter Taxs > 0");
+				row.find('#taxinamount').val(0.00);
+				row.find('#taxinpercentage').val(0);
+				return;
+			}
+			if(qty < 0)
+			{
+				alert("Please Enter Quantity > 0");
+				row.find('#Qty').val(0);
+				row.find('#total_amount').val(0.00);
+				return;
+			}
+	        var taxAmount = (price * qty * (taxPercentage / 100));
+	        row.find('#taxinamount').val(taxAmount.toFixed(2));
+	
+	        var totalAmount = (price * qty) + taxAmount;
+	        row.find('#total_amount').val(totalAmount.toFixed(2));
+			
+			calculateTotalAmount();
+	    }
+		function calculateTotalAmountOnLoad() {
+	        $('#addrow tr').each(function() {
+	            var row = $(this);
+	            var AQty = parseFloat(row.find('#AQty').val());
+	            var Qty = parseFloat(row.find('#Qty').val());
+	            var price = parseFloat(row.find('#price').val());
+	            var taxPercentage = parseFloat(row.find('#taxinpercentage').val());
+	
+	            var taxAmount = (price * Qty * (taxPercentage / 100));
+	            row.find('#taxinamount').val(taxAmount.toFixed(2));
+	
+	            var totalAmount = (price * Qty) + taxAmount;
+	            row.find('#total_amount').val(totalAmount.toFixed(2));
+	        });
+			calculateTotalAmount();
+	    }
+	function calculateTotalAmount() {
+	    let totalAmount = 0;
+	    $('#addrow tr').each(function() {
+	        let row = $(this);
+	        let rowTotalAmount = parseFloat(row.find('#total_amount').val());
+	        if (!isNaN(rowTotalAmount)) {
+	            totalAmount += rowTotalAmount;
+	        }
+	    });
+	    $('#totalAmountField').val(totalAmount.toFixed(2));
+	}
+</script>
+<script>
 		const taxinpercentage = document.getElementById('taxinpercentage');
 		const discountAmountField = document.getElementById('discountAmountField');
 		const discountPercentField = document.getElementById('discountPercentField');
-		
+		const taxinAmount = document.getElementById('taxinamount')
 		taxinpercentage.addEventListener('input', function() {
 				if(parseFloat(taxinpercentage.value) < 0)
 				{
 					alert("Please Enter Taxs > 0");
-					taxinpercentage.value="";
+					taxinpercentage.value=0;
+					taxinAmount.value=0;
 				}
 			});
 		discountAmountField.addEventListener('input', function() {
@@ -311,37 +400,23 @@
 					discountPercentField.value="";
 				}
 			});
-		function calculateTaxAmount(input) {
-	            var price = parseFloat(document.getElementById('price').value);
-	            var quantity = parseFloat(document.getElementById('Qty').value);
-				var taxPercent = parseFloat(document.getElementById('taxinpercentage').value);
-				
-	            var taxAmount = (price * quantity * taxPercent)/100;
-				
-				var totalAmount = taxAmount + (price*quantity);
-				
-				document.getElementById('taxinamount').value = taxAmount.toFixed(2);
-				document.getElementById('total_amount').value = totalAmount.toFixed(2);
-				document.getElementById('totalAmountField').value = totalAmount.toFixed(2);
-	        }
-					
 		function updateDues() {
-                var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
-                var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
-                var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
-                var duesAmount = totalAmount - paidAmount;
+            var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
+            var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
+            var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
+            var duesAmount = totalAmount - paidAmount;
 
-                // Exclude discounted amount from dues if there are dues
-                if (duesAmount > 0) {
-                    duesAmount -= discountAmount;
-                    if (duesAmount < 0) {
-                        duesAmount = 0; // Ensure dues amount doesn't go negative
-                    }
+            // Exclude discounted amount from dues if there are dues
+            if (duesAmount > 0) {
+                duesAmount -= discountAmount;
+                if (duesAmount < 0) {
+                    duesAmount = 0; // Ensure dues amount doesn't go negative
                 }
-
-                // Update the dues amount display
-                document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
             }
+
+            // Update the dues amount display
+            document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
+        }
 			function updatePercentageAmount() {
 			    const totalAmountField = document.getElementById('totalAmountField');
 			    const discountPercentField = document.getElementById('discountPercentField');
@@ -372,7 +447,7 @@
 			    }
 			}
 
-		function updateDiscountedAmount() {
+		function updateDiscountedAmount(){
 				const totalAmountField = document.getElementById('totalAmountField');
 		        const discountPercentField = document.getElementById('discountPercentField');
 		        const discountAmountField = document.getElementById('discountAmountField');
@@ -389,7 +464,6 @@
 		            var discountAmount = parseFloat(discountAmountField.value);
 		            var discountPercent = parseFloat(discountPercentField.value);
 	
-		
 		            var discountedAmount = discountAmount;
 		            if (!isNaN(discountPercent)) {
 		                discountedAmount = (totalAmount * discountPercent) / 100;
@@ -413,28 +487,15 @@
 			       var price = selectedOption.data('price');
 				   var size = selectedOption.data('size');
 			       var AQty = selectedOption.data('quantity');
-				   var Cgst = selectedOption.data('cgst');
-				   var Sgst = selectedOption.data('sgst');
-				   
+				  
 				   if(AQty == null)
 				   {
 					AQty = 0;
 				   }
-				   if(Cgst == null)
-   				   {
-   					Cgst = 0;
-   				   }
-				   if(Sgst == null)
-  				   {
-  					Sgst = 0;
-  				   }
 				   
-					
 			       $('#price').val(price);
 				   $('#size').val(size);
 				   $('#AQty').val(AQty);
-				   $('#cgst').val(Cgst);
-				   $('#sgst').val(Sgst);
 			   });
 			});
 		</script>
@@ -448,150 +509,145 @@
 	       var email = selectedOption.data('email');
 		   var address = selectedOption.data('address');
 	       
-	       $('#mobile').val(phone);
-	       $('#email').val(email);
+	       $('#mobile1').val(phone);
+	       $('#email1').val(email);
 		   $('#address').val(address);
 	   });
 	});
 	</script>
 	
-	<script>
-	    // Get references to the input fields
-	    const totalAmountInput = document.getElementById('total_amount');
-	    const totalAmountField = document.getElementById('totalAmountField');
-		const sellingPriceInput = document.getElementById('price');
-		const QtyInput = document.getElementById('Qty');
-		const AQtyInput = document.getElementById('AQty');
-		
-		QtyInput.addEventListener('input', function() {
-			if(parseFloat(AQtyInput.value) < parseFloat(QtyInput.value))
-			{
-				alert("Please Enter Quantity less than Available Quantity");
-				QtyInput.value="";
-			}
-		});
-		QtyInput.addEventListener('input', function() {
-			if(parseFloat(QtyInput.value) < 0)
-			{
-				alert("Please Enter Quantity > 0");
-				QtyInput.value="";
-			}
-		});
-		
-		QtyInput.addEventListener('input', function() {
-		    // Parse the values to numbers
-		    const sellingPrice = parseFloat(sellingPriceInput.value);
-		    const quantity = parseFloat(QtyInput.value);
-		    
-		    // Check if the values are valid numbers
-		    if (!isNaN(sellingPrice) && !isNaN(quantity)) {
-		        // Calculate the total amount
-		        const totalAmount = sellingPrice * quantity;
-		        
-		        // Assign the total amount to the total amount input field
-		        totalAmountInput.value = totalAmount.toFixed(2); // Format to two decimal places
-				
-				totalAmountField.value = totalAmount.toFixed(2);
-		    } else {
-		        // If either input is not a valid number, set the total amount input field to empty
-		        totalAmountInput.value = '';
-				
-				totalAmountField.value = '';
-		    }
-		});
-
-	    // Add an event listener to the first input field
-	    totalAmountInput.addEventListener('input', function() {
-	        // Set the value of the second input field to the value entered in the first input field
-	        totalAmountField.value = this.value;
-	    });
-	</script>
 	
-	<script>
-	$(document).ready(function() {
-	    var i = 1;
-		var products = [];
-		
-		    // Function to fetch products from the server
-		    function fetchProducts() {
+	
+	<script type="text/javascript">
+			$(document).ready(function() {
+				var i = 1; // Initialize counter for row IDs
 				
-		        return $.ajax({
-		            url: '/a2zbilling/admin/getProducts',// Replace with your server-side endpoint URL
-		            method: 'GET',
-		            dataType: 'json',
-					success: function(data) {
-						
-		                console.log('Fetched products:', data);
-		            },
-		            error: function(error) {
-						
-		                console.error('Error fetching products:', error);
+			    // Add new row when "Add Row" button is clicked
+			    $('#add').click(function() {
+			        i++; // Increment counter for new row ID
+			        var opts = $("#productSelect").html();
+			        $('#addrow').append(`
+			            <tr id="row${i}">
+			                <td><input id="barcode${i}" type="text" class="form-control"></td>
+			                <td>
+			                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
+			                        ${opts}
+			                    </select>
+			                </td>
+			                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
+			                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>
+			                <td><input id="size${i}" type="text" class="form-control" readonly></td>
+			                <td><input id="AQty${i}" type="number" class="form-control" readonly></td>
+			                <td><input id="Qty${i}" name="quantity" type="number" oninput="calculateTaxAmount1(${i})" class="form-control"></td>
+			                <td><input id="taxinpercentage${i}" name="taxInPercentage" oninput="calculateTaxAmount1(${i})" type="number" class="form-control"></td>
+			                <td><input id="taxinamount${i}" name="taxInAmount" type="text" class="form-control" readonly></td>
+			                <td><input id="price${i}" type="text" class="form-control" readonly></td>
+			                <td><input id="total_amount${i}" type="text" class="form-control" readonly></td>
+			                <td>
+			                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
+			                </td>
+			            </tr>
+			        `);
+			
+			        // Call the function to add the change event listener for the newly added row
+			        addChangeListener(i);
+					calculateTotalAmount();
+			    });
+				
+				function calculateTotalAmount() {
+				    let totalAmount = 0;
+				    $('#addrow tr').each(function() {
+				        let row = $(this);
+				        let rowTotalAmount = parseFloat(row.find('input[id^="total_amount"]').val());
+				        if (!isNaN(rowTotalAmount)) {
+				            totalAmount += rowTotalAmount;
+				        }
+				    });
+				    $('#totalAmountField').val(totalAmount.toFixed(2));
+				    updateNetPayment(); // Call updateNetPayment after updating the total amount
+				}
+				function updateNetPayment() {
+					    let totalAmount = parseFloat($('#totalAmountField').val());
+					    let discountAmount = parseFloat($('#discountAmountField').val());
+					    let paidAmount = parseFloat($('#paidAmountField').val());
+					
+					    let netPayment = totalAmount - discountAmount;
+					    let dues = netPayment - paidAmount;
+					
+					    $('#netPaymentField').val(netPayment.toFixed(2));
+					    $('#duesAmountField').val(dues.toFixed(2));
+					}
+			    // Function to add change event listener for product selection
+			    function addChangeListener(index) {
+			        $(`#productSelect${index}`).change(function() {
+			            var selectedOption = $(this).find('option:selected');
+			            var price = selectedOption.data('price');
+			            var quantity = selectedOption.data('quantity');
+			            var size = selectedOption.data('size');
+										   
+			            $(`#price${index}`).val(price);
+			            $(`#AQty${index}`).val(quantity);
+			            $(`#size${index}`).val(size);
+			        });
+			    }
+				
+				// Function to calculate tax amount and total amount
+		        window.calculateTaxAmount1 = function(index) {
+		            var price = parseFloat($(`#price${index}`).val());
+		            var Qty = parseFloat($(`#Qty${index}`).val());
+		            var taxPercent = parseFloat($(`#taxinpercentage${index}`).val());
+					var AQty = parseFloat($(`#AQty${index}`).val());
+					
+					if (Qty > AQty) {
+		                alert("Please enter quantity less than available quantity");
+						$(`#Qty${index}`).val(AQty);
+						return;
+		            } else if (Qty < 0) {
+		                alert("Please enter quantity greater than 0");
+						$(`#Qty${index}`).val(0);
+						$(`#total_amount${index}`).val(0);
+						return;
 		            }
-		        });
-		    }
-	
-	    // Function to populate select options
-	    function populateSelectOptions(selectElement) {
-			
-	        products.forEach(function(product) {
-				
-	            var option = $('<option></option>').val(product.id).text(product.name);
-	            selectElement.append(option);
-	        });
-	    }
+					if(taxPercent < 0)
+					{
+						alert("Please enter Tax greater than 0");
+						$(`#taxinpercentage${index}`).val(0);
+						$(`#taxinamount${index}`).val(0);
+						return;
+					}
+
+		            var taxAmount = (price * Qty * taxPercent) / 100;
+		            var totalAmount = (price * Qty) + taxAmount;
 		
-		// Fetch products from the server
-	   fetchProducts()
-	       .done(function(data) {
-	           products = data;
-			   
-	           // Populate the initial select options for existing rows
-	           populateSelectOptions($('.productSelect'));
-	       })
-	       .fail(function(error) {
-			
-	           console.error('Error fetching products:', error);
-	       });
-	
-	    $('#add').click(function() {
-	        i++;
-	        var newRow = $('<tr id="row' + i + '">' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td>' +
-	            '<select class="form-select form-control productSelect" aria-label="Default select example" name="productSelect">' +
-	            '<option selected>Choose</option>' +
-	            '</select>' +
-	            '</td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td><input type="text" class="form-control"></td>' +
-	            '<td>' +
-	            '<a id="' + i + '" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>' +
-	            '</td>' +
-	            '</tr>');
-	        $('#addrow').append(newRow);
-	
-	        // Populate the select options for the new row
-	        populateSelectOptions(newRow.find('.productSelect'));
-	    });
-	
-	    $(document).on('click', '.remove_row', function() {
-	        var row_id = $(this).attr('id');
-	        $('#row' + row_id).remove();
-	    });
-	
-	    // Populate the initial select options for existing rows
-	    populateSelectOptions($('.productSelect'));
-	});
-	</script>
-
-
+		            $(`#taxinamount${index}`).val(taxAmount.toFixed(2));
+		            $(`#total_amount${index}`).val(totalAmount.toFixed(2));
+					
+					// Update the overall total amount
+					calculateOverallTotal();
+		        };
+				
+				// Function to calculate the overall total amount for all rows
+		        function calculateOverallTotal() {
+					var overallTotal = 0;
+					
+				    $('#addrow tr').each(function() {
+				        var totalAmount = parseFloat($(this).find('[id^="total_amount"]').val()) || 0;
+				        overallTotal += totalAmount;
+				    });
+				
+				    $('#totalAmountField').val(overallTotal.toFixed(2));
+		        }
+					
+				
+			    // Remove row when "Remove" button is clicked
+			    $(document).on('click', '.remove_row', function() {
+			        var row_id = $(this).attr('id');
+			        $(`#row${row_id}`).remove();
+					
+					calculateOverallTotal();
+			    });
+			});
+		</script>
 
 	<script>
         // Get the current date

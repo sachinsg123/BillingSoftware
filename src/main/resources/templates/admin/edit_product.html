@@ -9,16 +9,6 @@
 <body>
 	<section>
 		<div class="contaier-fluid">
-			<!--  <div th:if="${session.message}">
-        <div class="alert alert-primary" role="alert">
-       <p th:text="${session.message}"></p>
-       <script th:inline="javascript">
-       setTimeout(function() {
-          window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-  }, 500); 
-     </script>
-      </div> 
-        </div> -->
 			<div class="row" style="background-color:  rgb(84,78,130);color:#fff;">
 				<div class="col-md-12 mt-1">
 					<h1 class="text-center">Update Product</h1>
@@ -27,6 +17,21 @@
 			<form th:action="@{/a2zbilling/admin/product/edit}" method="post" enctype="multipart/form-data"
 				th:object="${product}" class="form-group">
 				<div class="row pb-3" style="background-color: #f5f0f0;">
+					
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Brand Name</label>
+							<div class="form-group">
+								<select class="form-select form-control" th:field="*{brand}" aria-label="Default select example"
+									name="brand">
+									<option value="" disabled selected>Brand</option >
+									<option th:each="brand: ${brands}" th:value="${brand.id}"
+										th:text="${brand.name}"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					
 					<div class="col-md-4 mt-3">
 						<input type="hidden" name="id" th:field="*{id}" />
 						<div class="form-group">
@@ -40,58 +45,78 @@
 							<input type="text" class="form-control" name="price" th:field="*{price}">
 						</div>
 					</div>
+					
+					<div class="col-md-4 mt-2">
+						<div class="form-group">
+							<label>Quantity</label>
+							<input type="text" class="form-control" name="quantity" th:field="*{quantity}">
+						</div>
+					</div>
+					
 					<div class="col-md-4 mt-2">
 						<label>Select Category</label>
-						<div class="form-group mt-2">
-							<select class="form-select form-control" aria-label="Default select example"
+						<div class="form-group">
+							<select class="form-select form-control" th:field="*{category}" aria-label="Default select example"
 								name="category">
-								<option selected>Category</option>
+								<option value="" disabled selected>Category</option >
 								<option th:each="category: ${categories}" th:value="${category.id}"
 									th:text="${category.categoryName}"></option>
 							</select>
 						</div>
 					</div>
-					<div class="col-md-4 mt-1">
+					<div class="col-md-4 mt-2">
 						<div class="form-group">
 							<label>Product Size</label>
 							<input type="text" class="form-control" name="productSize" th:field="*{size.sizeValue}">
 						</div>
 					</div>
-					<div class="col-md-4 mt-1">
-						<div class="form-group">
-							<label>Product Brand</label>
-							<input type="text" class="form-control" name="productBrand" th:field="*{brand.name}">
-						</div>
-					</div>
-					<div class="col-md-4 mt-1">
-						<div class="form-group">
-							<label>Product information</label>
-							<input type="text" class="form-control" name="about">
-						</div>
-					</div>
+					
 					<div class="col-md-4 mt-2">
 						<div class="form-group">
-							<label>choose date</label>
-							<input type="date" class="form-control" name="addedDate">
+							<label>Supplier Name</label>
+							<div class="form-group">
+							<select class="form-select form-control" th:field="*{supplier}" aria-label="Default select example"
+								name="supplier">
+								<option value="" disabled selected>Choose</option >
+								<option th:each="supplier: ${suppliers}" th:value="${supplier.id}"
+									th:text="${supplier.name}"></option>
+							</select>
+						</div>
 						</div>
 					</div>
-					<div class="col-md-4 ">
+					
+					<div class="col-md-4 mt-2 ">
 						<label>Color</label>
-						<div class="form-group mt-2">
+						<div class="form-group ">
 							<select class="form-select form-control" aria-label="Default select example"
-								name="productColor">
-								<option selected>Choose</option>
+								name="colorName">
+								<option value="" selected>Color</option >
 								<option th:each="color: ${colors}" th:value="${color.name}" th:text="${color.name}">
 								</option>
 							</select>
 						</div>
 					</div>
+					
+						<div class="col-md-4 mt-2">
+						<div class="form-group">
+							<label>Added Date</label>
+							<input type="date" class="form-control" id="currentDateInput" name="addedDate" >
+						</div>
+						</div>
+					
 					<div class="col-md-4 mt-2">
 						<div class="form-group">
-							<label>Add Product Image</label>
-							<input type="file" class="form-control" name="imageFile">
+							<label>About Product</label>
+							<input type="text" class="form-control" name="about" th:field="*{about}">
 						</div>
 					</div>
+					
+					<!--<div class="col-md-4 mt-2">
+						<div class="form-group">
+							<label>Add Product Image</label>
+							<input type="file" class="form-control" name="imageUrl">
+						</div>
+					</div>-->
 					<div class="col-md-12 mt-5">
 						<div class="text-center">
 							<button type="submit" class="btn btn-info text-center">Update</button>
@@ -101,7 +126,11 @@
 				</div>
 			</form>
 		</div>
-
+	<script>
+		var currentDate = new Date();
+		var formattedDate = currentDate.toISOString().split('T')[0];
+		document.getElementById('currentDateInput').value = formattedDate;
+	</script>
 
 	</section>
 </body>
