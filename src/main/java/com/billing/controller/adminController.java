@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +38,7 @@ import com.billing.model.PartiesTransaction;
 import com.billing.model.Product;
 import com.billing.model.Sales;
 import com.billing.model.Size;
+import com.billing.model.Stock;
 import com.billing.model.Supplier;
 import com.billing.model.Unit;
 import com.billing.model.User;
@@ -51,6 +54,7 @@ import com.billing.repositories.PartiesTransectionRepository;
 import com.billing.repositories.ProductRepository;
 import com.billing.repositories.SalesRepository;
 import com.billing.repositories.SizeRepository;
+import com.billing.repositories.StockRepository;
 import com.billing.repositories.SupplierRepository;
 import com.billing.repositories.UnitRepository;
 import com.billing.repositories.UserRepository;
@@ -114,8 +118,11 @@ public class adminController{
 	@Autowired
 	private PartiesTransectionRepository partiesTransectionRepo;
 
-  @Autowired
+	@Autowired
 	private SalesRepository salesRepo;
+	
+	@Autowired
+	private StockRepository stockRepo;
 	
 	@GetMapping("/viewAdminProfile")
 	public String viewAdminProfile(Model model) {
@@ -189,7 +196,7 @@ public class adminController{
 		String sign = company.getSignature();
 		String companySign = "/img/companysignature/" + sign;
 		model.addAttribute("companySign", companySign);
-
+		
 		return "/admin/update_Admin_Profile";
 
 	}
@@ -244,6 +251,8 @@ public class adminController{
 		userRepo.save(user);
 		companyRepo.save(company);
 		
+		session.setAttribute("message", "User Updated Successfully");
+		
 		return "redirect:/a2zbilling/admin/viewAdminProfile";
 	}
 
@@ -269,7 +278,7 @@ public class adminController{
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-
+		
 		String companyName = company.getName();
 		model.addAttribute("company", company);
 		model.addAttribute("companyName", companyName);
@@ -280,7 +289,33 @@ public class adminController{
 			imgpath1 = StringUtils.ImagePaths.userImageUrl + image;
 		}
 		model.addAttribute("imagePath", imgpath1);
+		
+		//for Alert if product quantity is less then min quantity
+		List<Product> products = productRepo.findAll();
+		List<Product> minStockProducts = new ArrayList<Product>();
+		for(Product product : products)
+		{
+			Stock stock = product.getStock();
+			
+			if(stock != null && Integer.parseInt(stock.getQuantity()) <= Integer.parseInt(stock.getMinQuantity()))
+			{
+				minStockProducts.add(product);
+			}
+		}
+		StringBuilder productNamesBuilder = new StringBuilder();
+		boolean isFirst = true;
+		for (Product product : minStockProducts) {
+		    if (!isFirst) {
+		        productNamesBuilder.append(", ");
+		    }
+		    productNamesBuilder.append("\"").append(product.getName()).append(" :- \"").append(product.getStock().getQuantity()).append("\"");
+		    isFirst = false;
+		}
+		String productNamesString = productNamesBuilder.toString();
 
+		model.addAttribute("productNamesString", productNamesString);
+		model.addAttribute("minStockProducts", minStockProducts);
+		
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
@@ -700,7 +735,7 @@ public class adminController{
 	}
 	// clear session
 	@GetMapping("/clearSessionAttribute")
-	public String clearSession(HttpSession session, HttpServletRequest request) {
+	public String clearSession(HttpSession session, HttpServletRequest request) throws URISyntaxException {
 		String referer = request.getHeader("referer");
 		if (session.getAttribute("message") != null) {
 
@@ -712,7 +747,11 @@ public class adminController{
 		}
 		session.removeAttribute("message");
 
-		return "redirect:/a2zbilling/admin/customer/add";
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        return "redirect:" + endpoint;
 	}
 	
 	@GetMapping("/purchasebill/transection")
@@ -1037,6 +1076,11 @@ public class adminController{
 	@PostMapping("/sales/add")
 	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session, HttpServletRequest request, Model model) throws URISyntaxException {
 		
+		String quantity = sales.getQuantity();
+		int[] quantityArray = Arrays.stream(quantity.split(","))
+		                            .mapToInt(Integer::parseInt)
+		                            .toArray();
+		
 		sales.setStatus("Active");
 		if (sales.getSignatureImage() == null) {
 			sales.setSignatureImage("");
@@ -1046,10 +1090,17 @@ public class adminController{
 		List<Product> products = sales.getProducts();
 		
 		salesRepo.save(sales);
-		
+
 		customer.getSales().add(sales);
 		List<Product> customerProduct = customer.getProducts();
+		int i=0;
 		for (Product product : products) {
+			Stock stock = product.getStock();
+			
+			int num = Integer.parseInt(stock.getQuantity()) - quantityArray[i];
+			stock.setQuantity(String.valueOf(num));
+			product.setStock(stock);
+			
 			customerProduct.add(product);
 			product.getCustomer().add(customer);
 			productRepo.save(product);
@@ -1061,7 +1112,8 @@ public class adminController{
 			product.getSales().add(sales);
 			productRepo.save(product);
 		}
-
+		session.setAttribute("message", "Sales Bill Generated Successfully");
+		
 		String referer = request.getHeader("referer");
 		java.net.URI uri = new java.net.URI(referer);
         String path = uri.getPath();
@@ -1179,13 +1231,6 @@ public class adminController{
 		List<Product> SalesProduct = sales.getProducts();
 		Customer SalesCustomer = sales.getCustomer();
 		
-//		for (Product product : SalesProduct) {
-//			if(SalesCustomer.getProducts().contains(product))
-//			{
-//				
-//			}
-//		}
-//		
 		sales.setProducts(products);
 		sales.setCustomer(customer);
 		
@@ -1229,6 +1274,7 @@ public class adminController{
 	public String manageStock(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1241,11 +1287,9 @@ public class adminController{
 		
 		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
 		model.addAttribute("suppliers", suppliers);
-
 		
 		List<Product> products = productRepo.findAll();
 		model.addAttribute("products", products);
-
 		
 		List<Category> categorys = categoryRepo.findAll();
 		model.addAttribute("categorys", categorys);
@@ -1263,7 +1307,42 @@ public class adminController{
 		return "admin/manage_stock";
 
 	}
-  
+	
+	@PostMapping("/managestock")
+	public String manageStockProcess(@ModelAttribute Stock stock, HttpSession session, Model model, HttpServletRequest request) throws URISyntaxException {
+		
+		Product product = stock.getProduct();
+		
+		if(product.getStock() != null)
+		{
+			int id = product.getStock().getId();
+			Stock stocks = stockRepo.findById(id).get();
+			
+			int oldQty = Integer.parseInt(stocks.getQuantity());
+			int newQty = Integer.parseInt(stock.getQuantity());
+			String addQty = String.valueOf(oldQty + newQty);
+			
+			stocks.setQuantity(addQty);
+			productRepo.save(product);
+			stockRepo.save(stocks);
+		}
+		else {
+			stockRepo.save(stock);
+			
+			product.setStock(stock);
+			productRepo.save(product);
+		}
+		
+		session.setAttribute("message", "Stock Added Or Updated Successfully");
+		
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        return "redirect:" + endpoint;
+	}
+	
 	// Created by Younus - get Brand list
 	@GetMapping("/brand/list")
 	public String brandList(Model model) {

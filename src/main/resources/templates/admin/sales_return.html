@@ -187,14 +187,17 @@
 			                        <option th:each="p : ${products}" 
 			                                th:value="${p.id}" 
 			                                th:text="${p.name}"
-			                                th:attr="data-price=${p.price}, data-quantity=${p.quantity}, data-size=${p.size?.sizeValue}">
+			                                th:attr="data-price=${p.price}, 
+											data-quantity=${p.stock?.quantity}, 
+											data-size=${p.size?.sizeValue}, 
+											data-tax=${product.stock?.taxInPercentage}">
 			                        </option>
 			                    </select>
 			                </td>
 				            <td><input id="cgst" style="width: 70px;" type="text" class="form-control" readonly></td>
 				            <td><input id="sgst" style="width: 70px;" type="text" class="form-control" readonly></td>
 				            <td><input id="size" style="width: 70px;" type="text" th:value="${product?.size?.sizeValue ?: '0'}" class="form-control" readonly></td>
-				            <td><input id="AQty" style="width: 70px;" type="number" th:value="${product?.quantity ?: '0'}" class="form-control" readonly></td>
+				            <td><input id="AQty" style="width: 70px;" type="number" th:value="${product?.stock?.quantity ?: '0'}" class="form-control" readonly></td>
 				            <td><input id="Qty" style="width: 70px;" type="number" name="quantity" th:value="${#strings.arraySplit(sale?.quantity, ',')[iterStat.index]}" class="form-control"  oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
 				            <td><input id="taxinpercentage" style="width: 70px;" name="taxInPercentage" type="number" th:value="${#strings.arraySplit(sale?.taxInPercentage, ',')[iterStat.index]}" class="form-control" oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
 				            <td><input id="taxinamount" style="width: 70px;" name="taxInAmount" type="text" class="form-control" readonly th:value="${#strings.arraySplit(sale?.taxInAmount, ',')[iterStat.index]}"></td>
@@ -494,6 +497,7 @@
 			       var selectedOption = $(this).find('option:selected');
 			       var price = selectedOption.data('price');
 				   var size = selectedOption.data('size');
+				   var tax = selectedOption.data('tax');
 			       var AQty = selectedOption.data('quantity');
 				  
 				   if(AQty == null)
@@ -503,6 +507,7 @@
 				   
 			       $('#price').val(price);
 				   $('#size').val(size);
+				   $('#taxinpercentage').val(tax);
 				   $('#AQty').val(AQty);
 			   });
 			});
@@ -591,10 +596,12 @@
 			            var selectedOption = $(this).find('option:selected');
 			            var price = selectedOption.data('price');
 			            var quantity = selectedOption.data('quantity');
+						var tax = selectedOption.data('tax');
 			            var size = selectedOption.data('size');
 										   
 			            $(`#price${index}`).val(price);
 			            $(`#AQty${index}`).val(quantity);
+						$(`#taxinpercentage${index}`).val(tax);
 			            $(`#size${index}`).val(size);
 			        });
 			    }

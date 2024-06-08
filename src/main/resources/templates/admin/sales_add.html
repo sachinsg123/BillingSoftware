@@ -169,8 +169,9 @@
 						           <option selected>Choose</option>
 								   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 							               th:attr="data-price=${product.price},
-							                         data-quantity=${product.quantity},
-							                         data-size=${product.size?.sizeValue}">
+							                         data-quantity=${product.stock?.quantity},
+							                         data-size=${product.size?.sizeValue},
+													 data-tax=${product.stock?.taxInPercentage}">
 							       </option>
 					           	</select>
 							</td>
@@ -488,7 +489,8 @@
 				   var size = selectedOption.data('size');
 			       var AQty = selectedOption.data('quantity');
 				   var Cgst = selectedOption.data('cgst');
-				   var Sgst = selectedOption.data('sgst');
+				   var tax = selectedOption.data('tax');
+				   var Sgst = selectedOption.data('sgst');				   
 				   
 				   if(AQty == null)
 				   {
@@ -504,6 +506,7 @@
       			   }
 				   
 			       $('#price').val(price);
+				   $('#taxinpercentage').val(tax);
 				   $('#size').val(size);
 				   $('#AQty').val(AQty);
 				   $('#cgst').val(Cgst);
@@ -628,10 +631,12 @@
 		            var price = selectedOption.data('price');
 		            var quantity = selectedOption.data('quantity');
 		            var size = selectedOption.data('size');
+					var tax = selectedOption.data('tax');
 									   
 		            $(`#price${index}`).val(price);
 		            $(`#AQty${index}`).val(quantity);
 		            $(`#size${index}`).val(size);
+					$(`#taxinpercentage${index}`).val(tax);
 		        });
 		    }
 			// Function to calculate tax amount and total amount
