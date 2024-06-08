@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
-<!-- BEGIN Page Wrapper -->
-
+	<head>
+	    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	    <script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	</head>
 
 <body>
 	<section>
-		<div class="contaier-fluid">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<div class="container-fluid pb-4" style="background-color: #f5f0f0; line-height: 25px;">
 			<div th:if="${session.message}">
 				<div class="alert alert-primary" role="alert">
 					<p th:text="${session.message}"></p>
@@ -28,76 +31,60 @@
 					<h1 class="text-center pt-1">Manage Stock</h1>
 				</div>
 			</div>
-			<form th:action="@{/a2zbilling/admin/Item/add}" method="post" enctype="multipart/form-data"
+			<form th:action="@{/a2zbilling/admin/managestock}" method="post" enctype="multipart/form-data"
 				class="form-group">
-				<div class="row pb-3" style="background-color: #f5f0f0;">
 				
-				<!-- Step 2 for step 1 -> go to manage stock controller -->
+				<div class="row">
 					<div class="col-md-4 mt-4">
-						<div class="form-group">
-
-							<label>Supplier Name </label>
-							<select id="supplierSelect" class="form-select form-control"
-								aria-label="Default select example" name="addSupplierProduct">
-								<option selected>Select</option>
-								<!-- Dynamically populate options with Supplier data -->
-								<option th:each="supplier:${suppliers}" th:value="${supplier.id}"
-									th:text="${supplier.name}"
-									th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
-							</select>
-						</div>
+						<label>Product Name</label>
+						<select id="productSelect" class="form-select form-control" aria-label="Default select example" name="product">
+							<option selected>Select</option>
+							<option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
+							        th:attr="data-price=${product.price}, 
+											data-supplierName=${product.supplier?.name ?: 'N/A'},
+											data-brandName=${product.brand?.name ?: 'N/A'},
+											data-categoryName=${product.category?.categoryName ?: 'N/A'},
+											data-unitName=${product.unit?.unitName ?: 'N/A'}">											
+							</option>
+						</select>
 					</div>
-					
 					<div class="col-md-4 mt-4">
-						<div class="form-group">
-							<label>Brand Name</label>
-							<select id="brandSelect" class="form-select form-control"
-								aria-label="Default select example" name="getProduct">
-								<option selected>Select</option>
-								<!-- Dynamically populate options with product data -->
-								<option th:each="brand:${brands}" th:text="${brand.name}"></option>
-							</select>
-						</div>
+						<label>Supplier Name </label>
+						<input id="supplierName" type="text" required class="form-control" name="suppilerName" placeholder="Enter product supplier">
+						
 					</div>
-					
-					
 					<div class="col-md-4 mt-4">
-						<div class="form-group">
-							<label>Product Name</label>
-							<select id="productSelect" class="form-select form-control"
-								aria-label="Default select example" name="getProduct">
-								<option selected>Select</option>
-								<!-- Dynamically populate options with product data -->
-								<option th:each="product:${products}" th:text="${product.name}"></option>
-							</select>
-						</div>
+						<label>Brand Name</label>
+						<input id="brandName" type="text" required class="form-control" name="brandName" placeholder="Enter product Brand">
+						<!--<select id="brandSelect" class="form-select form-control"
+							aria-label="Default select example" name="getProduct">
+							<option selected>Select</option>
+							 Dynamically populate options with product data 
+							<option th:each="brand:${brands}" th:text="${brand.name}"></option>
+						</select>-->
 					</div>
+				</div>
+				
+				<div class="row">
 					<div class="col-md-4 mt-4">
 						<div class="form-group">
 							<label>Product Category </label>
-							<select id="categorySelect" class="form-select form-control"
+							<input id="categoryName" type="text" required class="form-control" name="categoryName" placeholder="Enter product Category">
+							<!--<select id="categorySelect" class="form-select form-control"
 								aria-label="Default select example" name="getCategory">
 								<option selected>Select</option>
-								<!-- Dynamically populate options with Category data -->
+								 Dynamically populate options with Category data 
 								<option th:each="category:${categorys}" 
 									th:text="${category.categoryName}">
 									</option>
-							</select>
+							</select>-->
 						</div>
 					</div>
-
-					<div class="col-md-4 mt-4">
-						<div class="form-group">
-							<label>Item HSN/SAC</label>
-							<input type="text" required class="form-control" name="code"
-								placeholder="Enter item HSN/SAC">
-						</div>
-					</div>
-
+					
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Product Quantity</label>
-							<input type="number" min="1" required class="form-control" name="name"
+							<input type="number" min="1" required class="form-control" name="quantity"
 								placeholder="Product quantity">
 						</div>
 					</div>
@@ -105,39 +92,35 @@
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Product Unit</label>
-							<input type="text" required class="form-control" name="name"
-								placeholder="Enter product unit">
+							<input id="unitName" type="text" required class="form-control" name="" placeholder="Enter product unit">
 						</div>
 					</div>
 
-
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
-							<label>Price/Unit</label>
-							<input type="number" min="1" required class="form-control" name="name"
-								placeholder="Enter price/unit">
+							<label>Product Price</label>
+							<input id="price" name="price" type="text" min="1" class="form-control" placeholder="Enter prices">
 						</div>
 					</div>
 
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Product Tax %</label>
-							<input type="number" min="1" required class="form-control" name="name"
-								placeholder="Enter product tax %">
+							<input id="taxInPercentage" type="number" min="1" required class="form-control" name="taxInPercentage" placeholder="Enter product tax %">
 						</div>
 					</div>
 
-					<div class="col-md-4 mt-2">
+					<div class="col-md-4 mt-3">
 						<div class="form-group">
-							<label>Stock Update date</label>
-							<input type="date" required class="form-control" name="addedDate">
+							<label>Stock Update Date</label>
+							<input type="date" required class="form-control" name="date">
 						</div>
 					</div>
 
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Minimum Stock Qty</label>
-							<input type="number" min="1" required class="form-control" name="name"
+							<input type="number" min="1" required class="form-control" name="minQuantity"
 								placeholder="Enter min stock qty">
 						</div>
 					</div>
@@ -152,10 +135,26 @@
 				</div>
 			</form>
 		</div>
+		<script>
+			$(document).ready(function() {
+			    // Event listener for changing the selected option in the dropdown
+			    $('#productSelect').change(function() {
+			        var selectedOption = $(this).find('option:selected');
+			        var price = selectedOption.attr('data-price');
+			        var supplierName = selectedOption.attr('data-supplierName');
+					var brandName = selectedOption.attr('data-brandName');
+					var categoryName = selectedOption.attr('data-categoryName');
+					var unitName = selectedOption.attr('data-unitName');
+								
+			        $('#price').val(price);
+			        $('#supplierName').val(supplierName);
+					$('#brandName').val(brandName);
+					$('#categoryName').val(categoryName);
+					$('#unitName').val(unitName);
+			    });
+			});
+		</script>
 	</section>
-
-
-
 </body>
 <!-- END Body -->
 
