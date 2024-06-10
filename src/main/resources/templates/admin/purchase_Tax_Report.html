@@ -4,26 +4,46 @@
 <section>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
-		function filterTable() {
-			const query = document.getElementById('searchInput').value.toLowerCase();
-			const rows = document.querySelectorAll('tbody tr');
+    function filterTable() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
 
-			rows.forEach(row => {
-				const cells = row.querySelectorAll('td');
-				let match = false;
-				cells.forEach(cell => {
-					if (cell.textContent.toLowerCase().includes(query)) {
-						match = true;
-					}
-				});
-				row.style.display = match ? '' : 'none';
-			});
-		}
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            let match = false;
+            cells.forEach(cell => {
+                if (cell.textContent.toLowerCase().includes(query)) {
+                    match = true;
+                }
+            });
+            row.style.display = match ? '' : 'none';
+        });
 
-		document.addEventListener('DOMContentLoaded', () => {
-			document.getElementById('searchInput').addEventListener('keyup', filterTable);
-		});
-	</script>
+        calculateTotalTax(); // Recalculate total tax after filtering
+    }
+
+    function calculateTotalTax() {
+        let totalTax = 0;
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            if (row.style.display !== 'none') { // Only consider visible rows
+                const taxCell = row.querySelector('td:nth-child(8)'); // Assuming tax is in the 8th column
+                if (taxCell && !isNaN(parseFloat(taxCell.textContent))) {
+                    totalTax += parseFloat(taxCell.textContent);
+                }
+            }
+        });
+
+        document.getElementById('totalTaxAmount').textContent = totalTax.toFixed(2);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('searchInput').addEventListener('keyup', filterTable);
+        calculateTotalTax(); // Initial calculation
+    });
+</script>
+
 	<style>
 		.table tbody tr:hover {
 			background-color: #e0e0e0;
@@ -47,7 +67,7 @@
 		</div>
 		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
 			<div class="col-md-12 mt-1">
-				<h1 class="text-center">Purchase Report</h1>
+				<h1 class="text-center">Purchase Tax Report</h1>
 			</div>
 		</div>
 		<div style="background-color: #f5f0f0;">
@@ -71,7 +91,7 @@
 			<div class="row mt-2 pb-3">
 				<div class="col-md-12">
 					<table class="table table-bordered" style="background-color: #fff;">
-						<thead style="background-color: #F3EBD6;color: black;"a>
+						<thead style="background-color: #F3EBD6;color: black;">
 							<tr>
 								<th scope="col">Date</th>
 								<th scope="col">Invoice No</th>
@@ -79,11 +99,10 @@
 								<th scope="col">Product Name</th>
 								<th scope="col">Quantity</th>
 								<!--<th scope="col">Tax Status</th>-->
-								<th scope="col">Discount Amount</th>
-								<th scope="col">Payment Type</th>
+								
 								<th scope="col">Net Payment</th>
-								<th scope="col">Balance Due</th>
-								<th scope="col">Amount Paid</th>
+								<th scope="col">Tax In %</th>
+								<th scope="col">Tax In Rupees</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -107,16 +126,17 @@
                                     <option value="excluding_tax">Excluding Tax</option>
                                 </select>
                             </td>-->
-								<td th:text="${party.discountInRupees}"><input type="text" class="form-control" value=""
-										readonly></td>
-								<td th:text="${party.paymentMode}"><input type="text" class="form-control" value=""
-										readonly></td>
+								
 								<td th:text="${party.netPayment}"><input type="text" class="form-control" value=""
 										readonly></td>
-								<td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly>
+								<td th:text="${party.taxInPercentage}"><input type="text" class="form-control" value="" readonly>
 								</td>
-								<td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly>
+								<td th:text="${party.taxInRupees}"><input type="text" class="form-control" value="" readonly>
 								</td>
+							</tr>
+							<tr style="font-weight: bold;">
+								<td colspan="7" style="text-align: right;">Total Tax Amount:</td>
+								<td id="totalTaxAmount"></td>
 							</tr>
 						</tbody>
 					</table>

@@ -47,7 +47,7 @@
 		</div>
 		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
 			<div class="col-md-12 mt-1">
-				<h1 class="text-center">Purchase Report</h1>
+				<h1 class="text-center">Sales Report</h1>
 			</div>
 		</div>
 		<div style="background-color: #f5f0f0;">
@@ -71,53 +71,47 @@
 			<div class="row mt-2 pb-3">
 				<div class="col-md-12">
 					<table class="table table-bordered" style="background-color: #fff;">
-						<thead style="background-color: #F3EBD6;color: black;"a>
+						<thead style="background-color: #F3EBD6;color: black;">
 							<tr>
 								<th scope="col">Date</th>
-								<th scope="col">Invoice No</th>
-								<th scope="col">Party Name</th>
+								<th scope="col">Sale Bill No</th>
+								<th scope="col">Customer Name</th>
 								<th scope="col">Product Name</th>
 								<th scope="col">Quantity</th>
 								<!--<th scope="col">Tax Status</th>-->
 								<th scope="col">Discount Amount</th>
 								<th scope="col">Payment Type</th>
-								<th scope="col">Net Payment</th>
-								<th scope="col">Balance Due</th>
 								<th scope="col">Amount Paid</th>
+								<th scope="col">Balance Due</th>
+								<th scope="col">Net Payment</th>
+								
+								
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="party : ${partiesTransactions}"
-								style="text-align: center; border: 1px solid black;">
-								<td th:text="${party.date}"><input type="text" class="form-control" value="" readonly>
+							<tr th:each="sale : ${sales}" style="text-align: center; border: 1px solid black;">
+							<td th:text="${sale.date}"><input type="text" class="form-control" value="" readonly>
 								</td>
-								<td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
-								<td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
+								<td th:text="${sale.saleBillNo}"></td >
+								<td th:text="${sale.customer?.name}"></td >
 								<td>
-									<ul style="list-style-type: none; padding: 0; margin: 0;">
-										<li th:each="product : ${party?.products}">
-											<span th:text="${product?.name}"></span>
-										</li>
-									</ul>
+								<ul style="list-style-type: none; padding: 0; margin: 0;">
+															    <li th:each="product : ${sale.products}">
+															        <span th:text="${product.name}"></span>
+															    </li>
+															</ul>
+								</td >
+								<td>
+									<th:block th:each="qty : ${#strings.arraySplit(sale.quantity, ',')}">
+										<span th:text="${qty}"></span><br>
+									</th:block>
 								</td>
-								<td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
-								<!--<td>
-                                <select class="form-control">
-                                    <option value="including_tax">Including Tax</option>
-                                    <option value="excluding_tax">Excluding Tax</option>
-                                </select>
-                            </td>-->
-								<td th:text="${party.discountInRupees}"><input type="text" class="form-control" value=""
-										readonly></td>
-								<td th:text="${party.paymentMode}"><input type="text" class="form-control" value=""
-										readonly></td>
-								<td th:text="${party.netPayment}"><input type="text" class="form-control" value=""
-										readonly></td>
-								<td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly>
-								</td>
-								<td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly>
-								</td>
-							</tr>
+							<td th:text="${sale.discountInAmount}"></td >
+							<td th:text="${sale.paymentMode}"></td >
+							<td th:text="${sale.amountPaid}"></td >
+							<td th:text="${sale.dueAmount}"></td>
+							<td th:text="${sale.netPayment}"></td>
+							</tr >
 						</tbody>
 					</table>
 				</div>
