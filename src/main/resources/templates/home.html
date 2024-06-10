@@ -84,7 +84,8 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                 <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
                                     <div class="">
                                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                            150
+											<span th:text="${purchaseRecordCount}">0</span>
+											
                                             <small class="m-0 l-h-n">Purchase Invoices</small>
                                         </h3>
                                     </div>
@@ -95,7 +96,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                 <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
                                     <div class="">
                                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                            2000
+											<span th:text="${salesRecordCount}">0</span>
                                             <small class="m-0 l-h-n">Sales Invoices</small>
                                         </h3>
                                     </div>
@@ -108,7 +109,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                 <div id="panel-4" class="panel">
                                     <div class="panel-hdr">
                                         <h2>
-                                            Sale <span class="fw-300"><i>Records</i></span>
+                                            Sale Records
                                         </h2>
                                     </div>
                                     <div class="panel-container show">
@@ -126,7 +127,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 														<th style="border: 1px solid black;" scope="col">Paid Amount</th>
 														<th style="border: 1px solid black;" scope="col">Balance Due</th>
 														<th style="border: 1px solid black;" scope="col">Net Amount</th>
-														<th></th>
 													</tr>
                                                 </thead>
                                                 <tbody>
@@ -150,18 +150,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 														<td th:text="${sale.amountPaid}"></td>
 														<td th:text="${sale.dueAmount}"></td>
 														<td th:text="${sale.netPayment}"></td>
-														<td>
-															<div class="dropdown">
-															  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																<i class="fa-solid fa-ellipsis-vertical"></i>
-															  </button>
-															  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-															    <a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>
-																<a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Sales Return</b></a>
-															    <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
-															  </div>
-															</div>
-														</td>
 													</tr>
 												</tbody>
                                             </table>
@@ -173,7 +161,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                             <div id="panel-4" class="panel">
                                 <div class="panel-hdr">
                                     <h2>
-                                        Purchase <span class="fw-300"><i>Records</i></span>
+                                        Purchase Records
                                     </h2>
                                 </div>
                                 <div class="panel-container show">
@@ -196,7 +184,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 						                        </tr>
                                             </thead>
                                             <tbody>
-												<tr th:each="party : ${partiesTransactions}" style="text-align: center; border: 1px solid black;">
+												<tr th:each="party : ${partiesTransections}" style="text-align: center; border: 1px solid black;">
 						                            <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
 						                            <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
 						                            <td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
@@ -1644,7 +1632,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 								ES5 example below:	
 
 								*/
-								return "\n\t\t\t\t\t\t<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>\n\t\t\t\t\t\t\t<i class=\"fal fa-times\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<div class='dropdown d-inline-block dropleft'>\n\t\t\t\t\t\t\t<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>\n\t\t\t\t\t\t\t\t<i class=\"fal fa-ellipsis-v\"></i>\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<div class='dropdown-menu'>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>";
+								return "";
 							},
 						},
 

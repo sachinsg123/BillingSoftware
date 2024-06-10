@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.billing.model.Company;
 import com.billing.model.Parties;
+import com.billing.model.PartiesTransaction;
 import com.billing.model.User;
 import com.billing.repositories.BrandRepository;
 import com.billing.repositories.CategoryRepository;
@@ -26,6 +27,7 @@ import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
 import com.billing.repositories.GSTRepository;
 import com.billing.repositories.PartiesRepository;
+import com.billing.repositories.PartiesTransectionRepository;
 import com.billing.repositories.ProductRepository;
 import com.billing.repositories.SizeRepository;
 import com.billing.repositories.SupplierRepository;
@@ -88,6 +90,9 @@ public class PartiesController {
 		
 		@Autowired
 		private PartiesRepository partiesRepo;
+		
+		@Autowired
+		private PartiesTransectionRepository partiesTransectionRepo;
 
 		@GetMapping("/parties/add")
 		public String addParties(Model model) {
@@ -124,14 +129,18 @@ public class PartiesController {
 		public String partiesAddingProcess(@ModelAttribute Parties parties, HttpSession session, HttpServletRequest request)
 				throws URISyntaxException {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
+			User user = userRepo.findByUsername(auth.getName());
+			
 			parties.setStatus("Active");
 			
 			if(parties.getOpeningBalance() == null || parties.getOpeningBalance().isEmpty()) {
 				parties.setOpeningBalance("0");
 			}
+			user.getParties().add(parties);
+			parties.setUser(user);
 			partiesRepo.save(parties);
-
+			userRepo.save(user);
+			
 			String referer = request.getHeader("referer");
 			java.net.URI uri = new java.net.URI(referer);
 			String path = uri.getPath();
@@ -210,7 +219,7 @@ public class PartiesController {
 		public String listOfParties(Model model) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userRepo.findByUsername(auth.getName());
-			
+			int userId = user.getId();
 			String username = auth.getName();
 			String email = user.getEmail();
 			model.addAttribute("username", username);
@@ -220,7 +229,7 @@ public class PartiesController {
 			String companyName = company.getName();
 			model.addAttribute("companyName", companyName);
 
-			List<Parties> parties = partiesRepo.showAllActiveParties();
+			List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 			model.addAttribute("parties", parties);
 			
 			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -237,15 +246,20 @@ public class PartiesController {
 
 			return "admin/parties_list";
 		}
-		@GetMapping("/parties/transactions/list")
-		public String listOfPartiesTransactions(Model model) {
-
+		
+		@GetMapping("/parties/transactions/list/{id}")
+		public String listOfPartiesTransactions(@PathVariable("id") int id, Model model) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userRepo.findByUsername(auth.getName());
+			
 			String username = auth.getName();
 			String email = user.getEmail();
 			model.addAttribute("username", username);
 			model.addAttribute("email", email);
+			
+			Parties parties = partiesRepo.findById(id).get();
+			List<PartiesTransaction> partiesTransactions = parties.getTransactions();
+			model.addAttribute("partiesTransactions", partiesTransactions);
 			
 			Company company = companyRepo.getCompanyByUserId(user.getId());
 			String companyName = company.getName();
