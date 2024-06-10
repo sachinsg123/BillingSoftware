@@ -44,24 +44,20 @@
 											data-supplierName=${product.supplier?.name ?: 'N/A'},
 											data-brandName=${product.brand?.name ?: 'N/A'},
 											data-categoryName=${product.category?.categoryName ?: 'N/A'},
-											data-unitName=${product.unit?.unitName ?: 'N/A'}">											
+											data-unitName=${product.unit?.unitName ?: 'N/A'},
+											data-quantity=${product.stock?.quantity ?: '0'},											
+											data-tax=${product.stock?.taxInPercentage ?: '0'}">											
 							</option>
 						</select>
 					</div>
 					<div class="col-md-4 mt-4">
 						<label>Supplier Name </label>
-						<input id="supplierName" type="text" required class="form-control" name="suppilerName" placeholder="Enter product supplier">
+						<input id="supplierName" type="text" readonly class="form-control" name="suppilerName" placeholder="Enter product supplier">
 						
 					</div>
 					<div class="col-md-4 mt-4">
 						<label>Brand Name</label>
-						<input id="brandName" type="text" required class="form-control" name="brandName" placeholder="Enter product Brand">
-						<!--<select id="brandSelect" class="form-select form-control"
-							aria-label="Default select example" name="getProduct">
-							<option selected>Select</option>
-							 Dynamically populate options with product data 
-							<option th:each="brand:${brands}" th:text="${brand.name}"></option>
-						</select>-->
+						<input id="brandName" type="text" readonly class="form-control" name="brandName" placeholder="Enter product Brand">
 					</div>
 				</div>
 				
@@ -69,22 +65,14 @@
 					<div class="col-md-4 mt-4">
 						<div class="form-group">
 							<label>Product Category </label>
-							<input id="categoryName" type="text" required class="form-control" name="categoryName" placeholder="Enter product Category">
-							<!--<select id="categorySelect" class="form-select form-control"
-								aria-label="Default select example" name="getCategory">
-								<option selected>Select</option>
-								 Dynamically populate options with Category data 
-								<option th:each="category:${categorys}" 
-									th:text="${category.categoryName}">
-									</option>
-							</select>-->
+							<input id="categoryName" type="text" readonly class="form-control" name="categoryName" placeholder="Enter product Category">
 						</div>
 					</div>
 					
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Product Quantity</label>
-							<input type="number" min="1" required class="form-control" name="quantity"
+							<input id="quantity" type="number" readonly class="form-control" name="quantity"
 								placeholder="Product quantity">
 						</div>
 					</div>
@@ -92,36 +80,28 @@
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Product Unit</label>
-							<input id="unitName" type="text" required class="form-control" name="" placeholder="Enter product unit">
+							<input id="unitName" type="text" readonly class="form-control" name="unitName" placeholder="Enter product unit">
 						</div>
 					</div>
 
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Product Price</label>
-							<input id="price" name="price" type="text" min="1" class="form-control" placeholder="Enter prices">
+							<input id="price" name="price" readonly type="text" class="form-control" placeholder="Enter prices">
 						</div>
 					</div>
 
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Product Tax %</label>
-							<input id="taxInPercentage" type="number" min="1" required class="form-control" name="taxInPercentage" placeholder="Enter product tax %">
-						</div>
-					</div>
-
-					<div class="col-md-4 mt-3">
-						<div class="form-group">
-							<label>Stock Update Date</label>
-							<input type="date" required class="form-control" name="date">
+							<input id="taxInPercentage" type="text" readonly class="form-control" name="taxInPercentage" placeholder="Enter product tax %">
 						</div>
 					</div>
 
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Minimum Stock Qty</label>
-							<input type="number" min="1" required class="form-control" name="minQuantity"
-								placeholder="Enter min stock qty">
+							<input type="number" min="1" required class="form-control" name="minQuantity" placeholder="Enter min stock qty">
 						</div>
 					</div>
 
@@ -145,12 +125,16 @@
 					var brandName = selectedOption.attr('data-brandName');
 					var categoryName = selectedOption.attr('data-categoryName');
 					var unitName = selectedOption.attr('data-unitName');
+					var quantity = selectedOption.attr('data-quantity');
+					var tax = selectedOption.attr('data-tax');
 								
 			        $('#price').val(price);
 			        $('#supplierName').val(supplierName);
 					$('#brandName').val(brandName);
 					$('#categoryName').val(categoryName);
 					$('#unitName').val(unitName);
+					$('#quantity').val(quantity);
+					$('#taxInPercentage').val(tax);
 			    });
 			});
 		</script>

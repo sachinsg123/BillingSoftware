@@ -315,6 +315,8 @@ public class adminController{
 
 		model.addAttribute("productNamesString", productNamesString);
 		model.addAttribute("minStockProducts", minStockProducts);
+		List<Sales> sales = salesRepo.showAllActiveSales();
+		model.addAttribute("sales", sales);
 		
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
@@ -331,6 +333,38 @@ public class adminController{
 		model.addAttribute("suppliercount", suppliercount);
 
 		return "home";
+	}
+	
+	@GetMapping("/supplier/add")
+	public String supplierAddForm(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		// Code to Render admin on our page
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
+	    {
+	    	String image = user.getImageUrl();
+	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
+	    }
+
+		model.addAttribute("imagePath", imgpath);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		return "/admin/add_supplier";
+
 	}
 	
 	@PostMapping("/supplier/add")
@@ -1335,11 +1369,7 @@ public class adminController{
 			int id = product.getStock().getId();
 			Stock stocks = stockRepo.findById(id).get();
 			
-			int oldQty = Integer.parseInt(stocks.getQuantity());
-			int newQty = Integer.parseInt(stock.getQuantity());
-			String addQty = String.valueOf(oldQty + newQty);
-			
-			stocks.setQuantity(addQty);
+			stocks.setMinQuantity(stock.getMinQuantity());
 			productRepo.save(product);
 			stockRepo.save(stocks);
 		}
