@@ -7,13 +7,13 @@
 			<img th:src="${companyLogo}" alt="SmartAdmin WebApp" aria-roledescription="logo">
 		
 			<div th:if="${companyName != null}">
-				<span class="page-logo-text mr-1" style="font-size:30px" th:text="${companyName}"></span>
+				<span class="page-logo-text mr-1" style="font-size:20px; margin-left:15px; margin-top:5px; font-weight:bold" th:text="${companyName}"></span>
 			</div>
 			<div th:if="${companyName == null}">
-				<span class="page-logo-text mr-1" style="font-size:30px" >A2Z Billing</span>
+				<span class="page-logo-text mr-1" style="font-size:20px" >A2Z Billing</span>
 			</div>
 			<span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
-			<i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+			
 		</a>
 	</div>
 	<!-- BEGIN PRIMARY NAVIGATION -->

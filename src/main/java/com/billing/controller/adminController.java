@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.billing.model.Brand;
 import com.billing.model.BrandDto;
 import com.billing.model.Category;
@@ -62,6 +63,7 @@ import com.billing.services.CustomerServiceImpl;
 import com.billing.services.ProductServiceImpl;
 import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -470,6 +472,7 @@ public class adminController{
 		model.addAttribute("email", email);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		model.addAttribute("companyName", company.getName());
 		model.addAttribute("company", company);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
