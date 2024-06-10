@@ -82,7 +82,7 @@
     </div>
     <div class="row" style="background-color: rgb(84,78,130); color: #fff;">
         <div class="col-md-12 mt-1">
-            <h1 class="text-center">Purchase Transaction</h1>
+            <h1 class="text-center">Purchase Report</h1>
         </div>
     </div>
     <div style="background-color: #f5f0f0;">
@@ -97,9 +97,9 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-6 mt-3" style="text-align: right;">
+           <!-- <div class="col-md-6 mt-3" style="text-align: right;">
                 <a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Purchase</a>
-            </div>
+            </div>-->
         </div>
         <div class="row mt-2 pb-3">
             <div class="col-md-12">
@@ -150,6 +150,22 @@
         </div>
     </div>
 </div>
+			<!-- Add Print Buttons -->
+	<div class="col-md-12 mt-3 text-center">
+		<button type="button" class="btn btn-primary" onclick="printBill()">Print</button>
+	</div>
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+	<script>
+		// Function to print the bill
+		function printBill() {
+			window.print();
+		}
+		</script>
+
 </section>
 </body>
 <!-- END Body -->

@@ -151,13 +151,13 @@
 									<option selected>Select</option>
 									<!-- Dynamically populate options with product data -->
 									<option th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"
-										th:attr="data-price=${product.price},data-quantity=${product.quantity} ">
+										th:attr="data-price=${product.price},data-quantity=${product.stock?.quantity} ">
 
 									</option>
 								</select>
 							</td>
 							
-							<td><input id="AQty" class="form-control" min="1" type="number" name="Aquantity" required
+							<td><input id="AQty" class="form-control"  type="number" name="Aquantity" 
 									oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
 
 							<td>
@@ -412,6 +412,8 @@
 			window.print();
 		}
 
+
+
 		$(document).ready(function () {
 			// Event listener for changing the selected option in the dropdown
 			$('#productSelect').change(function () {
@@ -450,14 +452,11 @@
 			// Function to add event listeners to a specific row
 			window.calculateTaxAmount2 = function(index) {
 			        $(`#Qty${index}`).on('input', function() {
-			            var AQty = parseFloat($(`#AQty${index}`).val()) || 0;
+			           // var AQty = parseFloat($(`#AQty${index}`).val()) || 0;
 			            var Qty = parseFloat($(`#Qty${index}`).val()) || 0;
 						var TaxInPercentage = parseFloat($(`#taxinpercentage${index}`).val()) || 0;
 			
-			            if (Qty > AQty) {
-			                alert("Please enter quantity less than available quantity");
-			                $(this).val(AQty);
-			            } else if (Qty < 0) {
+			             if (Qty < 0) {
 			                alert("Please enter quantity greater than 0");
 			                $(this).val(0);
 			            }
@@ -532,11 +531,7 @@
 	            var taxPercent = parseFloat($(`#taxinpercentage${index}`).val());
 				var AQty = parseFloat($(`#AQty${index}`).val());
 				
-				if (Qty > AQty) {
-	                alert("Please enter quantity less than available quantity");
-					$(`#Qty${index}`).val(AQty);
-					return;
-	            } else if (Qty < 0) {
+			 if (Qty < 0) {
 	                alert("Please enter quantity greater than 0");
 					$(`#Qty${index}`).val(0);
 					return;
