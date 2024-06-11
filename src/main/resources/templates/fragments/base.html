@@ -542,14 +542,14 @@ th:fragment="layout(content)">
   								</button>
   							</div>
   							<div class="modal-body" style="background-color:#f5f0f0;">
-  								<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
+  								<form th:action="@{/a2zbilling/admin/charges/add}" method="post" class="form-group">
   									<div class="row">
   										<div class="col-md-12 mt-2">
   											<input type="hidden" class="form-control" name="name">
   											<div class="form-group">
   												<label><b>Name :</b></label>
   												<input type="text" class="form-control" onkeyup="gstCalculator()"
-  													id="gstPercentage" name="gstRate"
+  													id="gstPercentage" name="name"
   													placeholder="Charges Name" required>
   											</div>
   										</div>
@@ -557,7 +557,7 @@ th:fragment="layout(content)">
   											<div class="form-group">
   												<label><b>Price :</b></label>
   												<input type="text" class="form-control" id="sgstPercentage"
-  													name="sgstRate" placeholder="Enter price">
+  													name="price" placeholder="Enter price">
   											</div>
   										</div>
   										

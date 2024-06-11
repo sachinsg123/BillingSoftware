@@ -166,20 +166,20 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                 </div>
                                 <div class="panel-container show">
                                     <div class="panel-content">
-                                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                        <table id="dt-basic-example1" class="table table-bordered table-hover table-striped w-100">
                                             <thead class="bg-warning-200">
-												<tr>
-						                            <th scope="col">Date</th>
-						                            <th scope="col">Invoice No</th>
-						                            <th scope="col">Party Name</th>
-						                            <th scope="col">Product Name</th>
-						                            <th scope="col">Quantity</th>
+												<tr style="text-align: center;">
+						                            <th style="border: 1px solid black;" scope="col">Date</th>
+						                            <th style="border: 1px solid black;" scope="col">Invoice No</th>
+						                            <th style="border: 1px solid black;" scope="col">Party Name</th>
+						                            <th style="border: 1px solid black;" scope="col">Product Name</th>
+						                            <th style="border: 1px solid black;" scope="col">Quantity</th>
 						                            <!--<th scope="col">Tax Status</th>-->
-						                            <th scope="col">Discount Amount</th>
-						                            <th scope="col">Payment Type</th>
-						                            <th scope="col">Net Payment</th>
-						                            <th scope="col">Balance Due</th>
-						                            <th scope="col">Amount Paid</th>
+						                            <th style="border: 1px solid black;" scope="col">Discount Amount</th>
+						                            <th style="border: 1px solid black;" scope="col">Payment Type</th>
+						                            <th style="border: 1px solid black;" scope="col">Net Payment</th>
+						                            <th style="border: 1px solid black;" scope="col">Balance Due</th>
+						                            <th style="border: 1px solid black;" scope="col">Amount Paid</th>
 						                            
 						                        </tr>
                                             </thead>
@@ -458,14 +458,14 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
   								</button>
   							</div>
   							<div class="modal-body" style="background-color:#f5f0f0;">
-  								<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
+  								<form th:action="@{/a2zbilling/admin/charges/add}" method="post" class="form-group">
   									<div class="row">
   										<div class="col-md-12 mt-2">
   											<input type="hidden" class="form-control" name="name">
   											<div class="form-group">
   												<label><b>Name :</b></label>
   												<input type="text" class="form-control" onkeyup="gstCalculator()"
-  													id="gstPercentage" name="gstRate"
+  													id="gstPercentage" name="name"
   													placeholder="Charges Name" required>
   											</div>
   										</div>
@@ -473,7 +473,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
   											<div class="form-group">
   												<label><b>Price :</b></label>
   												<input type="text" class="form-control" id="sgstPercentage"
-  													name="sgstRate" placeholder="Enter price">
+  													name="price" placeholder="Enter price">
   											</div>
   										</div>
   										
@@ -1586,18 +1586,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 							className: 'btn-outline-default'
 						},
 						{
-							extend: 'csvHtml5',
-							text: 'CSV',
-							titleAttr: 'Generate CSV',
-							className: 'btn-outline-default'
-						},
-						{
-							extend: 'copyHtml5',
-							text: 'Copy',
-							titleAttr: 'Copy to clipboard',
-							className: 'btn-outline-default'
-						},
-						{
 							extend: 'print',
 							text: '<i class="fal fa-print"></i>',
 							titleAttr: 'Print Table',
@@ -1640,7 +1628,63 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 
 				});
 
+		/* init datatables */
+		$('#dt-basic-example1').dataTable(
+			{
+				responsive: true,
+				dom: "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+					"<'row'<'col-sm-12'tr>>" +
+					"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+				buttons: [
+					{
+						extend: 'colvis',
+						text: 'Column Visibility',
+						titleAttr: 'Col visibility',
+						className: 'btn-outline-default'
+					},
+					{
+						extend: 'print',
+						text: '<i class="fal fa-print"></i>',
+						titleAttr: 'Print Table',
+						className: 'btn-outline-default'
+					}
 
+				],
+				columnDefs: [
+					{
+						targets: -1,
+						title: '',
+						orderable: false,
+						render: function (data, type, full, meta) {
+
+							/*
+							-- ES6
+							-- convert using https://babeljs.io online transpiler
+							return `
+							<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>
+								<i class="fal fa-times"></i>
+							</a>
+							<div class='dropdown d-inline-block dropleft '>
+								<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>
+									<i class="fal fa-ellipsis-v"></i>
+								</a>
+								<div class='dropdown-menu'>
+									<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>
+									<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>
+								</div>
+							</div>`;
+								
+							ES5 example below:	
+
+							*/
+							return "";
+						},
+					},
+
+				]
+
+			});
+			
 			/* flot toggle example */
 			var flot_toggle = function () {
 

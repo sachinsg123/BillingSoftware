@@ -120,7 +120,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="party : ${partiesTransactions}" style="text-align: center; border: 1px solid black;">
+                        <tr th:each="party : ${partiesTransactions.content}" style="text-align: center; border: 1px solid black;">
                             <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
                             <td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
@@ -146,6 +146,13 @@
                         </tr>
                     </tbody>
                 </table>
+				<div>
+			        <span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${partiesTransactions.totalPages}"></span>
+			     </div>
+			     <div>
+			        <a th:if="${partiesTransactions.hasPrevious()}" th:href="@{/a2zbilling/admin/purchasebill/transection(page=${currentPage - 1}, size=${partiesTransactions.size})}">Previous</a>
+			        <a th:if="${partiesTransactions.hasNext()}" th:href="@{/a2zbilling/admin/purchasebill/transection(page=${currentPage + 1}, size=${partiesTransactions.size})}">Next</a>
+			    </div>
             </div>
         </div>
     </div>

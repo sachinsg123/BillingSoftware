@@ -34,11 +34,22 @@ public class User{
 	private List<Category> categories = new ArrayList<Category>();
 	
 	@OneToMany(mappedBy ="user")
+	private List<Charges> charges = new ArrayList<Charges>();
+	
+	@OneToMany(mappedBy ="user")
 	private List<Brand> brand = new ArrayList<Brand>();
 	
 	@OneToMany(mappedBy ="user")
 	private List<Parties> parties = new ArrayList<Parties>();
 	
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
+	}
+
 	@Column(name="user_role")
 	private String role;
 	
@@ -66,10 +77,22 @@ public class User{
 	private List<GSTRate> gst = new ArrayList<GSTRate>();
 	
 	@OneToMany(mappedBy = "user")
+	private List<Unit> units = new ArrayList<Unit>();
+	
+	@OneToMany(mappedBy = "user")
 	private List<Sales> sales = new ArrayList<Sales>();
 
 	@OneToMany(mappedBy = "user")
 	private List<PartiesTransaction> partiesTransactions = new ArrayList<PartiesTransaction>();
+
+	
+	public List<Unit> getUnits() {
+		return units;
+	}
+
+	public void setUnits(List<Unit> units) {
+		this.units = units;
+	}
 
 	public List<PartiesTransaction> getPartiesTransactions() {
 		return partiesTransactions;

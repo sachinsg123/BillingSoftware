@@ -363,11 +363,10 @@ public class ProductController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userRepo.findByUsername(auth.getName());
 			int userId = user.getId();
+			
 			Page<Product> productPage = productService.getAvailableProducts(page, size);
-//			model.addAttribute("products", allProducts);
 			model.addAttribute("productPage", productPage);
 			model.addAttribute("currentPage", page);
-
 			
 			String username = auth.getName();
 			String email = user.getEmail();

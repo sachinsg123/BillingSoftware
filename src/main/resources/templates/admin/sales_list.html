@@ -89,7 +89,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="sale : ${sales}" style="text-align: center;">
+						<tr th:each="sale : ${sales.content}" style="text-align: center;">
 							<td th:text="${sale.date}"></td>
 							<td th:text="${sale.saleBillNo}"></td>
 							<td th:text="${sale.customer?.name}"></td>
@@ -124,8 +124,16 @@
 						</tr>
 					</tbody>
 				</table>
+				<div>
+				  	<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${sales.totalPages}"></span>
+				</div>
+				<div>
+			        <a th:if="${sales.hasPrevious()}" th:href="@{/a2zbilling/admin/sales/list(page=${currentPage - 1}, size=${sales.size})}">Previous</a>
+			        <a th:if="${sales.hasNext()}" th:href="@{/a2zbilling/admin/sales/list(page=${currentPage + 1}, size=${sales.size})}">Next</a>
+			    </div>
 			</div>
 		</div>
+		
 	</div>
 </section>
 </body>
