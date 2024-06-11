@@ -3,7 +3,42 @@
 
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	 <script>
+        // Function to initialize the bill number from localStorage or set default
+        function initializeBillNumber() {
+            let billNoInput = document.getElementById("purchaseorder");
+            let storedBillNumber = localStorage.getItem("billNumber");
 
+            if (storedBillNumber) {
+                let newBillNumber = parseInt(storedBillNumber) + 1;
+                billNoInput.value = 'PB-' + newBillNumber;
+            } else {
+                billNoInput.value = 'PB-1000'; // Default starting bill number
+            }
+        }
+
+        // Function to save the bill and update the bill number
+        function saveBill() {
+            let billNoInput = document.getElementById("purchaseorder");
+            let currentBillNo = billNoInput.value;
+
+            // Extract the numeric part of the bill number
+            let billNumber = parseInt(currentBillNo.replace('PB-', '')) || 0;
+
+            // Save the current bill number
+            alert('Bill saved with number ' + currentBillNo);
+
+            // Store the current bill number in localStorage
+            localStorage.setItem("billNumber", billNumber);
+
+            // Update the bill number for the next new bill
+            let newBillNumber = billNumber + 1;
+            billNoInput.value = 'PB-' + newBillNumber;
+        }
+
+        // Initialize the bill number when the page loads
+        window.onload = initializeBillNumber;
+    </script>
 	<head>
 
 		<meta charset="UTF-8">
@@ -86,7 +121,7 @@
 								No</span>
 						</div>
 						<input name="billNo" id="purchaseorder" style="border: 1px solid #715499 ;" type="text"
-							class="form-control" readonly value="A2Z-PO-">
+							class="form-control" readonly value="PB-">
 					</div>
 				</div>
 				<div class="row ml-1 mr-1">
@@ -264,7 +299,8 @@
 
 			<div class="col-md-12 mt-5">
 				<div class="text-center">
-					<button type="submit" class="btn btn-info text-center ">Save</button>
+				
+					<button type="submit" class="btn btn-info text-center " onclick="saveBill()">Save</button>
 					<!--<button type="button" onclick="saveAndNew" class="btn btn-info text-center ml-3 ">Save & New</button> -->
 					<a th:href="@{'/a2zbilling/admin/purchasebill/transection'}" class="btn btn-info ml-3">Cancel</a>
 				</div>
