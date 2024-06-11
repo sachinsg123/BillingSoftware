@@ -371,13 +371,14 @@
 				</a>
 				<ul>
 				<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="purchase report">
+				
+						<a th:href="@{/a2zbilling/admin/purchaseReport}" title="Theme Modes (beta)" data-filter-tags="purchase report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">PURCHASE REPORT</span>
 						</a>
 					</li>
 					
 					<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="sales report">
+						<a th:href="@{/a2zbilling/admin/salesReport}" title="Theme Modes (beta)" data-filter-tags="sales report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">SALES REPORT</span>
 						</a>
 					</li>
@@ -386,6 +387,20 @@
 						<a href="#" title="Theme Modes (beta)" data-filter-tags="tax report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">TAX REPORT</span>
 						</a>
+						<ul>
+							<li>
+								<a th:href="@{/a2zbilling/admin/purchaseTaxReport}" title="Layout Options"
+									data-filter-tags="sales tax report">
+									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">PURCHASE TAX REPORT</span>
+								</a>
+							</li>
+							<li>
+								<a th:href="@{/a2zbilling/admin/salesTaxReport}" title="Layout Options"
+									data-filter-tags="peoples customer">
+									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">SALES TAX REPORT</span>
+								</a>
+							</li>
+						</ul>
 					</li>
 					
 					<li>

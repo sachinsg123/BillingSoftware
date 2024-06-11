@@ -11,11 +11,9 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 <div th:replace="fragments/head :: head"></div>
 
 <body class="mod-bg-1 mod-nav-link">
-	<!-- DOC: script to save and load page settings -->
+	
 	<script>
-
 		'use strict';
-
         </script>
         <!-- BEGIN Page Wrapper -->
         <div class="page-wrapper">
@@ -106,6 +104,8 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                         <div class="row">
                             <!-- code for purchase records -->
                             <div class="col-lg-12">
+                        
+                            <div class="row">
                                 <div id="panel-4" class="panel">
                                     <div class="panel-hdr">
                                         <h2>
@@ -116,7 +116,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                         <div class="panel-content">
                                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                                 <thead class="bg-warning-200">
-                                                    <tr>
+                                                      <tr>
                                                         <th>SupplierID</th>
                                                         <th>Name</th>
                                                         <th>PurchaseDate</th>
@@ -126,9 +126,22 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                                         <th>InvoiceAmount</th>
                                                         <th>Controls</th>
                                                     </tr>
-                                                </thead>
+                                                    <tr style="text-align: center;">
+														<!-- <th scope="col">Supplier Id</th> -->
+														<th style="border: 1px solid black;" scope="col">Data</th>
+														<th style="border: 1px solid black;" scope="col">Sale Bill No</th>
+														<th style="border: 1px solid black;" scope="col">Customer Name</th>
+														<th style="border: 1px solid black;" scope="col">Product Name</th>
+														<th style="border: 1px solid black;" scope="col">Order QTY</th>
+														<th style="border: 1px solid black;" scope="col">Payment Type</th>
+														<th style="border: 1px solid black;" scope="col">Paid Amount</th>
+														<th style="border: 1px solid black;" scope="col">Balance Due</th>
+														<th style="border: 1px solid black;" scope="col">Net Amount</th>
+														<th></th>
+													</tr>
+													</thead>
                                                 <tbody>
-                                                    <tr>
+                                                   <tr>
                                                         <td>268410636</td>
                                                         <td>Cooley, Walker J.</td>
                                                         <td>03-13-19</td>
@@ -138,12 +151,96 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                                         <td>$7,007</td>
                                                         <td>1</td>
                                                     </tr>
-                                            </table>
-                                            <!-- datatable end -->
+                                                    <tr th:each="sale : ${sales}" style="text-align: center;">
+														<td th:text="${sale.date}"></td>
+														<td th:text="${sale.saleBillNo}"></td>
+														<td th:text="${sale.customer?.name}"></td>
+														<td>							
+															<ul style="list-style-type: none; padding: 0; margin: 0;">
+															    <li th:each="product : ${sale.products}">
+															        <span th:text="${product.name}">Sale ID</span>
+															    </li>
+															</ul>
+														</td>
+														<td> 
+															<th:block th:each="qty : ${#strings.arraySplit(sale.quantity, ',')}">
+														        <span th:text="${qty}"></span><br>
+														    </th:block>
+														</td>
+														<td th:text="${sale.paymentMode}"></td>
+														<td th:text="${sale.amountPaid}"></td>
+														<td th:text="${sale.dueAmount}"></td>
+														<td th:text="${sale.netPayment}"></td>
+														<td>
+															<div class="dropdown">
+															  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																<i class="fa-solid fa-ellipsis-vertical"></i>
+															  </button>
+															  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+															    <a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>
+																<a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Sales Return</b></a>
+															    <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
+															  </div>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+						<div class="row">
+                            <div id="panel-4" class="panel">
+                                <div class="panel-hdr">
+                                    <h2>
+                                        Purchase <span class="fw-300"><i>Records</i></span>
+                                    </h2>
+                                </div>
+                                <div class="panel-container show">
+                                    <div class="panel-content">
+                                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                            <thead class="bg-warning-200">
+												<tr>
+						                            <th scope="col">Date</th>
+						                            <th scope="col">Invoice No</th>
+						                            <th scope="col">Party Name</th>
+						                            <th scope="col">Product Name</th>
+						                            <th scope="col">Quantity</th>
+						                            <!--<th scope="col">Tax Status</th>-->
+						                            <th scope="col">Discount Amount</th>
+						                            <th scope="col">Payment Type</th>
+						                            <th scope="col">Net Payment</th>
+						                            <th scope="col">Balance Due</th>
+						                            <th scope="col">Amount Paid</th>
+						                        </tr>
+                                            </thead>
+                                            <tbody>
+												<tr th:each="party : ${partiesTransactions}" style="text-align: center; border: 1px solid black;">
+						                            <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
+						                            <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
+						                            <td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
+						                            <td>
+						                                <ul style="list-style-type: none; padding: 0; margin: 0;">
+						                                    <li th:each="product : ${party?.products}">
+						                                        <span th:text="${product?.name}"></span>
+						                                    </li>
+						                                </ul>
+						                            </td>
+						                            <td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
+						                            <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
+						                            <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
+						                            <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
+						                            <td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly></td>
+						                            <td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly></td>						                          
+						                        </tr>
+											</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+							
                         </div>
                     </main>
                     <!-- this overlay is activated only when mobile menu is triggered -->
@@ -255,7 +352,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                 </div>
   					</div>
 				</div>
-
 				<!--  Modal for Unit adding  -->
 				<div class="modal fade" id="exampleModalUnits" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -296,10 +392,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 								</form>
 							</div>
 						</div>
-						<!--    <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
-  </div> -->
 					</div>
 				</div>
 
@@ -1382,21 +1474,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 
 		ga('create', 'UA-141754477-1', 'auto');
 		ga('send', 'pageview');
-
 	</script>
-	<!-- base vendor bundle: 
-			 DOC: if you remove pace.js from core please note on Internet Explorer some CSS animations may execute before a page is fully loaded, resulting 'jump' animations 
-						+ pace.js (recommended)
-						+ jquery.js (core)
-						+ jquery-ui-cust.js (core)
-						+ popper.js (core)
-						+ bootstrap.js (core)
-						+ slimscroll.js (extension)
-						+ app.navigation.js (core)
-						+ ba-throttle-debounce.js (core)
-						+ waves.js (extension)
-						+ smartpanels.js (extension)
-						+ src/../jquery-snippets.js (core) -->
 	<script src="/js/vendors.bundle.js"></script>
 	<script src="/js/app.bundle.js"></script>
 	<script type="text/javascript">
@@ -1473,9 +1551,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 			[600, 2],
 			[700, 1]
 		];
-
-		$(document).ready(function () {
-
+		$(document).ready(function (){
 			/* init datatables */
 			$('#dt-basic-example').dataTable(
 				{
@@ -1517,26 +1593,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 							orderable: false,
 							render: function (data, type, full, meta) {
 
-								/*
-								-- ES6
-								-- convert using https://babeljs.io online transpiler
-								return `
-								<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>
-									<i class="fal fa-times"></i>
-								</a>
-								<div class='dropdown d-inline-block dropleft '>
-									<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>
-										<i class="fal fa-ellipsis-v"></i>
-									</a>
-									<div class='dropdown-menu'>
-										<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>
-										<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>
-									</div>
-								</div>`;
-									
-								ES5 example below:	
-
-								*/
 								return "\n\t\t\t\t\t\t<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>\n\t\t\t\t\t\t\t<i class=\"fal fa-times\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<div class='dropdown d-inline-block dropleft'>\n\t\t\t\t\t\t\t<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>\n\t\t\t\t\t\t\t\t<i class=\"fal fa-ellipsis-v\"></i>\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<div class='dropdown-menu'>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>";
 							},
 						},
@@ -1544,9 +1600,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 					]
 
 				});
-
-
-			/* flot toggle example */
+			
 			var flot_toggle = function () {
 
 				var data = [
@@ -1560,9 +1614,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 							align: "center",
 							barWidth: 30 * 30 * 60 * 1000 * 80,
 							lineWidth: 0,
-							/*fillColor: {
-								colors: [color.primary._500, color.primary._900]
-							},*/
 							fillColor:
 							{
 								colors: [
@@ -1666,9 +1717,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 				plotNow()
 			}
 			flot_toggle();
-			/* flot toggle example -- end*/
-
-			/* flot area */
 			var flotArea = $.plot($('#flot-area'), [
 				{
 					data: dataSet1,
@@ -1747,8 +1795,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 					}
 
 				});
-			/* flot area -- end */
-
+			
 			var flotVisit = $.plot('#flotVisit', [
 				{
 					data: [
@@ -1849,8 +1896,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 						}
 					}
 				});
-
-
 		});
 
 	</script>

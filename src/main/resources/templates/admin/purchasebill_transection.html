@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
 <!-- Created by Younus -->
-
 <section>
 <script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 <script>
@@ -41,16 +39,36 @@
             }
         })
     }
+
+    function filterTable() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            let match = false;
+            cells.forEach(cell => {
+                if (cell.textContent.toLowerCase().includes(query)) {
+                    match = true;
+                }
+            });
+            row.style.display = match ? '' : 'none';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('searchInput').addEventListener('keyup', filterTable);
+    });
 </script>
-<!-- BEGIN Page Wrapper -->
-
-	<style>
-	    .table tbody tr:hover {
-	        background-color: #e0e0e0;
-	        color: #000;
-	    }
-	</style>
-
+<style>
+    .table tbody tr:hover {
+        background-color: #e0e0e0;
+        color: #000;
+    }
+    .search-icon {
+        cursor: pointer;
+    }
+</style>
 <div class="container-fluid">
     <div th:if="${session.message}">
         <div class="alert alert-primary" role="alert">
@@ -73,9 +91,9 @@
                 <form th:action="@{/search}" method="get">
                     <div class="col-md-6">
                         <!-- Search Bar -->
-                        <input type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);" name="query" placeholder="   Search">
+                        <input id="searchInput" type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);" name="query" placeholder=" Search">
                         <!-- Search icon -->
-                        <i class="fas fa-search search-icon" style="font-size: 20px; color: rgb(12,131,226);" onclick="submitForm()"></i>
+                        
                     </div>
                 </form>
             </div>
@@ -85,8 +103,8 @@
         </div>
         <div class="row mt-2 pb-3">
             <div class="col-md-12">
-                <table class="table table-bordered" style="background-color: #8A72AA; color: #fff;">
-                    <thead style="background-color: #715499;">
+                <table class="table table-bordered" style="background-color: #fff;">
+                    <thead style="background-color: #696969;color: #fff;">
                         <tr>
                             <th scope="col">Date</th>
                             <th scope="col">Invoice No</th>
@@ -99,7 +117,6 @@
                             <th scope="col">Net Payment</th>
                             <th scope="col">Balance Due</th>
                             <th scope="col">Amount Paid</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -126,17 +143,6 @@
                             <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly></td>
-                           <!-- <td>
-                                <div class="dropdown">
-                                    <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" th:href="@{'/a2zbilling/admin/purchasebill/update/'+ ${party.id}}">Update</a>
-                                        <a class="dropdown-item" th:onclick="|deleteContactAlert(${party.id})|" href="#">Delete</a>
-                                    </div>
-                                </div>
-                            </td>-->
                         </tr>
                     </tbody>
                 </table>
@@ -147,5 +153,4 @@
 </section>
 </body>
 <!-- END Body -->
-
 </html>
