@@ -1669,6 +1669,8 @@ public class adminController{
 		
 		return "redirect:/a2zbilling/admin/brand/list";
 	}
+	
+	//Created by Younus
 	@GetMapping("/purchaseReport")
 	public String purchaseReport(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1692,4 +1694,72 @@ public class adminController{
 		
 		return "admin/purchase_Report";
 	}
+	
+	//Created by Younus
+	@GetMapping("/salesReport")
+	public String salesReport(Model model) {
+		
+		// To get sale data from db
+		List<Sales> sales = salesRepo.showAllActiveSales();
+		model.addAttribute("sales", sales);
+		
+		
+				
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		model.addAttribute("imagePath", imgpath);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+		
+		return "admin/sales_Report";
+	}
+	
+	//Created by Younus 
+		@GetMapping("/purchaseTaxReport")
+		public String purchaseTaxReport(Model model) {
+			
+			// To get Parties Name data from db
+			List<Parties> parties = partiesRepo.showAllActiveParties();
+			model.addAttribute("parties", parties);
+			
+			List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection();
+			model.addAttribute("partiesTransactions", partiesTransactions);
+					
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userRepo.findByUsername(auth.getName());
+			Company company = companyRepo.getCompanyByUserId(user.getId());
+			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+			model.addAttribute("imagePath", imgpath);
+
+			String image = company.getLogo();
+			String companyLogo = "/img/companylogo/" + image;
+			model.addAttribute("companyLogo", companyLogo);
+			
+			return "admin/purchase_Tax_Report";
+		}
+		
+		//Created by Younus salesTaxReport
+				@GetMapping("/salesTaxReport")
+				public String salesTaxReport(Model model) {
+					
+					// To get sale data from db
+					List<Sales> sales = salesRepo.showAllActiveSales();
+					model.addAttribute("sales", sales);
+							
+					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+					User user = userRepo.findByUsername(auth.getName());
+					Company company = companyRepo.getCompanyByUserId(user.getId());
+					String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+					model.addAttribute("imagePath", imgpath);
+
+					String image = company.getLogo();
+					String companyLogo = "/img/companylogo/" + image;
+					model.addAttribute("companyLogo", companyLogo);
+					
+					return "admin/sales_Tax_Report";
+				}
 }
