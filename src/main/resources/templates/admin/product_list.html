@@ -56,16 +56,6 @@
 
 		</script>
 		<div class="contaier-fluid">
-			<!--   <div th:if="${session.message}">
-                       <div class="alert alert-primary" role="alert">
-                      <p th:text="${session.message}"></p>
-                      <script th:inline="javascript">
-                      setTimeout(function() {
-            	            window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-                 }, 500); 
-                    </script> 
-                      </div>
-                     </div> -->
 			<div class="row" style="background-color:rgb(84,78,130);color: #fff;">
 				<div class="col-md-12 mt-1">
 					<h1 class="text-center">All Products</h1>
@@ -84,12 +74,12 @@
 								
 								<th scope="col">Added Date</th>
 								<th scope="col">Quantity</th>
-								<th scope="col">Added by</th>
+								<!--<th scope="col">Added by</th>-->
 								<th scope="col">Supplied by</th>
 								<th scope="col">Product price</th>
 								<!--<th scope="col">Customer Name</th>
 								<th scope="col">Customer Mobile</th>-->
-								<th scope="col">Edit</th>
+								<th class="text-center" scope="col">Edit</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -102,7 +92,7 @@
 								
 								<td th:text="${product.addedDate}"></td>
 								<td th:text="${product.stock?.quantity ?:0}"></td>
-								<td>Admin</td>
+								<!--<td>Admin</td>-->
 								<td th:text="${product.supplier?.name}"> </td >
 								<td th:text="${product?.price}"></td >
 								<!--<td th:text="${product.customer}"></td>
