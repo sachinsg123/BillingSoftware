@@ -53,7 +53,7 @@
 
 		}
 	</script>
-	<!-- BEGIN Page Wrapper -->
+<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
 	<div th:if="${session.message}">
 		<div class="alert alert-primary" role="alert">
 			<p th:text="${session.message}"></p>
@@ -65,8 +65,6 @@
 		</div>
 	</div>
 	
-		
-<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
 	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
         <div class="col-md-12">
             <h1 class="text-center mt-2"><b>Sales Bill</b></h1>
@@ -292,14 +290,14 @@
 				        <label><b>Customer Name</b></label>
 				    </div>
 				    <div class="col-md-7 mt-4">
-				        <input type="text" required class="form-control" name="name1" placeholder="Enter your name">
+				        <input type="text" required class="form-control" name="name" placeholder="Enter your name">
 				    </div>
 					
 		  		  <div class="col-md-5 mt-4">
 						<label><b>Customer email</b></label>
 				  </div>
 		  		  <div class="col-md-7 mt-4">
-		  		  		<input size="50" type="email" required class="form-control" name="email1" placeholder="Enter your e-mail">
+		  		  		<input size="50" type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
 		  		  </div>
 				  
 				  <div class="col-md-5 mt-4">
@@ -504,6 +502,10 @@
    				   {
    					Sgst = 0;
       			   }
+				   if(tax == null)
+				    {
+				    	tax = 0;
+				     }
 				   
 			       $('#price').val(price);
 				   $('#taxinpercentage').val(tax);
@@ -632,11 +634,30 @@
 		            var quantity = selectedOption.data('quantity');
 		            var size = selectedOption.data('size');
 					var tax = selectedOption.data('tax');
-									   
+					var Cgst = selectedOption.data('cgst');
+					var Sgst = selectedOption.data('sgst');
+					if(quantity == null)
+					   {
+							quantity = 0;
+					   }
+					if(tax == null)
+   					   {
+						tax = 0;
+   					   }
+					if(Cgst == null)
+	   				   {
+	   					Cgst = 0;
+      				   }
+   				   if(Sgst == null)
+      				   {
+      					Sgst = 0;
+         			   }
 		            $(`#price${index}`).val(price);
 		            $(`#AQty${index}`).val(quantity);
 		            $(`#size${index}`).val(size);
 					$(`#taxinpercentage${index}`).val(tax);
+					$(`#cgst${index}`).val(Cgst);
+					$(`#sgst${index}`).val(Sgst);
 		        });
 		    }
 			// Function to calculate tax amount and total amount

@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,11 +29,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.billing.model.Brand;
 import com.billing.model.BrandDto;
 import com.billing.model.Category;
+import com.billing.model.Charges;
 import com.billing.model.Company;
 import com.billing.model.CompanyDto;
 import com.billing.model.Customer;
@@ -47,6 +52,7 @@ import com.billing.model.User;
 import com.billing.model.UserDto;
 import com.billing.repositories.BrandRepository;
 import com.billing.repositories.CategoryRepository;
+import com.billing.repositories.ChargesRepository;
 import com.billing.repositories.ColorRepository;
 import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
@@ -111,6 +117,9 @@ public class adminController{
 	@Autowired
 	private GSTRepository gstRepo;
 
+	@Autowired
+	private ChargesRepository chargesRepo;
+	
 	@Autowired
 	private BrandRepository brandRepo;
 
@@ -610,14 +619,21 @@ public class adminController{
 
 	@PostMapping("/unit/add")
 	public String addUnit(@ModelAttribute Unit unit) {
-
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
 		Unit unitFound = unitRepo.findByunitName(unit.getUnitName());
 
 		if (unitFound == null) {
 
 			unit.setUnitName(unit.getUnitName());
 			unit.setUnitCode(unit.getUnitCode());
+			
+			unit.setUser(user);
 			unitRepo.save(unit);
+			user.getUnits().add(unit);
+			userRepo.save(user);
 
 		} else {
 
@@ -661,6 +677,30 @@ public class adminController{
 		}
 
 		System.out.println(gstFound);
+
+		return "redirect:/a2zbilling/admin/";
+	}
+	
+	@PostMapping("/charges/add")
+	public String chargesAddingByAdmin(@ModelAttribute Charges charges) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
+		Charges chargesFound = chargesRepo.findByName(charges.getName());
+		if(chargesFound == null)
+		{
+			user.getCharges().add(charges);
+			charges.setUser(user);
+			chargesRepo.save(charges);
+			userRepo.save(user);
+		}
+		else {
+			chargesFound.setName(charges.getName());
+			chargesFound.setPrice(charges.getPrice());
+			
+			chargesRepo.save(chargesFound);
+		}
 
 		return "redirect:/a2zbilling/admin/";
 	}
@@ -801,7 +841,7 @@ public class adminController{
 	}
 	//Created by Younus - to update transections
 	@GetMapping("/purchasebill/transection")
-	public String purchaseBillList(Model model) {
+	public String purchaseBillList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -814,8 +854,10 @@ public class adminController{
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId);
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
 		model.addAttribute("partiesTransactions", partiesTransactions);
+		model.addAttribute("currentPage", page);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
@@ -837,11 +879,11 @@ public class adminController{
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
 		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.findAll();
+		List<Unit> units = unitRepo.showAllActiveUnit(userId);
 		model.addAttribute("units", units);
 
 		// to render Size list on Purchase bill page
-		List<Size> sizes = sizeRepo.findAll();
+		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
 
 		// To get product Name data from db
@@ -971,16 +1013,16 @@ public class adminController{
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 
-		int id = user.getId();
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(id);
+		int userId = user.getId();
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userId);
 		model.addAttribute("suppliers", suppliers);
 
 		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.findAll();
+		List<Unit> units = unitRepo.showAllActiveUnit(userId);
 		model.addAttribute("units", units);
 
 		// to render list on Purchase bill page
-		List<Size> sizes = sizeRepo.findAll();
+		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
 
 		String username = auth.getName();
@@ -1037,6 +1079,7 @@ public class adminController{
 	public String addPurchaseReturn(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1051,11 +1094,11 @@ public class adminController{
 		model.addAttribute("suppliers", suppliers);
 
 		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.findAll();
+		List<Unit> units = unitRepo.showAllActiveUnit(userId);
 		model.addAttribute("units", units);
 
 		// to render list on Purchase bill page
-		List<Size> sizes = sizeRepo.findAll();
+		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -1114,7 +1157,7 @@ public class adminController{
 	}
 	
 	@GetMapping("/sales/list")
-	public String salesList(Model model) {
+	public String salesList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -1127,9 +1170,11 @@ public class adminController{
 
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
-
-		List<Sales> sales = salesRepo.showAllActiveSales(userId);
+		
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Sales> sales = salesRepo.showAllActiveSales(userId,pageable);
 		model.addAttribute("sales", sales);
+		model.addAttribute("currentPage", page);
 		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {

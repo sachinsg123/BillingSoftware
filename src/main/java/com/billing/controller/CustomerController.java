@@ -1,5 +1,6 @@
 package com.billing.controller;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,7 @@ import com.billing.services.ProductServiceImpl;
 import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -117,7 +119,7 @@ public class CustomerController {
 	}
 
 	@PostMapping("/customer/add")
-	public String addingProcessCustomer(@ModelAttribute Customer customer, Model model, HttpSession session) {
+	public String addingProcessCustomer(@ModelAttribute Customer customer, Model model, HttpSession session, HttpServletRequest request) throws URISyntaxException {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user1 = userRepo.findByUsername(auth.getName());
@@ -146,7 +148,13 @@ public class CustomerController {
 
 		session.setAttribute("message", "Customer Added Successfully");
 
-		return "redirect:/a2zbilling/admin/customer/add";
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+		String path = uri.getPath();
+		String query = uri.getQuery();
+		String endpoint = path + (query != null ? "?" + query : "");
+
+		return "redirect:" + endpoint;
 
 	}
 
