@@ -68,38 +68,46 @@
 		<div class="row mt-4">
 			<div class="col-md-12">
 				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
-					<thead class="thead-dark">
-						<tr style="text-align: center;">
-							<!-- <th scope="col">Supplier Id</th> -->
-							<th style="border: 1px solid black;" scope="col"></th>
-							<th style="border: 1px solid black;" scope="col">TYPE</th>
-							<th style="border: 1px solid black;" scope="col">NUMBER</th>
-							<th style="border: 1px solid black;" scope="col">DATE</th>
-							<th style="border: 1px solid black;" scope="col">TOTAL</th>
-							<th style="border: 1px solid black;" scope="col">BALANCE</th>
-							<th style="border: 1px solid black;" scope="col"></th>
-						</tr>
-					</thead>
+					<thead style="background-color: #696969;color: #fff;">
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Invoice No</th>
+                            <th scope="col">Party Name</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Quantity</th>
+                            <!--<th scope="col">Tax Status</th>-->
+                            <th scope="col">Discount Amount</th>
+                            <th scope="col">Payment Type</th>
+                            <th scope="col">Net Payment</th>
+                            <th scope="col">Balance Due</th>
+                            <th scope="col">Amount Paid</th>
+                        </tr>
+                    </thead>
 					<tbody>
-						<tr style="text-align: center;">
-							<td>.</td>
-							<td>PosSale</td>
-							<td>2</td>
-							<td>03/04/2024</td>
-							<td>1062</td>
-							<td>0.00</td>					
-							<td>
-								<div class="dropdown">
-								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fa-solid fa-ellipsis-vertical"></i>
-								  </button>
-								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/transactions/update}"><b>Edit</b></a>
-								    <a class="dropdown-item" th:onclick="|deleteContactAlert()|" href="#"><b>Delete</b></a>
-								  </div>
-								</div>
-							</td>
-						</tr>
+						<tr th:each="party : ${partiesTransactions}" style="text-align: center; border: 1px solid black;">
+                            <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
+                            <td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
+                            <td>
+                                <ul style="list-style-type: none; padding: 0; margin: 0;">
+                                    <li th:each="product : ${party?.products}">
+                                        <span th:text="${product?.name}"></span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
+                            <!--<td>
+                                <select class="form-control">
+                                    <option value="including_tax">Including Tax</option>
+                                    <option value="excluding_tax">Excluding Tax</option>
+                                </select>
+                            </td>-->
+                            <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly></td>
+                        </tr>
 					</tbody>
 				</table>
 				

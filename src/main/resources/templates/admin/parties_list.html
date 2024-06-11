@@ -91,7 +91,7 @@
 									<i class="fa-solid fa-ellipsis-vertical"></i>
 								  </button>
 								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/transactions/list}"><b>View Transactions</b></a>
+								    <a class="dropdown-item" th:href="@{'/a2zbilling/admin/parties/transactions/list/' + ${partie.id} }"><b>View Transactions</b></a>
 								    <a class="dropdown-item" th:href="@{'/a2zbilling/admin/parties/update/' + ${partie.id} }"><b>Edit</b></a>
 								    <a class="dropdown-item" th:onclick="|deleteContactAlert(${partie.id})|"><b>Delete</b></a>
 								  </div>

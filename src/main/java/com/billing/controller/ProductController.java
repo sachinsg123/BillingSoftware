@@ -101,25 +101,25 @@ public class ProductController {
 	
 	@GetMapping("/product/add")
 	public String addProductByAdmin(Model model) {
-
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		
+		int userId = user.getId();
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userId);
 		model.addAttribute("suppliers", suppliers);
 
 		List<Customer> customerList = customerRepo.findAll();
 		model.addAttribute("customers", customerList);
 
-		List<Category> categoryList = categoryRepo.findAll();
+		List<Category> categoryList = categoryRepo.findByActiveCategory(userId);
 		model.addAttribute("categories", categoryList);
 
 		List<Color> colors = colorRepo.findAll();
 		model.addAttribute("colors", colors);
 		
-		List<Brand> brands=brandRepo.showAllActiveBrand();
+		List<Brand> brands=brandRepo.showAllActiveBrand(userId);
 		model.addAttribute("brands", brands);
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		User user = userRepo.findByUsername(auth.getName());
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -238,9 +238,9 @@ public class ProductController {
 	// update form handler
 		@GetMapping("/product/edit/{id}")
 		public String productEditForm(@PathVariable("id") String id, Model model) {
-
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userRepo.findByUsername(auth.getName());
+			int userId = user.getId();
 			String username = auth.getName();
 			String email = user.getEmail();
 			model.addAttribute("username", username);
@@ -249,19 +249,20 @@ public class ProductController {
 			Company company = companyRepo.getCompanyByUserId(user.getId());
 			String companyName = company.getName();
 			
-			List<Brand> brands = brandRepo.showAllActiveBrand();
+			List<Brand> brands = brandRepo.showAllActiveBrand(userId);
 			model.addAttribute("brands", brands);
 			
 			model.addAttribute("companyName", companyName);
 			Optional<Product> Founded = productRepo.findById(Integer.parseInt(id));
 			Product product = Founded.get();
 			model.addAttribute("product", product);
-			List<Category> categories = categoryRepo.findAll();
+			List<Category> categories = categoryRepo.findByActiveCategory(userId);
 			model.addAttribute("categories", categories);
 			List<Color> colors = colorRepo.findAll();
 			model.addAttribute("colors", colors);
 
-			List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+			int userid = user.getId();
+			List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userid);
 			model.addAttribute("suppliers", suppliers);
 			
 			String image = company.getLogo();
@@ -359,14 +360,15 @@ public class ProductController {
 		// showing all products
 		@GetMapping("/product/list")
 		public String showAllProduct(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
-
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userRepo.findByUsername(auth.getName());
+			int userId = user.getId();
 			Page<Product> productPage = productService.getAvailableProducts(page, size);
 //			model.addAttribute("products", allProducts);
 			model.addAttribute("productPage", productPage);
 			model.addAttribute("currentPage", page);
 
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userRepo.findByUsername(auth.getName());
+			
 			String username = auth.getName();
 			String email = user.getEmail();
 			model.addAttribute("username", username);
