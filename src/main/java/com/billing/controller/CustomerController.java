@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.billing.model.Company;
 import com.billing.model.Customer;
@@ -160,14 +164,20 @@ public class CustomerController {
 
 	// Get all customers
 	@GetMapping("/customer/list")
-	public String getAllCustomers(Model model) {
-
-//		List<Customer> customers = customerService.getAllCustomers();
-		List<Customer> activeCustomers = customerService.getActiveCustomers();
-		model.addAttribute("customers", activeCustomers);
+	public String getAllCustomers(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId =user.getId();
+//		List<Customer> customers = customerService.getAllCustomers();
+		
+		//Pagination Added
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Customer> customers = customerRepo.showAllCustomerBYActive(userId, pageable);
+		model.addAttribute("customers", customers);
+		model.addAttribute("currentPage", page);
+
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -186,6 +196,10 @@ public class CustomerController {
 	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
 	    }
 
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+		
 		model.addAttribute("imagePath", imgpath);
 
 		return "admin/customer_list";

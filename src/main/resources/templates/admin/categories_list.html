@@ -90,6 +90,18 @@
 							</tr>
 						</tbody>
 					</table>
+					
+					<!-- Pagination Code -->
+					<div>
+						<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${categories.totalPages}"></span>
+					</div>
+					<div>
+						<a th:if="${categories.hasPrevious()}"
+							th:href="@{/a2zbilling/admin/category/list(page=${currentPage - 1}, size=${categories.size})}">Previous</a>
+						<a th:if="${categories.hasNext()}"
+							th:href="@{/a2zbilling/admin/category/list(page=${currentPage + 1}, size=${categories.size})}">Next</a>
+					</div>
+					
 				</div>
 			</div>
 		</div>

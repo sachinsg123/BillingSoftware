@@ -3,42 +3,6 @@
 
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	 <script>
-        // Function to initialize the bill number from localStorage or set default
-        function initializeBillNumber() {
-            let billNoInput = document.getElementById("purchaseorder");
-            let storedBillNumber = localStorage.getItem("billNumber");
-
-            if (storedBillNumber) {
-                let newBillNumber = parseInt(storedBillNumber) + 1;
-                billNoInput.value = 'PB-' + newBillNumber;
-            } else {
-                billNoInput.value = 'PB-1000'; // Default starting bill number
-            }
-        }
-
-        // Function to save the bill and update the bill number
-        function saveBill() {
-            let billNoInput = document.getElementById("purchaseorder");
-            let currentBillNo = billNoInput.value;
-
-            // Extract the numeric part of the bill number
-            let billNumber = parseInt(currentBillNo.replace('PB-', '')) || 0;
-
-            // Save the current bill number
-            alert('Bill saved with number ' + currentBillNo);
-
-            // Store the current bill number in localStorage
-            localStorage.setItem("billNumber", billNumber);
-
-            // Update the bill number for the next new bill
-            let newBillNumber = billNumber + 1;
-            billNoInput.value = 'PB-' + newBillNumber;
-        }
-
-        // Initialize the bill number when the page loads
-        window.onload = initializeBillNumber;
-    </script>
 	<head>
 
 		<meta charset="UTF-8">
@@ -129,7 +93,8 @@
 						<div class="col-md-4 mt-3 input-group">
 							<label>Party Name :- </label>
 							<select id="partiesSelect" required class="form-select form-control"
-								aria-label="Default select example" name="parties">  <!--addPartiesProduct-->
+								aria-label="Default select example" name="parties">
+								<!--addPartiesProduct-->
 								<option selected>Choose</option>
 								<!-- Dynamically populate options with Parties data -->
 								<option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
@@ -161,8 +126,8 @@
 					 
 				</div>
 
-				<table id="itemtable" class="table table-bordered" style="background-color: #694c94c4; color: white;">
-					<thead style="background-color: #694c94c4;">
+				<table id="itemtable" class="table table-bordered" style="background-color: #fff; color: black;">
+					<thead style="background-color: #F3EBD6;">
 						<tr>
 							<th></th>
 							<th scope="col">Product Name</th>
@@ -178,21 +143,23 @@
 					</thead>
 					<tbody id="addrow">
 						<tr>
-							<td><button type="button" class="btn btn-danger btn-sm text-white">	<i
+							<td><button type="button" class="btn btn-danger btn-sm text-white"
+									style="background-color: red; color: white;"> <i
 										class="fa-solid fa-trash"></i></button></td>
-										
+
 							<td><select id="productSelect" class="form-select form-control"
 									aria-label="Default select example" name="products">
 									<option selected>Select</option>
 									<!-- Dynamically populate options with product data -->
-									<option th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"
+									<option th:each="product:${products}" th:value="${product.id}"
+										th:text="${product.name}"
 										th:attr="data-price=${product.price},data-quantity=${product.stock?.quantity} ">
 
 									</option>
 								</select>
 							</td>
-							
-							<td><input id="AQty" class="form-control"  type="number" name="Aquantity" 
+
+							<td><input id="AQty" class="form-control" type="number" name="Aquantity"
 									oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
 
 							<td>
@@ -204,13 +171,13 @@
 								<select id="size" name="size[]" class="form-control" required>
 									<option value="None">Select Size</option>
 									<option th:each="size : ${sizes}" value="${size.id}" th:text="${size.sizeValue}">
-								</select >
+								</select>
 							</td>
 							<td>
 								<select id="unit" name="unit[]" class="form-control" required>
 									<option value="None">Select Unit</option>
 									<option th:each="unit : ${units}" value="${unit.id}" th:text="${unit.unitName}">
-								</select >
+								</select>
 							</td>
 							<td><input id="price" class="form-control" type="number" name="price" required
 									oninput="calculateTotalAmount(this)"></td>
@@ -218,16 +185,18 @@
 									required oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>
 							<td><input id="taxinamount" class="form-control" type="text" name="taxInRupees" required>
 							</td>
-							<td><input class="form-control" id="total_amount" type="number" name="total_Amount" required readonly></td>
+							<td><input class="form-control" id="total_amount" type="number" name="total_Amount" required
+									readonly></td>
 						</tr>
-					</tbody >
+					</tbody>
 				</table>
 
 			</div>
 
 			<!-- Add Row Button -->
 			<div class="col-md-12 mt-3 ">
-				<button type="button" id="add" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i>
+				<button type="button" id="add" class="btn btn-sm btn-success" onclick="addRow()"><i
+						class="fa-solid fa-plus"></i>
 					Add Row</button>
 			</div>
 
@@ -296,18 +265,17 @@
 				</div>
 			</div>
 
-
 			<div class="col-md-12 mt-5">
 				<div class="text-center">
-				
-					<button type="submit" class="btn btn-info text-center " onclick="saveBill()">Save</button>
+
+					<button type="submit" class="btn btn-info text-center " >Save</button>
 					<!--<button type="button" onclick="saveAndNew" class="btn btn-info text-center ml-3 ">Save & New</button> -->
 					<a th:href="@{'/a2zbilling/admin/purchasebill/transection'}" class="btn btn-info ml-3">Cancel</a>
 				</div>
 			</div>
 		</form>
 	</div>
-
+	
 	<!--Add Parties Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
 		aria-hidden="true">
@@ -326,29 +294,33 @@
 								<label><b>Party Name*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
-								<input type="text" required class="form-control" name="name" placeholder="Enter party name">
+								<input type="text" required class="form-control" name="name"
+									placeholder="Enter party name">
 							</div>
-							
+
 							<div class="col-md-5 mt-4">
 								<label><b>Party Mobile*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
-								<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter party mobile No">
+								<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control"
+									name="mobile" placeholder="Enter party mobile No">
 							</div>
 							<div class="col-md-5 mt-4">
 								<label><b>Billing Address*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
-								<textarea name="billingAddress" required type="text" class="form-control" placeholder="Billing Address"></textarea>
+								<textarea name="billingAddress" required type="text" class="form-control"
+									placeholder="Billing Address"></textarea>
 							</div>
-							
+
 							<div class="col-md-5 mt-4">
 								<label><b>Shipping Address*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
-								<textarea name="shippingAddress" required type="text" class="form-control" placeholder="Shipping Address"></textarea>
-							</div>	
-									
+								<textarea name="shippingAddress" required type="text" class="form-control"
+									placeholder="Shipping Address"></textarea>
+							</div>
+
 							<div class="col-md-5 mt-4">
 								<label><b>Party email*</b></label>
 							</div>
@@ -363,39 +335,41 @@
 								<select name="gstType" required class="form-control" id="businessType">
 									<option value="unregistered/Consumer">Unregistered/Consumer</option>
 									<option value="registeredBusinessRegular">Registered Business - Regular</option>
-									<option value="registeredBusinessComposition">Registered Business - Composition</option>
+									<option value="registeredBusinessComposition">Registered Business - Composition
+									</option>
 								</select>
 							</div>
-							
+
 							<div class="col-md-5 mt-4" id="gstinLable" style="display: none;">
 								<label><b>GSTIN Number*</b></label>
 							</div>
-							
+
 							<div class="col-md-7 mt-4" id="gstinInput" style="display: none;">
 								<input name="gstinNumber" type="text" class="form-control" placeholder="GSTIN Number">
-							</div>		
+							</div>
 							<div class="col-md-5 mt-4">
 								<label><b>Opening Balance*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
-								<input name="openingBalance" type="text" class="form-control" placeholder="Opening Balance">
-							</div>		
+								<input name="openingBalance" type="text" class="form-control"
+									placeholder="Opening Balance">
+							</div>
 							<div class="col-md-5 mt-4"></div>
-							
+
 							<div class="col-md-7 mt-4">
 								<select name="payment" required class="form-control">
 									<option>Select</option>
 									<option value="toPay">To Pay</option>
 									<option value="toReceive">To Receive</option>
 								</select>
-							</div>				
+							</div>
 							<div class="col-md-5 mt-2">
 								<label><b>Choose date</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input type="date" class="form-control" name="date">
 							</div>
-							
+
 							<div class="modal-footer d-flex justify-content-end">
 								<button type="submit" class="btn btn-primary">Add</button>
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -409,18 +383,18 @@
 
 	<!--Get Current date code-->
 	<script>
-        $(document).ready(function() {
-			$('#businessType').change(function() {
-                var selectedValue = $(this).val();
-                if (selectedValue === 'registeredBusinessRegular') {
-                    $('#gstinLable').show();
+		$(document).ready(function () {
+			$('#businessType').change(function () {
+				var selectedValue = $(this).val();
+				if (selectedValue === 'registeredBusinessRegular') {
+					$('#gstinLable').show();
 					$('#gstinInput').show();
-                } else {
-                    $('#gstinLable').hide();
+				} else {
+					$('#gstinLable').hide();
 					$('#gstinInput').hide();
-                }
-	            });
-        });
+				}
+			});
+		});
 		var currentDate = new Date();
 
 		// Format the date as desired (e.g., "2024-04-26")
@@ -429,7 +403,7 @@
 		// Set the value of the input field to the formatted date
 		document.getElementById('currentDateInput').value = formattedDate;
 	</script>
-	
+
 
 
 
@@ -464,10 +438,10 @@
 		});
 
 	</script>
-	
+
 	<script>
-	// !--Get parties mobile number and Email from Database-->
-	
+		// !--Get parties mobile number and Email from Database-->
+
 		$(document).ready(function () {
 
 			// Event listener for changing the selected option in the dropdown
@@ -481,42 +455,41 @@
 			});
 		});
 	</script>
-	
+
 	<script type="text/javascript">
-		$(document).ready(function() {
+		$(document).ready(function () {
 			var i = 1; // Initialize counter for row IDs
 			// Function to add event listeners to a specific row
-			window.calculateTaxAmount2 = function(index) {
-			        $(`#Qty${index}`).on('input', function() {
-			           // var AQty = parseFloat($(`#AQty${index}`).val()) || 0;
-			            var Qty = parseFloat($(`#Qty${index}`).val()) || 0;
-						var TaxInPercentage = parseFloat($(`#taxinpercentage${index}`).val()) || 0;
-			
-			             if (Qty < 0) {
-			                alert("Please enter quantity greater than 0");
-			                $(this).val(0);
-			            }
-						if(TaxInPercentage < 0)
-						{
-							alert("Please enter Tax greater than 0");
-							$(this).val(0);
-						}
-						
-			            calculateTaxAmount1(index);
-			        });
-			   }
-			
-		    // Add new row when "Add Row" button is clicked
-		    $('#add').click(function() {
-		        i++; // Increment counter for new row ID
-		        var opts = $("#productSelect").html();
-		        var units = $("#unit").html();
-		        var sizes = $("#size").html();
-		        $('#addrow').append(`
+			window.calculateTaxAmount2 = function (index) {
+				$(`#Qty${index}`).on('input', function () {
+					// var AQty = parseFloat($(`#AQty${index}`).val()) || 0;
+					var Qty = parseFloat($(`#Qty${index}`).val()) || 0;
+					var TaxInPercentage = parseFloat($(`#taxinpercentage${index}`).val()) || 0;
+
+					if (Qty < 0) {
+						alert("Please enter quantity greater than 0");
+						$(this).val(0);
+					}
+					if (TaxInPercentage < 0) {
+						alert("Please enter Tax greater than 0");
+						$(this).val(0);
+					}
+
+					calculateTaxAmount1(index);
+				});
+			}
+
+			// Add new row when "Add Row" button is clicked
+			$('#add').click(function () {
+				i++; // Increment counter for new row ID
+				var opts = $("#productSelect").html();
+				var units = $("#unit").html();
+				var sizes = $("#size").html();
+				$('#addrow').append(`
 		            <tr id="row${i}">
 		                <td>
-		                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
-		                </td>
+			                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white; width: 39.5px; height: 32px; display: flex; align-items: center; justify-content: center; "><b><i class="fa-solid fa-trash"></i></b></a>
+			                </td>
 		                <td>
 		                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
 		                        ${opts}
@@ -542,78 +515,77 @@
 		                
 		            </tr>
 		        `);
-		
-		        // Call the function to add the change event listener for the newly added row
-		        addChangeListener(i);
-		    });
-		
-		    // Function to add change event listener for product selection
-		    function addChangeListener(index) {
-		        $(`#productSelect${index}`).change(function() {
-		            var selectedOption = $(this).find('option:selected');
-		            var price = selectedOption.data('price');
-		            var quantity = selectedOption.data('quantity');
-		            var size = selectedOption.data('size');
-									   
-		            $(`#price${index}`).val(price);
-		            $(`#AQty${index}`).val(quantity);
-		            $(`#size${index}`).val(size);
-		        });
-		    }
+
+				// Call the function to add the change event listener for the newly added row
+				addChangeListener(i);
+			});
+
+			// Function to add change event listener for product selection
+			function addChangeListener(index) {
+				$(`#productSelect${index}`).change(function () {
+					var selectedOption = $(this).find('option:selected');
+					var price = selectedOption.data('price');
+					var quantity = selectedOption.data('quantity');
+					var size = selectedOption.data('size');
+
+					$(`#price${index}`).val(price);
+					$(`#AQty${index}`).val(quantity);
+					$(`#size${index}`).val(size);
+				});
+			}
 			// Function to calculate tax amount and total amount
-			window.calculateTaxAmount1 = function(index) {
-	            var price = parseFloat($(`#price${index}`).val());
-	            var Qty = parseFloat($(`#Qty${index}`).val());
-	            var taxPercent = parseFloat($(`#taxinpercentage${index}`).val());
+			window.calculateTaxAmount1 = function (index) {
+				var price = parseFloat($(`#price${index}`).val());
+				var Qty = parseFloat($(`#Qty${index}`).val());
+				var taxPercent = parseFloat($(`#taxinpercentage${index}`).val());
 				var AQty = parseFloat($(`#AQty${index}`).val());
-				
-			 if (Qty < 0) {
-	                alert("Please enter quantity greater than 0");
+
+				if (Qty < 0) {
+					alert("Please enter quantity greater than 0");
 					$(`#Qty${index}`).val(0);
 					return;
-	            }
-				if(taxPercent < 0)
-				{
+				}
+				if (taxPercent < 0) {
 					alert("Please enter Tax greater than 0");
 					$(`#taxinpercentage${index}`).val(0);
 					$(`#taxinamount${index}`).val(0);
 					return;
 				}
 
-	            var taxAmount = (price * Qty * taxPercent) / 100;
-	            var totalAmount = (price * Qty) + taxAmount;
-	
-	            $(`#taxinamount${index}`).val(taxAmount.toFixed(2));
-	            $(`#total_amount${index}`).val(totalAmount.toFixed(2));
-				
+				var taxAmount = (price * Qty * taxPercent) / 100;
+				var totalAmount = (price * Qty) + taxAmount;
+
+				$(`#taxinamount${index}`).val(taxAmount.toFixed(2));
+				$(`#total_amount${index}`).val(totalAmount.toFixed(2));
+
 				// Update the overall total amount
 				calculateOverallTotal();
-	        };
-			
+			};
+
 			// Function to calculate the overall total amount for all rows
-	        function calculateOverallTotal() {
+			function calculateOverallTotal() {
 				var overallTotal = 0;
-				
-			    $('#addrow tr').each(function() {
-			        var totalAmount = parseFloat($(this).find('[id^="total_amount"]').val()) || 0;
-			        overallTotal += totalAmount;
-			    });
-			
-			    $('#totalAmountField').val(overallTotal.toFixed(2));
-	        }
-				
-			
-		    // Remove row when "Remove" button is clicked
-		    $(document).on('click', '.remove_row', function() {
-		        var row_id = $(this).attr('id');
-		        $(`#row${row_id}`).remove();
-				
+
+				$('#addrow tr').each(function () {
+					var totalAmount = parseFloat($(this).find('[id^="total_amount"]').val()) || 0;
+					overallTotal += totalAmount;
+				});
+
+				$('#totalAmountField').val(overallTotal.toFixed(2));
+			}
+
+
+			// Remove row when "Remove" button is clicked
+			$(document).on('click', '.remove_row', function () {
+				var row_id = $(this).attr('id');
+				$(`#row${row_id}`).remove();
+
 				calculateOverallTotal();
-		    });
+			});
 		});
 	</script>
 	<script>
-				
+
 
 		function removeRow(btn) {
 			var row = btn.parentNode.parentNode;
@@ -749,7 +721,6 @@
 			});
 		}
 
-
 		//Code to show alert when user enter negative discountAmount
 		const priceperunitfield = document.getElementById('priceperunitfield');
 		priceperunitfield.addEventListener('input', function () {
@@ -758,8 +729,6 @@
 				priceperunitfield.value = "";
 			}
 		});
-
-
 
 		//Code to show alert when user enter negative discountAmount
 		const discountAmountField = document.getElementById('discountAmountField');
@@ -789,7 +758,6 @@
 			}
 		});
 
-
 		//Code to show alert when user enter negative Tax Amount
 		const taxAmountField = document.getElementById('taxAmountField');
 		taxAmountField.addEventListener('input', function () {
@@ -799,7 +767,6 @@
 			}
 		});
 
-
 		// Get the current date automatically
 		var currentDate = new Date();
 
@@ -808,12 +775,7 @@
 
 		// Set the value of the input field to the formatted date
 		document.getElementById('currentDateInput').value = formattedDate;
-		
-			
-
 	</script>
-
-
 </section>
 </body>
 <!-- END Body -->
