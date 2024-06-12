@@ -79,7 +79,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each=" customer : ${customers}">
+						<tr th:each=" customer : ${customers.content}">
 							<th scope="row" th:text="${customer.id}"></th>
 							<td th:text="${customer.name}"></td>
 							<td th:text="${customer.email}"></td>
@@ -94,6 +94,19 @@
 						</tr>
 					</tbody>
 				</table>
+				
+				
+				<div>
+					<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${customers.totalPages}"></span>
+				</div>
+				<div>
+					<a th:if="${customers.hasPrevious()}"
+						th:href="@{/a2zbilling/admin/customer/list(page=${currentPage - 1}, size=${customers.size})}">Previous</a>
+					<a th:if="${customers.hasNext()}"
+						th:href="@{/a2zbilling/admin/customer/list(page=${currentPage + 1}, size=${customers.size})}">Next</a>
+				</div>
+				
+				
 			</div>
 		</div>
 	</section>
