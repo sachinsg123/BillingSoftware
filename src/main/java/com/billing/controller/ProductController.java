@@ -176,21 +176,18 @@ public class ProductController {
 			Size s = new Size();
 			s.setSizeValue(productSizeValue);
 			sizeRepo.save(s);
+			user.getSizes().add(s);
+			userRepo.save(user);
 			product.setSize(s);
 		}
 		
 		
 		// adding color
 		Color colorFound = colorRepo.findByName(colorName);
-		Color noColorChoosed = colorRepo.findByName("No color choosed");
 
 		if (colorFound != null) {
 
 			product.setColor(colorFound);
-		} else if (colorName.equals("No choosed color")) {
-
-			product.setColor(noColorChoosed);
-
 		} else {
 			Color co = new Color();
 			co.setName(colorName);
@@ -283,40 +280,51 @@ public class ProductController {
 		}
 
 		@PostMapping("/product/edit")
-		public String productUpdateProcess(@ModelAttribute Product product)
-				throws IOException {
-
-			System.out.println("data getting " + product);
+		public String productUpdateProcess(@ModelAttribute("product") Product product, @RequestParam("productColor") String colorName, HttpSession session) throws IOException {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userRepo.findByUsername(auth.getName());
+			int userId = user.getId();
+			
 			Optional<Product> found = productRepo.findById(product.getId());
 			Product productFound = found.get();
 			
 			productFound.setName(product.getName());
 			productFound.setAddedDate(product.getAddedDate());
-			productFound.setQuantity(product.getQuantity());
 			productFound.setPrice(product.getPrice());
 			productFound.setSupplier(product.getSupplier());
 			productFound.setAbout(product.getAbout());
 			
-//			Size sizeOccured = sizeRepo.findBySizeValue(productSize);
-//
-//			if (sizeOccured != null) {
-//				productFound.setSize(sizeOccured);
-//			} else {
-//
-//				Size s = new Size();
-//				s.setSizeValue(productSize);
-//				sizeRepo.save(s);
-//				productFound.setSize(s);
-//			}
+			String productSizeValue = product.getSize().getSizeValue(); // Assuming you have a 'getSize()' method in your Product class
+			Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
+			if (sizeOccured != null) {
+				productFound.setSize(sizeOccured);
+				sizeOccured.setSizeValue(productSizeValue);
+				sizeRepo.save(sizeOccured);
+			} else {
 
-			// adding color
+				Size s = new Size();
+				s.setSizeValue(productSizeValue);
+				s.setUser(user);
+				sizeRepo.save(s);
+				user.getSizes().add(s);
+				
+				userRepo.save(user);
+				productFound.setSize(s);
+			}
 			
-			 Color color = product.getColor();
-			 if(color != null)
+			 Color colorFound = colorRepo.findByName(colorName);
+			 if(colorFound != null)
 			 {
-				 color.getProducts().add(product);
-				 colorRepo.save(color);
+				 colorFound.getProducts().add(product);
+				 colorRepo.save(colorFound);
 				 
+				 productFound.setColor(colorFound);
+			 }
+			 else {
+				 Color color = new Color();
+				 color.setName(colorName);
+				 
+				 colorRepo.save(color);
 				 productFound.setColor(color);
 			 }
 			 
@@ -334,8 +342,6 @@ public class ProductController {
 			}
 
 			productFound.setStatus("Active");
-
-			System.out.println(product);
 
 	  		productRepo.save(productFound);		
 

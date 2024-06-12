@@ -43,9 +43,6 @@ public class Product{
 	
 	private String imageUrl;
 	
-	@ManyToMany(mappedBy ="product")
-	private List<Charges> charges = new ArrayList<Charges>();
-	
 	@ManyToMany
 	@JoinTable(name="product_customer",
 	joinColumns = @JoinColumn(name="product_id")
@@ -99,14 +96,6 @@ public class Product{
 
 	public void setSales(List<Sales> sales) {
 		this.sales = sales;
-	}
-
-	public List<Charges> getCharges() {
-		return charges;
-	}
-
-	public void setCharges(List<Charges> charges) {
-		this.charges = charges;
 	}
 
 	public Unit getUnit() {
