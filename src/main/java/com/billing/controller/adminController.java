@@ -732,13 +732,16 @@ public class adminController{
 	}
 
 	@GetMapping("/category/list")
-	public String listOfCategories(Model model) {
+	public String listOfCategories(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
 		
-		List<Category> categories = categoryRepo.findByActiveCategory(userId);
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Category> categories = categoryRepo.findByActiveCategory(userId, pageable);
 		model.addAttribute("categories", categories);
+		model.addAttribute("currentPage", page);
+		
 
 		
 		String username = auth.getName();
@@ -1407,6 +1410,7 @@ public class adminController{
 		return "redirect:/a2zbilling/admin/sales/list";
 	}
 	
+	//Created by Younus
 	@GetMapping("/Item/add")
 	public String addItem(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1441,6 +1445,7 @@ public class adminController{
 
 	}
 	
+	//Created by Younus
 	@GetMapping("/managestock")
 	public String manageStock(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1483,6 +1488,7 @@ public class adminController{
 		return "admin/manage_stock";
 	}
 	
+	//Created by Younus
 	@PostMapping("/managestock")
 	public String manageStockProcess(@ModelAttribute Stock stock, HttpSession session, Model model, HttpServletRequest request) throws URISyntaxException {
 		
@@ -1516,12 +1522,16 @@ public class adminController{
 	
 	// Created by Younus - get Brand list
 	@GetMapping("/brand/list")
-	public String brandList(Model model) {
+	public String brandList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
-		List<Brand> brands = brandRepo.showAllActiveBrand(userId);
+		
+		//Pagination Added
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Brand> brands = brandRepo.showAllActiveBrand(userId,pageable);
 		model.addAttribute("brands", brands);
+		model.addAttribute("currentPage", page);
 		
 		String username = auth.getName();
 		String email = user.getEmail();
@@ -1672,7 +1682,7 @@ public class adminController{
 	
 	//Created by Younus
 	@GetMapping("/purchaseReport")
-	public String purchaseReport(Model model) {
+	public String purchaseReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -1680,8 +1690,11 @@ public class adminController{
 		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		model.addAttribute("parties", parties);
 		
-		List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId);
+		//Pagination Added
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId,pageable);
 		model.addAttribute("partiesTransactions", partiesTransactions);
+		model.addAttribute("currentPage", page);
 				
 		
 		Company company = companyRepo.getCompanyByUserId(userId);
@@ -1697,16 +1710,19 @@ public class adminController{
 	
 	//Created by Younus
 	@GetMapping("/salesReport")
-	public String salesReport(Model model) {
-		
-		// To get sale data from db
-		List<Sales> sales = salesRepo.showAllActiveSales();
-		model.addAttribute("sales", sales);
-		
-		
-				
+	public String salesReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
+		int userId=user.getId();
+		// To get sale data from db
+		
+		//Pagination Added
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Sales> sales = salesRepo.showAllActiveSales(userId,pageable);
+		model.addAttribute("sales", sales);
+		model.addAttribute("currentPage", page);
+	
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		model.addAttribute("imagePath", imgpath);
@@ -1720,17 +1736,22 @@ public class adminController{
 	
 	//Created by Younus 
 		@GetMapping("/purchaseTaxReport")
-		public String purchaseTaxReport(Model model) {
-			
-			// To get Parties Name data from db
-			List<Parties> parties = partiesRepo.showAllActiveParties();
-			model.addAttribute("parties", parties);
-			
-			List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection();
-			model.addAttribute("partiesTransactions", partiesTransactions);
-					
+		public String purchaseTaxReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userRepo.findByUsername(auth.getName());
+			
+			int userId=user.getId();
+			
+			// To get Parties Name data from db
+			List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+			model.addAttribute("parties", parties);
+			
+			//Pagination Added
+			Pageable pageable =  PageRequest.of(page,size);
+			Page<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId,pageable);
+			model.addAttribute("partiesTransactions", partiesTransactions);
+			model.addAttribute("currentPage", page);		
+			
 			Company company = companyRepo.getCompanyByUserId(user.getId());
 			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 			model.addAttribute("imagePath", imgpath);
@@ -1744,14 +1765,19 @@ public class adminController{
 		
 		//Created by Younus salesTaxReport
 				@GetMapping("/salesTaxReport")
-				public String salesTaxReport(Model model) {
-					
-					// To get sale data from db
-					List<Sales> sales = salesRepo.showAllActiveSales();
-					model.addAttribute("sales", sales);
-							
+				public String salesTaxReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 					User user = userRepo.findByUsername(auth.getName());
+					
+					// To get sale data from db
+					int Userid=user.getId();
+					
+					//Pagination Added
+					Pageable pageable =  PageRequest.of(page,size);
+					Page<Sales> sales = salesRepo.showAllActiveSales(Userid,pageable);
+					model.addAttribute("sales", sales);
+					model.addAttribute("currentPage", page);
+				
 					Company company = companyRepo.getCompanyByUserId(user.getId());
 					String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 					model.addAttribute("imagePath", imgpath);
