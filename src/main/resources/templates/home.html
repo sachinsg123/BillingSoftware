@@ -117,8 +117,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                                 <thead class="bg-warning-200">
 													<tr style="text-align: center;">
-														<!-- <th scope="col">Supplier Id</th> -->
-														<th style="border: 1px solid black;" scope="col">Data</th>
+														<th style="border: 1px solid black;" scope="col">Date</th>
 														<th style="border: 1px solid black;" scope="col">Sale Bill No</th>
 														<th style="border: 1px solid black;" scope="col">Customer Name</th>
 														<th style="border: 1px solid black;" scope="col">Product Name</th>
@@ -141,7 +140,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 															    </li>
 															</ul>
 														</td>
-														<td> 
+														<td>
 															<th:block th:each="qty : ${#strings.arraySplit(sale.quantity, ',')}">
 														        <span th:text="${qty}"></span><br>
 														    </th:block>
@@ -1579,38 +1578,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 							className: 'btn-outline-default'
 						}
 
-					],
-					columnDefs: [
-						{
-							targets: -1,
-							title: '',
-							orderable: false,
-							render: function (data, type, full, meta) {
-
-								/*
-								-- ES6
-								-- convert using https://babeljs.io online transpiler
-								return `
-								<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>
-									<i class="fal fa-times"></i>
-								</a>
-								<div class='dropdown d-inline-block dropleft '>
-									<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>
-										<i class="fal fa-ellipsis-v"></i>
-									</a>
-									<div class='dropdown-menu'>
-										<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>
-										<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>
-									</div>
-								</div>`;
-									
-								ES5 example below:	
-
-								*/
-								return "";
-							},
-						},
-
 					]
 
 				});
@@ -1635,38 +1602,6 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 						titleAttr: 'Print Table',
 						className: 'btn-outline-default'
 					}
-
-				],
-				columnDefs: [
-					{
-						targets: -1,
-						title: '',
-						orderable: false,
-						render: function (data, type, full, meta) {
-
-							/*
-							-- ES6
-							-- convert using https://babeljs.io online transpiler
-							return `
-							<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>
-								<i class="fal fa-times"></i>
-							</a>
-							<div class='dropdown d-inline-block dropleft '>
-								<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>
-									<i class="fal fa-ellipsis-v"></i>
-								</a>
-								<div class='dropdown-menu'>
-									<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>
-									<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>
-								</div>
-							</div>`;
-								
-							ES5 example below:	
-
-							*/
-							return "";
-						},
-					},
 
 				]
 
