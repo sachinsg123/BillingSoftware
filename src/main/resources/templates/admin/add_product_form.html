@@ -25,7 +25,7 @@
 		</div>
 		<div class="row" style="background-color:rgb(84,78,130) ; color: #fff;">
 			<div class="col-md-12 mt-1">
-				<h1 class="text-center">Add Product</h1>
+				<h1 class="text-center"><b>ADD PRODUCT</b></h1>
 			</div>
 		</div>
 
@@ -34,37 +34,43 @@
 			class="form-group">
 			<div class="row pb-3" style="background-color: #f5f0f0;">
 
-				<div class="input-group">
-					<div class="col-md-4 mt-3 input-group">
-						<label>Supplier Name :- </label>
-						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
-							name="supplier">
-							<option selected>Choose</option>
-							<!-- Dynamically populate options with Supplier data -->
-							<option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
-								th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
-						</select>
+				<!--Get Parties data from database-->
+				<div class="row ml-1 mr-1">
+					<div class="input-group">
+						<div class="col-md-4 mt-6 input-group">
+							<label>Party Name :- </label>
+							<select id="partiesSelect" required class="form-select form-control"
+								aria-label="Default select example" name="parties">
+								<!--addPartiesProduct-->
+								<option selected>Choose</option>
+								<!-- Dynamically populate options with Parties data -->
+								<option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
+									th:attr="data-mobile=${party.mobile}, data-email=${party.email}"></option>
+							</select>
 
 
-						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
-							<i class="fa-solid fa-plus"></i>
-						</button>
+							<button type="button" class="btn btn-info ml-2" data-toggle="modal"
+								data-target="#exampleModal">
+								<i class="fa-solid fa-plus"></i>
+							</button>
 
+						</div>
+
+						<div class="col-md-3 mt-6 input-group">
+							<label>Mobile :- </label>
+							<input id="mobile1" readonly type="text" class="form-control">
+						</div>
+						<div class="col-md-3 mt-6 input-group">
+							<label>Email :- </label>
+							<input id="email1" readonly type="email" class="form-control">
+						</div>
+
+						<div class="col-md-2 mt-6 input-group">
+							<label>Date :- </label>
+							<input name="addedDate" type="text" class="form-control" id="currentDateInput" readonly>
+						</div>
 					</div>
-
-					<div class="col-md-3 mt-3 input-group">
-						<label>Mobile :- </label>
-						<input id="mobile1" readonly type="text" class="form-control">
-					</div>
-					<div class="col-md-3 mt-3 input-group">
-						<label>Email :- </label>
-						<input id="email1" readonly type="email" class="form-control">
-					</div>
-
-					<div class="col-md-2 mt-3 input-group">
-						<label>Date :- </label>
-						<input name="addedDate" type="text" class="form-control" id="currentDateInput" readonly>
-					</div>
+					 
 				</div>
 				
 				<div class="col-md-4 mt-4">
@@ -177,7 +183,22 @@
 			</div>
 		</form>
 	</div>
-	
+	<script>
+		// !--Get parties mobile number and Email from Database-->
+
+		$(document).ready(function () {
+
+			// Event listener for changing the selected option in the dropdown
+			$('#partiesSelect').change(function () {
+				var selectedOption = $(this).find('option:selected');
+				var phone = selectedOption.data('mobile');
+				var email = selectedOption.data('email');
+
+				$('#mobile1').val(phone);
+				$('#email1').val(email);
+			});
+		});
+	</script>
 	<script>
 		function checkStockLevels() {
 			var quantity = parseInt(document.getElementById('productQuantity').value);
@@ -213,52 +234,100 @@
 	<div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
 	<!-- BEGIN Page Footer -->
 
-	<!-- Add Supplier Modal -->
+	<!--Add Parties Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
 		aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
+
 				<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
-					<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
+					<h1 class="modal-title" id="exampleModalLabel"><b>ADD PARTY</b></h1>
 				</div>
+
 				<div class="modal-body" style="background-color: #f5f0f0;">
-					<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
+					<form th:action="@{/a2zbilling/admin/parties/add}" method="post" enctype="multipart/form-data"
 						class="form-group">
 						<div class="row pb-3">
 							<div class="col-md-5 mt-4">
-								<label>Supplier Name</label>
+								<label><b>Party Name*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input type="text" required class="form-control" name="name"
-									placeholder="Enter supplier name">
+									placeholder="Enter party name">
+							</div>
+
+							<div class="col-md-5 mt-4">
+								<label><b>Party Mobile*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control"
+									name="mobile" placeholder="Enter party mobile No">
 							</div>
 							<div class="col-md-5 mt-4">
-								<label>Supplier Email</label>
+								<label><b>Billing Address*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<textarea name="billingAddress" required type="text" class="form-control"
+									placeholder="Billing Address"></textarea>
+							</div>
+
+							<div class="col-md-5 mt-4">
+								<label><b>Shipping Address*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<textarea name="shippingAddress" required type="text" class="form-control"
+									placeholder="Shipping Address"></textarea>
+							</div>
+
+							<div class="col-md-5 mt-4">
+								<label><b>Party email*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input size="50" type="email" required class="form-control" name="email"
-									placeholder="Enter supplier e-mail">
+									placeholder="Enter party e-mail">
 							</div>
 							<div class="col-md-5 mt-4">
-								<label>Supplier Mobile</label>
+								<label><b>GST Type</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
-								<input type="text" pattern="[0-9]{10}" required class="form-control" name="mobile"
-									placeholder="Enter supplier mobile No">
+								<select name="gstType" required class="form-control" id="businessType">
+									<option value="unregistered/Consumer">Unregistered/Consumer</option>
+									<option value="registeredBusinessRegular">Registered Business - Regular</option>
+									<option value="registeredBusinessComposition">Registered Business - Composition
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-5 mt-4" id="gstinLable" style="display: none;">
+								<label><b>GSTIN Number*</b></label>
+							</div>
+
+							<div class="col-md-7 mt-4" id="gstinInput" style="display: none;">
+								<input name="gstinNumber" type="text" class="form-control" placeholder="GSTIN Number">
+							</div>
+							<div class="col-md-5 mt-4">
+								<label><b>Opening Balance*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input name="openingBalance" type="text" class="form-control"
+									placeholder="Opening Balance">
+							</div>
+							<div class="col-md-5 mt-4"></div>
+
+							<div class="col-md-7 mt-4">
+								<select name="payment" required class="form-control">
+									<option>Select</option>
+									<option value="toPay">To Pay</option>
+									<option value="toReceive">To Receive</option>
+								</select>
 							</div>
 							<div class="col-md-5 mt-2">
-								<label>Address</label>
+								<label><b>Choose date</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
-								<textarea type="text" required class="form-control" name="address"
-									placeholder="Enter supplier address"></textarea>
+								<input type="date" class="form-control" name="date">
 							</div>
-							<div class="col-md-5 mt-2">
-								<label>Choose Date</label>
-							</div>
-							<div class="col-md-7 mt-4">
-								<input type="date" class="form-control" name="addedDate">
-							</div>
+
 							<div class="modal-footer d-flex justify-content-end">
 								<button type="submit" class="btn btn-primary">Add</button>
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -276,7 +345,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content" style="background-color: #f5f0f0;">
 				<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
-					<h1 class="modal-title" id="addCategoryModalLabel">Add Category</h1>
+					<h1 class="modal-title" id="addCategoryModalLabel"><b>ADD CATEGORY</b></h1>
 				</div>
 				<div class="modal-body">
 					<form th:action="@{/a2zbilling/admin/category/add}" method="post" enctype="multipart/form-data"

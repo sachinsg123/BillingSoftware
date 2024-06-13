@@ -58,7 +58,7 @@
 		<div class="contaier-fluid">
 			<div class="row" style="background-color:rgb(84,78,130);color: #fff;">
 				<div class="col-md-12 mt-1">
-					<h1 class="text-center">All Products</h1>
+					<h1 class="text-center"><b>PRODUCT LIST</b></h1>
 				</div>
 			</div>
 			<div class="row" style="background-color: #f5f0f0;">
@@ -93,7 +93,7 @@
 								<td th:text="${product.addedDate}"></td>
 								<td th:text="${product.stock?.quantity ?:0}"></td>
 								<!--<td>Admin</td>-->
-								<td th:text="${product.supplier?.name}"> </td >
+								<td th:text="${product.parties?.name}"> </td >
 								<td th:text="${product?.price}"></td >
 								<!--<td th:text="${product.customer}"></td>
 								<td>customer mobile</td>-->

@@ -64,12 +64,26 @@ public class Product{
     
     private String about;
     
+//    @ManyToOne
+//    @JoinColumn(name="supplier_id")
+//    private Supplier supplier;
+    
     @ManyToOne
-    @JoinColumn(name="supplier_id")
-    private Supplier supplier;
+    @JoinColumn(name="parties_id")
+    private Parties parties;
 	
-    @ManyToOne
+    public Parties getParties() {
+		return parties;
+	}
+
+	public void setParties(Parties parties) {
+		this.parties = parties;
+	}
+
+	@ManyToOne
     @JoinColumn(name="unit_id")
+    
+    
     private Unit unit;
     
     @ManyToOne
@@ -234,13 +248,13 @@ public class Product{
 		this.about = about;
 	}
 	
-	public Supplier getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(Supplier supplier) {
-		this.supplier = supplier;
-	}
+//	public Supplier getSupplier() {
+//		return supplier;
+//	}
+//
+//	public void setSupplier(Supplier supplier) {
+//		this.supplier = supplier;
+//	}
 
 	@Override
 	public String toString() {

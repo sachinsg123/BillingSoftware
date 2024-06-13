@@ -75,11 +75,11 @@
 						<div class="form-group">
 							<label>Supplier Name</label>
 							<div class="form-group">
-							<select class="form-select form-control" th:field="*{supplier}" aria-label="Default select example"
-								name="supplier">
+							<select class="form-select form-control" th:field="*{parties}" aria-label="Default select example"
+								name="parties">
 								<option value="" disabled selected>Choose</option >
-								<option th:each="supplier: ${suppliers}" th:value="${supplier.id}"
-									th:text="${supplier.name}"></option>
+								<option th:each="party: ${parties}" th:value="${party.id}"
+									th:text="${party.name}"></option>
 							</select>
 						</div>
 						</div>

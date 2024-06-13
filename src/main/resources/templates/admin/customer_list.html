@@ -61,13 +61,13 @@
 
 		<div class="row">
 			<div class="col-md-12" style="background-color: rgb(84,78,130);color:#fff;">
-				<h1 class="text-center pt-1">All Customers</h1>
+				<h1 class="text-center pt-1"><b>CUSTOMERS LIST	</b></h1>
 			</div>
 		</div>
 		<div class="row mt-3" style="background-color: #f5f0f0;">
 			<div class="col-md-12 pb-2">
 				<table class="table table-bordered table-hover" style="background-color: #fff	;">
-					<thead style="background-color: #696969; color: #fff;">
+					<thead style="background-color: #F3EBD6; color: black;">
 						<tr>
 							<th scope="col">Customer Id</th>
 							<th scope="col">Name</th>
@@ -94,8 +94,8 @@
 						</tr>
 					</tbody>
 				</table>
-				
-				
+
+
 				<div>
 					<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${customers.totalPages}"></span>
 				</div>
@@ -105,8 +105,8 @@
 					<a th:if="${customers.hasNext()}"
 						th:href="@{/a2zbilling/admin/customer/list(page=${currentPage + 1}, size=${customers.size})}">Next</a>
 				</div>
-				
-				
+
+
 			</div>
 		</div>
 	</section>
