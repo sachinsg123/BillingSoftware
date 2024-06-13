@@ -1,6 +1,9 @@
 package com.billing.repositories;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +18,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>{
 	
 	@Query("SELECT c FROM Category c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
 	public List<Category> findByActiveCategory(@Param("id") Integer id);
+	
+	@Query("SELECT c FROM Category c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
+	public Page<Category> findByActiveCategory(@Param("id") Integer id, Pageable pageable);
+
 
 }

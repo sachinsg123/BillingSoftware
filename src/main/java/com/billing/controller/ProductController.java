@@ -117,6 +117,9 @@ public class ProductController {
 		List<Color> colors = colorRepo.findAll();
 		model.addAttribute("colors", colors);
 		
+		List<Size> sizes=sizeRepo.showAllSize(userId);
+		model.addAttribute("sizes", sizes);
+		
 		List<Brand> brands=brandRepo.showAllActiveBrand(userId);
 		model.addAttribute("brands", brands);
 
@@ -166,6 +169,7 @@ public class ProductController {
 		 * System.out.println(supplierName);
 		 */
 		// adding size
+		
 		Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
 
 		if (sizeOccured != null) {
@@ -175,10 +179,13 @@ public class ProductController {
 
 			Size s = new Size();
 			s.setSizeValue(productSizeValue);
+			s.setUser(user);
 			sizeRepo.save(s);
 			user.getSizes().add(s);
 			userRepo.save(user);
 			product.setSize(s);
+			user.getSizes().add(s);
+			userRepo.save(user);
 		}
 		
 		
