@@ -217,8 +217,23 @@
 		                        placeholder="Discount %" oninput="updateDiscountedAmount()">
 		                </div>
 		            </div>
-		            <div>
-		                <div class="form-group">
+					<div>
+						<div class="form-group">
+		                    <label class="invoice-label">Charges : </label>
+		                    <select id="selectCharges" class="form-control" name="charges" onchange="updateChargesPrice()">
+		                        <option>Choose</option>
+								<option th:each="charge : ${charges}" 
+										th:value="${charge.id}" 
+										th:text="${charge.name}"
+										th:attr="data-chargesPrice=${charge.price}"></option>
+		                    </select>
+							<input id="chargesPrice" type="hidden" name="" placeholder="charges">
+		                </div>
+		            </div>					
+		        </div>
+		        <div class="row">
+					<div>
+		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Payment mode:</label>
 		                    <select class="form-control" name="paymentMode" required>
 		                        <option value="cash">Cash</option>
@@ -227,21 +242,19 @@
 		                    </select>
 		                </div>
 		            </div>
-		        </div>
-		        <div class="row">
-		            <div>
+		            <div style="margin-left: 165px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Paid:</label>
 		                    <input id="paidAmountField" type="number" required class="form-control" name="amountPaid" placeholder="Amount paid" oninput="updateDues()">
 		                </div>
 		            </div>
-		            <div style="margin-left: 110px;">
+		            <div style="margin-left: 87px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Dues:</label>
 		                    <input id="duesAmountField" type="number" required class="form-control" name="dueAmount" placeholder="Dues" readonly>
 		                </div>
 		            </div>
-		            <div style="margin-left: 110px;">
+		            <div style="margin-left: 66px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Net Payment:</label>
 		                    <input id="netPaymentField" type="number" required class="form-control" name="netPayment" placeholder="Final Amount" readonly>
@@ -338,6 +351,16 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 	<script>
+		// Get the select element
+		const chargesSelect = document.getElementById('chargesSelect');
+		
+		// Add an event listener to handle changes in the select element
+		chargesSelect.addEventListener('change', function() {
+		  const selectedOptions = Array.from(chargesSelect.selectedOptions);
+		  const selectedValues = selectedOptions.map(option => option.value);
+		  console.log('Selected values:', selectedValues);
+		  // You can perform further actions with the selected values here
+		});
 		// Function to print the bill
 		function printBill() {
 			window.print();
@@ -399,23 +422,46 @@
 			    $('#totalAmountField').val(totalAmount.toFixed(2));
 			}	
 		function updateDues() {
-                var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
+                var totalAmount = parseFloat(document.getElementById('netPaymentField').value);
                 var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
                 var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
                 var duesAmount = totalAmount - paidAmount;
 
-                // Exclude discounted amount from dues if there are dues
-                if (duesAmount > 0) {
-                    duesAmount -= discountAmount;
-                    if (duesAmount < 0) {
-                        duesAmount = 0; // Ensure dues amount doesn't go negative
-                    }
-                }
-
-                // Update the dues amount display
-                document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
+                if(duesAmount < 0) {
+					document.getElementById('duesAmountField').value = 0;
+				}
+				else{
+					// Update the dues amount display
+					document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
+				}
+                
             }
-			function updatePercentageAmount() {
+		function calculatePercentageAndNetAmount1() {
+				  var totalAmount = parseFloat(totalAmountField.value);
+				  var discountAmount = parseFloat(discountAmountField.value);
+				  var chargesPrice = parseFloat(document.getElementById('chargesPrice').value);
+				
+				  // Calculate the discount percentage
+				  var discountPercentage = (discountAmount / totalAmount) * 100;
+				
+				  // Update the net amount
+				  var netAmount = totalAmount - discountAmount + chargesPrice;
+				
+				  // Update the discount percentage display
+				  document.getElementById('discountPercentField').value = discountPercentage.toFixed(2);
+				
+				  // Update the net amount display
+				  document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+				}
+		function updateChargesPrice() {
+		            var selectElement = document.getElementById("selectCharges");
+		            var selectedOption = selectElement.options[selectElement.selectedIndex];
+		            var chargePrice = selectedOption.getAttribute("data-chargesPrice");
+		            document.getElementById("chargesPrice").value = chargePrice;
+		
+		            calculatePercentageAndNetAmount1();
+		        }
+		function updatePercentageAmount() {
 			    const totalAmountField = document.getElementById('totalAmountField');
 			    const discountPercentField = document.getElementById('discountPercentField');
 			    const discountAmountField = document.getElementById('discountAmountField');
@@ -425,12 +471,11 @@
 			
 			    // Add event listener to discountAmountField
 			    discountAmountField.addEventListener('input', calculatePercentageAndNetAmount);
-			
+			}
 			    // Function to calculate percentage and net amount
-			    function calculatePercentageAndNetAmount() {
+		function calculatePercentageAndNetAmount() {
 			        var totalAmount = parseFloat(totalAmountField.value);
 			        var discountAmount = parseFloat(discountAmountField.value);
-			
 			        // Calculate the discount percentage
 			        var discountPercentage = (discountAmount / totalAmount) * 100;
 			
@@ -443,14 +488,12 @@
 			        // Update the net amount display
 			        document.getElementById('netPaymentField').value = netAmount.toFixed(2);
 			    }
-			}
 
 		function updateDiscountedAmount(){
 				const totalAmountField = document.getElementById('totalAmountField');
 		        const discountPercentField = document.getElementById('discountPercentField');
 		        const discountAmountField = document.getElementById('discountAmountField');
-		
-		        // Calculate the discounted amount initially
+			        // Calculate the discounted amount initially
 		        calculateDiscountAndNetAmount();
 		
 		        // Add event listener to discountPercentField
@@ -462,7 +505,6 @@
 		            var discountAmount = parseFloat(discountAmountField.value);
 		            var discountPercent = parseFloat(discountPercentField.value);
 	
-		
 		            var discountedAmount = discountAmount;
 		            if (!isNaN(discountPercent)) {
 		                discountedAmount = (totalAmount * discountPercent) / 100;
@@ -478,7 +520,7 @@
 		            document.getElementById('netPaymentField').value = netAmount.toFixed(2);
 		        }
             }
-		
+
 			$(document).ready(function(){
 			   // Event listener for changing the selected option in the dropdown
 			   $('#productSelect').change(function() {
