@@ -41,7 +41,7 @@
 							<option selected>Select</option>
 							<option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 							        th:attr="data-price=${product.price}, 
-											data-supplierName=${product.supplier?.name ?: 'N/A'},
+											data-supplierName=${product.parties	?.name ?: 'N/A'},
 											data-brandName=${product.brand?.name ?: 'N/A'},
 											data-categoryName=${product.category?.categoryName ?: 'N/A'},
 											data-unitName=${product.unit?.unitName ?: 'N/A'},
@@ -52,7 +52,7 @@
 					</div>
 					<div class="col-md-4 mt-4">
 						<label>Supplier Name </label>
-						<input id="supplierName" type="text" readonly class="form-control" name="suppilerName" placeholder="Enter product supplier">
+						<input id="supplierName" type="text" readonly class="form-control" name="parties" placeholder="Enter product supplier">
 						
 					</div>
 					<div class="col-md-4 mt-4">

@@ -49,6 +49,11 @@
         .search-icon {
             cursor: pointer;
         }
+        @media print {
+			#searchInput {
+				display: none;
+			}
+		}
     </style>
     <div class="container-fluid">
         <div th:if="${session.message}">
@@ -63,7 +68,7 @@
         </div>
         <div class="row" style="background-color: rgb(84,78,130); color: #fff;">
             <div class="col-md-12 mt-1">
-                <h1 class="text-center">Sales Tax Report</h1>
+                <h1 class="text-center"><b>SALES TAX REPORT</b></h1>
             </div>
         </div>
         <div style="background-color: #f5f0f0;">

@@ -3,6 +3,7 @@ package com.billing.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -50,6 +51,17 @@ public class Parties {
 	
 	private String status;
 	
+	@OneToMany(mappedBy = "parties", cascade = CascadeType.ALL)
+	private List<Product> products = new ArrayList<Product>();
+	
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 	public String getStatus() {
 		return status;
 	}

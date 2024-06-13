@@ -38,6 +38,9 @@
 			.invoice-value {
 				margin-left: 10px;
 			}
+			
+			
+			
 		</style>
 
 		<div class="contaier-fluid">
@@ -72,10 +75,7 @@
 			<!-- //style="overflow-x: auto;" -->
 			<div class="col-md-12 mt-1">
 
-				<!--Get Parties data from database-->
-
-
-
+			
 				<!--Purchase Bill Number Code-->
 				<div class="row d-flex justify-content-end">
 					<div class="col-md-3 mt-3 input-group ">
@@ -88,6 +88,8 @@
 							class="form-control" readonly value="PB-">
 					</div>
 				</div>
+				
+				<!--Get Parties data from database-->
 				<div class="row ml-1 mr-1">
 					<div class="input-group">
 						<div class="col-md-4 mt-3 input-group">
@@ -100,13 +102,10 @@
 								<option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
 									th:attr="data-mobile=${party.mobile}, data-email=${party.email}"></option>
 							</select>
-
-
 							<button type="button" class="btn btn-info ml-2" data-toggle="modal"
 								data-target="#exampleModal">
 								<i class="fa-solid fa-plus"></i>
 							</button>
-
 						</div>
 
 						<div class="col-md-3 mt-3 input-group">

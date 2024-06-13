@@ -31,8 +31,8 @@ public class Supplier{
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
-	private List<Product> products = new ArrayList<Product>();
+//	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
+//	private List<Product> products = new ArrayList<Product>();
 	
 	private String status;
 	
@@ -86,13 +86,13 @@ public class Supplier{
 		this.user = user;
 	}
 
-	public List<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
+//	public List<Product> getProducts() {
+//		return products;
+//	}
+//
+//	public void setProducts(List<Product> products) {
+//		this.products = products;
+//	}
 
 	public String getStatus() {
 		return status;
@@ -113,9 +113,10 @@ public class Supplier{
 	@Override
 	public String toString() {
 		return "Supplier [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", address="
-				+ address + ", user=" + user + ", products=" + products + ", status=" + status + ", addedDate="
-				+ addedDate + "]";
+				+ address + ", user=" + user + ", status=" + status + ", addedDate=" + addedDate + "]";
 	}
+
+	
 	
 	
 	
