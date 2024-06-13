@@ -141,6 +141,7 @@ public class PartiesController {
 			partiesRepo.save(parties);
 			userRepo.save(user);
 			
+			session.setAttribute("message", "Parties Added Successfully");
 			String referer = request.getHeader("referer");
 			java.net.URI uri = new java.net.URI(referer);
 			String path = uri.getPath();
@@ -178,7 +179,7 @@ public class PartiesController {
 
 			Parties partie = partiesRepo.findById(id).get();
 			model.addAttribute("partie", partie);
-
+			
 			return "admin/update_parties";
 		}
 		
@@ -211,7 +212,7 @@ public class PartiesController {
 			else partie.setOpeningBalance(parties.getOpeningBalance());
 
 			partiesRepo.save(partie);
-
+			session.setAttribute("message", "Parties Updated Successfully");
 			return "redirect:/a2zbilling/admin/parties/list";
 		}
 		

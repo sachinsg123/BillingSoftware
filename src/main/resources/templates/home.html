@@ -32,22 +32,40 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                     
                     <main id="js-page-content" role="main" class="page-content">
                         <ol class="breadcrumb page-breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin Dashboard</a></li>
                             <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
                         </ol>
-                        <div class="subheader">
-                            <h1 class="subheader-title">
-                                <i class='subheader-icon fal fa-chart-area'></i>
-                                 Dashboard
-                            </h1>
-                        </div>
+                        
 						<div th:if="${not #lists.isEmpty(minStockProducts)}">
 						    <script th:inline="javascript">
 						        /*<![CDATA[*/
 						        window.onload = function() {
 						            var productNames = /*[[${productNamesString}]]*/ '';
-						            var alertMessage = "The following products have reached the minimum stock quantity: " + productNames;
-						            alert(alertMessage);
+									var alertMessage = "The following products have reached the minimum stock quantity :- <br>" + productNames.replace(/,/g, "<br>");
+						            showCustomAlert(alertMessage);
+						        }
+						
+						        function showCustomAlert(message) {
+						            var modalHtml = '<div class="modal fade" tabindex="-1" role="dialog">' +
+						                                '<div class="modal-dialog" role="document">' +
+						                                    '<div style="background-color:#f5f0f0;" class="modal-content">' +
+						                                        '<div style="background-color:rgb(84,78,131)" class="modal-header">' +
+						                                            '<h1 style="color:white" class="modal-title">Minimum Stock Alert</h1>' +
+						                                            '<button style="color:red" type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+						                                                '<span aria-hidden="true">&times;</span>' +
+						                                            '</button>' +
+						                                        '</div>' +
+						                                        '<div class="modal-body">' +
+						                                            '<p>' + message + '</p>' +
+						                                        '</div>' +
+						                                        '<div class="modal-footer">' +
+						                                            '<button type="button" class="btn btn-success" data-dismiss="modal">Close</button>' +
+						                                        '</div>' +
+						                                    '</div>' +
+						                                '</div>' +
+						                            '</div>';
+						
+						            var modal = $(modalHtml);
+						            modal.modal('show');
 						        }
 						        /*]]>*/
 						    </script>

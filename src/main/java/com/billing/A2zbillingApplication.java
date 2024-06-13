@@ -23,7 +23,6 @@ public class A2zbillingApplication implements CommandLineRunner {
 		String encodedPass = passwordEncoder.encode(password);
 
 		System.out.println(encodedPass);
-
 	}
 
 }
