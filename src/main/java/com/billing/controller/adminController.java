@@ -270,9 +270,6 @@ public class adminController{
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(auth.getPrincipal());
-		System.out.println(auth.getName());
-
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
 
@@ -311,7 +308,7 @@ public class adminController{
 		  if(stock != null && Integer.parseInt(stock.getQuantity()) <=
 		  Integer.parseInt(stock.getMinQuantity())) { minStockProducts.add(product); }
 		  }
-		 
+		
 		StringBuilder productNamesBuilder = new StringBuilder();
 		boolean isFirst = true;
 		for (Product product : minStockProducts) {
@@ -347,7 +344,8 @@ public class adminController{
 		long customercount = customerService.getCustomerCount();
 		model.addAttribute("customercount", customercount);
 
-		long suppliercount = supplierService.getSupplierCount();
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+		long suppliercount = parties.size();
 		model.addAttribute("suppliercount", suppliercount);
 
 		return "home";
@@ -1329,7 +1327,6 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/sales_update";
-
 	}
 
 	@GetMapping("/sales/delete/{id}")
