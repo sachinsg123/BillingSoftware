@@ -39,8 +39,6 @@
 				margin-left: 10px;
 			}
 			
-			
-			
 		</style>
 
 		<div class="contaier-fluid">
@@ -53,9 +51,6 @@
 
 							window.location.href = '/a2zbilling/admin/clearSessionAttribute';
 						}, 500);
-
-
-
 					</script>
 				</div>
 			</div>
@@ -64,7 +59,7 @@
 
 	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
 		<div class="col-md-12 ">
-			<h1 class="text-center pt-1">Purchase Bill</h1>
+			<h1 class="text-center pt-1"><b>PURCHASE BILL</b></h1>
 		</div>
 	</div>
 
@@ -84,16 +79,17 @@
 								style="background-color: #715499; color: white ; border: 1px solid #715499 ;">Bill
 								No</span>
 						</div>
-						<input name="billNo" id="purchaseorder" style="border: 1px solid #715499 ;" type="text"
+						<input th:value="${newPurchaseBillNo}" name="billNo" id="purchaseorder" style="border: 1px solid #715499 ;" type="text"
 							class="form-control" readonly value="PB-">
 					</div>
 				</div>
+				
 				
 				<!--Get Parties data from database-->
 				<div class="row ml-1 mr-1">
 					<div class="input-group">
 						<div class="col-md-4 mt-3 input-group">
-							<label>Party Name :- </label>
+							<label>Supplier Name :- </label>
 							<select id="partiesSelect" required class="form-select form-control"
 								aria-label="Default select example" name="parties">
 								<!--addPartiesProduct-->
@@ -274,7 +270,7 @@
 			</div>
 		</form>
 	</div>
-	
+	</div>
 	<!--Add Parties Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
 		aria-hidden="true">
@@ -282,7 +278,7 @@
 			<div class="modal-content">
 
 				<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
-					<h1 class="modal-title" id="exampleModalLabel">Add Party</h1>
+					<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
 				</div>
 
 				<div class="modal-body" style="background-color: #f5f0f0;">
@@ -290,7 +286,7 @@
 						class="form-group">
 						<div class="row pb-3">
 							<div class="col-md-5 mt-4">
-								<label><b>Party Name*</b></label>
+								<label><b>Supplier Name*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input type="text" required class="form-control" name="name"
@@ -298,7 +294,7 @@
 							</div>
 
 							<div class="col-md-5 mt-4">
-								<label><b>Party Mobile*</b></label>
+								<label><b>Supplier Mobile*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control"
@@ -321,7 +317,7 @@
 							</div>
 
 							<div class="col-md-5 mt-4">
-								<label><b>Party email*</b></label>
+								<label><b>Supplier email*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input size="50" type="email" required class="form-control" name="email"

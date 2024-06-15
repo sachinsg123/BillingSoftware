@@ -28,17 +28,16 @@
 				<h1 class="text-center"><b>ADD PRODUCT</b></h1>
 			</div>
 		</div>
-
-
+		
 		<form th:action="@{/a2zbilling/admin/product/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
 			<div class="row pb-3" style="background-color: #f5f0f0;">
 
-				<!--Get Parties data from database-->
+				<!--Get Parties data from database  Note ->Here Supplier means Party -->
 				<div class="row ml-1 mr-1">
 					<div class="input-group">
 						<div class="col-md-4 mt-6 input-group">
-							<label>Party Name :- </label>
+							<label>Supplier Name :- </label>
 							<select id="partiesSelect" required class="form-select form-control"
 								aria-label="Default select example" name="parties">
 								<!--addPartiesProduct-->
@@ -91,20 +90,8 @@
 						</div>
 					</div>	
 				</div>
-
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label>Product Name</label>
-						<input type="text" required class="form-control" name="name" placeholder="Enter product name">
-					</div>
-				</div>
-				<div class="col-md-4 mt-4">
-					<div class="form-group">
-						<label>Product Price</label>
-						<input type="text" required class="form-control" name="price" placeholder="Enter product price">
-					</div>
-				</div>
-				<div class="col-md-4 mt-2">	
+				
+				<div class="col-md-4 mt-4">	
 					<label>Select Category</label>
 					<div class="form-group">
 						<div class="input-group">
@@ -123,6 +110,19 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="col-md-4 mt-4">
+					<div class="form-group">
+						<label>Product Name</label>
+						<input type="text" required class="form-control" name="name" placeholder="Enter product name">
+					</div>
+				</div>
+				<div class="col-md-4 mt-3">
+					<div class="form-group">
+						<label>Product Price</label>
+						<input type="text" required class="form-control" name="price" placeholder="Enter product price">
+					</div>
+				</div>
 				
 				<!--<div class="col-md-4 mt-2">
 					<div class="form-group">
@@ -131,7 +131,7 @@
 					</div>
 				</div>-->
 				
-				<div class="col-md-4 mt-2">
+				<div class="col-md-4 mt-3">
 					<div class="form-group">
 						<label>Product Size</label>
 						<input type="text" class="form-control" name="productSize" placeholder="Enter product size">
@@ -139,7 +139,7 @@
 				</div>
 				
 				
-				<div class="col-md-4 mt-2">
+				<div class="col-md-4 mt-3">
 					<div class="form-group">
 						<label>About Product</label>
 						<input type="text" class="form-control" name="about" placeholder="Enter about product">
@@ -151,7 +151,7 @@
 						<input type="date" class="form-control" name="addedDate">
 					</div>
 				</div>-->
-				<div class="col-md-4 mt-2">
+				<div class="col-md-4 mt-3">
 					<label>Color</label>
 					<div class="form-group">
 						<select class="form-select form-control" aria-label="Default select example"
@@ -240,8 +240,9 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 
+					<!--Here Supplier means Party-->
 				<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
-					<h1 class="modal-title" id="exampleModalLabel"><b>ADD PARTY</b></h1>
+					<h1 class="modal-title" id="exampleModalLabel"><b>ADD SUPPLIER</b></h1>
 				</div>
 
 				<div class="modal-body" style="background-color: #f5f0f0;">
@@ -249,7 +250,7 @@
 						class="form-group">
 						<div class="row pb-3">
 							<div class="col-md-5 mt-4">
-								<label><b>Party Name*</b></label>
+								<label><b>Supplier Name*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input type="text" required class="form-control" name="name"
@@ -257,7 +258,7 @@
 							</div>
 
 							<div class="col-md-5 mt-4">
-								<label><b>Party Mobile*</b></label>
+								<label><b>Supplier Mobile*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control"
@@ -280,7 +281,7 @@
 							</div>
 
 							<div class="col-md-5 mt-4">
-								<label><b>Party email*</b></label>
+								<label><b>Supplier email*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
 								<input size="50" type="email" required class="form-control" name="email"

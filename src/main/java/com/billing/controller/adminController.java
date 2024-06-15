@@ -706,7 +706,7 @@ public class adminController{
 	}
 
 	@PostMapping("/category/add")
-	public String addingCategory(@ModelAttribute Category category, HttpSession session) {
+	public String addingCategory(@ModelAttribute Category category, HttpSession session, HttpServletRequest request) throws URISyntaxException {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -728,7 +728,14 @@ public class adminController{
 			session.setAttribute("message", "Category already exists!");
 		}
 
-		return "redirect:/a2zbilling/admin/product/add";
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+		String path = uri.getPath();
+		String query = uri.getQuery();
+		String endpoint = path + (query != null ? "?" + query : "");
+
+		return "redirect:" + endpoint;
+		//return "redirect:/a2zbilling/admin/product/add";
 	}
 
 	@GetMapping("/category/list")
@@ -896,6 +903,22 @@ public class adminController{
 		// To get Parties Name data from db
 		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		model.addAttribute("parties", parties);
+		
+		//Add Bill No.
+		String purchaseBillString = partiesTransectionRepo.maxPurchaseBillNo(userId);
+		if(!purchaseBillString.isEmpty() && purchaseBillString != null) 
+		{
+			String newPurchaseBillNo = purchaseBillString.substring(0, 5);
+			int no =Integer.parseInt(purchaseBillString.substring(5, purchaseBillString.length()));
+			no += 1;
+			newPurchaseBillNo += no;
+			model.addAttribute("newPurchaseBillNo", newPurchaseBillNo);
+		}
+		else {
+			String newPurchaseBillNo = "PB - 1";
+			model.addAttribute("newPurchaseBillNo", newPurchaseBillNo);
+		}
+		
 		
 		String username = auth.getName();
 		String email = user.getEmail();

@@ -87,14 +87,12 @@
     </div>
     <div style="background-color: #f5f0f0;">
         <div class="row pb-3">
-            <div class="col-md-6">
-                <form th:action="@{/search}" method="get">
-                    <div class="col-md-6">
-                        <!-- Search Bar -->
-                        <input id="searchInput" type="text" style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);" name="query" placeholder=" Search"> 
-                    </div>
-                </form>
-            </div>
+           <div class="col-md-6">
+				<!-- Search Bar -->
+				<input id="searchInput" type="text"
+					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
+					name="query" placeholder=" Search">
+			</div>
             <div class="col-md-6 mt-3" style="text-align: right;">
                 <a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Purchase</a>
             </div>
@@ -130,12 +128,6 @@
                                 </ul>
                             </td>
                             <td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
-                            <!--<td>
-                                <select class="form-control">
-                                    <option value="including_tax">Including Tax</option>
-                                    <option value="excluding_tax">Excluding Tax</option>
-                                </select>
-                            </td>-->
                             <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
