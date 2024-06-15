@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
 <style>
-	/* Define a custom class for the button */
 	.styled-button {
 		width: 150px;
-		/* Set the desired width */
-		/* Add other styles here */
 	}
 </style>
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 	<div class="contaier-fluid">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
 				<script th:inline="javascript">
-					setTimeout(function () {
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+					setTimeout(function(){
+						window.location.href ='/a2zbilling/admin/clearSessionAttribute';
 					}, 500);
 				</script>
 			</div>
@@ -28,8 +23,6 @@
 				<h1 class="text-center">Add Product</h1>
 			</div>
 		</div>
-
-
 		<form th:action="@{/a2zbilling/admin/product/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
 			<div class="row pb-3" style="background-color: #f5f0f0;">
@@ -40,13 +33,10 @@
 						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
 							name="supplier">
 							<option selected>Choose</option>
-							<!-- Dynamically populate options with Supplier data -->
 							<option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
 								th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
 						</select>
-
-
-						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
+							<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
 							<i class="fa-solid fa-plus"></i>
 						</button>
 

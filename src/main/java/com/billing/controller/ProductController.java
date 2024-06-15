@@ -98,6 +98,12 @@ public class ProductController {
 	@Autowired
 	private BrandRepository brandRepo;
 	
+	@ModelAttribute("product")
+	public Product product(){
+		
+		return new Product();
+	}
+	
 	
 	@GetMapping("/product/add")
 	public String addProductByAdmin(Model model) {
