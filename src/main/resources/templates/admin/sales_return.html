@@ -1,4 +1,4 @@
-<!DOCTYPE html> <!-- Created By Mahesh -->
+<!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 	<head>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -52,8 +52,6 @@
 
 		}
 	</script>
-	<!-- BEGIN Page Wrapper -->
-	
 	<div th:if="${session.message}">
 		<div class="alert alert-primary" role="alert">
 			<p th:text="${session.message}"></p>
@@ -67,7 +65,7 @@
 <div class="contaier-fluid pb-2" style="background-color: #f5f0f0;">
 	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
         <div class="col-md-12">
-            <h1 class="text-center mt-2"><b>Sales Return</b></h1>
+            <h1 class="text-center mt-2"><b>SALSE RETURN</b></h1>
         </div>
     </div>
 	<form th:action="@{/a2zbilling/admin/sales/return}" method="post" th:object="${sale}"
@@ -101,14 +99,14 @@
 			        	<input id="mobile" readonly type="text" class="form-control" th:field="*{customer.mobile}">
 					</div>
 			    </div>
-				<div class="col-md-4 mt-3 input-group ml-auto">
+				<div class="col-md-4 mt-1 input-group ml-auto">
 					<div class="col-md-6">
-	               		<label>Sale Return No.:- </label>
+		               <label>Sale Bill No. :- </label>
 					</div>
 					<div class="col-md-6">
-				   		<input type="text" class="form-control" id="saleReturnNo" readonly>
-					</div>
-				</div>
+					   <input type="text" readonly class="form-control" id="invoiceNo" name="saleBillNo" th:field="*{saleBillNo}">
+				 	</div>
+	           </div>
 			</div>
 			<div class="row">
 			    <div class="col-md-4 mt-1 input-group">
@@ -119,15 +117,14 @@
 			        	<input id="email" readonly type="email" class="form-control" th:field="*{customer.email}">
 					</div>
 			    </div>
-				
 				<div class="col-md-4 mt-1 input-group ml-auto">
 					<div class="col-md-6">
-		               <label>Sale Bill No. :- </label>
+						<label>Sale Bill Date:- </label>
 					</div>
 					<div class="col-md-6">
-					   <input type="text" class="form-control" id="invoiceNo" name="saleBillNo" th:field="*{saleBillNo}">
-				 	</div>
-	           </div>
+	   			   		<input type="date" class="form-control" id="sellDate" th:field="*{date}">
+					</div>
+   	           </div>
 			</div>
 			
 			<div class="row">
@@ -139,30 +136,12 @@
 			        	<textarea id="address" readonly type="text" class="form-control" th:field="*{customer.address}"></textarea>
 					</div>
 				</div>
-			   <div class="col-md-4 mt-1 input-group ml-auto">
-					<div class="col-md-6">
-						<label>Sale Bill Date:- </label>
-					</div>
-					<div class="col-md-6">
-	   			   		<input type="date" class="form-control" id="sellDate" th:field="*{date}">
-					</div>
-   	           </div>
-			</div>
-			<div class="row">
-   				<div class="col-md-4 mt-1 input-group ml-auto">
-					<div class="col-md-6">
-   						<label>Date:- </label>
-					</div>
-					<div class="col-md-6">
-   			   			<input name="date" type="text" class="form-control" id="currentDateInput" readonly>
-					</div>
-   	           </div>	
-			</div>		 
+			</div>	 
 
 		<div class="row mt-4 ml-1 mr-1" >
 			<div class="col-md-12 table-responsive" style="max-height: 400px; overflow-y: auto;">
-				<table class="table table-bordered" style="background-color:#86A6AE;">
-				    <thead style="color: white;">
+				<table class="table table-bordered" style="background-color:white; color: black;">
+				    <thead style="background-color: #F3EBD6;">
 				        <tr>
 				            <th scope="col">Barcode</th>
 				            <th scope="col">Product Name</th>
@@ -194,8 +173,8 @@
 			                        </option>
 			                    </select>
 			                </td>
-				            <td><input id="cgst" style="width: 70px;" type="text" class="form-control" readonly></td>
-				            <td><input id="sgst" style="width: 70px;" type="text" class="form-control" readonly></td>
+				            <td><input id="cgst" style="width: 70px;" th:value="${product?.gst?.cgstRate ?: '0'}" type="text" class="form-control" readonly></td>
+				            <td><input id="sgst" style="width: 70px;" th:value="${product?.gst?.sgstRate ?: '0'}" type="text" class="form-control" readonly></td>
 				            <td><input id="size" style="width: 70px;" type="text" th:value="${product?.size?.sizeValue ?: '0'}" class="form-control" readonly></td>
 				            <td><input id="AQty" style="width: 70px;" type="number" th:value="${product?.stock?.quantity ?: '0'}" class="form-control" readonly></td>
 				            <td><input id="Qty" style="width: 70px;" type="number" name="quantity" th:value="${#strings.arraySplit(sale?.quantity, ',')[iterStat.index]}" class="form-control"  oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
@@ -214,8 +193,7 @@
 				<button type="button" class="btn btn-success" id="add" style="color: white;"><b><i class="fa-solid fa-plus"></i> Add Row</b></button>
 			</div>
 		</div>
-		<!--                       -->
-		<div class="invoice-container mt-3 ml-3 mr-3">
+		<div class="invoice-container mt-3 ml-1 mr-1">
 		    <div class="container">
 		        <div class="row d-flex justify-content-between">
 		            <div>
@@ -305,7 +283,6 @@
 		
 		$('#totalAmountField, #discountAmountField').on('input', updateNetPayment);
 		
-	   // Call updateDues whenever the paid amount changes
 	   $('#paidAmountField').on('input', updateDues);
     });
 	
@@ -417,15 +394,12 @@
             var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
             var duesAmount = totalAmount - paidAmount;
 
-            // Exclude discounted amount from dues if there are dues
             if (duesAmount > 0) {
                 duesAmount -= discountAmount;
                 if (duesAmount < 0) {
-                    duesAmount = 0; // Ensure dues amount doesn't go negative
+                    duesAmount = 0;
                 }
             }
-
-            // Update the dues amount display
             document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
         }
 			function updatePercentageAmount() {
@@ -598,7 +572,20 @@
 			            var quantity = selectedOption.data('quantity');
 						var tax = selectedOption.data('tax');
 			            var size = selectedOption.data('size');
-										   
+						var Cgst = selectedOption.data('cgst');
+						var Sgst = selectedOption.data('sgst');
+						
+						if(Cgst == null)
+		   				   {
+		   					Cgst = 0;
+	      				   }
+	   				   if(Sgst == null)
+	      				   {
+	      					Sgst = 0;
+	         			   }
+						   
+						$(`#cgst${index}`).val(Cgst);
+						$(`#sgst${index}`).val(Sgst);
 			            $(`#price${index}`).val(price);
 			            $(`#AQty${index}`).val(quantity);
 						$(`#taxinpercentage${index}`).val(tax);

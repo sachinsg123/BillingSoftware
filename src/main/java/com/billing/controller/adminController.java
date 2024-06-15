@@ -1219,6 +1219,20 @@ public class adminController{
 		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
 		
+		String salesBillString = salesRepo.maxSalesBillNo(userId);
+		if(!salesBillString.isEmpty() && salesBillString != null) 
+		{
+			String newSaleBillNo = salesBillString.substring(0, 5);
+			int no =Integer.parseInt(salesBillString.substring(5, salesBillString.length()));
+			no += 1;
+			newSaleBillNo += no;
+			model.addAttribute("newSaleBillNo", newSaleBillNo);
+		}
+		else {
+			String newSaleBillNo = "SB - 1";
+			model.addAttribute("newSaleBillNo", newSaleBillNo);
+		}
+		
 		List<Charges> charges = chargesRepo.findByActiveCharges(userId);
 		model.addAttribute("charges", charges);
 		
@@ -1357,8 +1371,10 @@ public class adminController{
 		model.addAttribute("customers", customers);
 
 		List<Product> products = productRepo.showAllActiveProduct(userId);
-
 		model.addAttribute("products",products);
+		
+		List<Charges> charges = chargesRepo.findByActiveCharges(userId);
+		model.addAttribute("charges", charges);
 		
 		Sales sale = salesRepo.findById(id).get();
 		model.addAttribute("sale", sale);

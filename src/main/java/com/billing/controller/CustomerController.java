@@ -4,7 +4,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,24 +18,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.billing.model.Company;
 import com.billing.model.Customer;
 import com.billing.model.User;
-import com.billing.repositories.BrandRepository;
-import com.billing.repositories.CategoryRepository;
-import com.billing.repositories.ColorRepository;
 import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
-import com.billing.repositories.GSTRepository;
-import com.billing.repositories.ProductRepository;
-import com.billing.repositories.SizeRepository;
-import com.billing.repositories.SupplierRepository;
-import com.billing.repositories.UnitRepository;
 import com.billing.repositories.UserRepository;
 import com.billing.services.CustomerServiceImpl;
-import com.billing.services.ProductServiceImpl;
-import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,31 +35,10 @@ import jakarta.servlet.http.HttpSession;
 public class CustomerController {
 
 	@Autowired
-	private ProductRepository productRepo;
-
-	@Autowired
-	private CategoryRepository categoryRepo;
-
-	@Autowired
 	private CustomerRepository customerRepo;
 
 	@Autowired
-	private ColorRepository colorRepo;
-
-	@Autowired
-	private SizeRepository sizeRepo;
-
-	@Autowired
-	private ProductServiceImpl productService;
-
-	@Autowired
 	private CustomerServiceImpl customerService;
-
-	@Autowired
-	private SupplierServiceImpl supplierService;
-
-	@Autowired
-	private SupplierRepository supplierRepo;
 
 	@Autowired
 	private UserRepository userRepo;
@@ -79,20 +46,8 @@ public class CustomerController {
 	@Autowired
 	private CompanyRepository companyRepo;
 
-	@Autowired
-	private UnitRepository unitRepo;
-
-	@Autowired
-	private GSTRepository gstRepo;
-
-	@Autowired
-	private BrandRepository brandRepo;
-
-	
-	
 	@GetMapping("/customer/add")
 	public String customerAddForm(Model model) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		String username = auth.getName();
@@ -104,13 +59,11 @@ public class CustomerController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		// Code to Render admin on our page
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-	    {
-	    	String image = user.getImageUrl();
-	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-	    }
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 
 		model.addAttribute("imagePath", imgpath);
 
@@ -119,12 +72,10 @@ public class CustomerController {
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "/admin/add_customer_form";
-
 	}
 
 	@PostMapping("/customer/add")
 	public String addingProcessCustomer(@ModelAttribute Customer customer, Model model, HttpSession session, HttpServletRequest request) throws URISyntaxException {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user1 = userRepo.findByUsername(auth.getName());
 
@@ -134,20 +85,15 @@ public class CustomerController {
 
 		List<User> userList = new ArrayList<User>();
 		userList.add(addedByUser);
-
 		customer.setUser(userList);
-
 		customer.setStatus("Active");
-
-		Customer customer2 = customerService.addCustomer(customer);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 
-		if(user1.getImageUrl() != null && !user1.getImageUrl().isEmpty())
-	    {
-	    	String image = user1.getImageUrl();
-	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-	    }
+		if (user1.getImageUrl() != null && !user1.getImageUrl().isEmpty()) {
+			String image = user1.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		session.setAttribute("message", "Customer Added Successfully");
@@ -159,80 +105,63 @@ public class CustomerController {
 		String endpoint = path + (query != null ? "?" + query : "");
 
 		return "redirect:" + endpoint;
-
 	}
 
-	// Get all customers
 	@GetMapping("/customer/list")
-	public String getAllCustomers(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
-
+	public String getAllCustomers(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-		int userId =user.getId();
-//		List<Customer> customers = customerService.getAllCustomers();
-		
-		//Pagination Added
-		Pageable pageable =  PageRequest.of(page,size);
+		int userId = user.getId();
+
+		Pageable pageable = PageRequest.of(page, size);
 		Page<Customer> customers = customerRepo.showAllCustomerBYActive(userId, pageable);
 		model.addAttribute("customers", customers);
 		model.addAttribute("currentPage", page);
 
-		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		
+
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-
 		String companyName = company.getName();
-
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-	    {
-	    	String image = user.getImageUrl();
-	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-	    }
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-		
 		model.addAttribute("imagePath", imgpath);
 
 		return "admin/customer_list";
-
 	}
 
-	// update customer form
 	@GetMapping("/customer/update/{id}")
 	public String updateCustomerDetails(@PathVariable("id") Integer customerId, Model model) {
-
-		Customer customerGet = customerService.getCustomerById(customerId);
-		model.addAttribute("customer", customerGet);
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		
+		Customer customerGet = customerService.getCustomerById(customerId);
+		model.addAttribute("customer", customerGet);
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		
+
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-
 		String companyName = company.getName();
-
 		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-	    {
-	    	String image = user.getImageUrl();
-	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-	    }
-
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -240,12 +169,10 @@ public class CustomerController {
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "/admin/update_customer";
-
 	}
 
 	@PostMapping("/customer/update")
 	public String customerUpdateProcessing(@ModelAttribute Customer customer, Model model, HttpSession session) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 
@@ -257,26 +184,22 @@ public class CustomerController {
 		customerGet.setAddress(customer.getAddress());
 
 		if (!customer.getAddedDate().isEmpty()) {
-
 			customerGet.setAddedDate(customer.getAddedDate());
 		}
 		customerGet.setAddedDate(customerGet.getAddedDate());
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-	    {
-	    	String image = user.getImageUrl();
-	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-	    }
-
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		customerRepo.save(customerGet);
 
 		return "redirect:/a2zbilling/admin/customer/list";
-
 	}
-	// delete customer
+
 	@GetMapping("/customer/delete/{id}")
 	public String deleteCustomerById(@PathVariable("id") int id) {
 
@@ -287,5 +210,5 @@ public class CustomerController {
 
 		return "redirect:/a2zbilling/admin/customer/list";
 	}
-	
+
 }
