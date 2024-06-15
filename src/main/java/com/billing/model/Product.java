@@ -43,9 +43,6 @@ public class Product{
 	
 	private String imageUrl;
 	
-	@ManyToMany(mappedBy ="product")
-	private List<Charges> charges = new ArrayList<Charges>();
-	
 	@ManyToMany
 	@JoinTable(name="product_customer",
 	joinColumns = @JoinColumn(name="product_id")
@@ -67,12 +64,26 @@ public class Product{
     
     private String about;
     
+//    @ManyToOne
+//    @JoinColumn(name="supplier_id")
+//    private Supplier supplier;
+    
     @ManyToOne
-    @JoinColumn(name="supplier_id")
-    private Supplier supplier;
+    @JoinColumn(name="parties_id")
+    private Parties parties;
 	
-    @ManyToOne
+    public Parties getParties() {
+		return parties;
+	}
+
+	public void setParties(Parties parties) {
+		this.parties = parties;
+	}
+
+	@ManyToOne
     @JoinColumn(name="unit_id")
+    
+    
     private Unit unit;
     
     @ManyToOne
@@ -99,14 +110,6 @@ public class Product{
 
 	public void setSales(List<Sales> sales) {
 		this.sales = sales;
-	}
-
-	public List<Charges> getCharges() {
-		return charges;
-	}
-
-	public void setCharges(List<Charges> charges) {
-		this.charges = charges;
 	}
 
 	public Unit getUnit() {
@@ -245,13 +248,13 @@ public class Product{
 		this.about = about;
 	}
 	
-	public Supplier getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(Supplier supplier) {
-		this.supplier = supplier;
-	}
+//	public Supplier getSupplier() {
+//		return supplier;
+//	}
+//
+//	public void setSupplier(Supplier supplier) {
+//		this.supplier = supplier;
+//	}
 
 	@Override
 	public String toString() {

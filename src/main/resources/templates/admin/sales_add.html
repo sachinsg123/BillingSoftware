@@ -52,7 +52,7 @@
 			})
 		}
 	</script>
-	<!-- BEGIN Page Wrapper -->
+<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
 	<div th:if="${session.message}">
 		<div class="alert alert-primary" role="alert">
 			<p th:text="${session.message}"></p>
@@ -66,7 +66,7 @@
 <div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
 	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
         <div class="col-md-12">
-            <h1 class="text-center mt-2"><b>Sales Bill</b></h1>
+            <h1 class="text-center mt-2"><b>SALES BILL</b></h1>
         </div>
     </div>
 	<form th:action="@{/a2zbilling/admin/sales/add}" method="post" enctype="multipart/form-data" class="form-group">
@@ -99,12 +99,12 @@
 		        	<input id="mobile1" readonly type="text" class="form-control">
 				</div>
 		    </div>
-			<div class="col-md-4 mt-3 input-group ml-auto">
+			<div class="col-md-4 mt-3 input-group">
 				<div class="col-md-4">
 	               <label><b>Sale Bill No. :- </b></label>
 				</div>
 				<div class="col-md-6">
-				   <input name="saleBillNo" type="text" class="form-control" id="saleBillNo">
+				   <input name="saleBillNo" readonly type="text" class="form-control" th:value="${newSaleBillNo}" id="saleBillNo">
 			 	</div>
            </div>
 		</div>
@@ -137,13 +137,10 @@
 				</div>
 			</div>
 		</div>
-
-			 
-
 		<div class="row mt-4 ml-1 mr-1" >
 			<div class="col-md-12 table-responsive" style="max-height: 400px; overflow-y: auto; max-width: 100%; overflow-x: auto;">
-				<table class="table table-bordered" style="background-color:#86A6AE;">
-					<thead style="color: black;">
+				<table class="table table-bordered"	style="background-color:white; color: black;">
+					<thead style="background-color:#F3EBD6;">
 						<tr>
 							<th scope="col">Barcode</th>
 							<th scope="col">Product Name</th>
@@ -216,8 +213,23 @@
 		                        placeholder="Discount %" oninput="updateDiscountedAmount()">
 		                </div>
 		            </div>
-		            <div>
-		                <div class="form-group">
+					<div>
+						<div class="form-group">
+		                    <label class="invoice-label">Charges : </label>
+		                    <select id="selectCharges" class="form-control" name="charges" onchange="updateChargesPrice()">
+		                        <option>Choose</option>
+								<option th:each="charge : ${charges}" 
+										th:value="${charge.id}" 
+										th:text="${charge.name}"
+										th:attr="data-chargesPrice=${charge.price}"></option>
+		                    </select>
+							<input id="chargesPrice" type="hidden" name="" placeholder="charges">
+		                </div>
+		            </div>					
+		        </div>
+		        <div class="row">
+					<div>
+		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Payment mode:</label>
 		                    <select class="form-control" name="paymentMode" required>
 		                        <option value="cash">Cash</option>
@@ -226,21 +238,19 @@
 		                    </select>
 		                </div>
 		            </div>
-		        </div>
-		        <div class="row">
-		            <div>
+		            <div style="margin-left: 165px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Paid:</label>
 		                    <input id="paidAmountField" type="number" required class="form-control" name="amountPaid" placeholder="Amount paid" oninput="updateDues()">
 		                </div>
 		            </div>
-		            <div style="margin-left: 110px;">
+		            <div style="margin-left: 87px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Dues:</label>
 		                    <input id="duesAmountField" type="number" required class="form-control" name="dueAmount" placeholder="Dues" readonly>
 		                </div>
 		            </div>
-		            <div style="margin-left: 110px;">
+		            <div style="margin-left: 66px;">
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Net Payment:</label>
 		                    <input id="netPaymentField" type="number" required class="form-control" name="netPayment" placeholder="Final Amount" readonly>
@@ -249,7 +259,6 @@
 		        </div>
 		    </div>
 		</div>
-			
 		<div class="col-md-12 mt-2">
 			<div class="text-right mr-6 mt-4">
 				<img th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
@@ -267,7 +276,6 @@
 			</div>
 		</div>
 	</form>
-	
 	<div class="col-md-12 mt-3 text-center">
 		<button type="button" class="btn btn-primary" onclick="printBill()">Print Bill</button>
 	</div>
@@ -289,14 +297,14 @@
 				        <label><b>Customer Name</b></label>
 				    </div>
 				    <div class="col-md-7 mt-4">
-				        <input type="text" required class="form-control" name="name1" placeholder="Enter your name">
+				        <input type="text" required class="form-control" name="name" placeholder="Enter your name">
 				    </div>
 					
 		  		  <div class="col-md-5 mt-4">
 						<label><b>Customer email</b></label>
 				  </div>
 		  		  <div class="col-md-7 mt-4">
-		  		  		<input size="50" type="email" required class="form-control" name="email1" placeholder="Enter your e-mail">
+		  		  		<input size="50" type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
 		  		  </div>
 				  
 				  <div class="col-md-5 mt-4">
@@ -319,8 +327,6 @@
 		  		  <div class="col-md-7 mt-4">
 						<input type="date" class="form-control" name="addedDate">
 		  		  </div>
-				  
-				  
 				  <div class="modal-footer d-flex justify-content-end">
 				      <button type="submit" class="btn btn-primary">Add</button>
 				      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -331,12 +337,19 @@
 	    </div>
 	  </div>
 	</div>
-	
 	<!-- Add Print Buttons -->
-		
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 	<script>
+		// Get the select element
+		const chargesSelect = document.getElementById('chargesSelect');
+		
+		// Add an event listener to handle changes in the select element
+		chargesSelect.addEventListener('change', function() {
+		  const selectedOptions = Array.from(chargesSelect.selectedOptions);
+		  const selectedValues = selectedOptions.map(option => option.value);
+		  console.log('Selected values:', selectedValues);
+		  // You can perform further actions with the selected values here
+		});
 		// Function to print the bill
 		function printBill() {
 			window.print();
@@ -398,23 +411,46 @@
 			    $('#totalAmountField').val(totalAmount.toFixed(2));
 			}	
 		function updateDues() {
-                var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
+                var totalAmount = parseFloat(document.getElementById('netPaymentField').value);
                 var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
                 var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
                 var duesAmount = totalAmount - paidAmount;
 
-                // Exclude discounted amount from dues if there are dues
-                if (duesAmount > 0) {
-                    duesAmount -= discountAmount;
-                    if (duesAmount < 0) {
-                        duesAmount = 0; // Ensure dues amount doesn't go negative
-                    }
-                }
-
-                // Update the dues amount display
-                document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
+                if(duesAmount < 0) {
+					document.getElementById('duesAmountField').value = 0;
+				}
+				else{
+					// Update the dues amount display
+					document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
+				}
+                
             }
-			function updatePercentageAmount() {
+		function calculatePercentageAndNetAmount1() {
+				  var totalAmount = parseFloat(totalAmountField.value);
+				  var discountAmount = parseFloat(discountAmountField.value);
+				  var chargesPrice = parseFloat(document.getElementById('chargesPrice').value);
+				
+				  // Calculate the discount percentage
+				  var discountPercentage = (discountAmount / totalAmount) * 100;
+				
+				  // Update the net amount
+				  var netAmount = totalAmount - discountAmount + chargesPrice;
+				
+				  // Update the discount percentage display
+				  document.getElementById('discountPercentField').value = discountPercentage.toFixed(2);
+				
+				  // Update the net amount display
+				  document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+				}
+		function updateChargesPrice() {
+		            var selectElement = document.getElementById("selectCharges");
+		            var selectedOption = selectElement.options[selectElement.selectedIndex];
+		            var chargePrice = selectedOption.getAttribute("data-chargesPrice");
+		            document.getElementById("chargesPrice").value = chargePrice;
+		
+		            calculatePercentageAndNetAmount1();
+		        }
+		function updatePercentageAmount() {
 			    const totalAmountField = document.getElementById('totalAmountField');
 			    const discountPercentField = document.getElementById('discountPercentField');
 			    const discountAmountField = document.getElementById('discountAmountField');
@@ -424,12 +460,11 @@
 			
 			    // Add event listener to discountAmountField
 			    discountAmountField.addEventListener('input', calculatePercentageAndNetAmount);
-			
+			}
 			    // Function to calculate percentage and net amount
-			    function calculatePercentageAndNetAmount() {
+		function calculatePercentageAndNetAmount() {
 			        var totalAmount = parseFloat(totalAmountField.value);
 			        var discountAmount = parseFloat(discountAmountField.value);
-			
 			        // Calculate the discount percentage
 			        var discountPercentage = (discountAmount / totalAmount) * 100;
 			
@@ -442,14 +477,12 @@
 			        // Update the net amount display
 			        document.getElementById('netPaymentField').value = netAmount.toFixed(2);
 			    }
-			}
 
 		function updateDiscountedAmount(){
 				const totalAmountField = document.getElementById('totalAmountField');
 		        const discountPercentField = document.getElementById('discountPercentField');
 		        const discountAmountField = document.getElementById('discountAmountField');
-		
-		        // Calculate the discounted amount initially
+			        // Calculate the discounted amount initially
 		        calculateDiscountAndNetAmount();
 		
 		        // Add event listener to discountPercentField
@@ -461,7 +494,6 @@
 		            var discountAmount = parseFloat(discountAmountField.value);
 		            var discountPercent = parseFloat(discountPercentField.value);
 	
-		
 		            var discountedAmount = discountAmount;
 		            if (!isNaN(discountPercent)) {
 		                discountedAmount = (totalAmount * discountPercent) / 100;
@@ -477,7 +509,6 @@
 		            document.getElementById('netPaymentField').value = netAmount.toFixed(2);
 		        }
             }
-		
 			$(document).ready(function(){
 			   // Event listener for changing the selected option in the dropdown
 			   $('#productSelect').change(function() {
@@ -501,6 +532,10 @@
    				   {
    					Sgst = 0;
       			   }
+				   if(tax == null)
+				    {
+				    	tax = 0;
+				     }
 				   
 			       $('#price').val(price);
 				   $('#taxinpercentage').val(tax);
@@ -527,7 +562,6 @@
 	   });
 	});
 	</script>
-	
 	<script>
 	    // Get references to the input fields
 	    const totalAmountInput = document.getElementById('total_amount');
@@ -553,9 +587,6 @@
 			else calculateTaxAmount();
 			
 		});
-		
-		
-
 	    // Add an event listener to the first input field
 	    totalAmountInput.addEventListener('input', function() {
 	        // Set the value of the second input field to the value entered in the first input field
@@ -616,11 +647,9 @@
 		                </td>
 		            </tr>
 		        `);
-		
 		        // Call the function to add the change event listener for the newly added row
 		        addChangeListener(i);
 		    });
-		
 		    // Function to add change event listener for product selection
 		    function addChangeListener(index) {
 		        $(`#productSelect${index}`).change(function() {
@@ -629,11 +658,30 @@
 		            var quantity = selectedOption.data('quantity');
 		            var size = selectedOption.data('size');
 					var tax = selectedOption.data('tax');
-									   
+					var Cgst = selectedOption.data('cgst');
+					var Sgst = selectedOption.data('sgst');
+					if(quantity == null)
+					   {
+							quantity = 0;
+					   }
+					if(tax == null)
+   					   {
+						tax = 0;
+   					   }
+					if(Cgst == null)
+	   				   {
+	   					Cgst = 0;
+      				   }
+   				   if(Sgst == null)
+      				   {
+      					Sgst = 0;
+         			   }
 		            $(`#price${index}`).val(price);
 		            $(`#AQty${index}`).val(quantity);
 		            $(`#size${index}`).val(size);
 					$(`#taxinpercentage${index}`).val(tax);
+					$(`#cgst${index}`).val(Cgst);
+					$(`#sgst${index}`).val(Sgst);
 		        });
 		    }
 			// Function to calculate tax amount and total amount
@@ -681,8 +729,6 @@
 			
 			    $('#totalAmountField').val(overallTotal.toFixed(2));
 	        }
-				
-			
 		    // Remove row when "Remove" button is clicked
 		    $(document).on('click', '.remove_row', function() {
 		        var row_id = $(this).attr('id');
@@ -695,10 +741,8 @@
 	<script>
         // Get the current date
         var currentDate = new Date();
-        
         // Format the date as desired (e.g., "2024-04-26")
         var formattedDate = currentDate.toISOString().split('T')[0];
-        
         // Set the value of the input field to the formatted date
         document.getElementById('currentDateInput').value = formattedDate;
 	 </script>
@@ -716,7 +760,6 @@
  				flex-wrap: wrap;
  				justify-content: space-between;
  			}
- 
  			.invoice-field {
  				flex-basis: calc(50% - 10px);
  				margin-bottom: 10px;
@@ -734,11 +777,6 @@
  				margin-left: 10px;
  			}
 	 		</style>
-		
 </section>
 </body>
-<!-- END Body -->
-
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
-
 </html>

@@ -6,15 +6,22 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.billing.model.Customer;
+import com.billing.model.User;
 import com.billing.repositories.CustomerRepository;
+import com.billing.repositories.UserRepository;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private CustomerRepository customerRepo;
+	
+	@Autowired
+	private UserRepository userRepo;
 
 	@Override
 	public Customer addCustomer(Customer customer) {
@@ -74,8 +81,11 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 	
 	public List<Customer> getActiveCustomers(){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		
-		List<Customer> customers = customerRepo.showAllCustomerBYActive();
+		List<Customer> customers = customerRepo.showAllCustomerBYActive(userId);
 		
 		return customers;
 		
@@ -86,12 +96,12 @@ public class CustomerServiceImpl implements CustomerService{
 	public long getCustomerCount() {
 		int count=0;
 		
-	List<Customer> customers=customerRepo.findAll();
-	for(Customer customer : customers) {
-		if(customer.getStatus().equals("Active")) {
-			count++;
-		}
-	}
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
+		List<Customer> customers = customerRepo.showAllCustomerBYActive(userId);
+		count = customers.size();
 		return count;
 	}
 

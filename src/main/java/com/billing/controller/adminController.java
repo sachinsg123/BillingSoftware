@@ -8,8 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,12 +27,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.billing.model.Brand;
 import com.billing.model.BrandDto;
 import com.billing.model.Category;
+import com.billing.model.Charges;
 import com.billing.model.Company;
 import com.billing.model.CompanyDto;
 import com.billing.model.Customer;
@@ -48,6 +51,7 @@ import com.billing.model.User;
 import com.billing.model.UserDto;
 import com.billing.repositories.BrandRepository;
 import com.billing.repositories.CategoryRepository;
+import com.billing.repositories.ChargesRepository;
 import com.billing.repositories.ColorRepository;
 import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
@@ -113,6 +117,9 @@ public class adminController{
 	@Autowired
 	private GSTRepository gstRepo;
 
+	@Autowired
+	private ChargesRepository chargesRepo;
+	
 	@Autowired
 	private BrandRepository brandRepo;
 
@@ -263,12 +270,10 @@ public class adminController{
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(auth.getPrincipal());
-		System.out.println(auth.getName());
-
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 
-		Company company = companyRepo.getCompanyByUserId(user.getId());
+		Company company = companyRepo.getCompanyByUserId(userId);
 		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 
@@ -295,7 +300,7 @@ public class adminController{
 		model.addAttribute("imagePath", imgpath1);
 		
 		//for Alert if product quantity is less then min quantity
-		List<Product> products = productRepo.findAll();
+		List<Product> products = productRepo.showAllActiveProduct(userId);
 		List<Product> minStockProducts = new ArrayList<Product>();
 		
 		  for(Product product : products) { Stock stock = product.getStock();
@@ -303,7 +308,7 @@ public class adminController{
 		  if(stock != null && Integer.parseInt(stock.getQuantity()) <=
 		  Integer.parseInt(stock.getMinQuantity())) { minStockProducts.add(product); }
 		  }
-		 
+		
 		StringBuilder productNamesBuilder = new StringBuilder();
 		boolean isFirst = true;
 		for (Product product : minStockProducts) {
@@ -317,8 +322,16 @@ public class adminController{
 
 		model.addAttribute("productNamesString", productNamesString);
 		model.addAttribute("minStockProducts", minStockProducts);
-		List<Sales> sales = salesRepo.showAllActiveSales();
+		
+		List<Sales> sales = salesRepo.showAllActiveSales(userId);
+		int salesRecordCount  = sales.size();
+		model.addAttribute("salesRecordCount", salesRecordCount);
 		model.addAttribute("sales", sales);
+		
+		List<PartiesTransaction> partiesTransections = partiesTransectionRepo.showAllActivePartiesTransection(userId);
+		int purchaseRecordCount = partiesTransections.size();
+		model.addAttribute("purchaseRecordCount", purchaseRecordCount);
+		model.addAttribute("partiesTransections", partiesTransections);
 		
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
@@ -331,7 +344,8 @@ public class adminController{
 		long customercount = customerService.getCustomerCount();
 		model.addAttribute("customercount", customercount);
 
-		long suppliercount = supplierService.getSupplierCount();
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+		long suppliercount = parties.size();
 		model.addAttribute("suppliercount", suppliercount);
 
 		return "home";
@@ -409,7 +423,8 @@ public class adminController{
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+		int id = user.getId();
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(id);
 		model.addAttribute("suppliers", suppliers);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
@@ -601,30 +616,40 @@ public class adminController{
 	}
 
 	@PostMapping("/unit/add")
-	public String addUnit(@ModelAttribute Unit unit) {
-
+	public String addUnit(@ModelAttribute Unit unit, HttpSession session) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
 		Unit unitFound = unitRepo.findByunitName(unit.getUnitName());
 
 		if (unitFound == null) {
 
 			unit.setUnitName(unit.getUnitName());
 			unit.setUnitCode(unit.getUnitCode());
+			
+			unit.setUser(user);
 			unitRepo.save(unit);
+			user.getUnits().add(unit);
+			userRepo.save(user);
+			session.setAttribute("message", "Unit Added Successfully !!");
 
 		} else {
 
 			unitFound.setUnitCode(unit.getUnitCode());
 			unitFound.setUnitName(unit.getUnitName());
 			unitRepo.save(unitFound);
-
+			session.setAttribute("message", "Unit Updated Successfully !!");
 		}
-
+		
+		
+		
 		return "redirect:/a2zbilling/admin/";
 	}
 
 	
 	@PostMapping("/gst/add")
-	public String gstAddingByAdmin(@ModelAttribute GSTRate gst) {
+	public String gstAddingByAdmin(@ModelAttribute GSTRate gst, HttpSession session) {
 
 		GSTRate gstFound = gstRepo.findBygstRate(gst.getGstRate());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -640,7 +665,7 @@ public class adminController{
 			gstFound.setUser(user);
 			System.out.println(gstFound);
 			gstRepo.save(gstFound);
-
+			session.setAttribute("message", "GST Updated Successfully !!");
 		} else {
 
 			gst.setGstRate(gst.getGstRate());
@@ -649,16 +674,39 @@ public class adminController{
 			gst.setUser(user);
 			System.out.println(gst);
 			gstRepo.save(gst);
-
+			session.setAttribute("message", "GST Added Successfully !!");
 		}
 
-		System.out.println(gstFound);
+		return "redirect:/a2zbilling/admin/";
+	}
+	
+	@PostMapping("/charges/add")
+	public String chargesAddingByAdmin(@ModelAttribute Charges charges, HttpSession session) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		Charges chargesFound = chargesRepo.findByName(charges.getName());
+		if(chargesFound == null)
+		{
+			user.getCharges().add(charges);
+			charges.setUser(user);
+			chargesRepo.save(charges);
+			userRepo.save(user);
+			session.setAttribute("message", "Charges Added Successfully !!");
+		}
+		else {
+			chargesFound.setName(charges.getName());
+			chargesFound.setPrice(charges.getPrice());
+			
+			chargesRepo.save(chargesFound);
+			session.setAttribute("message", "Charges Updated Successfully !!");
+		}
 
 		return "redirect:/a2zbilling/admin/";
 	}
 
 	@PostMapping("/category/add")
-	public String addingCategory(@ModelAttribute Category category, HttpSession session) {
+	public String addingCategory(@ModelAttribute Category category, HttpSession session, HttpServletRequest request) throws URISyntaxException {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -680,17 +728,29 @@ public class adminController{
 			session.setAttribute("message", "Category already exists!");
 		}
 
-		return "redirect:/a2zbilling/admin/product/add";
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+		String path = uri.getPath();
+		String query = uri.getQuery();
+		String endpoint = path + (query != null ? "?" + query : "");
+
+		return "redirect:" + endpoint;
+		//return "redirect:/a2zbilling/admin/product/add";
 	}
 
 	@GetMapping("/category/list")
-	public String listOfCategories(Model model) {
-
-		List<Category> categories = categoryRepo.findByActiveCategory();
-		model.addAttribute("categories", categories);
-
+	public String listOfCategories(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Category> categories = categoryRepo.findByActiveCategory(userId, pageable);
+		model.addAttribute("categories", categories);
+		model.addAttribute("currentPage", page);
+		
+
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -791,10 +851,10 @@ public class adminController{
 	}
 	//Created by Younus - to update transections
 	@GetMapping("/purchasebill/transection")
-	public String purchaseBillList(Model model) {
-
+	public String purchaseBillList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -804,8 +864,10 @@ public class adminController{
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection();
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
 		model.addAttribute("partiesTransactions", partiesTransactions);
+		model.addAttribute("currentPage", page);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
@@ -823,31 +885,46 @@ public class adminController{
 
 	@GetMapping("/purchasebill/add")
 	public String addPurchaseBill(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.findAll();
+		List<Unit> units = unitRepo.showAllActiveUnit(userId);
 		model.addAttribute("units", units);
 
 		// to render Size list on Purchase bill page
-		List<Size> sizes = sizeRepo.findAll();
+		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
 
 		// To get product Name data from db
-		List<Product> products = productRepo.findAll();
+		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
 
 		// To get Parties Name data from db
-		List<Parties> parties = partiesRepo.showAllActiveParties();
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		model.addAttribute("parties", parties);
+	
+		String purchaseBillString = partiesTransectionRepo.maxPurchaseBillNo(userId);
+		if(purchaseBillString != null && !purchaseBillString.isEmpty()) 
+		{
+			String newPurchaseBillNo = purchaseBillString.substring(0, 5);
+			int no =Integer.parseInt(purchaseBillString.substring(5, purchaseBillString.length()));
+			no += 1;
+			newPurchaseBillNo += no;
+			model.addAttribute("newPurchaseBillNo", newPurchaseBillNo);
+		}
+		else {
+			String newPurchaseBillNo = "PB - 1";
+			model.addAttribute("newPurchaseBillNo", newPurchaseBillNo);
+		}
 		
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 
-		Company company = companyRepo.getCompanyByUserId(user.getId());
+		Company company = companyRepo.getCompanyByUserId(userId);
 
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -868,6 +945,8 @@ public class adminController{
 	
 	@PostMapping("/purchasebill/add")
 		public String addPurchaseBillProcess(@ModelAttribute PartiesTransaction partiesTransaction, Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
 		
 		String quantity=partiesTransaction.getQuantity();
 		int[] quantityArray = Arrays.stream(quantity.split(","))
@@ -878,8 +957,11 @@ public class adminController{
 		int[] taxInPercentageArray = Arrays.stream(taxInPercentage.split(","))
                 .mapToInt(Integer::parseInt)
                 .toArray();
+		user.getPartiesTransactions().add(partiesTransaction);
+		partiesTransaction.setUser(user);
 		
 		partiesTransectionRepo.save(partiesTransaction);
+		userRepo.save(user);
 		partiesTransaction.setStatus("Active");
 		
 		List<Product> products=partiesTransaction.getProducts();
@@ -956,15 +1038,16 @@ public class adminController{
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+		int userId = user.getId();
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userId);
 		model.addAttribute("suppliers", suppliers);
 
 		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.findAll();
+		List<Unit> units = unitRepo.showAllActiveUnit(userId);
 		model.addAttribute("units", units);
 
 		// to render list on Purchase bill page
-		List<Size> sizes = sizeRepo.findAll();
+		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
 
 		String username = auth.getName();
@@ -1022,6 +1105,7 @@ public class adminController{
 	public String addPurchaseReturn(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1031,15 +1115,16 @@ public class adminController{
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+		int id = user.getId();
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(id);
 		model.addAttribute("suppliers", suppliers);
 
 		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.findAll();
+		List<Unit> units = unitRepo.showAllActiveUnit(userId);
 		model.addAttribute("units", units);
 
 		// to render list on Purchase bill page
-		List<Size> sizes = sizeRepo.findAll();
+		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -1098,9 +1183,11 @@ public class adminController{
 	}
 	
 	@GetMapping("/sales/list")
-	public String salesList(Model model) {
+	public String salesList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1109,9 +1196,11 @@ public class adminController{
 
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
-
-		List<Sales> sales = salesRepo.showAllActiveSales();
+		
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Sales> sales = salesRepo.showAllActiveSales(userId,pageable);
 		model.addAttribute("sales", sales);
+		model.addAttribute("currentPage", page);
 		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
@@ -1123,7 +1212,7 @@ public class adminController{
 		List<Customer> customers = customerRepo.findAll();
 		model.addAttribute("customers", customers);
 
-		List<Product> products = productRepo.findAll();
+		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
 
 		String image = company.getLogo();
@@ -1137,6 +1226,7 @@ public class adminController{
 	public String addSales(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1145,19 +1235,37 @@ public class adminController{
 
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
-
-		List<Customer> customers = customerRepo.showAllCustomerBYActive();
+		
+		List<Customer> customers = customerRepo.showAllCustomerBYActive(userId);
 		model.addAttribute("customers", customers);
 
-		List<Product> products = productRepo.findAll();
+		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
-
+		
+		String salesBillString = salesRepo.maxSalesBillNo(userId);
+		if( salesBillString != null && !salesBillString.isEmpty()) 
+		{
+			String newSaleBillNo = salesBillString.substring(0, 5);
+			int no =Integer.parseInt(salesBillString.substring(5, salesBillString.length()));
+			no += 1;
+			newSaleBillNo += no;
+			model.addAttribute("newSaleBillNo", newSaleBillNo);
+		}
+		else {
+			
+			String newSaleBillNo = "SB - 1";
+			model.addAttribute("newSaleBillNo", newSaleBillNo);
+		}
+		
+		List<Charges> charges = chargesRepo.findByActiveCharges(userId);
+		model.addAttribute("charges", charges);
+		
 		String signature = company.getSignature();
 		if (signature != null) {
 			String companySignImgPath = StringUtils.ImagePaths.companySignImageUrl + signature;
 			model.addAttribute("companySignImgPath", companySignImgPath);
 		}
-
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
@@ -1174,7 +1282,9 @@ public class adminController{
 	}
 	
 	@PostMapping("/sales/add")
-	public String salesAddingProcess(@ModelAttribute Sales sales,HttpSession session, HttpServletRequest request, Model model) throws URISyntaxException {
+	public String salesAddingProcess(@ModelAttribute Sales sales, HttpSession session, HttpServletRequest request, Model model) throws URISyntaxException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
 		
 		String quantity = sales.getQuantity();
 		int[] quantityArray = Arrays.stream(quantity.split(","))
@@ -1185,12 +1295,19 @@ public class adminController{
 		if (sales.getSignatureImage() == null) {
 			sales.setSignatureImage("");
 		}
-
+		user.getSales().add(sales);
 		Customer customer = sales.getCustomer();
 		List<Product> products = sales.getProducts();
+		sales.setUser(user);
 		
 		salesRepo.save(sales);
-
+		userRepo.save(user);
+		List<Charges> charges = sales.getCharges();
+		for (Charges charge : charges) {
+			charge.getSales().add(sales);
+			chargesRepo.save(charge);
+		}
+		
 		customer.getSales().add(sales);
 		List<Product> customerProduct = customer.getProducts();
 		int i=0;
@@ -1248,7 +1365,6 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/sales_update";
-
 	}
 
 	@GetMapping("/sales/delete/{id}")
@@ -1260,15 +1376,14 @@ public class adminController{
 
 		salesRepo.save(sales);
 		return "redirect:/a2zbilling/admin/sales/list";
-
 	}
 
-	
 	//create by Mahesh
 	@GetMapping("/sales/return/{id}")
 	public String returnsales(@PathVariable("id") int id, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		
 		String username = auth.getName();
 		String email = user.getEmail();
@@ -1276,12 +1391,14 @@ public class adminController{
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
-		List<Customer> customers = customerRepo.showAllCustomerBYActive();
+		List<Customer> customers = customerRepo.showAllCustomerBYActive(userId);
 		model.addAttribute("customers", customers);
 
-		List<Product> products = productRepo.findAll();
-
+		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products",products);
+		
+		List<Charges> charges = chargesRepo.findByActiveCharges(userId);
+		model.addAttribute("charges", charges);
 		
 		Sales sale = salesRepo.findById(id).get();
 		model.addAttribute("sale", sale);
@@ -1338,21 +1455,24 @@ public class adminController{
 		return "redirect:/a2zbilling/admin/sales/list";
 	}
 	
+	//Created by Younus
 	@GetMapping("/Item/add")
 	public String addItem(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 
-		Company company = companyRepo.getCompanyByUserId(user.getId());
+		Company company = companyRepo.getCompanyByUserId(userId);
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
 		// To get product Name data from db
-		List<Product> products = productRepo.findAll();
+		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -1370,10 +1490,12 @@ public class adminController{
 
 	}
 	
+	//Created by Younus
 	@GetMapping("/managestock")
 	public String manageStock(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 		
 		String username = auth.getName();
 		String email = user.getEmail();
@@ -1384,20 +1506,24 @@ public class adminController{
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
+		int id = user.getId();
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(id);
 		model.addAttribute("suppliers", suppliers);
 		
-		List<Product> products = productRepo.findAll();
+		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
 		
-		List<Category> categorys = categoryRepo.findAll();
+		List<Category> categorys = categoryRepo.findByActiveCategory(userId);
 		model.addAttribute("categorys", categorys);
 		
-		List<Brand> brands=brandRepo.showAllActiveBrand();
+		List<Brand> brands=brandRepo.showAllActiveBrand(userId);
 		model.addAttribute("brands", brands);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -1405,9 +1531,9 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/manage_stock";
-
 	}
 	
+	//Created by Younus
 	@PostMapping("/managestock")
 	public String manageStockProcess(@ModelAttribute Stock stock, HttpSession session, Model model, HttpServletRequest request) throws URISyntaxException {
 		
@@ -1441,16 +1567,31 @@ public class adminController{
 	
 	// Created by Younus - get Brand list
 	@GetMapping("/brand/list")
-	public String brandList(Model model) {
-
-		List<Brand> brands = brandRepo.showAllActiveBrand();
-		model.addAttribute("brands", brands);
-
+	public String brandList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		
+		//Pagination Added
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Brand> brands = brandRepo.showAllActiveBrand(userId,pageable);
+		model.addAttribute("brands", brands);
+		model.addAttribute("currentPage", page);
+		
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -1458,13 +1599,15 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/brand_list";
-
 	}
 
 	// Created by Younus - brand add Process
 	@PostMapping("brand/add")
 	public String brandaddProcess(@ModelAttribute BrandDto brandDto, Model model, HttpServletRequest request)
 	        throws URISyntaxException, IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
 	    // Create a new Brand instance
 	    Brand brand = new Brand();
 	    brand.setName(brandDto.getName());
@@ -1495,9 +1638,13 @@ public class adminController{
 	    
 	    // Set the status of the brand to "Active"
 	    brand.setStatus("Active");
+	    List<Brand> brands = user.getBrand();
+	    user.setBrand(brands);
+	    brand.setUser(user);
+	    
 	    // Save the brand to the repository
 	    brandRepo.save(brand);
-
+	    userRepo.save(user);
 	    // Get the referer URL from the request header
 	    String referer = request.getHeader("referer");
 	    // Parse the referer URL to get the path and query
@@ -1509,22 +1656,28 @@ public class adminController{
 
 	    // Redirect to the referer URL
 	    return "redirect:" + endpoint;
-	    
 	}
 	
-	//Craeted by Younus - Update Brand
 	@GetMapping("/brand/update/{id}")
 	public String updateBrandList(@PathVariable int id, Model model) {
-
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		
 		Brand brand = brandRepo.findById(id).get();
 		model.addAttribute("brand", brand);
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
-
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
@@ -1578,19 +1731,30 @@ public class adminController{
 	
 	//Created by Younus
 	@GetMapping("/purchaseReport")
-	public String purchaseReport(Model model) {
-		
-		// To get Parties Name data from db
-		List<Parties> parties = partiesRepo.showAllActiveParties();
-		model.addAttribute("parties", parties);
-		
-		List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection();
-		model.addAttribute("partiesTransactions", partiesTransactions);
-				
+	public String purchaseReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-		Company company = companyRepo.getCompanyByUserId(user.getId());
+		int userId = user.getId();
+		// To get Parties Name data from db
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+		model.addAttribute("parties", parties);
+		
+		//Pagination Added
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId,pageable);
+		model.addAttribute("partiesTransactions", partiesTransactions);
+		model.addAttribute("currentPage", page);
+				
+		Company company = companyRepo.getCompanyByUserId(userId);
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -1602,18 +1766,28 @@ public class adminController{
 	
 	//Created by Younus
 	@GetMapping("/salesReport")
-	public String salesReport(Model model) {
-		
-		// To get sale data from db
-		List<Sales> sales = salesRepo.showAllActiveSales();
-		model.addAttribute("sales", sales);
-		
-		
-				
+	public String salesReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		int userId=user.getId();
+		// To get sale data from db
+		
+		//Pagination Added
+		Pageable pageable =  PageRequest.of(page,size);
+		Page<Sales> sales = salesRepo.showAllActiveSales(userId,pageable);
+		model.addAttribute("sales", sales);
+		model.addAttribute("currentPage", page);
+	  Company company = companyRepo.getCompanyByUserId(user.getId());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		String image = company.getLogo();
@@ -1622,20 +1796,25 @@ public class adminController{
 		
 		return "admin/sales_Report";
 	}
-	
+  
 	//Created by Younus 
 		@GetMapping("/purchaseTaxReport")
-		public String purchaseTaxReport(Model model) {
-			
-			// To get Parties Name data from db
-			List<Parties> parties = partiesRepo.showAllActiveParties();
-			model.addAttribute("parties", parties);
-			
-			List<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection();
-			model.addAttribute("partiesTransactions", partiesTransactions);
-					
+		public String purchaseTaxReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userRepo.findByUsername(auth.getName());
+			
+			int userId=user.getId();
+			
+			// To get Parties Name data from db
+			List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+			model.addAttribute("parties", parties);
+			
+			//Pagination Added
+			Pageable pageable =  PageRequest.of(page,size);
+			Page<PartiesTransaction> partiesTransactions=partiesTransectionRepo.showAllActivePartiesTransection(userId,pageable);
+			model.addAttribute("partiesTransactions", partiesTransactions);
+			model.addAttribute("currentPage", page);		
+			
 			Company company = companyRepo.getCompanyByUserId(user.getId());
 			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 			model.addAttribute("imagePath", imgpath);
@@ -1646,17 +1825,22 @@ public class adminController{
 			
 			return "admin/purchase_Tax_Report";
 		}
-		
+
 		//Created by Younus salesTaxReport
 				@GetMapping("/salesTaxReport")
-				public String salesTaxReport(Model model) {
-					
-					// To get sale data from db
-					List<Sales> sales = salesRepo.showAllActiveSales();
-					model.addAttribute("sales", sales);
-							
+				public String salesTaxReport(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 					User user = userRepo.findByUsername(auth.getName());
+					
+					// To get sale data from db
+					int Userid=user.getId();
+					
+					//Pagination Added
+					Pageable pageable =  PageRequest.of(page,size);
+					Page<Sales> sales = salesRepo.showAllActiveSales(Userid,pageable);
+					model.addAttribute("sales", sales);
+					model.addAttribute("currentPage", page);
+				
 					Company company = companyRepo.getCompanyByUserId(user.getId());
 					String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 					model.addAttribute("imagePath", imgpath);

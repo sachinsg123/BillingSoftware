@@ -53,6 +53,11 @@
 		.search-icon {
 			cursor: pointer;
 		}
+		@media print {
+			#searchInput {
+				display: none;
+			}
+		}
 	</style>
 	<div class="container-fluid">
 		<div th:if="${session.message}">
@@ -67,26 +72,15 @@
 		</div>
 		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
 			<div class="col-md-12 mt-1">
-				<h1 class="text-center">Purchase Tax Report</h1>
+				<h1 class="text-center"><b>PURCHASE TAX REPORT</b></h1>
 			</div>
 		</div>
 		<div style="background-color: #f5f0f0;">
-			<div class="row pb-3">
-				<div class="col-md-6">
-					<form th:action="@{/search}" method="get">
-						<div class="col-md-6">
-							<!-- Search Bar -->
-							<input id="searchInput" type="text"
-								style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
-								name="query" placeholder=" Search">
-							<!-- Search icon -->
-
-						</div>
-					</form>
-				</div>
-				<!-- <div class="col-md-6 mt-3" style="text-align: right;">
-                <a th:href="@{'/a2zbilling/admin/purchasebill/add'}" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Purchase</a>
-            </div>-->
+			<div class="col-md-6">
+				<!-- Search Bar -->
+				<input id="searchInput" type="text"
+					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
+					name="query" placeholder=" Search">
 			</div>
 			<div class="row mt-2 pb-3">
 				<div class="col-md-12">
@@ -106,7 +100,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="party : ${partiesTransactions}"
+							<tr th:each="party : ${partiesTransactions.content}"
 								style="text-align: center; border: 1px solid black;">
 								<td th:text="${party.date}"><input type="text" class="form-control" value="" readonly>
 								</td>
@@ -140,6 +134,17 @@
 							</tr>
 						</tbody>
 					</table>
+					
+					<div>
+						<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${partiesTransactions.totalPages}"></span>
+					</div>
+					<div>
+						<a th:if="${partiesTransactions.hasPrevious()}"
+							th:href="@{/a2zbilling/admin/purchaseTaxReport(page=${currentPage - 1}, size=${partiesTransactions.size})}">Previous</a>
+						<a th:if="${partiesTransactions.hasNext()}"
+							th:href="@{/a2zbilling/admin/purchaseTaxReport(page=${currentPage + 1}, size=${partiesTransactions.size})}">Next</a>
+					</div>
+					
 				</div>
 			</div>
 		</div>

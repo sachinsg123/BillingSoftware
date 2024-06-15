@@ -3,10 +3,13 @@ package com.billing.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -48,6 +51,17 @@ public class Parties {
 	
 	private String status;
 	
+	@OneToMany(mappedBy = "parties", cascade = CascadeType.ALL)
+	private List<Product> products = new ArrayList<Product>();
+	
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -56,8 +70,20 @@ public class Parties {
 		this.status = status;
 	}
 
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
 	@OneToMany(mappedBy = "parties")
 	private List<PartiesTransaction> transactions= new ArrayList<>(); // in that list we store the all transactions of party
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public int getId() {
 		return id;

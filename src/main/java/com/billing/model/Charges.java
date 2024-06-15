@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 //created by Mahesh
@@ -24,16 +25,28 @@ public class Charges {
 
 	private String price;
 	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "charges_products", joinColumns = @JoinColumn(name = "charges_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-	private List<Product> product = new ArrayList<Product>();
-
-	public List<Product> getProduct() {
-		return product;
+	@JoinTable(name = "charges_sales", joinColumns = @JoinColumn(name = "charges_id"), inverseJoinColumns = @JoinColumn(name = "sales_id"))
+	private List<Sales> sales = new ArrayList<Sales>();
+	
+	public List<Sales> getSales() {
+		return sales;
 	}
 
-	public void setProduct(List<Product> product) {
-		this.product = product;
+	public void setSales(List<Sales> sales) {
+		this.sales = sales;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public int getId() {
@@ -62,7 +75,7 @@ public class Charges {
 
 	@Override
 	public String toString() {
-		return "Charges [id=" + id + ", name=" + name + ", price=" + price + ", product=" + product + "]";
+		return "Charges [id=" + id + ", name=" + name + ", price=" + price + "]";
 	}
 	 
 	 

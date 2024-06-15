@@ -27,6 +27,7 @@ import com.billing.model.Category;
 import com.billing.model.Color;
 import com.billing.model.Company;
 import com.billing.model.Customer;
+import com.billing.model.Parties;
 import com.billing.model.Product;
 import com.billing.model.Size;
 import com.billing.model.Stock;
@@ -38,6 +39,7 @@ import com.billing.repositories.ColorRepository;
 import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
 import com.billing.repositories.GSTRepository;
+import com.billing.repositories.PartiesRepository;
 import com.billing.repositories.ProductRepository;
 import com.billing.repositories.SizeRepository;
 import com.billing.repositories.StockRepository;
@@ -53,8 +55,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/a2zbilling/admin")
 public class ProductController {
-	
-	
+
 	@Autowired
 	private ProductRepository productRepo;
 
@@ -98,34 +99,39 @@ public class ProductController {
 	@Autowired
 	private BrandRepository brandRepo;
 	
+	@Autowired
+	private PartiesRepository partiesRepo;
+	
 	@ModelAttribute("product")
 	public Product product(){
 		
 		return new Product();
 	}
 	
-	
 	@GetMapping("/product/add")
 	public String addProductByAdmin(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
 
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
-		model.addAttribute("suppliers", suppliers);
+		int userId = user.getId();
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+		model.addAttribute("parties", parties);
 
 		List<Customer> customerList = customerRepo.findAll();
 		model.addAttribute("customers", customerList);
 
-		List<Category> categoryList = categoryRepo.findAll();
+		List<Category> categoryList = categoryRepo.findByActiveCategory(userId);
 		model.addAttribute("categories", categoryList);
 
 		List<Color> colors = colorRepo.findAll();
 		model.addAttribute("colors", colors);
-		
-		List<Brand> brands=brandRepo.showAllActiveBrand();
+
+		List<Size> sizes = sizeRepo.showAllSize(userId);
+		model.addAttribute("sizes", sizes);
+
+		List<Brand> brands = brandRepo.showAllActiveBrand(userId);
 		model.addAttribute("brands", brands);
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		User user = userRepo.findByUsername(auth.getName());
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -137,11 +143,10 @@ public class ProductController {
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 
-		if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-	    {
-	    	String image = user.getImageUrl();
-	    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-	    }
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
 		model.addAttribute("imagePath", imgpath);
 
 		model.addAttribute("companyName", companyName);
@@ -155,23 +160,23 @@ public class ProductController {
 	}
 
 	@PostMapping("/product/add")
-	public String processProductAdding(@ModelAttribute Product product, @RequestParam("productSize") String productSizeValue,
-			@RequestParam("productColor") String colorName, 
+	public String processProductAdding(@ModelAttribute Product product,
+			@RequestParam("productSize") String productSizeValue, @RequestParam("productColor") String colorName,
 			HttpSession session) throws IOException {
-		
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 
-		
 		user.getProducts().add(product);
 		userRepo.save(user);
-		
+
 		product.setUser(user);
 		/*
 		 * String supplierName=product.getSupplier().getName();
 		 * System.out.println(supplierName);
 		 */
 		// adding size
+
 		Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
 
 		if (sizeOccured != null) {
@@ -181,22 +186,21 @@ public class ProductController {
 
 			Size s = new Size();
 			s.setSizeValue(productSizeValue);
+			s.setUser(user);
 			sizeRepo.save(s);
+			user.getSizes().add(s);
+			userRepo.save(user);
 			product.setSize(s);
+			user.getSizes().add(s);
+			userRepo.save(user);
 		}
-		
-		
+
 		// adding color
 		Color colorFound = colorRepo.findByName(colorName);
-		Color noColorChoosed = colorRepo.findByName("No color choosed");
 
 		if (colorFound != null) {
 
 			product.setColor(colorFound);
-		} else if (colorName.equals("No choosed color")) {
-
-			product.setColor(noColorChoosed);
-
 		} else {
 			Color co = new Color();
 			co.setName(colorName);
@@ -214,15 +218,12 @@ public class ProductController {
 		 * Brand b = new Brand(); b.setName(brandName); b.setLogo("default.png");
 		 * brandRepo.save(b); product.setBrand(b); }
 		 */
-		
+
 		Brand brand = product.getBrand();
 		brand.getProducts().add(product);
 		brandRepo.save(brand);
 		product.setBrand(brand);
-		
-		
 
-		
 		Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
 
 		if (cat == null) {
@@ -241,164 +242,168 @@ public class ProductController {
 		return "redirect:/a2zbilling/admin/product/add";
 
 	}
+
 	// update form handler
-		@GetMapping("/product/edit/{id}")
-		public String productEditForm(@PathVariable("id") String id, Model model) {
+	@GetMapping("/product/edit/{id}")
+	public String productEditForm(@PathVariable("id") String id, Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userRepo.findByUsername(auth.getName());
-			String username = auth.getName();
-			String email = user.getEmail();
-			model.addAttribute("username", username);
-			model.addAttribute("email", email);
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
 
-			Company company = companyRepo.getCompanyByUserId(user.getId());
-			String companyName = company.getName();
-			
-			List<Brand> brands = brandRepo.showAllActiveBrand();
-			model.addAttribute("brands", brands);
-			
-			model.addAttribute("companyName", companyName);
-			Optional<Product> Founded = productRepo.findById(Integer.parseInt(id));
-			Product product = Founded.get();
-			model.addAttribute("product", product);
-			List<Category> categories = categoryRepo.findAll();
-			model.addAttribute("categories", categories);
-			List<Color> colors = colorRepo.findAll();
-			model.addAttribute("colors", colors);
+		List<Brand> brands = brandRepo.showAllActiveBrand(userId);
+		model.addAttribute("brands", brands);
 
-			List<Supplier> suppliers = supplierRepo.showAllActiveSupplier();
-			model.addAttribute("suppliers", suppliers);
-			
-			String image = company.getLogo();
-			String companyLogo = "/img/companylogo/" + image;
-			model.addAttribute("companyLogo", companyLogo);
+		model.addAttribute("companyName", companyName);
+		Optional<Product> Founded = productRepo.findById(Integer.parseInt(id));
+		Product product = Founded.get();
+		model.addAttribute("product", product);
+		List<Category> categories = categoryRepo.findByActiveCategory(userId);
+		model.addAttribute("categories", categories);
+		List<Color> colors = colorRepo.findAll();
+		model.addAttribute("colors", colors);
 
+		int userid = user.getId();
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+		model.addAttribute("parties", parties);
 
-			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-			if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-		    {
-		    	String Userimage = user.getImageUrl();
-		    	imgpath = StringUtils.ImagePaths.userImageUrl + Userimage;
-		    }
-			model.addAttribute("imagePath", imgpath);
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
 
-			return "admin/edit_product";
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String Userimage = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + Userimage;
+		}
+		model.addAttribute("imagePath", imgpath);
 
+		return "admin/edit_product";
+
+	}
+
+	@PostMapping("/product/edit")
+	public String productUpdateProcess(@ModelAttribute("product") Product product,
+			@RequestParam("productColor") String colorName, HttpSession session) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+
+		Optional<Product> found = productRepo.findById(product.getId());
+		Product productFound = found.get();
+
+		productFound.setName(product.getName());
+		productFound.setAddedDate(product.getAddedDate());
+		productFound.setPrice(product.getPrice());
+		productFound.setParties(product.getParties());
+		productFound.setAbout(product.getAbout());
+
+		String productSizeValue = product.getSize().getSizeValue(); // Assuming you have a 'getSize()' method in your
+																	// Product class
+		Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
+		if (sizeOccured != null) {
+			productFound.setSize(sizeOccured);
+			sizeOccured.setSizeValue(productSizeValue);
+			sizeRepo.save(sizeOccured);
+		} else {
+
+			Size s = new Size();
+			s.setSizeValue(productSizeValue);
+			s.setUser(user);
+			sizeRepo.save(s);
+			user.getSizes().add(s);
+
+			userRepo.save(user);
+			productFound.setSize(s);
 		}
 
-		@PostMapping("/product/edit")
-		public String productUpdateProcess(@ModelAttribute Product product)
-				throws IOException {
+		Color colorFound = colorRepo.findByName(colorName);
+		if (colorFound != null) {
+			colorFound.getProducts().add(product);
+			colorRepo.save(colorFound);
 
-			System.out.println("data getting " + product);
-			Optional<Product> found = productRepo.findById(product.getId());
-			Product productFound = found.get();
-			
-			productFound.setName(product.getName());
-			productFound.setAddedDate(product.getAddedDate());
-			productFound.setQuantity(product.getQuantity());
-			productFound.setPrice(product.getPrice());
-			productFound.setSupplier(product.getSupplier());
-			productFound.setAbout(product.getAbout());
-			
-//			Size sizeOccured = sizeRepo.findBySizeValue(productSize);
-//
-//			if (sizeOccured != null) {
-//				productFound.setSize(sizeOccured);
-//			} else {
-//
-//				Size s = new Size();
-//				s.setSizeValue(productSize);
-//				sizeRepo.save(s);
-//				productFound.setSize(s);
-//			}
+			productFound.setColor(colorFound);
+		} else {
+			Color color = new Color();
+			color.setName(colorName);
 
-			// adding color
-			
-			 Color color = product.getColor();
-			 if(color != null)
-			 {
-				 color.getProducts().add(product);
-				 colorRepo.save(color);
-				 
-				 productFound.setColor(color);
-			 }
-			 
-			 Brand brand = product.getBrand();
-			 if(brand != null)
-			 {
-				 brand.getProducts().add(product);
-				 brandRepo.save(brand);
-				 productFound.setBrand(brand);
-			 }
-
-			Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
-			if (cat != null) {
-				productFound.setCategory(cat);
-			}
-
-			productFound.setStatus("Active");
-
-			System.out.println(product);
-
-	  		productRepo.save(productFound);		
-
-			return "redirect:/a2zbilling/admin/product/list";
+			colorRepo.save(color);
+			productFound.setColor(color);
 		}
-		
-		//delete product handler 
-		@GetMapping("/product/delete/{id}")
-		public String deleteProductById(@PathVariable("id") String id){
-			 
-			Optional<Product> productGet= productRepo.findById(Integer.parseInt(id));
-			Product product = productGet.get();
-			
-			product.setStatus("InActive");
-			
-			productRepo.save(product);
-			
-			return "redirect:/a2zbilling/admin/product/list";
-			
+
+		Brand brand = product.getBrand();
+		if (brand != null) {
+			brand.getProducts().add(product);
+			brandRepo.save(brand);
+			productFound.setBrand(brand);
 		}
-		
-		// showing all products
-		@GetMapping("/product/list")
-		public String showAllProduct(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
 
-			Page<Product> productPage = productService.getAvailableProducts(page, size);
-//			model.addAttribute("products", allProducts);
-			model.addAttribute("productPage", productPage);
-			model.addAttribute("currentPage", page);
-
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userRepo.findByUsername(auth.getName());
-			String username = auth.getName();
-			String email = user.getEmail();
-			model.addAttribute("username", username);
-			model.addAttribute("email", email);
-			
-			Company company = companyRepo.getCompanyByUserId(user.getId());
-			String companyName = company.getName();
-
-			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-			if(user.getImageUrl() != null && !user.getImageUrl().isEmpty())
-		    {
-		    	String image = user.getImageUrl();
-		    	imgpath = StringUtils.ImagePaths.userImageUrl + image;
-		    }
-			model.addAttribute("imagePath", imgpath);
-
-			model.addAttribute("companyName", companyName);
-
-			String image = company.getLogo();
-			String companyLogo = "/img/companylogo/" + image;
-			model.addAttribute("companyLogo", companyLogo);
-
-			return "admin/product_list";
+		Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
+		if (cat != null) {
+			productFound.setCategory(cat);
 		}
-		
 
+		productFound.setStatus("Active");
 
+		productRepo.save(productFound);
 
+		return "redirect:/a2zbilling/admin/product/list";
+	}
+
+	// delete product handler
+	@GetMapping("/product/delete/{id}")
+	public String deleteProductById(@PathVariable("id") String id) {
+
+		Optional<Product> productGet = productRepo.findById(Integer.parseInt(id));
+		Product product = productGet.get();
+
+		product.setStatus("InActive");
+
+		productRepo.save(product);
+
+		return "redirect:/a2zbilling/admin/product/list";
+
+	}
+
+	// showing all products
+	@GetMapping("/product/list")
+	public String showAllProduct(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+
+		Page<Product> productPage = productService.getAvailableProducts(page, size);
+		model.addAttribute("productPage", productPage);
+		model.addAttribute("currentPage", page);
+
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
+		model.addAttribute("imagePath", imgpath);
+
+		model.addAttribute("companyName", companyName);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		return "admin/product_list";
+	}
 }

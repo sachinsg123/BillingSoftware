@@ -51,7 +51,7 @@
 		<div class="contaier-fluid">
 			<div class="row">
 				<div class="col-md-12" style="background-color: #534F84;color: #fff;">
-					<h1 class="text-center">BRAND LIST</h1>
+					<h1 class="text-center"><b>BRAND LIST</b></h1>
 				</div>
 			</div>
 
@@ -76,7 +76,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="brand : ${brands}">
+						<tr th:each="brand : ${brands.content}">
 							<th scope="row" th:text="${brand.id}"></th>
 							<td th:text="${brand.name}"></td>
 
@@ -95,6 +95,15 @@
 						</tr>
 					</tbody>
 				</table>
+				<div>
+					<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${brands.totalPages}"></span>
+				</div>
+				<div>
+					<a th:if="${brands.hasPrevious()}"
+						th:href="@{/a2zbilling/admin/brand/list(page=${currentPage - 1}, size=${brands.size})}">Previous</a>
+					<a th:if="${brands.hasNext()}"
+						th:href="@{/a2zbilling/admin/brand/list(page=${currentPage + 1}, size=${brands.size})}">Next</a>
+				</div>
 			</div>
 		</div>
 		</div>

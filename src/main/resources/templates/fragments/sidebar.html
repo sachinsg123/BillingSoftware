@@ -30,59 +30,59 @@
 		
 		<ul id="js-nav-menu" class="nav-menu">
 			<li class="active open">
-				<a th:href="@{/a2zbilling/admin/}" title="Application Intel" data-filter-tags="application intel">
+				<a th:href="@{/a2zbilling/admin/}" title="Dashboard" data-filter-tags="dashboard">
 					<i class="fa fa-tachometer" aria-hidden="true"></i>
 					<span class="nav-link-text" data-i18n="nav.application_intel">DASHBOARD</span>
 				</a>
 			</li>
 			<li>
-				<a href="#" title="Theme Settings" data-filter-tags="theme product">
+				<a href="#" title="Products, Category, Brand" data-filter-tags="theme product">
 					<i class="fa-brands fa-product-hunt"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">PRODUCTS</span>
 				</a>
 				<ul>
 	
 					<li>
-						<a th:href="@{/a2zbilling/admin/product/add}" title="Layout Options"
+						<a th:href="@{/a2zbilling/admin/product/add}" title="Add Product"
 							data-filter-tags="theme create product">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ADD PRODUCT</span>
 						</a>
 					</li>
 					<li>
 					
-						<a th:href="@{/a2zbilling/admin/product/list}" title="How it works"
+						<a th:href="@{/a2zbilling/admin/product/list}" title="Product List"
 							data-filter-tags="theme products">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ALL PRODUCTS</span>
 						</a>
 					</li>
 					<li>
-						<a href="" title="Theme Modes (beta)" data-filter-tags="theme category" data-toggle="modal"
+						<a href="" title="Add Category" data-filter-tags="theme category" data-toggle="modal"
 							data-target="#exampleModalCategory">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">ADD
 								CATEGORY</span>
 						</a>
 					</li>
 					<li>
-						<a th:href="@{/a2zbilling/admin/category/list}" title="Saving to Database"
+						<a th:href="@{/a2zbilling/admin/category/list}" title="Category List"
 							data-filter-tags="theme sub category">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_saving_to_database">ALL
 								CATEGORIES</span>
 						</a>
 					</li>
 					<li>
-						<a th:href="@{/a2zbilling/admin/brand/list}" title="Skin Options" data-filter-tags="theme brands">
+						<a th:href="@{/a2zbilling/admin/brand/list}" title="Add Brand" data-filter-tags="theme brands">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_skin_options">BRANDS</span>
 						</a>
 					</li>
 					<li>
-						<a href="settings_saving_db.html" title="Saving to Database"
+						<a href="settings_saving_db.html" title="Print Barcode"
 							data-filter-tags="theme print barcode">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_saving_to_database">PRINT
 								BARCODE</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Saving to Database" data-filter-tags="theme import products">
+						<a href="#" title="Import Products" data-filter-tags="theme import products">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_saving_to_database">IMPORT
 								PRODUCTS</span>
 						</a>
@@ -90,13 +90,13 @@
 				</ul>
 			</li>
 			<li>
-				<a href="#" title="Documentation" data-filter-tags="sales">
+				<a href="#" title="Create Sales Bill" data-filter-tags="sales">
 					<i class="fal fa-book"></i>
 					<span class="nav-link-text" data-i18n="nav.documentation">SALES</span>
 				</a>
 				<ul>
 					<li>
-						<a th:href="@{/a2zbilling/admin/sales/list}" title="General Docs" data-filter-tags="sales">
+						<a th:href="@{/a2zbilling/admin/sales/list}" title="Create Sales Bill" data-filter-tags="sales">
 							<span class="nav-link-text" data-i18n="nav.documentation_general_docs">SALES</span>
 						</a>
 					</li>
@@ -106,13 +106,13 @@
 						</a>
 					</li>
 					<li>
-						<a th:href="@{/a2zbilling/admin/sales/return}" title="Flavors & Editions" data-filter-tags="documentation sales return">
+						<a href="#" title="Flavors & Editions" data-filter-tags="documentation sales return">
 							<span class="nav-link-text" data-i18n="nav.documentation_flavors_&_editions">SALES
 								RETURN</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Community Support" data-filter-tags="documentation quotation">
+						<a href="#" title="Quatation" data-filter-tags="documentation quotation">
 							<span class="nav-link-text" data-i18n="nav.documentation_community_support">QUATATION</span>
 						</a>
 					</li>
@@ -122,18 +122,18 @@
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Licensing" data-filter-tags="sales return">
+						<a href="#" title="Return" data-filter-tags="sales return">
 							<span class="nav-link-text" data-i18n="nav.documentation_licensing	">RETURN</span>
 						</a>
 						<ul>
 							<li>
-								<a href="#" title="transfer list" data-filter-tags="sales sales return">
+								<a href="#" title="Sales Return" data-filter-tags="sales sales return">
 									<span class="nav-link-text" data-i18n="nav.documentation_licensing">SALES
 										RETURN</span>
 								</a>
 							</li>
 							<li>
-								<a href="#" title="transfer list" data-filter-tags="sales purchase return">
+								<a href="#" title="Purchase Return" data-filter-tags="sales purchase return">
 									<span class="nav-link-text" data-i18n="nav.documentation_licensing">PURCHASE
 										RETURN</span>
 								</a>
@@ -141,13 +141,13 @@
 						</ul>
 					</li>
 					<li>
-						<a href="#" title="Build Notes" data-filter-tags="sales build notes">
+						<a href="#" title="Transfer" data-filter-tags="sales build notes">
 							<span class="nav-link-text" data-i18n="nav.documentation_build_notes">TRANSFER</span>
 
 						</a>
 						<ul>
 							<li>
-								<a href="#" title="transfer list" data-filter-tags="sales transfer list">
+								<a href="#" title="Transfer list" data-filter-tags="sales transfer list">
 									<span class="nav-link-text" data-i18n="nav.documentation_licensing">TRANSFER
 										LIST</span>
 								</a>
@@ -164,19 +164,19 @@
 			</li>
 			<!--Create By Mahesh-->
 			<li>
-				<a th:href="@{/a2zbilling/admin/parties/list}" title="Theme Settings" data-filter-tags="parties">
+				<a th:href="@{/a2zbilling/admin/parties/list}" title="Add Party, Party Transection" data-filter-tags="parties">
 					<i class="fa-solid fa-user-group"></i>
-					<span class="nav-link-text" data-i18n="nav.theme_settings">PARTIES</span>
+					<span class="nav-link-text" data-i18n="nav.theme_settings">SUPPLIER</span>
 				</a>
 			</li>
-			<li>
-				<a href="#" title="Theme Settings" data-filter-tags="purchase">
+			<!--<li>
+				<a href="#" title="Add Item" data-filter-tags="purchase">
 					<i class="fa-solid fa-sitemap"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">ITEM</span>
 				</a>
 				<ul>
 					<li>
-						<a th:href="@{/a2zbilling/admin/Item/add}" title="How it works" data-filter-tags="item item add">
+						<a th:href="@{/a2zbilling/admin/Item/add}" title="Add Item" data-filter-tags="item item add">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ADD ITEM</span>
 						</a>
 					</li>
@@ -187,34 +187,34 @@
 					</li>
 
 				</ul>
-			</li>
+			</li>-->
 			<li>
-				<a href="#" title="Theme Settings" data-filter-tags="purchase">
+				<a href="#" title="Create Purchase Bill" data-filter-tags="purchase">
 					<i class="fa fa-shopping-cart"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">PURCHASE</span>
 				</a>
 				<ul>
 					<li>
-						<a th:href="@{/a2zbilling/admin/purchasebill/transection}" title="How it works">
+						<a th:href="@{/a2zbilling/admin/purchasebill/transection}" title="Create Purchase Bill">
 							 <span class="nav-link-text"
 							data-i18n="nav.theme_settings_how_it_works">PURCHASE BILL</span>
 						</a>
 					</li>
 					<li>
 					
-						<a href="#" title="How it works" data-filter-tags="theme import purchase">
+						<a href="#" title="Import purchase" data-filter-tags="theme import purchase">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">IMPORT
 								PURCHASE</span>
 						</a>
 					</li>
 					<li>
-						<a th:href="@{/a2zbilling/admin/purchaseorder/add}" title="Layout Options" data-filter-tags="theme purchase order">
+						<a th:href="@{/a2zbilling/admin/purchaseorder/add}" title="Create Purchase order" data-filter-tags="theme purchase order">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">PURCHASE
 								ORDER</span>
 						</a>
 					</li>
 					<li>
-						<a th:href="@{/a2zbilling/admin/purchasereturn/transection}" title="Theme Modes (beta)" data-filter-tags="theme purchase return">
+						<a th:href="@{/a2zbilling/admin/purchasereturn/transection}" title="Create Purchase return" data-filter-tags="theme purchase return">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">PURCHASE
 								RETURN</span>
 						</a>
@@ -224,13 +224,13 @@
 			</li>
 
 			<li>
-				<a href="#" title="Theme Settings" data-filter-tags="theme ">
+				<a href="#" title="Finance & Account" data-filter-tags="theme ">
 					<i class="fa-solid fa-building-columns"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">FINANCE & ACCOUNTS</span>
 				</a>
 				<ul>
 					<li>
-						<a href="#" title="How it works" data-filter-tags="theme expense">
+						<a href="#" title="Expense" data-filter-tags="theme expense">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">EXPENSES</span>
 						</a>
 						<ul>
@@ -251,24 +251,24 @@
 				</ul>
 			</li>
 			<li>
-				<a href="#" title="Theme Settings" data-filter-tags="stock ">
+				<a href="#" title="Manage Stock" data-filter-tags="stock ">
 					<i class="fa-solid fa-arrow-trend-up"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">STOCK</span>
 				</a>
 				<ul>
 					<li>
-						<a th:href="@{/a2zbilling/admin/managestock}" title="How it works"
+						<a th:href="@{/a2zbilling/admin/managestock}" title="Manage Stock"
 							data-filter-tags="stock manage">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">MANAGE STOCK</span>
 						</a>
 					<li>
-						<a href="#" title="Layout Options" data-filter-tags="stock adjustment">
+						<a href="#" title="Stock Adjustment" data-filter-tags="stock adjustment">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">STOCK
 								ADJUSTMENT</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="stock transfer">
+						<a href="#" title="Stock Transfer" data-filter-tags="stock transfer">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">STOCK
 								TRANSFER</span>
 						</a>
@@ -276,7 +276,7 @@
 				</ul>
 			</li>
 			<li>
-				<a href="#" title="Theme Settings" data-filter-tags="peoples">
+				<a href="#" title="Add Customer / Supplier" data-filter-tags="peoples">
 					<i class="fa-solid fa-person"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">PEOPLES</span>
 				</a>
@@ -287,14 +287,14 @@
 						</a>
 						<ul>
 							<li>
-								<a th:href="@{/a2zbilling/admin/customer/add}" title="Layout Options"
+								<a th:href="@{/a2zbilling/admin/customer/add}" title="Add Customer"
 									data-filter-tags="peoples customer">
 									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ADD
 										CUSTOMERS</span>
 								</a>
 							</li>
 							<li>
-								<a th:href="@{/a2zbilling/admin/customer/list}" title="Layout Options"
+								<a th:href="@{/a2zbilling/admin/customer/list}" title="Customer List"
 									data-filter-tags="peoples customer">
 									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ALL
 										CUSTOMERS</span>
@@ -302,34 +302,34 @@
 							</li>
 						</ul>
 					</li>
-					<li>
-						<a href="#" title="Layout Options" data-filter-tags="peoples suppliers">
+					<!--<li>
+						<a href="#" title="Supplier" data-filter-tags="peoples suppliers">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">SUPPLIERS</span>
 						</a>
 						<ul>
 							<li>
-								<a th:href="@{/a2zbilling/admin/supplier/add}" title="Layout Options"
+								<a th:href="@{/a2zbilling/admin/supplier/add}" title="Add Supplier"
 									data-filter-tags="peoples suppliers">
 									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">NEW
 										SUPPLIER</span>
 								</a>
 							</li>
 							<li>
-								<a th:href="@{/a2zbilling/admin/supplier/list}" title="Layout Options"
+								<a th:href="@{/a2zbilling/admin/supplier/list}" title="Supplier List"
 									data-filter-tags="peoples customer">
 									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ALL
 										SUPPLIERS</span>
 								</a>
 							</li>
 						</ul>
-					</li>
+					</li>-->
 					<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="peoples stores">
+						<a href="#" title="Store" data-filter-tags="peoples stores">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">STORES</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="peoples warehouses">
+						<a href="#" title="Warehouse" data-filter-tags="peoples warehouses">
 							<span class="nav-link-text"
 								data-i18n="nav.theme_settings_theme_modes_(beta)">WAREHOUSES</span>
 						</a>
@@ -337,25 +337,25 @@
 				</ul>
 			</li>
 			<li>
-				<a href="#" title="Theme Settings" data-filter-tags="master">
+				<a href="#" title="Add Unit, Charges, Gst" data-filter-tags="master">
 					<i class="fa-solid fa-scale-balanced"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">MASTER</span>
 				</a>
 				<ul>
 					<li>
-						<a href="#" title="How it works" data-filter-tags="master units" data-toggle="modal"
+						<a href="#" title="Add Unit" data-filter-tags="master units" data-toggle="modal"
 							data-target="#exampleModalUnits">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ADD UNITS</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Layout Options" data-filter-tags="master gst" data-toggle="modal"
+						<a href="#" title="Add GST" data-filter-tags="master gst" data-toggle="modal"
 							data-target="#exampleModalForGST">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ADD GST</span>
 						</a>
 					</li>
 					<li>
-					    <a href="#" title="How it works" data-filter-tags="master charges" data-toggle="modal"
+					    <a href="#" title="Add Charges" data-filter-tags="master charges" data-toggle="modal"
 					       data-target="#exampleModalForCharges">
 					        <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">ADD CHARGES</span>
 					    </a>
@@ -365,37 +365,37 @@
 			</li>
 			
 			<li>
-			<a href="#" title="Theme Settings" data-filter-tags="REPORTS">
+			<a href="#" title="Reports" data-filter-tags="REPORTS">
 					<i class="fa-solid fa-receipt"></i>
 					<span class="nav-link-text" data-i18n="nav.theme_settings">REPORTS</span>
 				</a>
 				<ul>
 				<li>
 				
-						<a th:href="@{/a2zbilling/admin/purchaseReport}" title="Theme Modes (beta)" data-filter-tags="purchase report">
+						<a th:href="@{/a2zbilling/admin/purchaseReport}" title="Purchase Report" data-filter-tags="purchase report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">PURCHASE REPORT</span>
 						</a>
 					</li>
 					
 					<li>
-						<a th:href="@{/a2zbilling/admin/salesReport}" title="Theme Modes (beta)" data-filter-tags="sales report">
+						<a th:href="@{/a2zbilling/admin/salesReport}" title="Sales Report" data-filter-tags="sales report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">SALES REPORT</span>
 						</a>
 					</li>
 					
 					<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="tax report">
+						<a href="#" title="Tax Report" data-filter-tags="tax report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">TAX REPORT</span>
 						</a>
 						<ul>
 							<li>
-								<a th:href="@{/a2zbilling/admin/purchaseTaxReport}" title="Layout Options"
+								<a th:href="@{/a2zbilling/admin/purchaseTaxReport}" title="Purchase Tax Report"
 									data-filter-tags="sales tax report">
 									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">PURCHASE TAX REPORT</span>
 								</a>
 							</li>
 							<li>
-								<a th:href="@{/a2zbilling/admin/salesTaxReport}" title="Layout Options"
+								<a th:href="@{/a2zbilling/admin/salesTaxReport}" title="Sales Tax Report"
 									data-filter-tags="peoples customer">
 									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">SALES TAX REPORT</span>
 								</a>
@@ -404,7 +404,7 @@
 					</li>
 					
 					<li>
-						<a href="#" title="Theme Modes (beta)" data-filter-tags="profit & loss report">
+						<a href="#" title="Profit & Loss Report" data-filter-tags="profit & loss report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">PROFIT & LOSS REPORT</span>
 						</a>
 					</li>

@@ -52,10 +52,22 @@ public class PartiesTransaction {
 	@ManyToMany
 	@JoinTable(
         name = "transaction_product",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "transaction_id")
+        joinColumns = @JoinColumn(name = "parties_transaction_id"),
+        inverseJoinColumns = @JoinColumn(name = "product_id")
     )
 	private List<Product> products = new ArrayList<Product>();
+
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public int getId() {
 		return Id;

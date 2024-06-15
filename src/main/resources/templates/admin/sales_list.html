@@ -61,7 +61,7 @@
 		</div>
 		<div class="row" style="background-color:rgb(84,78,131);">
 			<div class="col-md-12 mt-2">
-				<h1 class="text-center" style="color: white;"><b>Sales Transaction</b></h1>
+				<h1 class="text-center" style="color: white;"><b>SALES TRANSACTION</b></h1>
 			</div>
 		</div>
 		
@@ -76,7 +76,7 @@
 					<thead class="thead-dark">
 						<tr style="text-align: center;">
 							<!-- <th scope="col">Supplier Id</th> -->
-							<th style="border: 1px solid black;" scope="col">Data</th>
+							<th style="border: 1px solid black;" scope="col">Date</th>
 							<th style="border: 1px solid black;" scope="col">Sale Bill No</th>
 							<th style="border: 1px solid black;" scope="col">Customer Name</th>
 							<th style="border: 1px solid black;" scope="col">Product Name</th>
@@ -89,7 +89,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="sale : ${sales}" style="text-align: center;">
+						<tr th:each="sale : ${sales.content}" style="text-align: center;">
 							<td th:text="${sale.date}"></td>
 							<td th:text="${sale.saleBillNo}"></td>
 							<td th:text="${sale.customer?.name}"></td>
@@ -109,24 +109,53 @@
 							<td th:text="${sale.amountPaid}"></td>
 							<td th:text="${sale.dueAmount}"></td>
 							<td th:text="${sale.netPayment}"></td>
-							<td>
-								<div class="dropdown">
-								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fa-solid fa-ellipsis-vertical"></i>
-								  </button>
-								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>
-									<a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Sales Return</b></a>
-								    <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
-								  </div>
-								</div>
+							<td style="position: relative;">
+							  <div class="dropdown">
+							    <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							      <i class="fa-solid fa-ellipsis-vertical"></i>
+							    </button>
+							    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+							      <!--<a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>-->
+							      <a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Sales Return</b></a>
+							      <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
+							    </div>
+							  </div>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				<div>
+				  	<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${sales.totalPages}"></span>
+				</div>
+				<div>
+			        <a th:if="${sales.hasPrevious()}" th:href="@{/a2zbilling/admin/sales/list(page=${currentPage - 1}, size=${sales.size})}">Previous</a>
+			        <a th:if="${sales.hasNext()}" th:href="@{/a2zbilling/admin/sales/list(page=${currentPage + 1}, size=${sales.size})}">Next</a>
+			    </div>
 			</div>
 		</div>
+		
 	</div>
+	<style>
+		.dropdown {
+		  position: relative;
+		}
+		
+		.dropdown-menu {
+		  position: absolute;
+		  top: 100%;
+		  right: 0;
+		  min-width: 200px; /* Adjust the min-width as needed */
+		  max-width: 300px; /* Adjust the max-width as needed */
+		  max-height: 300px; /* Adjust the max-height as needed */
+		  overflow-y: auto; /* Add vertical scrollbar if menu items exceed max-height */
+		  z-index: 1;
+		}
+		
+		.dropdown-menu-right {
+		  right: 0;
+		  left: auto;
+		}
+	</style>
 </section>
 </body>
 <!-- END Body -->

@@ -27,20 +27,29 @@ public class User{
 	
 	private String mobile;
 	
-/*	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name ="user_role",
-			joinColumns = @JoinColumn(name="user_id"),
-			inverseJoinColumns = @JoinColumn(name="role_id"))
-	private List<Roles> roles = new ArrayList<Roles>();  */
-	
 	@OneToMany(mappedBy = "user")
-	private List<Product> products = new ArrayList<Product>(); 
-
+	private List<Product> products = new ArrayList<Product>();
 
 	@OneToMany(mappedBy ="user")
-	private List<Category> categories = new ArrayList<Category>(); 
+	private List<Category> categories = new ArrayList<Category>();
 	
+	@OneToMany(mappedBy ="user")
+	private List<Charges> charges = new ArrayList<Charges>();
+	
+	@OneToMany(mappedBy ="user")
+	private List<Brand> brand = new ArrayList<Brand>();
+	
+	@OneToMany(mappedBy ="user")
+	private List<Parties> parties = new ArrayList<Parties>();
+	
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
+	}
+
 	@Column(name="user_role")
 	private String role;
 	
@@ -58,12 +67,80 @@ public class User{
 	@OneToMany(mappedBy = "user")
 	private List<Supplier> supplier = new ArrayList<Supplier>();
 	
+	@OneToMany(mappedBy = "user")
+	private List<Size> sizes = new ArrayList<Size>();
+	
 	@OneToOne(mappedBy = "user")
 	private Company company;
 	
 	@OneToMany(mappedBy = "user")
 	private List<GSTRate> gst = new ArrayList<GSTRate>();
 	
+	@OneToMany(mappedBy = "user")
+	private List<Unit> units = new ArrayList<Unit>();
+	
+	@OneToMany(mappedBy = "user")
+	private List<Sales> sales = new ArrayList<Sales>();
+
+	@OneToMany(mappedBy = "user")
+	private List<PartiesTransaction> partiesTransactions = new ArrayList<PartiesTransaction>();
+
+	
+	public List<Unit> getUnits() {
+		return units;
+	}
+
+	public void setUnits(List<Unit> units) {
+		this.units = units;
+	}
+
+	public List<PartiesTransaction> getPartiesTransactions() {
+		return partiesTransactions;
+	}
+
+	public void setPartiesTransactions(List<PartiesTransaction> partiesTransactions) {
+		this.partiesTransactions = partiesTransactions;
+	}
+
+	public List<Sales> getSales() {
+		return sales;
+	}
+
+	public void setSales(List<Sales> sales) {
+		this.sales = sales;
+	}
+
+	public List<Size> getSizes() {
+		return sizes;
+	}
+
+	public void setSizes(List<Size> sizes) {
+		this.sizes = sizes;
+	}
+
+	public List<Brand> getBrand() {
+		return brand;
+	}
+
+	public void setBrand(List<Brand> brand) {
+		this.brand = brand;
+	}
+
+	public List<Parties> getParties() {
+		return parties;
+	}
+
+	public void setParties(List<Parties> parties) {
+		this.parties = parties;
+	}
+
+	public List<GSTRate> getGst() {
+		return gst;
+	}
+
+	public void setGst(List<GSTRate> gst) {
+		this.gst = gst;
+	}
 
 	public int getId() {
 		return id;

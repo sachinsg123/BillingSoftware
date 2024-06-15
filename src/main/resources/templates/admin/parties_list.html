@@ -30,7 +30,7 @@
 
 
 					swalWithBootstrapButtons.fire(
-						'Parties Deleted Successfully!!',
+						'Supplier Deleted Successfully!!',
 
 					)
 				} else if (
@@ -39,12 +39,11 @@
 				) {
 					swalWithBootstrapButtons.fire(
 						'Cancelled',
-						'Parties Not deleted',
+						'Supplier Not deleted',
 						'error'
 					)
 				}
 			})
-
 		}
 	</script>
 	<!-- BEGIN Page Wrapper -->
@@ -60,14 +59,14 @@
 			</div>
 		</div>
 		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12">
-				<h1 class="text-center" style="color: white;"><b>ALL PARTIES</b></h1>
+			<div class="col-md-12 mt-2">
+				<h1 class="text-center" style="color: white;"><b>ALL SUPPLIER</b></h1>
 			</div>
 		</div>
 		
-		<div class="row">
+		<div class="row text-right">
 			<div class="col-md-12 mt-3">
-				<a th:href="@{'/a2zbilling/admin/parties/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><i class="fa-solid fa-plus"></i> Add Party</a>
+				<a th:href="@{'/a2zbilling/admin/parties/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Supplier</a>
 			</div>
 		</div>
 		<div class="row mt-4">
@@ -76,8 +75,9 @@
 					<thead class="thead-dark">
 						<tr style="text-align: center;">
 							<!-- <th scope="col">Supplier Id</th> -->
-							<th style="border: 1px solid black;" scope="col">PARTY</th>
+							<th style="border: 1px solid black;" scope="col">Supplier Name</th>
 							<th style="border: 1px solid black;" scope="col">AMOUNT</th>
+							<th style="border: 1px solid black;" scope="col">Payment</th>
 							<th style="border: 1px solid black;" scope="col"></th>
 						</tr>
 					</thead>
@@ -85,13 +85,14 @@
 						<tr th:each="partie : ${parties}" style="text-align: center;">
 							<td th:text="${partie.name}"></td>
 							<td th:text="${partie.openingBalance}"></td>
+							<td th:text="${partie.payment}"></td>
 							<td>
 								<div class="dropdown">
 								  <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<i class="fa-solid fa-ellipsis-vertical"></i>
 								  </button>
 								  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								    <a class="dropdown-item" th:href="@{/a2zbilling/admin/parties/transactions/list}"><b>View Transactions</b></a>
+								    <a class="dropdown-item" th:href="@{'/a2zbilling/admin/parties/transactions/list/' + ${partie.id} }"><b>View Transactions</b></a>
 								    <a class="dropdown-item" th:href="@{'/a2zbilling/admin/parties/update/' + ${partie.id} }"><b>Edit</b></a>
 								    <a class="dropdown-item" th:onclick="|deleteContactAlert(${partie.id})|"><b>Delete</b></a>
 								  </div>

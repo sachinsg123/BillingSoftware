@@ -49,6 +49,11 @@
         .search-icon {
             cursor: pointer;
         }
+        @media print {
+			#searchInput {
+				display: none;
+			}
+		}
     </style>
     <div class="container-fluid">
         <div th:if="${session.message}">
@@ -63,24 +68,16 @@
         </div>
         <div class="row" style="background-color: rgb(84,78,130); color: #fff;">
             <div class="col-md-12 mt-1">
-                <h1 class="text-center">Sales Tax Report</h1>
+                <h1 class="text-center"><b>SALES TAX REPORT</b></h1>
             </div>
         </div>
         <div style="background-color: #f5f0f0;">
-            <div class="row pb-3">
-                <div class="col-md-6">
-                    <form th:action="@{/search}" method="get">
-                        <div class="col-md-6">
-                            <!-- Search Bar -->
-                            <input id="searchInput" type="text"
-                                style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
-                                name="query" placeholder=" Search">
-                            <!-- Search icon -->
-
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <div class="col-md-6">
+				<!-- Search Bar -->
+				<input id="searchInput" type="text"
+					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
+					name="query" placeholder=" Search">
+			</div>
             <div class="row mt-2 pb-3">
                 <div class="col-md-12">
                     <table class="table table-bordered" style="background-color: #fff;">
@@ -99,7 +96,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="sale : ${sales}" style="text-align: center; border: 1px solid black;">
+                            <tr th:each="sale : ${sales.content}" style="text-align: center; border: 1px solid black;">
                                 <td th:text="${sale.date}"><input type="text" class="form-control" value=""
                                         readonly></td>
                                 <td th:text="${sale.saleBillNo}"></td>
@@ -127,6 +124,16 @@
                             </tr>
                         </tbody>
                     </table>
+                    
+                    <div>
+						<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${sales.totalPages}"></span>
+					</div>
+					<div>
+						<a th:if="${sales.hasPrevious()}"
+							th:href="@{/a2zbilling/admin/salesTaxReport(page=${currentPage - 1}, size=${sales.size})}">Previous</a>
+						<a th:if="${sales.hasNext()}"
+							th:href="@{/a2zbilling/admin/salesTaxReport(page=${currentPage + 1}, size=${sales.size})}">Next</a>
+					</div>
                 </div>
             </div>
         </div>

@@ -131,7 +131,7 @@ th:fragment="layout(content)">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
-		<h1 class="modal-title" id="exampleModalLabel"><b>Add Units</b></h1>
+		<h1 class="modal-title" id="exampleModalLabel"><b>ADD UNIT</b></h1>
 							<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
@@ -161,15 +161,8 @@ th:fragment="layout(content)">
 							</form>
 						</div>
 					</div>
-					<!--    <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
-  </div> -->
 				</div>
 			</div>
-  
-  <!--  js code for gst  -->
-  
   <script>
   
    function gstCalculator(){
@@ -185,16 +178,14 @@ th:fragment="layout(content)">
        document.getElementById("cgstPercentage").value = cgst.toFixed(2);
 	   
    }
-  
-  </script>  
-  
+  </script> 
    <!-- Adding GST Modal -->
   <div class="modal fade" id="exampleModalForGST" tabindex="-1" role="dialog"
   					aria-labelledby="exampleModalLabel" aria-hidden="true">
   					<div class="modal-dialog" role="document">
   						<div class="modal-content">
   							<div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
-  								<h1 class="modal-title" id="exampleModalLabel">Add GST</h1>
+  								<h1 class="modal-title" id="exampleModalLabel"><b>ADD GST</b></h1>
   								<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
   									<span aria-hidden="true">&times;</span>
   								</button>
@@ -235,13 +226,8 @@ th:fragment="layout(content)">
   								</form>
   							</div>
   						</div>
-  						<!--    <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div> -->
        </div>
        </div>
-  <!-- Adding Charges Modal -->
   <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog"
   					aria-labelledby="exampleModalLabel" aria-hidden="true">
   					<div class="modal-dialog" role="document">
@@ -281,18 +267,51 @@ th:fragment="layout(content)">
   								</form>
   							</div>
   						</div>
-  						<!--    <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div> -->
         </div>
        </div>
-   <!--Add Category Module -> Changes by Younus-->
+  <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
+				<h1 class="modal-title" id="exampleModalLabel"><b>ADD CHARGES</b></h1>
+				<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" style="background-color:#f5f0f0;">
+				<form th:action="@{/a2zbilling/admin/charges/add}" method="post" class="form-group">
+					<div class="row">
+						<div class="col-md-12 mt-2">
+							<input type="hidden" class="form-control" id="id">
+							<div class="form-group">
+								<label><b>Name :</b></label>
+								<input type="text" class="form-control" name="name" placeholder="Charges Name" required>
+							</div>
+						</div>
+						<div class="col-md-12 mt-2">
+							<div class="form-group">
+								<label><b>Price :</b></label>
+								<input type="text" class="form-control" name="price" placeholder="Enter price" required>
+							</div>
+						</div>
+						
+					</div>
+					<div class="col-md-12 mt-4">
+						<div class="text-center">
+							<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+							 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
   <div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="background-color: #f5f0f0;">
       <div class="modal-header align-items-center" style="background-color: 	#534F84;color: #fff;">
-        <h1 class="modal-title" id="exampleModalLabel">Add Category</h1>
+        <h1 class="modal-title" id="exampleModalLabel"><b>ADD CATEGORY</b></h1>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -308,8 +327,6 @@ th:fragment="layout(content)">
                     </script> 
                       </div>
                      </div>
-                     
-                     
                  <form th:action="@{/a2zbilling/admin/category/add}" method="post" class="form-group">
 	                    <div class="row"  >
 	                     <div class="col-md-12 mt-2" >
@@ -326,21 +343,16 @@ th:fragment="layout(content)">
 	                     </div>
 	                     </div>
 	                     </form>
-                  </div>
-                </div>
-   <!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-    </div>
-  </div>
-  <!--Add Brand Module -> Created by Younus-->
+                      </div>
+                   </div>
+                </div> 
+             </div>
 				<div class="modal fade" id="exampleModalBrand" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content" style="background-color: #f5f0f0;">
 							<div class="modal-header align-items-center" style="background-color: #534F84;color: #fff;">
-								<h1 class="modal-title" id="exampleModalLabel">Add Brand</h1>
+								<h1 class="modal-title" id="exampleModalLabel"><b>ADD BRAND</b></h1>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
@@ -356,8 +368,6 @@ th:fragment="layout(content)">
 										</script>
 									</div>
 								</div>
-
-
 								<form th:action="@{/a2zbilling/admin/brand/add}" method="post" enctype="multipart/form-data" class="form-group">
 									<div class="row" style="background-color: #f5f0f0;">
 										<div class="col-md-12 mt-2">
@@ -388,10 +398,6 @@ th:fragment="layout(content)">
 					</div>
 				</div>
              </div>
-             <!-- END Shortcuts -->
-                    <!-- BEGIN Color profile -->
-                    <!-- this area is hidden and will not be seen on screens or screen readers -->
-                    <!-- we use this only for CSS color refernce for JS stuff -->
                     <p id="js-color-profile" class="d-none">
                         <span class="color-primary-50"></span>
                         <span class="color-primary-100"></span>
@@ -457,9 +463,6 @@ th:fragment="layout(content)">
                     <!-- END Color profile -->
                 </div>
             </div>
-        </div>
-        <!-- END Quick Menu -->
-        <!-- BEGIN Messenger -->
         <div class="modal fade js-modal-messenger modal-backdrop-transparent" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-right">
                 <div class="modal-content h-100">
@@ -654,8 +657,6 @@ th:fragment="layout(content)">
                                             Jun 19
                                         </div>
                                     </div>
-                                    <!--  end .chat-segment -->
-                                    <!-- start .chat-segment -->
                                     <div class="chat-segment chat-segment-sent">
                                         <div class="chat-message">
                                             <p>
@@ -732,8 +733,6 @@ th:fragment="layout(content)">
                                             </p>
                                         </div>
                                     </div>
-                                    <!--  end .chat-segment -->
-                                    <!-- start .chat-segment for timestamp -->
                                     <div class="chat-segment">
                                         <div class="time-stamp text-center mb-2 fw-400">
                                             Jun 20
@@ -772,8 +771,6 @@ th:fragment="layout(content)">
                 </div>
             </div>
         </div>
-        <!-- END Messenger -->
-        <!-- BEGIN Page Settings -->
         <div class="modal fade js-modal-settings modal-backdrop-transparent" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-right modal-md">
                 <div class="modal-content">
@@ -1125,19 +1122,6 @@ th:fragment="layout(content)">
             ga('send', 'pageview');
 
         </script>
-        <!-- base vendor bundle: 
-			 DOC: if you remove pace.js from core please note on Internet Explorer some CSS animations may execute before a page is fully loaded, resulting 'jump' animations 
-						+ pace.js (recommended)
-						+ jquery.js (core)
-						+ jquery-ui-cust.js (core)
-						+ popper.js (core)
-						+ bootstrap.js (core)
-						+ slimscroll.js (extension)
-						+ app.navigation.js (core)
-						+ ba-throttle-debounce.js (core)
-						+ waves.js (extension)
-						+ smartpanels.js (extension)
-						+ src/../jquery-snippets.js (core) -->
         <script src="/js/vendors.bundle.js"></script>
         <script src="/js/app.bundle.js"></script>
         <script type="text/javascript">
@@ -1597,13 +1581,8 @@ th:fragment="layout(content)">
                         }
                     }
                 });
-
-
             });
 
         </script>
     </body>
-    <!-- END Body -->
-
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
 </html>

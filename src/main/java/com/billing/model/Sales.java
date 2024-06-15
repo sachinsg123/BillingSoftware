@@ -55,8 +55,31 @@ public class Sales {
 	,inverseJoinColumns = @JoinColumn(name="product_id"))
 	private List<Product> products = new ArrayList<>();
 
+	@ManyToMany(mappedBy ="sales")
+	private List<Charges> charges = new ArrayList<Charges>();
+	
 	private String status;
 	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public String getSignatureImage() {
 		return SignatureImage;
 	}

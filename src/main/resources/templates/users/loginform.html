@@ -147,11 +147,11 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                             <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9 border-0">
                                 <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
                                     <img src="/img/favicon/a2zlogo.png" alt="A2Z Billing" aria-roledescription="logo">
-                                    <span class="page-logo-text mr-1">A2Z Billing</span>
+                                    <span class="page-logo-text mr-1">A2Z Billing Software</span>
                                 </a>
                             </div>
-							<a style="cursor: pointer;" data-toggle="modal" data-target="#createAccount" class="btn-link text-white ml-auto">
-                                Create Account
+							<a style="cursor: pointer;" data-toggle="modal" data-target="#createAccount" class="btn-link ml-auto">
+								<span class="page-logo-text mr-1"><b>Create Account</b></span>
                             </a>
                         </div>
                     </div>
@@ -229,29 +229,30 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                             <div class="row">
                                 <div class="col col-md-6 col-lg-7 hidden-sm-down">
                                     <h2 class="fs-xxl fw-500 mt-4 text-white">
-                                        Login here <br> A2Z Billing Software
+                                        LogIn Here <br> 
+										<div style="color: yellow;">A2Z Billing Software</div>
                                         <small class="h3 fw-300 mt-3 mb-5 text-white opacity-60">
-                                           This system is designed by A2Z INFOTECH company on 2021. If you have any query about system/software you can contact us on
+                                           This system is designed by A2Z INFOTECH company on 2024. If you have any query about system/software you can contact us on
                                            Call / Whatsapp +919011144920
                                            Visit Our Website a2zinfotechs.com
                                         </small>
                                     </h2>
-                                    <a href="#" class="fs-lg fw-500 text-white opacity-70">Learn more &gt;&gt;</a>
+                                    <a href="https://www.a2zithub.org/" class="fs-lg fw-500 text-white opacity-70">Learn more &gt;&gt;</a>
                                     <div class="d-sm-flex flex-column align-items-center justify-content-center d-md-block">
                                         <div class="px-0 py-1 mt-5 text-white fs-nano opacity-50">
                                             Find us on social media
                                         </div>
                                         <div class="d-flex flex-row opacity-70">
-                                            <a href="#" class="mr-2 fs-xxl text-white">
+                                            <a href="https://www.facebook.com/a2zinfo.ithub/" class="mr-2 fs-xxl text-white">
                                                 <i class="fab fa-facebook-square"></i>
                                             </a>
-                                            <a href="#" class="mr-2 fs-xxl text-white">
-                                                <i class="fab fa-twitter-square"></i>
+                                            <a href="https://www.instagram.com/a2z.ithub/" class="mr-2 fs-xxl text-white">
+                                                <i class="fab fa-instagram-square"></i>
                                             </a>
-                                            <a href="#" class="mr-2 fs-xxl text-white">
+                                            <a href="https://a2zithub.org/training/" class="mr-2 fs-xxl text-white">
                                                 <i class="fab fa-google-plus-square"></i>
                                             </a>
-                                            <a href="#" class="mr-2 fs-xxl text-white">
+                                            <a href="https://www.linkedin.com/company/a2zinfotechs/mycompany/" class="mr-2 fs-xxl text-white">
                                                 <i class="fab fa-linkedin"></i>
                                             </a>
                                         </div>
@@ -274,11 +275,11 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                             </div>
                                             <div class="row no-gutters">
                                                 <div class="col-lg-6 pl-lg-1 my-2">
-                                                    <button id="js-login-btn" type="submit" class="btn btn-danger btn-block btn-lg">login</button>
+                                                    <button id="js-login-btn" type="submit" class="btn btn-danger btn-block btn-lg">Login</button>
                                                 </div>
 												<div class="col ml-5 mt-4">
 													<a style="cursor: pointer;" data-toggle="modal" data-target="#forgotPassword">
-														Forget Password
+														Forgot Password
 												   	</a>
                                                 </div>
                                             </div>
@@ -506,14 +507,13 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 			                        success: function(response) {
 										if(response == 'Email Not Present')
 										{
-											alert('This Email Address User Not Present.');
+											alert('User Not Found !!!');
 											return;
 										}
 										
 										$('#otpRow').show();
 			                        },
 			                        error: function(error) {
-			                            alert('Error: ' + error.responseText);
 										$('#otpRow').show();
 			                        }
 			                    });

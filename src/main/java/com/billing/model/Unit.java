@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -20,10 +22,22 @@ public class Unit{
 	
 	private String unitName;
 	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
 	@OneToMany(mappedBy ="unit")
 	private List<Product> product = new ArrayList<Product>();
 	
 	private String addedDate;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public int getId() {
 		return id;
