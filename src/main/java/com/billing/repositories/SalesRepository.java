@@ -16,4 +16,7 @@ public interface SalesRepository extends JpaRepository<Sales, Integer> {
 	
 	@Query("SELECT c FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
 	List<Sales> showAllActiveSales(@Param("id") Integer id);
+	
+	@Query("SELECT MAX(c.saleBillNo) FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
+	String maxSalesBillNo(@Param("id") Integer id);
 }
