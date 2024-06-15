@@ -87,6 +87,7 @@ public class CustomerController {
 		userList.add(addedByUser);
 		customer.setUser(userList);
 		customer.setStatus("Active");
+		customerRepo.save(customer);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 

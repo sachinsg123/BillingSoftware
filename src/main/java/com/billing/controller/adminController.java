@@ -1611,6 +1611,8 @@ public class adminController{
 	    Brand brand = new Brand();
 	    brand.setName(brandDto.getName());
 	    
+	    
+	    
 	    // Get the uploaded logo file from the DTO
 	    MultipartFile file = brandDto.getLogo();
 	    

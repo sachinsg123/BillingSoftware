@@ -105,7 +105,7 @@
 			</div>
 			<div class="row" style="background-color: #f5f0f0;">
 				<div class="col-md-12 mt-3">
-					<table class="table table-bordered table-hover " style="background-color: #fff;">
+					<table class="table table-bordered table-hover table-striped" style="background-color: #fff;">
 						<thead style="background-color: #F3EBD6; ">
 							<tr>
 								<th scope="col">Id</th>
@@ -137,12 +137,10 @@
 								<td>
 									<div class="input-group">
 										<a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}"
-											class="btn btn-success"
-											style="height:35px; width:35px; border-radius:50%; text-align:center; margin-bottom:5px"><i
-												class="fa fa-edit"></i></a>
+											class="btn btn-success" >
+											<i class="fa fa-edit"></i></a>
 
-										<a th:onclick="|deleteProductAlert(${product.id})|" class="btn btn-danger"
-											style="height:35px; width:35px; border-radius:50%; text-align:center"><i
+										<a th:onclick="|deleteP roductAlert(${product.id})|" class="btn btn-danger ml-1"><i
 												class="fa fa-trash"></i></a>
 
 									</div>
