@@ -94,13 +94,12 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
-                            <!--<td>
-                                <select class="form-control">
-                                    <option value="including_tax">Including Tax</option>
-                                    <option value="excluding_tax">Excluding Tax</option>
-                                </select>
-                            </td>-->
+                            <td>
+								<th:block th:each="qty : ${#strings.arraySplit(party?.quantity, ',')}">
+                                    <span th:text="${qty}"></span><br>
+                                </th:block>
+							</td>
+                            
                             <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>

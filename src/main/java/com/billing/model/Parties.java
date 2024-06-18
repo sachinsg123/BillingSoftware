@@ -220,14 +220,5 @@ public class Parties {
 	public void setTransactions(List<PartiesTransaction> transactions) {
 		this.transactions = transactions;
 	}
-	@Override
-	public String toString() {
-		return "Parties [id=" + id + ", name=" + name + ", mobile=" + mobile + ", partyGroup=" + partyGroup
-				+ ", billingAddress=" + billingAddress + ", shippingAddress=" + shippingAddress + ", email=" + email
-				+ ", gstType=" + gstType + ", gstinNumber=" + gstinNumber + ", state=" + state + ", openingBalance="
-				+ openingBalance + ", date=" + date + ", payment=" + payment + ", adharNumber=" + adharNumber
-				+ ", panNumber=" + panNumber + ", drivingLicenceNumber=" + drivingLicenceNumber + ", status=" + status
-				+ ", transactions=" + transactions + "]";
-	}
 	
 }

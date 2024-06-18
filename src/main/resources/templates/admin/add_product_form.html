@@ -35,9 +35,7 @@
 							<label>Supplier Name :- </label>
 							<select id="partiesSelect" required class="form-select form-control"
 								aria-label="Default select example" name="parties">
-								<!--addPartiesProduct-->
-								<option selected>Choose</option>
-								<!-- Dynamically populate options with Parties data -->
+								<option value="" disabled selected>Choose</option>
 								<option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
 									th:attr="data-mobile=${party.mobile}, data-email=${party.email}"></option>
 							</select>
@@ -79,7 +77,7 @@
 							</div>
 							<select class="form-select form-control" aria-label="Default select example"
 								name="brand">
-								<!--<option selected>Brand</option>-->
+								<option value="" selected>Choose</option>
 								<option th:each="brand:${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
 							</select>
 						</div>
@@ -98,7 +96,7 @@
 							</div>
 							<select class="form-select form-control" aria-label="Default select example"
 								name="category">
-								<option selected>Category</option>
+								<option value="" selected>Choose</option>
 								<option th:each="category: ${categories}" th:value="${category.id}"
 									th:text="${category.CategoryName}"></option>
 							</select>
@@ -135,7 +133,7 @@
 					<div class="form-group">
 						<select class="form-select form-control" aria-label="Default select example"
 							name="productColor">
-							<option selected>Choose</option>
+							<option value="choose" selected>Choose</option>
 							<option th:each="color: ${colors}" th:value="${color.name}" th:text="${color.name}">
 							</option>
 						</select>
@@ -232,6 +230,13 @@
 									name="mobile" placeholder="Enter party mobile No">
 							</div>
 							<div class="col-md-5 mt-4">
+								<label><b>Supplier email*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input size="50" type="email" required class="form-control" name="email"
+									placeholder="Enter party e-mail">
+							</div>
+							<div class="col-md-5 mt-4">
 								<label><b>Billing Address*</b></label>
 							</div>
 							<div class="col-md-7 mt-4">
@@ -246,33 +251,7 @@
 								<textarea name="shippingAddress" required type="text" class="form-control"
 									placeholder="Shipping Address"></textarea>
 							</div>
-
-							<div class="col-md-5 mt-4">
-								<label><b>Supplier email*</b></label>
-							</div>
-							<div class="col-md-7 mt-4">
-								<input size="50" type="email" required class="form-control" name="email"
-									placeholder="Enter party e-mail">
-							</div>
-							<div class="col-md-5 mt-4">
-								<label><b>GST Type</b></label>
-							</div>
-							<div class="col-md-7 mt-4">
-								<select name="gstType" required class="form-control" id="businessType">
-									<option value="unregistered/Consumer">Unregistered/Consumer</option>
-									<option value="registeredBusinessRegular">Registered Business - Regular</option>
-									<option value="registeredBusinessComposition">Registered Business - Composition
-									</option>
-								</select>
-							</div>
-
-							<div class="col-md-5 mt-4" id="gstinLable" style="display: none;">
-								<label><b>GSTIN Number*</b></label>
-							</div>
-
-							<div class="col-md-7 mt-4" id="gstinInput" style="display: none;">
-								<input name="gstinNumber" type="text" class="form-control" placeholder="GSTIN Number">
-							</div>
+							
 							<div class="col-md-5 mt-4">
 								<label><b>Opening Balance*</b></label>
 							</div>
@@ -284,7 +263,7 @@
 
 							<div class="col-md-7 mt-4">
 								<select name="payment" required class="form-control">
-									<option>Select</option>
+									<option>Choose</option>
 									<option value="toPay">To Pay</option>
 									<option value="toReceive">To Receive</option>
 								</select>
@@ -337,6 +316,23 @@
 		</div>
 	</div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#businessType').change(function() {
+            var selectedValue = $(this).val();
+            if (selectedValue === 'registeredBusinessRegular') {
+                $('#gstinLabel').show();
+                $('#gstinInput').show();
+            } else {
+                $('#gstinLabel').hide();
+                $('#gstinInput').hide();
+            }
+        });
+    });
+</script>
+
+
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -3,7 +3,7 @@
 <!-- Created by Younus -->
 <section>
     <script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
-    <script>
+	<script>
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const rows = document.querySelectorAll('tbody tr');
@@ -31,9 +31,12 @@
             const rows = document.querySelectorAll('tbody tr');
 
             rows.forEach(row => {
-                const taxCell = row.querySelector('td:nth-child(8)'); // Assuming tax is in the 8th column
-                if (taxCell && !isNaN(parseFloat(taxCell.textContent))) {
-                    totalTax += parseFloat(taxCell.textContent);
+                if (row.style.display !== 'none') { // Only consider visible rows
+                    const taxCell = row.querySelector('td:nth-child(8)'); // Assuming tax is in the 8th column
+                    if (taxCell) {
+                        const taxAmounts = taxCell.innerText.split('\n').map(amount => parseFloat(amount.trim())).filter(amount => !isNaN(amount));
+                        totalTax += taxAmounts.reduce((sum, amount) => sum + amount, 0);
+                    }
                 }
             });
 
@@ -115,8 +118,16 @@
                                 </td>
                                 <!--<td th:text="${sale.paymentMode}"></td>-->
                                 <td th:text="${sale.netPayment}"></td>
-                                <td th:text="${sale.taxInPercentage}"></td>
-                                <td th:text="${sale.taxInAmount}"></td>
+                                <td>
+									<th:block th:each="tax : ${#strings.arraySplit(sale.taxInPercentage, ',')}">
+                                        <span th:text="${tax}"></span><br>
+                                    </th:block>
+								</td>
+                                <td>
+									<th:block th:each="taxInAmount : ${#strings.arraySplit(sale.taxInAmount, ',')}">
+                                        <span th:text="${taxInAmount}"></span><br>
+                                    </th:block>
+								</td>
                             </tr>
                             <tr style="font-weight: bold;">
                                 <td colspan="7" style="text-align: right;">Total Tax Amount:</td>
