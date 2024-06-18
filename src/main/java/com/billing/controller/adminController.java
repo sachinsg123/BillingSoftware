@@ -959,6 +959,19 @@ public class adminController{
                 .toArray();
 		user.getPartiesTransactions().add(partiesTransaction);
 		partiesTransaction.setUser(user);
+
+		Parties parties = partiesTransaction.getParties();
+		Double amount = Double.parseDouble(parties.getOpeningBalance()) - Double.parseDouble(partiesTransaction.getDues());
+		if(amount < 0)
+		{
+			parties.setPayment("toReceive");
+		}
+		else {
+			parties.setPayment("toPay");
+		}
+		parties.setOpeningBalance(String.valueOf(amount));
+		parties.getTransactions().add(partiesTransaction);
+		partiesRepo.save(parties);
 		
 		partiesTransectionRepo.save(partiesTransaction);
 		userRepo.save(user);
@@ -1852,9 +1865,14 @@ public class adminController{
 			model.addAttribute("currentPage", page);		
 			
 			Company company = companyRepo.getCompanyByUserId(user.getId());
+			
 			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+			if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+				String image = user.getImageUrl();
+				imgpath = StringUtils.ImagePaths.userImageUrl + image;
+			}
 			model.addAttribute("imagePath", imgpath);
-
+			
 			String image = company.getLogo();
 			String companyLogo = "/img/companylogo/" + image;
 			model.addAttribute("companyLogo", companyLogo);
@@ -1878,9 +1896,14 @@ public class adminController{
 					model.addAttribute("currentPage", page);
 				
 					Company company = companyRepo.getCompanyByUserId(user.getId());
-					String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-					model.addAttribute("imagePath", imgpath);
 
+					String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+					if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+						String image = user.getImageUrl();
+						imgpath = StringUtils.ImagePaths.userImageUrl + image;
+					}
+					model.addAttribute("imagePath", imgpath);
+					
 					String image = company.getLogo();
 					String companyLogo = "/img/companylogo/" + image;
 					model.addAttribute("companyLogo", companyLogo);

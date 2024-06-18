@@ -4,45 +4,45 @@
 <section>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
-    function filterTable() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const rows = document.querySelectorAll('tbody tr');
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
 
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            let match = false;
-            cells.forEach(cell => {
-                if (cell.textContent.toLowerCase().includes(query)) {
-                    match = true;
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let match = false;
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(query)) {
+                        match = true;
+                    }
+                });
+                row.style.display = match ? '' : 'none';
+            });
+            calculateTotalTax(); // Recalculate total tax after filtering
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('searchInput').addEventListener('keyup', filterTable);
+            calculateTotalTax(); // Initial calculation
+        });
+
+        function calculateTotalTax() {
+            let totalTax = 0;
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                if (row.style.display !== 'none') { // Only consider visible rows
+                    const taxCell = row.querySelector('td:nth-child(8)'); // Assuming tax is in the 8th column
+                    if (taxCell) {
+                        const taxAmounts = taxCell.innerText.split('\n').map(amount => parseFloat(amount.trim())).filter(amount => !isNaN(amount));
+                        totalTax += taxAmounts.reduce((sum, amount) => sum + amount, 0);
+                    }
                 }
             });
-            row.style.display = match ? '' : 'none';
-        });
 
-        calculateTotalTax(); // Recalculate total tax after filtering
-    }
-
-    function calculateTotalTax() {
-        let totalTax = 0;
-        const rows = document.querySelectorAll('tbody tr');
-
-        rows.forEach(row => {
-            if (row.style.display !== 'none') { // Only consider visible rows
-                const taxCell = row.querySelector('td:nth-child(8)'); // Assuming tax is in the 8th column
-                if (taxCell && !isNaN(parseFloat(taxCell.textContent))) {
-                    totalTax += parseFloat(taxCell.textContent);
-                }
-            }
-        });
-
-        document.getElementById('totalTaxAmount').textContent = totalTax.toFixed(2);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('searchInput').addEventListener('keyup', filterTable);
-        calculateTotalTax(); // Initial calculation
-    });
-</script>
+            document.getElementById('totalTaxAmount').textContent = totalTax.toFixed(2);
+        }
+    </script>
 
 	<style>
 		.table tbody tr:hover {
@@ -113,19 +113,23 @@
 										</li>
 									</ul>
 								</td>
-								<td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
-								<!--<td>
-                                <select class="form-control">
-                                    <option value="including_tax">Including Tax</option>
-                                    <option value="excluding_tax">Excluding Tax</option>
-                                </select>
-                            </td>-->
+								<td>
+									<th:block th:each="qty : ${#strings.arraySplit(party?.quantity, ',')}">
+                                        <span th:text="${qty}"></span><br>
+                                    </th:block>
+								</td>
 								
 								<td th:text="${party.netPayment}"><input type="text" class="form-control" value=""
 										readonly></td>
-								<td th:text="${party.taxInPercentage}"><input type="text" class="form-control" value="" readonly>
+								<td>
+									<th:block th:each="tax : ${#strings.arraySplit(party.taxInPercentage, ',')}">
+                                        <span th:text="${tax}"></span><br>
+                                    </th:block>
 								</td>
-								<td th:text="${party.taxInRupees}"><input type="text" class="form-control" value="" readonly>
+								<td>
+									<th:block th:each="taxInRupees : ${#strings.arraySplit(party.taxInRupees, ',')}">
+                                        <span th:text="${taxInRupees}"></span><br>
+                                    </th:block>
 								</td>
 							</tr>
 							<tr style="font-weight: bold;">

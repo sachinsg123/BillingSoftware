@@ -37,8 +37,8 @@
 				<div class="row">
 					<div class="col-md-4 mt-4">
 						<label>Product Name</label>
-						<select id="productSelect" class="form-select form-control" aria-label="Default select example" name="product">
-							<option selected>Select</option>
+						<select id="productSelect" required class="form-select form-control" aria-label="Default select example" name="product">
+							<option value="" disabled selected>Select</option>
 							<option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 							        th:attr="data-price=${product.price}, 
 											data-supplierName=${product.parties	?.name ?: 'N/A'},

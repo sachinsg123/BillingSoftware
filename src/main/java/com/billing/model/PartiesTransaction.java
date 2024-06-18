@@ -197,14 +197,5 @@ public class PartiesTransaction {
 		this.quantity = quantity;
 	}
 
-	@Override
-	public String toString() {
-		return "PartiesTransaction [Id=" + Id + ", billNo=" + billNo + ", date=" + date + ", quantity=" + quantity
-				+ ", discountInRupees=" + discountInRupees + ", discountInPercentage=" + discountInPercentage
-				+ ", taxInRupees=" + taxInRupees + ", taxInPercentage=" + taxInPercentage + ", paymentMode="
-				+ paymentMode + ", paid=" + paid + ", dues=" + dues + ", totalAmount=" + totalAmount + ", status="
-				+ status + ", netPayment=" + netPayment + ", parties=" + parties + ", products=" + products + "]";
-	}
-	
 	
 }

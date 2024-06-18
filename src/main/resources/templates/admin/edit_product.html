@@ -24,7 +24,7 @@
 							<div class="form-group">
 								<select class="form-select form-control" th:field="*{brand}" aria-label="Default select example"
 									name="brand">
-									<option value="" disabled selected>Brand</option >
+									<option value="" selected>Choose</option >
 									<option th:each="brand: ${brands}" th:value="${brand.id}"
 										th:text="${brand.name}"></option>
 								</select>
@@ -58,7 +58,7 @@
 						<div class="form-group">
 							<select class="form-select form-control" th:field="*{category}" aria-label="Default select example"
 								name="category">
-								<option value="" disabled selected>Category</option >
+								<option value="" selected>Choose</option >
 								<option th:each="category: ${categories}" th:value="${category.id}"
 									th:text="${category.categoryName}"></option>
 							</select>
@@ -89,9 +89,8 @@
 						<label>Color</label>
 						<div class="form-group ">
 							<div class="form-group">
-								<select class="form-select form-control" aria-label="Default select example"
-									name="productColor">
-									<option selected>Choose</option>
+								<select class="form-select form-control" aria-label="Default select example" name="productColor">
+									<option value="choose" selected>Choose</option>
 									<option th:each="color: ${colors}" th:value="${color.name}" th:text="${color.name}">
 									</option>
 								</select>

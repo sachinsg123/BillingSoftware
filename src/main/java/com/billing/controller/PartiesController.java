@@ -136,6 +136,9 @@ public class PartiesController {
 			if(parties.getOpeningBalance() == null || parties.getOpeningBalance().isEmpty()) {
 				parties.setOpeningBalance("0");
 			}
+			if(parties.getPayment() == null || parties.getPayment().isEmpty()) {
+				parties.setPayment("");
+			}
 			Parties partiesFindByMobile = partiesRepo.findByMobile(parties.getMobile(), userId);
 			Parties partiesFindByEmail = partiesRepo.findByEmail(parties.getEmail(), userId);
 			if(partiesFindByMobile != null)
@@ -152,7 +155,7 @@ public class PartiesController {
 			user.getParties().add(parties);
 			parties.setUser(user);
 			
-			
+			partiesRepo.save(parties);
 			session.setAttribute("message", "Parties Added Successfully");
 			String referer = request.getHeader("referer");
 			java.net.URI uri = new java.net.URI(referer);

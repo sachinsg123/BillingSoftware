@@ -93,7 +93,7 @@
 							<select id="partiesSelect" required class="form-select form-control"
 								aria-label="Default select example" name="parties">
 								<!--addPartiesProduct-->
-								<option selected>Choose</option>
+								<option value="" disabled selected>Choose</option>
 								<!-- Dynamically populate options with Parties data -->
 								<option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
 									th:attr="data-mobile=${party.mobile}, data-email=${party.email}"></option>
@@ -142,9 +142,8 @@
 									style="background-color: red; color: white;"> <i
 										class="fa-solid fa-trash"></i></button></td>
 
-							<td><select id="productSelect" class="form-select form-control"
-									aria-label="Default select example" name="products">
-									<option selected>Select</option>
+							<td><select id="productSelect" required class="form-select form-control" aria-label="Default select example" name="products">
+									<option value="" disabled selected>Select</option>
 									<!-- Dynamically populate options with product data -->
 									<option th:each="product:${products}" th:value="${product.id}"
 										th:text="${product.name}"
@@ -154,7 +153,7 @@
 								</select>
 							</td>
 
-							<td><input id="AQty" class="form-control" type="number" name="Aquantity"
+							<td><input id="AQty" class="form-control" readonly type="number" name="Aquantity"
 									oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
 
 							<td>
@@ -227,6 +226,7 @@
 							<div class="form-group">
 								<label class="invoice-label">Payment mode:</label>
 								<select class="form-control" name="paymentMode" required>
+									<option value="">Choose</option>
 									<option value="cash">Cash</option>
 									<option value="cheque">Cheque</option>
 									<option value="online">Online</option>
@@ -689,15 +689,10 @@
 			var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
 			var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
 			var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
-			var duesAmount = totalAmount - paidAmount;
+			var duesAmount = totalAmount - paidAmount - discountAmount;
 
 			// Exclude discounted amount from dues if there are dues
-			if (duesAmount > 0) {
-				duesAmount -= discountAmount;
-				if (duesAmount < 0) {
-					duesAmount = 0; // Ensure dues amount doesn't go negative
-				}
-			}
+			
 
 			// Update the dues amount display
 			document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
