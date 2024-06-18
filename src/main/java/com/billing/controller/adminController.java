@@ -1285,23 +1285,49 @@ public class adminController{
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String endpoint = path + (query != null ? "?" + query : "");
+        
 		String quantity = sales.getQuantity();
 		int[] quantityArray = Arrays.stream(quantity.split(","))
 		                            .mapToInt(Integer::parseInt)
 		                            .toArray();
 		
 		sales.setStatus("Active");
+		if(sales.getDiscountInAmount()=="")
+		{
+			sales.setDiscountInAmount("0");
+		}
+		if(sales.getDiscountInPercentage()=="")
+		{
+			sales.setDiscountInPercentage("0");
+		}
+		
 		if (sales.getSignatureImage() == null) {
 			sales.setSignatureImage("");
 		}
 		user.getSales().add(sales);
+		
+		if(sales.getCustomer() == null)
+		{
+			session.setAttribute("message", "Customer Not Selected");
+			return "redirect:" + endpoint;
+		}
 		Customer customer = sales.getCustomer();
+		if(sales.getProducts().isEmpty())
+		{
+			session.setAttribute("message", "Product Not Selected");
+			return "redirect:" + endpoint;
+		}
 		List<Product> products = sales.getProducts();
 		sales.setUser(user);
 		
+		List<Charges> charges = sales.getCharges();
 		salesRepo.save(sales);
 		userRepo.save(user);
-		List<Charges> charges = sales.getCharges();
 		for (Charges charge : charges) {
 			charge.getSales().add(sales);
 			chargesRepo.save(charge);
@@ -1330,11 +1356,7 @@ public class adminController{
 		}
 		session.setAttribute("message", "Sales Bill Generated Successfully");
 		
-		String referer = request.getHeader("referer");
-		java.net.URI uri = new java.net.URI(referer);
-        String path = uri.getPath();
-        String query = uri.getQuery();
-        String endpoint = path + (query != null ? "?" + query : "");
+		
         return "redirect:" + endpoint;
 	}
 	
@@ -1430,14 +1452,26 @@ public class adminController{
 		sales.setQuantity(sale.getQuantity());
 		sales.setTaxInAmount(sale.getTaxInAmount());
 		sales.setTaxInPercentage(sale.getTaxInPercentage());
-		sales.setDiscountInAmount(sale.getDiscountInAmount());
-		sales.setDiscountInPercentage(sale.getDiscountInPercentage());
+		if(sales.getDiscountInAmount()=="")
+		{
+			sales.setDiscountInAmount("0");
+		} else {
+			sales.setDiscountInAmount(sale.getDiscountInAmount());
+		}
+		if(sales.getDiscountInPercentage()=="")
+		{
+			sales.setDiscountInPercentage("0");
+		} else {
+			sales.setDiscountInPercentage(sale.getDiscountInPercentage());
+		}
+		
 		sales.setPaymentMode(sale.getPaymentMode());
 		sales.setAmountPaid(sale.getAmountPaid());
 		sales.setDueAmount(sale.getDueAmount());
 		sales.setNetPayment(sale.getNetPayment());
 		sales.setTotalAmount(sale.getTotalAmount());
 		sales.setSignatureImage(sale.getSignatureImage());
+		sales.setCharges(sale.getCharges());
 		
 //		new products and customer
 		Customer customer = sale.getCustomer();

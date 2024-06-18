@@ -1,12 +1,4 @@
 <!DOCTYPE html>
-<!-- 
-Template Name:  SmartAdmin Responsive WebApp - Template build with Twitter Bootstrap 4
-Version: 4.5.1
-Author: Sunnyat A.
-Website: http://gootbootstrap.com
-Purchase: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0?ref=myorange
-License: You must have a valid license purchased only from wrapbootstrap.com (link above) in order to legally use this theme for your project.
--->
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:fragment="layout(content)">
 <div th:replace="fragments/head :: head"></div>
 
@@ -151,7 +143,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 														<td th:text="${sale.date}"></td>
 														<td th:text="${sale.saleBillNo}"></td>
 														<td th:text="${sale.customer?.name}"></td>
-														<td>							
+														<td>
 															<ul style="list-style-type: none; padding: 0; margin: 0;">
 															    <li th:each="product : ${sale.products}">
 															        <span th:text="${product.name}">Sale ID</span>
@@ -675,7 +667,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 		<a href="#" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Scroll Top">
 			<i class="fal fa-arrow-up"></i>
 		</a>
-		<a href="page_login.html" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Logout">
+		<a href="/logout" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Logout">
 			<i class="fal fa-sign-out"></i>
 		</a>
 		<a href="#" class="menu-item btn" data-action="app-fullscreen" data-toggle="tooltip" data-placement="left"
@@ -686,10 +678,10 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 			title="Print page">
 			<i class="fal fa-print"></i>
 		</a>
-		<a href="#" class="menu-item btn" data-action="app-voice" data-toggle="tooltip" data-placement="left"
+		<!--<a href="#" class="menu-item btn" data-action="app-voice" data-toggle="tooltip" data-placement="left"
 			title="Voice command">
 			<i class="fal fa-microphone"></i>
-		</a>
+		</a>-->
 	</nav>
 	<!-- END Quick Menu -->
 	<!-- BEGIN Messenger -->
