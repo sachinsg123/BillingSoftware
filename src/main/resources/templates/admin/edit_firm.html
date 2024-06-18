@@ -17,9 +17,24 @@
         </div>
 
         <!-- Success message alert -->
-        <div th:if="${successMessage}" class="alert alert-success" role="alert" id="successMessage">
+        <div th:if="${successMessage}" class="alert alert-info" role="alert" id="successMessage">
             <span th:text="${successMessage}" style="font-weight: bold;"></span>
         </div>
+        
+        <script>
+    // Function to hide the popup after a second
+    function hidePopup() {
+        const popup = document.getElementById('successMessage');
+        if (popup) {
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 2000); // 1000 milliseconds = 1 second
+        }
+    }
+
+    // Call the function to hide the popup
+    hidePopup();
+</script>
 
         <!-- Error message alert -->
         <div th:if="${errorMessage}" class="alert alert-danger" role="alert">

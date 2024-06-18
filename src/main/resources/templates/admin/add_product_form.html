@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
 <style>
-	/* Define a custom class for the button */
 	.styled-button {
 		width: 150px;
-		/* Set the desired width */
-		/* Add other styles here */
 	}
 </style>
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 	<div class="contaier-fluid">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
 				<script th:inline="javascript">
-					setTimeout(function () {
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+					setTimeout(function(){
+						window.location.href ='/a2zbilling/admin/clearSessionAttribute';
 					}, 500);
 				</script>
 			</div>
@@ -123,34 +118,18 @@
 						<input type="text" required class="form-control" name="price" placeholder="Enter product price">
 					</div>
 				</div>
-				
-				<!--<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Quantity</label>
-						<input type="text" required class="form-control" name="quantity" id="productQuantity" placeholder="Enter product quantity">
-					</div>
-				</div>-->
-				
 				<div class="col-md-4 mt-3">
 					<div class="form-group">
 						<label>Product Size</label>
 						<input type="text" class="form-control" name="productSize" placeholder="Enter product size">
 					</div>
 				</div>
-				
-				
 				<div class="col-md-4 mt-3">
 					<div class="form-group">
 						<label>About Product</label>
 						<input type="text" class="form-control" name="about" placeholder="Enter about product">
 					</div>
 				</div>
-				<!--<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>choose date</label>
-						<input type="date" class="form-control" name="addedDate">
-					</div>
-				</div>-->
 				<div class="col-md-4 mt-3">
 					<label>Color</label>
 					<div class="form-group">
@@ -162,19 +141,6 @@
 						</select>
 					</div>
 				</div>
-				<!--<div class="col-md-4 mt-2">
-					<div class="form-group">
-						<label>Add Product Image</label>
-						<input type="file" class="form-control" name="imageFile" multiple accept="image/*" onchange="limitFiles(this)">
-					</div>
-				</div>-->
-			<!--	<div class="col-md-4 mt-3">
-					<div class="form-group">
-						<label>Minimum Stock Qty</label>
-						<input type="number" required class="form-control" name="minStockQty" id="minStockQty" placeholder="Enter min stock qty">
-					</div>
-				</div>-->
-				
 				<div class="col-md-12 mt-4 ">
 					<div class="text-center">
 						<button type="submit" class="btn btn-info text-center">Add</button>
@@ -183,6 +149,7 @@
 			</div>
 		</form>
 	</div>
+	
 	<script>
 		// !--Get parties mobile number and Email from Database-->
 
@@ -369,10 +336,7 @@
 			</div>
 		</div>
 	</div>
-
 </section>
-
-<!-- Add your JavaScript links here -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>

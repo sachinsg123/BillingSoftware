@@ -3,11 +3,9 @@
 <div th:replace="fragments/head :: head"></div>
 
 <body class="mod-bg-1 mod-nav-link">
-	<!-- DOC: script to save and load page settings -->
+	
 	<script>
-
 		'use strict';
-
         </script>
         <!-- BEGIN Page Wrapper -->
         <div class="page-wrapper">
@@ -18,10 +16,6 @@
                 <div class="page-content-wrapper">
                     <!-- BEGIN Page Header -->
                     <div th:replace="fragments/header ::header"></div>
-                    <!-- END Page Header -->
-                    <!-- BEGIN Page Content -->
-                    <!-- the #js-page-content id is needed for some plugins to initialize -->
-                    
                     <main id="js-page-content" role="main" class="page-content">
                         <ol class="breadcrumb page-breadcrumb">
                             <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
@@ -62,7 +56,6 @@
 						        /*]]>*/
 						    </script>
 						</div>
-						
                         <div class="row">
                             <div class="col-sm-6 col-xl-3">
                                 <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
@@ -114,19 +107,20 @@
                                 </div>
                             </div>
                         </div>
-                        
+                        <div class="row">
+                            <div class="col-lg-12">
                             <div class="row">
                                 <div id="panel-4" class="panel">
                                     <div class="panel-hdr">
                                         <h2>
-                                            Sale Records
+                                            Purchase<span class="fw-300"><i>Records</i></span>
                                         </h2>
                                     </div>
                                     <div class="panel-container show">
                                         <div class="panel-content">
                                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                                 <thead class="bg-warning-200">
-													<tr style="text-align: center;">
+														<tr style="text-align: center;">
 														<th style="border: 1px solid black;" scope="col">Date</th>
 														<th style="border: 1px solid black;" scope="col">Sale Bill No</th>
 														<th style="border: 1px solid black;" scope="col">Customer Name</th>
@@ -137,9 +131,9 @@
 														<th style="border: 1px solid black;" scope="col">Balance Due</th>
 														<th style="border: 1px solid black;" scope="col">Net Amount</th>
 													</tr>
-                                                </thead>
+													</thead>
                                                 <tbody>
-													<tr th:each="sale : ${sales}" style="text-align: center;">
+                                                    <tr th:each="sale : ${sales}" style="text-align: center;">
 														<td th:text="${sale.date}"></td>
 														<td th:text="${sale.saleBillNo}"></td>
 														<td th:text="${sale.customer?.name}"></td>
@@ -161,13 +155,11 @@
 														<td th:text="${sale.netPayment}"></td>
 													</tr>
 												</tbody>
-                                            </table>
+											</table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            
 						<div class="row">
                             <div id="panel-4" class="panel">
                                 <div class="panel-hdr">
@@ -185,14 +177,12 @@
 						                            <th style="border: 1px solid black;" scope="col">Party Name</th>
 						                            <th style="border: 1px solid black;" scope="col">Product Name</th>
 						                            <th style="border: 1px solid black;" scope="col">Quantity</th>
-						                            <!--<th scope="col">Tax Status</th>-->
 						                            <th style="border: 1px solid black;" scope="col">Discount Amount</th>
 						                            <th style="border: 1px solid black;" scope="col">Payment Type</th>
 						                            <th style="border: 1px solid black;" scope="col">Net Payment</th>
 						                            <th style="border: 1px solid black;" scope="col">Balance Due</th>
 						                            <th style="border: 1px solid black;" scope="col">Amount Paid</th>
-						                            
-						                        </tr>
+						                            </tr>
                                             </thead>
                                             <tbody>
 												<tr th:each="party : ${partiesTransections}" style="text-align: center; border: 1px solid black;">
@@ -219,13 +209,11 @@
                                 </div>
                             </div>
                         </div>
-							
                         </div>
                     </main>
                     <!-- this overlay is activated only when mobile menu is triggered -->
        <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
        <!-- BEGIN Page Footer -->
-      
        <!-- END Page Footer -->
        <!-- BEGIN Shortcuts -->
        <div class="modal fade modal-backdrop-transparent" id="modal-shortcut" tabindex="-1" role="dialog" aria-labelledby="modal-shortcut" aria-hidden="true">
@@ -234,7 +222,7 @@
                    <div class="modal-body">
                        <ul class="app-list w-auto h-auto p-0 text-left">
                            <li>
-                               <a href="intel_introduction.html" class="app-list-item text-white border-0 m-0">
+                               <a th:href="@{/a2zbilling/admin/}" class="app-list-item text-white border-0 m-0">
                                    <div class="icon-stack">
                                        <i class="base base-7 icon-stack-3x opacity-100 color-primary-500 "></i>
                                        <i class="base base-7 icon-stack-2x opacity-100 color-primary-300 "></i>
@@ -249,7 +237,7 @@
                                <a th:href="@{/a2zbilling/admin/edit/firm}" class="app-list-item text-white border-0 m-0">
                                    <div class="icon-stack">
                                        <i class="base base-7 icon-stack-2x opacity-100 color-primary-300"></i>
-                                       <i class="fal fa-plus icon-stack-1x opacity-100 color-white"></i>
+                                       <i class="fal fa-edit icon-stack-1x opacity-100 color-white-300"></i>
                                    </div>
                                    <span class="app-list-name">
                                        Edit Business
@@ -262,8 +250,6 @@
            </div>
        </div>
        <!-- model stART  -->
-       <!-- Button trigger modal -->
-       
 <!-- Modal For edit firm -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -285,7 +271,7 @@
 	                     </div>
 	                     </div>
 	                       <div class="col-md-12">
-	                     <div class="form-group">
+	                  	   <div class="form-group">
 	                     <label>email</label>
 	                     <input type="text" class="form-control" name="email">
 	                     </div>
@@ -331,7 +317,6 @@
                 </div>
   					</div>
 				</div>
-
 				<!--  Modal for Unit adding  -->
 				<div class="modal fade" id="exampleModalUnits" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -372,17 +357,9 @@
 								</form>
 							</div>
 						</div>
-						<!--    <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
-  </div> -->
 					</div>
 				</div>
-
-				<!--  js code for gst  -->
-
 				<script>
-
 					function gstCalculator() {
 
 						var gstPercentage = parseFloat(document.getElementById("gstPercentage").value);
@@ -396,9 +373,7 @@
 						document.getElementById("cgstPercentage").value = cgst.toFixed(2);
 
 					}
-
 				</script>
-
 				<!-- Adding GST Modal -->
 				<div class="modal fade" id="exampleModalForGST" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -448,16 +423,89 @@
 								</form>
 							</div>
 						</div>
-						<!--    <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div> -->
-					</div>
+				  </div>
 				</div>
-
-
-
-<!-- Adding Charges Modal -->
+  <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog"
+  					aria-labelledby="exampleModalLabel" aria-hidden="true">
+  					<div class="modal-dialog" role="document">
+  						<div class="modal-content">
+  							<div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
+  								<h1 class="modal-title" id="exampleModalLabel">Add Charges</h1>
+  								<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+  									<span aria-hidden="true">&times;</span>
+  								</button>
+  							</div>
+  							<div class="modal-body" style="background-color:#f5f0f0;">
+  								<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
+  									<div class="row">
+  										<div class="col-md-12 mt-2">
+  											<input type="hidden" class="form-control" name="name">
+  											<div class="form-group">
+  												<label><b>Name :</b></label>
+  												<input type="text" class="form-control" onkeyup="gstCalculator()"
+  													id="gstPercentage" name="gstRate"
+  													placeholder="Charges Name" required>
+  											</div>
+  										</div>
+  										<div class="col-md-12 mt-2">
+  											<div class="form-group">
+  												<label><b>Price :</b></label>
+  												<input type="text" class="form-control" id="sgstPercentage"
+  													name="sgstRate" placeholder="Enter price">
+  											</div>
+  										</div>
+  										
+  									</div>
+  									<div class="col-md-12 mt-4">
+  										<div class="text-center">
+  											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+  											 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
+  										</div>
+  									</div>
+  								</form>
+  							</div>
+  						</div>
+  				   </div>
+  				</div>	
+				<!--Add Category Module -> Changes by Younus-->
+				<div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content" style="background-color: #f5f0f0;">
+							<div class="modal-header align-items-center" style="background-color: #534F84;color: #fff;">
+								<h1 class="modal-title" id="exampleModalLabel">Add Category</h1>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div th:if="${session.message}">
+									<div class="alert alert-danger" role="alert">
+										<p th:text="${session.message}"></p>
+										<script th:inline="javascript">
+											setTimeout(function () {
+												window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+											}, 500);
+										</script>
+									</div>
+								</div>
+								<form th:action="@{/a2zbilling/admin/category/add}" method="post" class="form-group">
+									<div class="row" style="background-color: #f5f0f0;">
+										<div class="col-md-12 mt-2">
+											<div class="form-group">
+												<label>Category Name :</label>
+												<input type="text" class="form-control" name="categoryName"
+													placeholder=" e.g.category name" required>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 mt-2">
+										<div class="text-center">
+											<button type="submit" class="btn btn-info text-center mt-3">Add</button>
+											 <button type="button" class="btn btn-secondary text-center mt-3" data-dismiss="modal" >Close</button>
+										</div>
+									</div>
+								</form>
   <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -495,55 +543,49 @@
 			</div>
 		</div>
 	</div>
-</div>	
-
-<!--Add Category Module -> Changes by Younus-->
-<div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog"
-	aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content" style="background-color: #f5f0f0;">
-			<div class="modal-header align-items-center" style="background-color: #534F84;color: #fff;">
-				<h1 class="modal-title" id="exampleModalLabel"><b>ADD CATEGORY</b></h1>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<div th:if="${session.message}">
-					<div class="alert alert-danger" role="alert">
-						<p th:text="${session.message}"></p>
-						<script th:inline="javascript">
-							setTimeout(function () {
-								window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-							}, 500);
-						</script>
+</div>
+			<div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content" style="background-color: #f5f0f0;">
+						<div class="modal-header align-items-center" style="background-color: #534F84;color: #fff;">
+							<h1 class="modal-title" id="exampleModalLabel"><b>ADD CATEGORY</b></h1>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div th:if="${session.message}">
+								<div class="alert alert-danger" role="alert">
+									<p th:text="${session.message}"></p>
+									<script th:inline="javascript">
+										setTimeout(function () {
+											window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+										}, 500);
+									</script>
+						    	</div>
+							</div>
+							<form th:action="@{/a2zbilling/admin/category/add}" method="post" class="form-group">
+								<div class="row" style="background-color: #f5f0f0;">
+									<div class="col-md-12 mt-2">
+										<div class="form-group">
+											<label>Category Name :</label>
+											<input type="text" class="form-control" name="categoryName"
+												placeholder=" e.g.category name" required>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 mt-2">
+									<div class="text-center">
+										<button type="submit" class="btn btn-info text-center mt-3">Add</button>
+										 <button type="button" class="btn btn-secondary text-center mt-3" data-dismiss="modal" >Close</button>
+									</div>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
-
-
-				<form th:action="@{/a2zbilling/admin/category/add}" method="post" class="form-group">
-					<div class="row" style="background-color: #f5f0f0;">
-						<div class="col-md-12 mt-2">
-							<div class="form-group">
-								<label>Category Name :</label>
-								<input type="text" class="form-control" name="categoryName"
-									placeholder=" e.g.category name" required>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12 mt-2">
-						<div class="text-center">
-							<button type="submit" class="btn btn-info text-center mt-3">Add</button>
-							 <button type="button" class="btn btn-secondary text-center mt-3" data-dismiss="modal" >Close</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-				
-				<!--Add Brand Module -> Created by Younus-->
+			</div>		
 				<div class="modal fade" id="exampleModalBrand" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog" role="document">
@@ -584,7 +626,6 @@
 						</div>
 					</div>
 				</div>
-				
 			</div>
 			<!-- END Shortcuts -->
 			<!-- BEGIN Color profile -->
@@ -656,6 +697,7 @@
 		</div>
 	</div>
 	</div>
+                      
 	<!-- END Page Wrapper -->
 	<!-- BEGIN Quick Menu -->
 	<!-- to add more items, please make sure to change the variable '$menu-items: number;' in your _page-components-shortcut.scss -->
@@ -685,6 +727,7 @@
 	</nav>
 	<!-- END Quick Menu -->
 	<!-- BEGIN Messenger -->
+
 	<div class="modal fade js-modal-messenger modal-backdrop-transparent" tabindex="-1" role="dialog"
 		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-right">
@@ -715,7 +758,6 @@
 					</button>
 				</div>
 				<div class="modal-body p-0 h-100 d-flex">
-					<!-- BEGIN msgr-list -->
 					<div
 						class="msgr-list d-flex flex-column bg-faded border-faded border-top-0 border-right-0 border-bottom-0 position-absolute pos-top pos-bottom">
 						<div>
@@ -893,8 +935,6 @@
 							</a>
 						</div>
 					</div>
-					<!-- END msgr-list -->
-					<!-- BEGIN msgr -->
 					<div class="msgr d-flex h-100 flex-column bg-white">
 						<!-- BEGIN custom-scroll -->
 						<div class="custom-scroll flex-1 h-100">
@@ -905,8 +945,6 @@
 										Jun 19
 									</div>
 								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment -->
 								<div class="chat-segment chat-segment-sent">
 									<div class="chat-message">
 										<p>
@@ -917,8 +955,6 @@
 										3:00 pm
 									</div>
 								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment -->
 								<div class="chat-segment chat-segment-get">
 									<div class="chat-message">
 										<p>
@@ -935,17 +971,13 @@
 										3:24 pm
 									</div>
 								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment -->
 								<div class="chat-segment chat-segment-sent chat-start">
 									<div class="chat-message">
 										<p>
 											Okay
 										</p>
 									</div>
-								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment -->
+								</div>>
 								<div class="chat-segment chat-segment-sent chat-end">
 									<div class="chat-message">
 										<p>
@@ -957,8 +989,6 @@
 										3:26 pm
 									</div>
 								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment -->
 								<div class="chat-segment chat-segment-get chat-start">
 									<div class="chat-message">
 										<p>
@@ -966,8 +996,6 @@
 										</p>
 									</div>
 								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment -->
 								<div class="chat-segment chat-segment-get">
 									<div class="chat-message">
 										<p>
@@ -975,8 +1003,6 @@
 										</p>
 									</div>
 								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment -->
 								<div class="chat-segment chat-segment-get chat-end">
 									<div class="chat-message">
 										<p>
@@ -984,18 +1010,13 @@
 										</p>
 									</div>
 								</div>
-								<!--  end .chat-segment -->
-								<!-- start .chat-segment for timestamp -->
 								<div class="chat-segment">
 									<div class="time-stamp text-center mb-2 fw-400">
 										Jun 20
 									</div>
 								</div>
-								<!--  end .chat-segment for timestamp -->
 							</div>
 						</div>
-						<!-- END custom-scroll  -->
-						<!-- BEGIN msgr__chatinput -->
 						<div class="d-flex flex-column">
 							<div
 								class="border-faded border-right-0 border-bottom-0 border-left-0 flex-1 mr-3 ml-3 position-relative shadow-top">
@@ -1023,15 +1044,11 @@
 								</div>
 							</div>
 						</div>
-						<!-- END msgr__chatinput -->
 					</div>
-					<!-- END msgr -->
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- END Messenger -->
-	<!-- BEGIN Page Settings -->
 	<div class="modal fade js-modal-settings modal-backdrop-transparent" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-right modal-md">
 			<div class="modal-content">
@@ -1457,7 +1474,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- END Page Settings -->
 	<script>
 		(function (i, s, o, g, r, a, m) {
 			i['GoogleAnalyticsObject'] = r;
@@ -1473,21 +1489,7 @@
 
 		ga('create', 'UA-141754477-1', 'auto');
 		ga('send', 'pageview');
-
 	</script>
-	<!-- base vendor bundle: 
-			 DOC: if you remove pace.js from core please note on Internet Explorer some CSS animations may execute before a page is fully loaded, resulting 'jump' animations 
-						+ pace.js (recommended)
-						+ jquery.js (core)
-						+ jquery-ui-cust.js (core)
-						+ popper.js (core)
-						+ bootstrap.js (core)
-						+ slimscroll.js (extension)
-						+ app.navigation.js (core)
-						+ ba-throttle-debounce.js (core)
-						+ waves.js (extension)
-						+ smartpanels.js (extension)
-						+ src/../jquery-snippets.js (core) -->
 	<script src="/js/vendors.bundle.js"></script>
 	<script src="/js/app.bundle.js"></script>
 	<script type="text/javascript">
@@ -1564,9 +1566,7 @@
 			[600, 2],
 			[700, 1]
 		];
-
-		$(document).ready(function () {
-
+		$(document).ready(function (){
 			/* init datatables */
 			$('#dt-basic-example').dataTable(
 				{
@@ -1587,11 +1587,19 @@
 							titleAttr: 'Print Table',
 							className: 'btn-outline-default'
 						}
+					],
+					columnDefs: [
+						{
+							targets: -1,
+							title: '',
+							orderable: false,
+							render: function (data, type, full, meta) {
 
+								return "\n\t\t\t\t\t\t<a href='javascript:void(0);' class='btn btn-sm btn-icon btn-outline-danger rounded-circle mr-1' title='Delete Record'>\n\t\t\t\t\t\t\t<i class=\"fal fa-times\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<div class='dropdown d-inline-block dropleft'>\n\t\t\t\t\t\t\t<a href='#'' class='btn btn-sm btn-icon btn-outline-primary rounded-circle shadow-0' data-toggle='dropdown' aria-expanded='true' title='More options'>\n\t\t\t\t\t\t\t\t<i class=\"fal fa-ellipsis-v\"></i>\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<div class='dropdown-menu'>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Change Status</a>\n\t\t\t\t\t\t\t\t<a class='dropdown-item' href='javascript:void(0);'>Generate Report</a>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>";
+							},
+						},
 					]
-
 				});
-
 		/* init datatables */
 		$('#dt-basic-example1').dataTable(
 			{
@@ -1616,8 +1624,6 @@
 				]
 
 			});
-			
-			/* flot toggle example */
 			var flot_toggle = function () {
 
 				var data = [
@@ -1631,9 +1637,6 @@
 							align: "center",
 							barWidth: 30 * 30 * 60 * 1000 * 80,
 							lineWidth: 0,
-							/*fillColor: {
-								colors: [color.primary._500, color.primary._900]
-							},*/
 							fillColor:
 							{
 								colors: [
@@ -1737,9 +1740,6 @@
 				plotNow()
 			}
 			flot_toggle();
-			/* flot toggle example -- end*/
-
-			/* flot area */
 			var flotArea = $.plot($('#flot-area'), [
 				{
 					data: dataSet1,
@@ -1816,10 +1816,7 @@
 							color: '#999'
 						}
 					}
-
 				});
-			/* flot area -- end */
-
 			var flotVisit = $.plot('#flotVisit', [
 				{
 					data: [
@@ -1920,14 +1917,8 @@
 						}
 					}
 				});
-
-
 		});
 
 	</script>
 </body>
-<!-- END Body -->
-
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
-
 </html>

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 
 @Configuration
@@ -36,9 +37,6 @@ public class SecurityConfig{
 		return authenticationProvider;
 	}
 	
-	
-	
-	
 	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		
@@ -61,24 +59,10 @@ public class SecurityConfig{
 		.logout()
 		.logoutUrl("/logout")
 		.and()
-        .requestCache()
-            .requestCache(new HttpSessionRequestCache())
+		.requestCache() .requestCache(new HttpSessionRequestCache())
 		;
-		
-	
-		
-	/*	http.csrf().disable()
-		.authorizeHttpRequests()
-		.anyRequest().permitAll();
-		*/
-		
-		
 		return http.build();
-	
-		
 	}
-	
-	
 
     @Bean
     PasswordEncoder getpasswordEncoder() {

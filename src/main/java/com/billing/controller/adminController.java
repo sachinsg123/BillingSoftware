@@ -8,15 +8,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.billing.model.Brand;
 import com.billing.model.BrandDto;
 import com.billing.model.Category;
@@ -70,6 +69,7 @@ import com.billing.services.CustomerServiceImpl;
 import com.billing.services.ProductServiceImpl;
 import com.billing.services.SupplierServiceImpl;
 import com.billing.utils.StringUtils;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -521,6 +521,7 @@ public class adminController{
 		model.addAttribute("email", email);
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
+		model.addAttribute("companyName", company.getName());
 		model.addAttribute("company", company);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
@@ -574,7 +575,6 @@ public class adminController{
 				redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload logo: " + ex.getMessage());
 			}
 		}
-
 		
 		if (companyDto.getSignature() != null && !companyDto.getSignature().isEmpty()) {
 			try {
@@ -903,10 +903,9 @@ public class adminController{
 		// To get Parties Name data from db
 		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		model.addAttribute("parties", parties);
-		
-		//Add Bill No.
+	
 		String purchaseBillString = partiesTransectionRepo.maxPurchaseBillNo(userId);
-		if(!purchaseBillString.isEmpty() && purchaseBillString != null) 
+		if(purchaseBillString != null && !purchaseBillString.isEmpty()) 
 		{
 			String newPurchaseBillNo = purchaseBillString.substring(0, 5);
 			int no =Integer.parseInt(purchaseBillString.substring(5, purchaseBillString.length()));
@@ -1100,6 +1099,7 @@ public class adminController{
 		model.addAttribute("companyLogo", companyLogo);
 
 		return "admin/purchasereturn_transection";
+		
 	}
 	@GetMapping("/purchasereturn/add")
 	public String addPurchaseReturn(Model model) {
@@ -1243,7 +1243,7 @@ public class adminController{
 		model.addAttribute("products", products);
 		
 		String salesBillString = salesRepo.maxSalesBillNo(userId);
-		if(!salesBillString.isEmpty() && salesBillString != null) 
+		if( salesBillString != null && !salesBillString.isEmpty()) 
 		{
 			String newSaleBillNo = salesBillString.substring(0, 5);
 			int no =Integer.parseInt(salesBillString.substring(5, salesBillString.length()));
@@ -1252,6 +1252,7 @@ public class adminController{
 			model.addAttribute("newSaleBillNo", newSaleBillNo);
 		}
 		else {
+			
 			String newSaleBillNo = "SB - 1";
 			model.addAttribute("newSaleBillNo", newSaleBillNo);
 		}
@@ -1645,6 +1646,8 @@ public class adminController{
 	    Brand brand = new Brand();
 	    brand.setName(brandDto.getName());
 	    
+	    
+	    
 	    // Get the uploaded logo file from the DTO
 	    MultipartFile file = brandDto.getLogo();
 	    
@@ -1690,8 +1693,7 @@ public class adminController{
 	    // Redirect to the referer URL
 	    return "redirect:" + endpoint;
 	}
-
-	//Craeted by Younus - Update Brand
+	
 	@GetMapping("/brand/update/{id}")
 	public String updateBrandList(@PathVariable int id, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

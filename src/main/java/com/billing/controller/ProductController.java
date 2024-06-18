@@ -98,10 +98,16 @@ public class ProductController {
 
 	@Autowired
 	private BrandRepository brandRepo;
-
+	
 	@Autowired
 	private PartiesRepository partiesRepo;
-
+	
+	@ModelAttribute("product")
+	public Product product(){
+		
+		return new Product();
+	}
+	
 	@GetMapping("/product/add")
 	public String addProductByAdmin(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -1,4 +1,4 @@
-<!DOCTYPE html> <!-- Created By Mahesh -->
+<!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 	<head>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -50,7 +50,6 @@
 					)
 				}
 			})
-
 		}
 	</script>
 <div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
@@ -64,7 +63,7 @@
 			</script>
 		</div>
 	</div>
-	
+<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
 	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
         <div class="col-md-12">
             <h1 class="text-center mt-2"><b>SALES BILL</b></h1>
@@ -262,7 +261,6 @@
 		        </div>
 		    </div>
 		</div>
-			
 		<div class="col-md-12 mt-2">
 			<div class="text-right mr-6 mt-4">
 				<img th:src="${companySignImgPath}" style="height:100px; width: 150px; margin-left: 200px;" alt="Signature">
@@ -280,7 +278,6 @@
 			</div>
 		</div>
 	</form>
-	
 	<div class="col-md-12 mt-3 text-center">
 		<button type="button" class="btn btn-primary" onclick="printBill()">Print Bill</button>
 	</div>
@@ -332,8 +329,6 @@
 		  		  <div class="col-md-7 mt-4">
 						<input type="date" class="form-control" name="addedDate">
 		  		  </div>
-				  
-				  
 				  <div class="modal-footer d-flex justify-content-end">
 				      <button type="submit" class="btn btn-primary">Add</button>
 				      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -344,10 +339,7 @@
 	    </div>
 	  </div>
 	</div>
-	
 	<!-- Add Print Buttons -->
-		
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 	<script>
 		// Get the select element
@@ -500,6 +492,7 @@
 		        discountPercentField.addEventListener('input', calculateDiscountAndNetAmount);
 		
             }
+    
 			// Function to calculate discounted amount and net amount
 	        function calculateDiscountAndNetAmount() {
 	            var totalAmount = parseFloat(totalAmountField.value);
@@ -577,7 +570,6 @@
 	   });
 	});
 	</script>
-	
 	<script>
 	    // Get references to the input fields
 	    const totalAmountInput = document.getElementById('total_amount');
@@ -603,9 +595,6 @@
 			else calculateTaxAmount();
 			
 		});
-		
-		
-
 	    // Add an event listener to the first input field
 	    totalAmountInput.addEventListener('input', function() {
 	        // Set the value of the second input field to the value entered in the first input field
@@ -666,11 +655,9 @@
 		                </td>
 		            </tr>
 		        `);
-		
 		        // Call the function to add the change event listener for the newly added row
 		        addChangeListener(i);
 		    });
-		
 		    // Function to add change event listener for product selection
 		    function addChangeListener(index) {
 		        $(`#productSelect${index}`).change(function() {
@@ -743,8 +730,6 @@
 			
 			    $('#totalAmountField').val(overallTotal.toFixed(2));
 	        }
-				
-			
 		    // Remove row when "Remove" button is clicked
 		    $(document).on('click', '.remove_row', function() {
 		        var row_id = $(this).attr('id');
@@ -757,10 +742,8 @@
 	<script>
         // Get the current date
         var currentDate = new Date();
-        
         // Format the date as desired (e.g., "2024-04-26")
         var formattedDate = currentDate.toISOString().split('T')[0];
-        
         // Set the value of the input field to the formatted date
         document.getElementById('currentDateInput').value = formattedDate;
 	 </script>
@@ -778,7 +761,6 @@
  				flex-wrap: wrap;
  				justify-content: space-between;
  			}
- 
  			.invoice-field {
  				flex-basis: calc(50% - 10px);
  				margin-bottom: 10px;
@@ -796,11 +778,6 @@
  				margin-left: 10px;
  			}
 	 		</style>
-		
 </section>
 </body>
-<!-- END Body -->
-
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
-
 </html>
