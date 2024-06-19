@@ -33,7 +33,9 @@ public class Customer {
 	private String address;
 
 	private String addedDate;
-
+	
+	private String dueAmount;
+	
 	@ManyToMany(mappedBy = "customer")
 	private List<Product> products = new ArrayList<Product>();
 	
@@ -45,6 +47,14 @@ public class Customer {
 	private List<User> user = new ArrayList<User>();
 
 	private String status;
+
+	public String getDueAmount() {
+		return dueAmount;
+	}
+
+	public void setDueAmount(String dueAmount) {
+		this.dueAmount = dueAmount;
+	}
 
 	public List<Sales> getSales() {
 		return sales;

@@ -38,6 +38,8 @@ public class Sales {
 	private String amountPaid;
 	
 	private String dueAmount;
+
+	private String size;
 	
 	private String netPayment;
 	
@@ -60,6 +62,14 @@ public class Sales {
 	
 	private String status;
 	
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;

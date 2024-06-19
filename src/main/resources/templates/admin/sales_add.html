@@ -165,19 +165,23 @@
 								   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
 							               th:attr="data-price=${product.price},
 							                         data-quantity=${product.stock?.quantity},
-							                         data-size=${product.size?.sizeValue},
 													 data-tax=${product.stock?.taxInPercentage}">
 							       </option>
 					           	</select>
 							</td>
 							<td><input id="cgst" type="text" style="width: 70px;" class="form-control" readonly></td>
 							<td><input id="sgst" type="text" style="width: 70px;" class="form-control" readonly></td>
-							<td><input id="size" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td>
+								<select required id="sizeSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="size">
+						           <option value="" selected>Choose</option>
+								   <option th:each="size : ${sizes}" th:value="${size.sizeValue}" th:text="${size.sizeValue}"></option>
+					           	</select>
+							</td>
 							<td><input id="AQty" type="number" style="width: 70px;" class="form-control" readonly></td>
 							<td><input id="Qty" required name="quantity" type="number" style="width: 70px;" class="form-control"></td>
 							<td><input id="taxinpercentage" name="taxInPercentage" oninput="calculateTaxAmount()" type="number" style="width: 70px;" class="form-control"></td>
 							<td><input id="taxinamount" name="taxInAmount" type="text" style="width: 70px;" class="form-control" readonly></td>
-							<td><input id="price" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="price" required type="text" style="width: 70px;" class="form-control"></td>
 							<td><input id="total_amount" type="text" style="width: 70px;" class="form-control" readonly></td>
 							<td>
 								<a id="1" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
@@ -522,7 +526,6 @@
 			   $('#productSelect').change(function() {
 			       var selectedOption = $(this).find('option:selected');
 			       var price = selectedOption.data('price');
-				   var size = selectedOption.data('size');
 			       var AQty = selectedOption.data('quantity');
 				   var Cgst = selectedOption.data('cgst');
 				   var tax = selectedOption.data('tax');
@@ -547,7 +550,6 @@
 				   
 			       $('#price').val(price);
 				   $('#taxinpercentage').val(tax);
-				   $('#size').val(size);
 				   $('#AQty').val(AQty);
 				   $('#cgst').val(Cgst);
 				   $('#sgst').val(Sgst);
@@ -633,22 +635,27 @@
 		    $('#add').click(function() {
 		        i++; // Increment counter for new row ID
 		        var opts = $("#productSelect").html();
+				var size = $("#sizeSelect").html();
 		        $('#addrow').append(`
 		            <tr id="row${i}">
 		                <td><input id="barcode${i}" type="text" class="form-control"></td>
 		                <td>
-		                    <select id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
+		                    <select required id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
 		                        ${opts}
 		                    </select>
 		                </td>
 		                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
 		                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>
-		                <td><input id="size${i}" type="text" class="form-control" readonly></td>
+		                <td>
+							<select required id="sizeSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="size">
+								${size}
+				           	</select>
+						</td>
 		                <td><input id="AQty${i}" type="number" class="form-control" readonly></td>
-		                <td><input id="Qty${i}" name="quantity" type="number" oninput="calculateTaxAmount1(${i})" class="form-control"></td>
+		                <td><input id="Qty${i}" required name="quantity" type="number" oninput="calculateTaxAmount1(${i})" class="form-control"></td>
 		                <td><input id="taxinpercentage${i}" name="taxInPercentage" oninput="calculateTaxAmount1(${i})" type="number" class="form-control"></td>
 		                <td><input id="taxinamount${i}" name="taxInAmount" type="text" class="form-control" readonly></td>
-		                <td><input id="price${i}" type="text" class="form-control" readonly></td>
+		                <td><input id="price${i}" required type="text" class="form-control"></td>
 		                <td><input id="total_amount${i}" type="text" class="form-control" readonly></td>
 		                <td>
 		                    <a id="${i}" class="btn btn-danger remove_row" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
