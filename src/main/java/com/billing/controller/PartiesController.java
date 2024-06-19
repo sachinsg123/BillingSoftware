@@ -130,17 +130,32 @@ public class PartiesController {
 				throws URISyntaxException {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userRepo.findByUsername(auth.getName());
-			
+			int userId = user.getId();
 			parties.setStatus("Active");
 			
 			if(parties.getOpeningBalance() == null || parties.getOpeningBalance().isEmpty()) {
 				parties.setOpeningBalance("0");
 			}
+			if(parties.getPayment() == null || parties.getPayment().isEmpty()) {
+				parties.setPayment("");
+			}
+			Parties partiesFindByMobile = partiesRepo.findByMobile(parties.getMobile(), userId);
+			Parties partiesFindByEmail = partiesRepo.findByEmail(parties.getEmail(), userId);
+			if(partiesFindByMobile != null)
+			{
+				session.setAttribute("message", "Mobile Already Exist");
+				return "admin/add_parties";
+			}
+			else 
+			if(partiesFindByEmail != null)
+			{
+				session.setAttribute("message", "Email Already Exist");
+				return "admin/add_parties";
+			}
 			user.getParties().add(parties);
 			parties.setUser(user);
-			partiesRepo.save(parties);
-			userRepo.save(user);
 			
+			partiesRepo.save(parties);
 			session.setAttribute("message", "Parties Added Successfully");
 			String referer = request.getHeader("referer");
 			java.net.URI uri = new java.net.URI(referer);

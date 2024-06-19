@@ -176,38 +176,38 @@ public class ProductController {
 		 * System.out.println(supplierName);
 		 */
 		// adding size
-
-		Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
-
-		if (sizeOccured != null) {
-
-			product.setSize(sizeOccured);
-		} else {
-
-			Size s = new Size();
-			s.setSizeValue(productSizeValue);
-			s.setUser(user);
-			sizeRepo.save(s);
-			user.getSizes().add(s);
-			userRepo.save(user);
-			product.setSize(s);
-			user.getSizes().add(s);
-			userRepo.save(user);
+		if(!productSizeValue.equals("choose")) {
+			Size sizeOccured = sizeRepo.findBySizeValue(productSizeValue);
+			if (sizeOccured != null) {
+	
+				product.setSize(sizeOccured);
+			} else {
+	
+				Size s = new Size();
+				s.setSizeValue(productSizeValue);
+				s.setUser(user);
+				sizeRepo.save(s);
+				user.getSizes().add(s);
+				userRepo.save(user);
+				product.setSize(s);
+				user.getSizes().add(s);
+				userRepo.save(user);
+			}
 		}
-
+		
 		// adding color
-		Color colorFound = colorRepo.findByName(colorName);
-
-		if (colorFound != null) {
-
-			product.setColor(colorFound);
-		} else {
-			Color co = new Color();
-			co.setName(colorName);
-			colorRepo.save(co);
-			product.setColor(co);
+		if(!colorName.equals("choose")) {
+			Color colorFound = colorRepo.findByName(colorName);
+			if (colorFound != null) {
+	
+				product.setColor(colorFound);
+			} else {
+				Color co = new Color();
+				co.setName(colorName);
+				colorRepo.save(co);
+				product.setColor(co);
+			}
 		}
-
 		/*
 		 * // add brand into product Brand brandFound = brandRepo.findByName(brandName);
 		 * 
@@ -220,18 +220,18 @@ public class ProductController {
 		 */
 
 		Brand brand = product.getBrand();
-		brand.getProducts().add(product);
-		brandRepo.save(brand);
-		product.setBrand(brand);
-
-		Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
-
-		if (cat == null) {
-
-			product.setCategory(null);
+		if(brand != null) {
+			brand.getProducts().add(product);
+			brandRepo.save(brand);
+			product.setBrand(brand);
 		}
-
-		product.setCategory(cat);
+		Category cat = product.getCategory();
+		if (cat != null) {
+			Category cat1 = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
+			cat1.getProducts().add(product);
+			categoryRepo.save(cat1);
+			product.setCategory(cat1);
+		}
 		product.setStatus("Active");
 
 		productRepo.save(product);
@@ -322,21 +322,23 @@ public class ProductController {
 			userRepo.save(user);
 			productFound.setSize(s);
 		}
-
-		Color colorFound = colorRepo.findByName(colorName);
-		if (colorFound != null) {
-			colorFound.getProducts().add(product);
-			colorRepo.save(colorFound);
-
-			productFound.setColor(colorFound);
-		} else {
-			Color color = new Color();
-			color.setName(colorName);
-
-			colorRepo.save(color);
-			productFound.setColor(color);
+		
+		if(!colorName.equals("choose")) {
+			Color colorFound = colorRepo.findByName(colorName);
+			if (colorFound != null) {
+				colorFound.getProducts().add(product);
+				colorRepo.save(colorFound);
+	
+				productFound.setColor(colorFound);
+			} else {
+				Color color = new Color();
+				color.setName(colorName);
+	
+				colorRepo.save(color);
+				productFound.setColor(color);
+			}
 		}
-
+		
 		Brand brand = product.getBrand();
 		if (brand != null) {
 			brand.getProducts().add(product);
@@ -344,11 +346,13 @@ public class ProductController {
 			productFound.setBrand(brand);
 		}
 
-		Category cat = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
+		Category cat = product.getCategory();
 		if (cat != null) {
-			productFound.setCategory(cat);
+			Category cat1 = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
+			cat1.getProducts().add(product);
+			categoryRepo.save(cat1);
+			product.setCategory(cat1);
 		}
-
 		productFound.setStatus("Active");
 
 		productRepo.save(productFound);

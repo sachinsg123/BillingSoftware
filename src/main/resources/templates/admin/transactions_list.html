@@ -68,14 +68,13 @@
 		<div class="row mt-4">
 			<div class="col-md-12">
 				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
-					<thead style="background-color: #696969;color: #fff;">
+					<thead style="color:black; background-color: #F3EBD6">
                         <tr>
                             <th scope="col">Date</th>
                             <th scope="col">Invoice No</th>
                             <th scope="col">Supplier Name</th>
                             <th scope="col">Product Name</th>
                             <th scope="col">Quantity</th>
-                            <!--<th scope="col">Tax Status</th>-->
                             <th scope="col">Discount Amount</th>
                             <th scope="col">Payment Type</th>
                             <th scope="col">Net Payment</th>
@@ -95,13 +94,12 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>
-                            <!--<td>
-                                <select class="form-control">
-                                    <option value="including_tax">Including Tax</option>
-                                    <option value="excluding_tax">Excluding Tax</option>
-                                </select>
-                            </td>-->
+                            <td>
+								<th:block th:each="qty : ${#strings.arraySplit(party?.quantity, ',')}">
+                                    <span th:text="${qty}"></span><br>
+                                </th:block>
+							</td>
+                            
                             <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
