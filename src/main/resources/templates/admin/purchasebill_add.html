@@ -3,6 +3,7 @@
 
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 	<head>
 
 		<meta charset="UTF-8">
@@ -38,7 +39,6 @@
 			.invoice-value {
 				margin-left: 10px;
 			}
-			
 		</style>
 
 		<div class="contaier-fluid">
@@ -70,7 +70,7 @@
 			<!-- //style="overflow-x: auto;" -->
 			<div class="col-md-12 mt-1">
 
-			
+
 				<!--Purchase Bill Number Code-->
 				<div class="row d-flex justify-content-end">
 					<div class="col-md-3 mt-3 input-group ">
@@ -79,25 +79,25 @@
 								style="background-color: #715499; color: white ; border: 1px solid #715499 ;">Bill
 								No</span>
 						</div>
-						<input th:value="${newPurchaseBillNo}" name="billNo" id="purchaseorder" style="border: 1px solid #715499 ;" type="text"
-							class="form-control" readonly value="PB-">
+						<input th:value="${newPurchaseBillNo}" name="billNo" id="purchaseorder"
+							style="border: 1px solid #715499 ;" type="text" class="form-control" readonly value="PB-">
 					</div>
 				</div>
-				
-				
+
+
 				<!--Get Parties data from database-->
 				<div class="row ml-1 mr-1">
 					<div class="input-group">
-						<div class="col-md-4 mt-3 input-group">
+						<div class="col-md-4 mt-3 input-group " re>
 							<label>Supplier Name :- </label>
-							<select id="partiesSelect" required class="form-select form-control"
-								aria-label="Default select example" name="parties">
+							<select  id="partiesSelect" class="form-select form-control"
+								aria-label="Default select example" name="parties" required >
 								<!--addPartiesProduct-->
 								<option value="" disabled selected>Choose</option>
 								<!-- Dynamically populate options with Parties data -->
 								<option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
 									th:attr="data-mobile=${party.mobile}, data-email=${party.email}"></option>
-							</select>
+							</select >
 							<button type="button" class="btn btn-info ml-2" data-toggle="modal"
 								data-target="#exampleModal">
 								<i class="fa-solid fa-plus"></i>
@@ -124,16 +124,16 @@
 				<table id="itemtable" class="table table-bordered" style="background-color: #fff; color: black;">
 					<thead style="background-color: #F3EBD6;">
 						<tr>
-							<th></th>
-							<th scope="col">Product Name</th>
-							<th scope="col">Available Qty</th>
-							<th scope="col">Quantity</th>
-							<th scope="col">Size</th>
-							<th scope="col">Unit</th>
-							<th scope="col">Price/Unit</th>
-							<th scope="col">Tax %</th>
-							<th scope="col">Tax Amount</th>
-							<th scope="col">Total Amount</th>
+							<th style="border: 1px solid black;"></th>
+							<th style="border: 1px solid black;" scope="col">Product Name</th>
+							<th style="border: 1px solid black;" scope="col">Available Qty</th>
+							<th style="border: 1px solid black;" scope="col">Quantity</th>
+							<th style="border: 1px solid black;" scope="col">Size</th>
+							<th style="border: 1px solid black;" scope="col">Unit</th>
+							<th style="border: 1px solid black;" scope="col">Price/Unit</th>
+							<th style="border: 1px solid black;" scope="col">Tax %</th>
+							<th style="border: 1px solid black;" scope="col">Tax Amount</th>
+							<th style="border: 1px solid black;" scope="col">Total Amount</th>
 						</tr>
 					</thead>
 					<tbody id="addrow">
@@ -142,8 +142,10 @@
 									style="background-color: red; color: white;"> <i
 										class="fa-solid fa-trash"></i></button></td>
 
-							<td><select id="productSelect" required class="form-select form-control" aria-label="Default select example" name="products">
-									<option value="" disabled selected>Select</option>
+							<td><select id="productSelect" class="form-select form-control"
+									aria-label="Default select example" name="products">
+									<option value="" disabled selected	>Select</option>
+
 									<!-- Dynamically populate options with product data -->
 									<option th:each="product:${products}" th:value="${product.id}"
 										th:text="${product.name}"
@@ -263,7 +265,7 @@
 			<div class="col-md-12 mt-5">
 				<div class="text-center">
 
-					<button type="submit" class="btn btn-info text-center " >Save</button>
+					<button type="submit" class="btn btn-info text-center ">Save</button>
 					<!--<button type="button" onclick="saveAndNew" class="btn btn-info text-center ml-3 ">Save & New</button> -->
 					<a th:href="@{'/a2zbilling/admin/purchasebill/transection'}" class="btn btn-info ml-3">Cancel</a>
 				</div>

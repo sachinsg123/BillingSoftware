@@ -616,7 +616,7 @@ public class adminController{
 	}
 
 	@PostMapping("/unit/add")
-	public String addUnit(@ModelAttribute Unit unit, HttpSession session) {
+	public String addUnit(@ModelAttribute Unit unit, HttpSession session, HttpServletRequest request) throws URISyntaxException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -642,9 +642,13 @@ public class adminController{
 			session.setAttribute("message", "Unit Updated Successfully !!");
 		}
 		
-		
-		
-		return "redirect:/a2zbilling/admin/";
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+		String path = uri.getPath();
+		String query = uri.getQuery();
+		String endpoint = path + (query != null ? "?" + query : "");
+
+		return "redirect:" + endpoint;
 	}
 
 	
