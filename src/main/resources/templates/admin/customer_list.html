@@ -68,23 +68,25 @@
 			<div class="col-md-12 pb-2">
 				<table class="table table-bordered table-hover table-striped" style="background-color: #fff	;">
 					<thead style="background-color: #F3EBD6; color: black;">
-						<tr>
+						<tr style="text-align: center;">
 							<th scope="col">Customer Id</th>
 							<th scope="col">Name</th>
 							<th scope="col">Email</th>
 							<th scope="col">Mobile</th>
 							<th scope="col">Address</th>
+							<th scope="col">Due Amount</th>
 							<th scope="col">Added Date</th>
 							<th scope="col">Edit</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody style="text-align: center;">
 						<tr th:each=" customer : ${customers.content}">
 							<th scope="row" th:text="${customer.id}"></th>
 							<td th:text="${customer.name}"></td>
 							<td th:text="${customer.email}"></td>
 							<td th:text="${customer.mobile}"></td>
 							<td th:text="${customer.address}"></td>
+							<td th:text="${customer.dueAmount ?: '0'}"></td>
 							<td th:text="${customer.addedDate}"></td>
 							<td><a th:href="@{'/a2zbilling/admin/customer/update/'+ ${customer.id} }"
 									class="btn btn-success"><i class="fa fa-edit"></i></a>

@@ -85,6 +85,7 @@ public class CustomerController {
 
 		List<User> userList = new ArrayList<User>();
 		userList.add(addedByUser);
+		customer.setDueAmount("0");
 		customer.setUser(userList);
 		customer.setStatus("Active");
 		customerRepo.save(customer);

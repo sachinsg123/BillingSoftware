@@ -161,8 +161,8 @@
 					    <tr th:each="product,iterStat : ${sale.products}">
 					        <td><input id="barcode" style="width: 70px;" type="text" class="form-control"></td>
 					        <td>
-					            <select id="productSelect" style="width: 90px;" name="products" class="form-select form-control" aria-label="Default select example" onchange="updateProductDetails(this)">
-					                <option value="" disabled selected>Choose</option>
+					            <select required id="productSelect" style="width: 90px;" name="products" class="form-select form-control" aria-label="Default select example" onchange="updateProductDetails(this)">
+					                <option value="" selected>Choose</option>
 					                <option th:each="p : ${products}" 
 					                        th:value="${p.id}" 
 					                        th:text="${p.name}"
@@ -173,12 +173,21 @@
 					        </td>
 					        <td><input id="cgst" style="width: 70px;" th:value="${product?.gst?.cgstRate ?: '0'}" type="text" class="form-control" readonly></td>
 					        <td><input id="sgst" style="width: 70px;" th:value="${product?.gst?.sgstRate ?: '0'}" type="text" class="form-control" readonly></td>
-					        <td><input id="size" style="width: 70px;" type="text" th:value="${product?.size?.sizeValue ?: '0'}" class="form-control" readonly></td>
+					        <td>
+								<select required id="sizeSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="size">
+						           <option value="" selected>Choose</option>
+								   <option	th:each="size : ${sizes}"
+								   			th:value="${size.sizeValue}" 
+											th:text="${size.sizeValue}"
+											th:selected="${size.sizeValue} == ${#strings.arraySplit(sale?.size, ',')[iterStat.index]}"
+									></option>
+					           	</select>
+							</td>
 					        <td><input id="AQty" style="width: 70px;" type="number" th:value="${product?.stock?.quantity ?: '0'}" class="form-control" readonly></td>
 					        <td><input id="Qty" required style="width: 70px;" type="number" name="quantity" th:value="${#strings.arraySplit(sale?.quantity, ',')[iterStat.index]}" class="form-control"  oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
 					        <td><input id="taxinpercentage" style="width: 70px;" name="taxInPercentage" type="number" th:value="${#strings.arraySplit(sale?.taxInPercentage, ',')[iterStat.index]}" class="form-control" oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
 					        <td><input id="taxinamount" style="width: 70px;" name="taxInAmount" type="text" class="form-control" readonly th:value="${#strings.arraySplit(sale?.taxInAmount, ',')[iterStat.index]}"></td>
-					        <td><input id="price" style="width: 70px;" type="text" th:value="${product?.price}" class="form-control" readonly></td>
+					        <td><input id="price" required style="width: 70px;" type="text" th:value="${product?.price}" class="form-control"></td>
 					        <td><input id="total_amount" style="width: 70px;" class="form-control" type="text" readonly></td>
 					        <td>
 					            <a id="deleteBtn" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
@@ -577,6 +586,7 @@
 			    $('#add').click(function() {
 			        i++; // Increment counter for new row ID
 			        var opts = $("#productSelect").html();
+					var size = $("#sizeSelect").html();
 			        $('#addrow').append(`
 			            <tr id="row${i}">
 			                <td><input id="barcode${i}" type="text" class="form-control"></td>
@@ -587,7 +597,11 @@
 			                </td>
 			                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
 			                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>
-			                <td><input id="size${i}" type="text" class="form-control" readonly></td>
+			                <td>
+								<select required id="sizeSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="size">
+									${size}
+					           	</select>
+							</td>
 			                <td><input id="AQty${i}" type="number" class="form-control" readonly></td>
 			                <td><input id="Qty${i}" name="quantity" type="number" oninput="calculateTaxAmount1(${i})" class="form-control"></td>
 			                <td><input id="taxinpercentage${i}" name="taxInPercentage" oninput="calculateTaxAmount1(${i})" type="number" class="form-control"></td>

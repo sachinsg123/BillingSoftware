@@ -219,7 +219,6 @@ public class PartiesController {
 			partie.setPanNumber(parties.getPanNumber());
 			partie.setDrivingLicenceNumber(parties.getDrivingLicenceNumber());
 			partie.setPartyGroup(parties.getPartyGroup());
-			partie.setPayment(parties.getPayment());
 			
 			if(parties.getOpeningBalance() == null || parties.getOpeningBalance().isEmpty()) {
 				partie.setOpeningBalance("0");

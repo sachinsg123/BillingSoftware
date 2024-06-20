@@ -965,7 +965,7 @@ public class adminController{
 		partiesTransaction.setUser(user);
 
 		Parties parties = partiesTransaction.getParties();
-		Double amount = Double.parseDouble(parties.getOpeningBalance()) - Double.parseDouble(partiesTransaction.getDues());
+		Double amount = Double.parseDouble(parties.getOpeningBalance()) + Double.parseDouble(partiesTransaction.getDues());
 		if(amount < 0)
 		{
 			parties.setPayment("toReceive");
@@ -1255,7 +1255,10 @@ public class adminController{
 		
 		List<Customer> customers = customerRepo.showAllCustomerBYActive(userId);
 		model.addAttribute("customers", customers);
-
+		
+		List<Size> sizes = sizeRepo.showAllSize(userId);
+		model.addAttribute("sizes", sizes);
+		
 		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
 		
@@ -1366,6 +1369,8 @@ public class adminController{
 			productRepo.save(product);
 		}
 		customer.setProducts(customerProduct);
+		Double amount = Double.parseDouble(customer.getDueAmount()) +  Double.parseDouble(sales.getDueAmount());
+		customer.setDueAmount(String.valueOf(amount));
 		customerRepo.save(customer);
 
 		for (Product product : products) {
@@ -1436,6 +1441,9 @@ public class adminController{
 		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products",products);
 		
+		List<Size> sizes = sizeRepo.showAllSize(userId);
+		model.addAttribute("sizes", sizes);
+		
 		List<Charges> charges = chargesRepo.findByActiveCharges(userId);
 		model.addAttribute("charges", charges);
 		
@@ -1464,12 +1472,77 @@ public class adminController{
 	@PostMapping("/sales/return")
 	public String returnsalesProcess(@ModelAttribute Sales sale, Model model) {
 		Sales sales = salesRepo.findById(sale.getId()).get();
+		//new products and customer
+		Customer newCustomer = sale.getCustomer();
+		List<Product> newProducts = sale.getProducts();
+		
+		//old products and customer
+		List<Product> oldProduct = sales.getProducts();
+		Customer oldCustomer = sales.getCustomer();
+		
+		//update the due amount
+		Double oldDue = Double.parseDouble(sales.getDueAmount());
+		Double newDue = Double.parseDouble(sale.getDueAmount());
+		
+		if(oldCustomer.getId() == newCustomer.getId())
+		{
+			Double diffDue = oldDue - newDue;
+			Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - diffDue;
+			oldCustomer.setDueAmount(String.valueOf(amount));
+			customerRepo.save(oldCustomer);
+		}
+		else
+		{
+			//remove due from old customer
+			oldCustomer.setDueAmount(String.valueOf(Double.parseDouble(oldCustomer.getDueAmount()) - oldDue));
+			customerRepo.save(oldCustomer);
+			
+			//add due in new customer
+			Double amount = Double.parseDouble(newCustomer.getDueAmount()) +  Double.parseDouble(sale.getDueAmount());
+			newCustomer.setDueAmount(String.valueOf(amount));
+			customerRepo.save(newCustomer);
+		}
+		//update the quantity
+		String oldQuantity = sales.getQuantity();
+		int[] oldQuantityArray = Arrays.stream(oldQuantity.split(","))
+		                            .mapToInt(Integer::parseInt)
+		                            .toArray();
+		String newQuantity = sale.getQuantity();
+		int[] newQuantityArray = Arrays.stream(newQuantity.split(","))
+		                            .mapToInt(Integer::parseInt)
+		                            .toArray();
+
+		int i=0;
+		for (Product product : oldProduct) {
+			Stock stock = product.getStock();
+			
+			int num = Integer.parseInt(stock.getQuantity()) + oldQuantityArray[i];
+			stock.setQuantity(String.valueOf(num));
+			product.setStock(stock);
+			
+//			customerProduct.add(product);
+//			product.getCustomer().add(oldCustomer);
+			productRepo.save(product);
+		}
+		i=0;
+		for (Product product : newProducts) {
+			Stock stock = product.getStock();
+			
+			int num = Integer.parseInt(stock.getQuantity()) - newQuantityArray[i];
+			stock.setQuantity(String.valueOf(num));
+			product.setStock(stock);
+			
+			newCustomer.getProducts().add(product);
+			product.getCustomer().add(newCustomer);
+			productRepo.save(product);
+		}
 		
 		sales.setDate("");
 		sales.setDate(sale.getDate());
 		sales.setQuantity(sale.getQuantity());
 		sales.setTaxInAmount(sale.getTaxInAmount());
 		sales.setTaxInPercentage(sale.getTaxInPercentage());
+		
 		if(sales.getDiscountInAmount()=="")
 		{
 			sales.setDiscountInAmount("0");
@@ -1490,17 +1563,10 @@ public class adminController{
 		sales.setTotalAmount(sale.getTotalAmount());
 		sales.setSignatureImage(sale.getSignatureImage());
 		sales.setCharges(sale.getCharges());
-		
-//		new products and customer
-		Customer customer = sale.getCustomer();
-		List<Product> products = sale.getProducts();
-		
-//		old products and customer
-		List<Product> SalesProduct = sales.getProducts();
-		Customer SalesCustomer = sales.getCustomer();
-		
-		sales.setProducts(products);
-		sales.setCustomer(customer);
+		sales.setSize(sale.getSize());
+
+		sales.setProducts(newProducts);
+		sales.setCustomer(newCustomer);
 		
 		salesRepo.save(sales);
 		return "redirect:/a2zbilling/admin/sales/list";
