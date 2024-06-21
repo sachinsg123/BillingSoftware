@@ -164,15 +164,15 @@
 							</td>
 
 							<td>
-								<select id="size" name="size[]" class="form-control" required>
+								<select id="size" name="size" class="form-control" required>
 									<option value="None">Select Size</option>
-									<option th:each="size : ${sizes}" value="${size.id}" th:text="${size.sizeValue}">
+									<option th:each="size : ${sizes}" th:value="${size.sizeValue}" th:text="${size.sizeValue}">
 								</select>
 							</td>
 							<td>
 								<select id="unit" name="unit[]" class="form-control" required>
 									<option value="None">Select Unit</option>
-									<option th:each="unit : ${units}" value="${unit.id}" th:text="${unit.unitName}">
+									<option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.unitName}">
 								</select>
 							</td>
 							<td><input id="price" class="form-control" type="number" name="price" required

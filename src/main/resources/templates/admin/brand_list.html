@@ -8,8 +8,8 @@
 			function deleteContactAlert(id) {
 				const swalWithBootstrapButtons = Swal.mixin({
 					customClass: {
-						confirmButton: 'btn btn-success',
-						cancelButton: 'btn btn-danger'
+						confirmButton: 'btn btn-success m-2',
+						cancelButton: 'btn btn-danger m-2'
 					},
 					buttonsStyling: false
 				})
@@ -64,15 +64,14 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-12" style="background-color: #f5f0f0;">
+			<div class="col-md-12" style="background-color: #fff;">
 				<table class="table table-bordered table-hover table-striped">
 					<thead style="background-color: #F3EBD6;">
 						<tr>
-							<th scope="col" name="id">ID</th>
-							<th scope="col" name="name">Brand Name</th>
-							<th scope="col" type="file">Logo </th>
-							<!--<th scope="col" type="file" >Logo</th>-->
-							<th scope="col">Action</th>
+							<th style="border: 1px solid black;" scope="col" name="id">ID</th >
+							<th style="border: 1px solid black;" scope="col" name="name">Brand Name</th >
+							<th style="border: 1px solid black;" scope="col" type="file">Logo </th >
+							<th style="border: 1px solid black;" scope="col">Action</th >
 						</tr>
 					</thead>
 					<tbody>
@@ -81,8 +80,8 @@
 							<td th:text="${brand.name}"></td>
 
 							<td>
-								<!--Code to get images from database = >  object-fit: cover-->
-								<img th:src="@{'/img/brandlogo/' + ${brand.logo}}" style="height:80px; width: 80px; border-radius: 50%;;"
+								<!--Code to get images from database = >  object-fit: cover        border-radius: 50%;-->
+								<img th:src="@{'/img/brandlogo/' + ${brand.logo}}" style="height:80px; width: 80px; ;"
 									 onerror="this.onerror=null; this.src='/img/admin/default.png';">
 							</td>
 							<!--<td> </td>-->

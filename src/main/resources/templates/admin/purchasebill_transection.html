@@ -82,7 +82,7 @@
     </div>
     <div class="row" style="background-color: rgb(84,78,130); color: #fff;">
         <div class="col-md-12 mt-1">
-            <h1 class="text-center">Purchase Transaction</h1>
+            <h1 class="text-center"><b>PURCHASE TRANSACTION</b></h1>
         </div>
     </div>
     <div style="background-color: #f5f0f0;">
@@ -113,6 +113,7 @@
                             <th style="border: 1px solid black;" scope="col">Net Payment</th>
                             <th style="border: 1px solid black;" scope="col">Balance Due</th>
                             <th style="border: 1px solid black;" scope="col">Amount Paid</th>
+                            <th style="border: 1px solid black;" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,6 +139,19 @@
                             <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly></td>
+                            <td style="position: relative;">
+                            <div class="dropdown">
+                            <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							      <i class="fa-solid fa-ellipsis-vertical"></i>
+						    </button>
+						  		<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+							      <!--<a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>-->
+							      <a class="dropdown-item" th:href="@{'/a2zbilling/admin/purchasereturn/add/' + ${party.id}}"><b>Purchase Return</b></a>
+							    <!--  <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>-->
+							    </div>
+                            </div >
+                            </td >
+                            
                         </tr>
                     </tbody>
                 </table>
