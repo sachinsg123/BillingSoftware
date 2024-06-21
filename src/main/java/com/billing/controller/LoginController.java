@@ -47,6 +47,7 @@ public class LoginController{
 	@Autowired
     private JavaMailSender javaMailSender;
 	
+	private String storedOtp = "";
 	
 	@GetMapping("/login-user")
 	public String loginPage(){
@@ -148,6 +149,14 @@ public class LoginController{
 		return "redirect:/auth/login-user";
 	}
 	
+	@PostMapping("/checkValidOTP")
+    public ResponseEntity<String> checkValidOTP(@RequestParam("otp") String otp) {
+        if(otp.equals(storedOtp)) {
+        	return ResponseEntity.ok("Email Verified Successfully !!");
+        }
+        return ResponseEntity.ok("Entered OTP is Wrong");
+    }
+	
 	//created by Mahesh
 	public String generateOTP(int length) {
         String numbers = "0123456789";
@@ -174,20 +183,44 @@ public class LoginController{
 	
 	//created by Mahesh
 	@PostMapping("/sendOTPEmail")
-    public ResponseEntity<String> sendOTPEmail1(@RequestParam("email") String email, HttpSession session) {
+    public ResponseEntity<String> sendOTPEmail1(@RequestParam("email") String email) {
+		
+		User user = userrepo.findByEmail(email);
+		
+		if(user != null) return ResponseEntity.ok("Email Present");
+		
+        String otp = generateOTP(6); // Generate a 6-digit OTP
+        storedOtp = otp;
+        String subject = "Your OTP for Verification";
+        String body = "Your OTP is : " + otp + ". Please use this OTP to verify your email.";
+
+        try {
+        	sendOTPEmail(email, subject, body); // Assuming this is the correct method signature
+        	
+            return ResponseEntity.ok("OTP sent to " + email + " successfully.");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send OTP");
+        }
+    }
+	
+	//created by Mahesh
+	@PostMapping("/sendOTPForForgotPassword")
+    public ResponseEntity<String> sendOTPForForgotPassword(@RequestParam("email") String email) {
 		
 		User user = userrepo.findByEmail(email);
 		
 		if(user == null) return ResponseEntity.ok("Email Not Present");
 		
         String otp = generateOTP(6); // Generate a 6-digit OTP
+        storedOtp = otp;
         String subject = "Your OTP for Verification";
-        String body = "Your OTP is: " + otp + ". Please use this OTP to verify your email.";
+        String body = "Your OTP is : " + otp + ". Please use this OTP to verify your email.";
 
-        
         try {
         	sendOTPEmail(email, subject, body); // Assuming this is the correct method signature
-            return ResponseEntity.ok("OTP sent to " + email + "this email successfully.");
+        	
+            return ResponseEntity.ok("OTP sent to " + email + " successfully.");
         } catch (MessagingException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send OTP");
