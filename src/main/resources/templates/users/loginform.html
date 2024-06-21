@@ -35,6 +35,20 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
         <link rel="stylesheet" media="screen, print" href="/css/fa-brands.css">
 		<script th:src="@{/js/script.js}" defer></script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+		<style>
+	        .verificationbutton {
+	            text-align: center;
+	            width: 50%;
+	        }
+			.otpLableDiv {
+	            display: none;
+	        }
+			.otpInputDiv {
+	            display: none;
+	        }
+			
+	    </style>
 </head>
     <!-- BEGIN Body -->
     <!-- Possible Classes
@@ -190,13 +204,25 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 						  		  <div class="col-md-7 mt-4">
 						  		  		<input size="50" type="email" id="email2" required class="form-control" name="email" placeholder="Enter your e-mail">
 						  		  </div>
-								  
+								  <div class="col-md-5 mt-4">
+									
+  								  </div>
+		  						<div class="col-md-7 mt-4">
+		  							<button type="button" class="btn btn-primary" id="generateOTPButton1">Send OTP</button>
+		  						</div>
+								<div id="otpLable" class="col-md-5 mt-4 otpLableDiv">
+									<label><b>Enter OTP</b></label>
+		                        </div>
+								<div id="otpInput" class="col-md-7 mt-4 form-group otpInputDiv">
+								    <input type="text" id="enterOtp" required class="form-control mr-2" placeholder="Enter your OTP">
+								    <button type="button" class="btn btn-primary verificationbutton" id="verification">Verify</button>
+								</div>
 								  <div class="col-md-5 mt-4">
 										<label><b>Mobile</b></label>
 								  </div>
 						  		  <div class="col-md-7 mt-4">
 										<input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
-						  		  </div>
+									</div>
 								  
 								  <div class="col-md-5 mt-2">
 				                      <label><b>Image</b></label>
@@ -319,15 +345,17 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 								<button type="button" class="btn btn-primary" id="generateOTPButton">Send OTP</button>
 							</div>
 						</div>
-						<div class="row mt-2 mb-2" id="otpRow" style="display: none;">
-							<div class="col-md-5 mt-4">
-								<label><b>Enter OTP</b></label>
-	                        </div>
-							<div class="col-md-7 mt-4">
-								<input type="text" id="OTP" required class="form-control" placeholder="Enter your OTP">
+						<div class="row mt-2 mb-2" id="otpRow" style="">
+						    <div class="col-md-5 mt-4 d-flex align-items-center">
+						        <label class="mb-0"><b>Enter OTP</b></label>
+						    </div>
+						    <div class="col-md-3 mt-4">
+						        <input type="text" id="OTP" required class="form-control" placeholder="Enter your OTP">
+						    </div>
+						    <div class="col-md-4 mt-4 modal-footer d-flex justify-content-end">
+						        <button type="button" class="btn btn-primary verificationbutton text-center" id="verification">Verify</button>
 						    </div>
 						</div>
-						
 					</div>
                 </form>
             </div>
@@ -463,84 +491,157 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
             });
 
         </script>
-		<script>
-			function isValidEmail(email) {
+		
+		<!-- for check an OTP entered is correct or not -->
+		<script th:inline="javascript">
+		    /*<![CDATA[*/
+		    var checkOtpUrl = /*[[@{/auth/checkValidOTP}]]*/'';
+		    /*]]>*/
+		
+		    $(document).ready(function() {
+		        $('#verification').click(function() {
+		            var otp = $('#enterOtp').val();
+		            if (otp) {
+		                $.ajax({
+		                    url: checkOtpUrl,
+		                    type: 'POST',
+		                    data: {otp: otp},
+		                    success: function(response) {
+		                        if (response == 'Entered OTP is Wrong') {
+									showCustomAlert('Please Enter Valid OTP');
+		                        } else {
+									showCustomAlert(response);
+		                            $('#otpLable').hide();
+		                            $('#otpInput').hide();
+		                        }
+		                    },
+		                    error: function(error) {
+								showCustomAlert('Failed to verify OTP');
+		                    }
+		                });
+		            } else {
+						showCustomAlert('Please Enter OTP');
+		            }
+		        });
+		    });
+		</script>
+		
+		<!-- for sending OTP when creating a new account -->
+		<script th:inline="javascript">
+		    /*<![CDATA[*/
+		    var sendOtpUrl = /*[[@{/auth/sendOTPEmail}]]*/'';
+		    /*]]>*/
+		
+		    function isValidEmail(email) {
 		        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 		        return emailRegex.test(email);
 		    }
-			$('#add').click(function() {
-                var email = $('#email2').val();
-                if (email) {
-					if(isValidEmail(email)){
-						
-					}else{
-						alert('Please enter a valid email address.');
-					}
-				
-	            } else {
-	                alert('Please enter an email address.');
-	            }
-			});
-			
-		</script>
-		<script th:inline="javascript">
-		        /*<![CDATA[*/
-		        var baseUrl = /*[[@{/auth/sendOTPEmail}]]*/'';
-		        /*]]>*/
-				
-				function isValidEmail(email) {
-			        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-			        return emailRegex.test(email);
-			    }
-					
-		        $(document).ready(function() {
-		            $('#generateOTPButton').click(function() {
-		                var email = $('#email1').val();
-		                if (email) {
-						
-							if(isValidEmail(email))
-							{
-								$.ajax({
-			                        url: baseUrl,
-			                        type: 'POST',
-			                        data: { email: email},
-			                        success: function(response) {
-										if(response == 'Email Not Present')
-										{
-											alert('User Not Found !!!');
-											return;
-										}
-										
-										$('#otpRow').show();
-			                        },
-			                        error: function(error) {
-										$('#otpRow').show();
-			                        }
-			                    });
-							}else{
-								alert('Please enter a valid email address.');
-							}
-							
+		
+		    $(document).ready(function() {
+		        $('#generateOTPButton1').click(function() {
+		            var email = $('#email2').val();
+		            if (email) {
+		                if (isValidEmail(email)) {
+		                    $.ajax({
+		                        url: sendOtpUrl,
+		                        type: 'POST',
+		                        data: {email: email},
+		                        success: function(response) {
+		                            if (response == 'Email Present') {
+										showCustomAlert('Email Address Already Used !!!');
+		                            } else {
+										showCustomAlert(response);
+		                                $('#otpLable').show();
+		                                $('#otpInput').show();
+		                            }
+		                        },
+		                        error: function(error) {
+									showCustomAlert('Failed to send OTP');
+		                        }
+		                    });
 		                } else {
-		                    alert('Please enter an email address.');
+							showCustomAlert('Please enter a valid email address.');
 		                }
-		            });
+		            } else {
+						showCustomAlert('Please enter an email address.');
+		            }
 		        });
-		    </script>
-			<style>
-			  .alert-primary {
-			    background-color: #d4edda;
-			    border-color: #c3e6cb;
-			    color: #155724;
-			    padding: 15px;
-			    border-radius: 5px;
-			    position: fixed;
-			    top: 10%;
-			    right: 50px;
-			    transform: translateY(-50%);
-			    z-index: 9999;
-			  }
-			</style>
+		    });
+		</script>
+		<script>
+			function showCustomAlert(message) {
+	            var modalHtml = '<div class="modal fade" tabindex="-1" role="dialog">' +
+	                                '<div class="modal-dialog" role="document">' +
+	                                    '<div style="background-color:#f5f0f0;" class="modal-content">' +
+	                                        '<div style="background-color:rgb(84,78,131)" class="modal-header">' +
+												'<i class="fa-solid fa-triangle-exclamation"></i>' +
+	                                            '<h1 style="color:white" class="modal-title">Email Verification</h1>' +
+	                                        '</div>' +
+	                                        '<div class="modal-body">' +
+	                                            '<p>' + message + '</p>' +
+	                                        '</div>' +
+	                                        '<div class="pb-4 mr-4" style="text-align:right">' +
+	                                            '<button type="button" class="btn btn-success" data-dismiss="modal">Close</button>' +
+	                                        '</div>' +
+	                                    '</div>' +
+	                                '</div>' +
+	                            '</div>';
+	            var modal = $(modalHtml);
+	            modal.modal('show');
+	        }
+		</script>
+		<!-- for sending OTP when forgot a password -->
+		<script th:inline="javascript">
+			
+		    /*<![CDATA[*/
+		    var forgotPasswordOtpUrl = /*[[@{/auth/sendOTPForForgotPassword}]]*/'';
+		    /*]]>*/
+		
+		    $(document).ready(function() {
+		        $('#generateOTPButton').click(function() {
+		            var email = $('#email1').val();
+		            if (email) {
+		                if (isValidEmail(email)) {
+		                    $.ajax({
+		                        url: forgotPasswordOtpUrl,
+		                        type: 'POST',
+		                        data: {email: email},
+		                        success: function(response) {
+		                            if (response == 'Email Not Present') {
+										showCustomAlert('User Not Found !!!');
+		                            } else {
+										showCustomAlert(response);
+		                                $('#otpRow').show();
+		                            }
+		                        },
+		                        error: function(error) {
+									showCustomAlert('Failed to send OTP');
+		                        }
+		                    });
+		                } else {
+							showCustomAlert('Please enter a valid email address.');
+		                }
+		            } else {
+						showCustomAlert('Please enter an email address.');
+		            }
+		        });
+		    });
+		</script>
+
+		<style>
+		  .alert-primary {
+		    background-color: #d4edda;
+		    border-color: #c3e6cb;
+		    color: #155724;
+		    padding: 15px;
+		    border-radius: 5px;
+		    position: fixed;
+		    top: 10%;
+		    right: 50px;
+		    transform: translateY(-50%);
+		    z-index: 9999;
+		  }
+		</style>
     </body>
     <!-- END Body -->
 
