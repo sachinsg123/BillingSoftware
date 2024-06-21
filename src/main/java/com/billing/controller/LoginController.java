@@ -1,8 +1,11 @@
 package com.billing.controller;
 
 import java.io.InputStream;
+
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,12 +15,12 @@ import java.util.Random;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -157,6 +160,31 @@ public class LoginController{
         return ResponseEntity.ok("Entered OTP is Wrong");
     }
 	
+	@PostMapping("/checkValidOTPForForgotPassword")
+    public ResponseEntity<String> checkValidOTPForForgotPassword(@RequestParam("otp") String otp) {
+        if(otp.equals(storedOtp)) {
+        	return ResponseEntity.ok("Email Verified Successfully !!");
+        }
+        return ResponseEntity.ok("Entered OTP is Wrong");
+    }
+	
+	@PostMapping("/updateUserPassword")
+    public String updateUserPassword(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session) {
+		
+		User user = userrepo.findByEmail(email);
+		String encodedPass = passwordEncoder.encode(password);
+		
+		user.setPassword(encodedPass);
+		
+		userrepo.save(user);
+		
+		System.out.println(email);
+		System.out.println(password);
+		
+		session.setAttribute("message", "User Password Updated Successfully");
+        return "redirect:/auth/login-user";
+    }
+	
 	//created by Mahesh
 	public String generateOTP(int length) {
         String numbers = "0123456789";
@@ -169,33 +197,52 @@ public class LoginController{
     }
 	
 	//created by Mahesh
-	public void sendOTPEmail(String to, String subject, String body) throws MessagingException {
+	public void sendOTPEmail(String to, String subject, String body, String imagePath) throws MessagingException {
 		MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(body, true);
-        
-        System.out.println(body);
-        
+        helper.setText(body, true); // Set to true for HTML content
+
+        ClassPathResource resource = new ClassPathResource(imagePath);
+        helper.addInline("image1", resource);
         javaMailSender.send(message);
+        
     }
 	
 	//created by Mahesh
 	@PostMapping("/sendOTPEmail")
     public ResponseEntity<String> sendOTPEmail1(@RequestParam("email") String email) {
-		
 		User user = userrepo.findByEmail(email);
 		
 		if(user != null) return ResponseEntity.ok("Email Present");
 		
         String otp = generateOTP(6); // Generate a 6-digit OTP
         storedOtp = otp;
-        String subject = "Your OTP for Verification";
-        String body = "Your OTP is : " + otp + ". Please use this OTP to verify your email.";
+        String subject = "Your OTP for Verification : " + otp;
+        String body = "<html>" +
+                "<body style='font-family: Arial, sans-serif;'>" +
+                "<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>" +
+                "<h2 style='color: #2C3E50; text-align: center;'>OTP Verification</h2>" +
+                "<p style='font-size: 16px; color: #333;'>Dear User,</p>" +
+                "<p style='font-size: 16px; color: #333;'>Your OTP is:</p>" +
+                "<div style='font-size: 24px; color: green; text-align: center; margin: 20px 0;'><strong>" + otp + "</strong></div>" +
+                "<p style='font-size: 16px; color: #333;'>Please use this OTP to verify your email address. This OTP is valid for the next 10 minutes.</p>" +
+                "<p style='font-size: 16px; color: #333;'>If you did not request this OTP, please ignore this email or contact support.</p>" +
+                "<div style='text-align: center; margin-top: 30px;'>" +
+                "<a href='https://a2zithub.org/training/a2z/contact' style='padding: 10px 20px; background-color: #3498DB; color: #fff; text-decoration: none; border-radius: 5px;'>Contact Support</a>" +
+                "</div>" +
+                "<p style='font-size: 14px; color: #777; text-align: center; margin-top: 20px;'>Thank you for using our service!</p>" +
+                "<div style='text-align: center; margin-top: 20px;'>" +
+                "<img src='cid:image1' style='max-width: 100%; height: auto;'>" +
+                "</div>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
 
         try {
-        	sendOTPEmail(email, subject, body); // Assuming this is the correct method signature
+        	sendOTPEmail(email, subject, body,"static/img/favicon/a2zlogo.png"); // Assuming this is the correct method signature
         	
             return ResponseEntity.ok("OTP sent to " + email + " successfully.");
         } catch (MessagingException e) {
@@ -214,11 +261,30 @@ public class LoginController{
 		
         String otp = generateOTP(6); // Generate a 6-digit OTP
         storedOtp = otp;
-        String subject = "Your OTP for Verification";
-        String body = "Your OTP is : " + otp + ". Please use this OTP to verify your email.";
+        String subject = "Your OTP for Verification : " + otp;
+        String body = "<html>" +
+                "<body style='font-family: Arial, sans-serif;'>" +
+                "<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>" +
+                "<h2 style='color: #2C3E50; text-align: center;'>OTP Verification</h2>" +
+                "<p style='font-size: 16px; color: #333;'>Dear User,</p>" +
+                "<p style='font-size: 16px; color: #333;'>Your OTP is:</p>" +
+                "<div style='font-size: 24px; color: green; text-align: center; margin: 20px 0;'><strong>" + otp + "</strong></div>" +
+                "<p style='font-size: 16px; color: #333;'>Please use this OTP to verify your email address. This OTP is valid for the next 10 minutes.</p>" +
+                "<p style='font-size: 16px; color: #333;'>If you did not request this OTP, please ignore this email or contact support.</p>" +
+                "<div style='text-align: center; margin-top: 30px;'>" +
+                "<a href='https://a2zithub.org/training/a2z/contact' style='padding: 10px 20px; background-color: #3498DB; color: #fff; text-decoration: none; border-radius: 5px;'>Contact Support</a>" +
+                "</div>" +
+                "<p style='font-size: 14px; color: #777; text-align: center; margin-top: 20px;'>Thank you for using our service!</p>" +
+                "<div style='text-align: center; margin-top: 20px;'>" +
+                "<img src='cid:image1' style='width: 10%; height: 10%;'>" +
+                "</div>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+
 
         try {
-        	sendOTPEmail(email, subject, body); // Assuming this is the correct method signature
+        	sendOTPEmail(email, subject, body,"static/img/favicon/a2zlogo.png"); // Assuming this is the correct method signature
         	
             return ResponseEntity.ok("OTP sent to " + email + " successfully.");
         } catch (MessagingException e) {
