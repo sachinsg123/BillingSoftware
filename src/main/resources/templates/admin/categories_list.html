@@ -9,8 +9,8 @@
 
 				const swalWithBootstrapButtons = Swal.mixin({
 					customClass: {
-						confirmButton: 'btn btn-success',
-						cancelButton: 'btn btn-danger'
+						confirmButton: 'btn btn-success m-2',
+						cancelButton: 'btn btn-danger m-2'
 					},
 					buttonsStyling: false
 				})
@@ -31,7 +31,7 @@
 
 
 						swalWithBootstrapButtons.fire(
-							'Customer Deleted Successfully !',
+							'Category Deleted Successfully !',
 
 						)
 					} else if (
@@ -60,10 +60,10 @@
 					<table class="table table-bordered table-hover table-striped" style="background-color: #fff;">
 						<thead style="background-color: #F3EBD6;">
 							<tr>
-								<th scope="col">ID</th>
-								<th scope="col">Category Name</th>
-								<th scope="col">Added Date</th>
-								<th scope="col">Action</th>
+								<th style="border: 1px solid black;" scope="col">ID</th >
+								<th style="border: 1px solid black;" scope="col">Category Name</th >
+								<th style="border: 1px solid black;" scope="col">Added Date</th >
+								<th style="border: 1px solid black;" scope="col">Action</th >
 							</tr>
 						</thead >
 						<tbody>

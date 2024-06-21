@@ -45,6 +45,16 @@ public class PartiesTransaction {
 
 	private String netPayment;
 	
+	private String size;
+	
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
 	@ManyToOne
     @JoinColumn(name = "parties_id")
 	private Parties parties;
