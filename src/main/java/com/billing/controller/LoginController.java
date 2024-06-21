@@ -224,6 +224,7 @@ public class LoginController{
         String body = "<html>" +
                 "<body style='font-family: Arial, sans-serif;'>" +
                 "<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>" +
+                "<img src='cid:image1' style='width: 10%; height: 10%;'>" +
                 "<h2 style='color: #2C3E50; text-align: center;'>OTP Verification</h2>" +
                 "<p style='font-size: 16px; color: #333;'>Dear User,</p>" +
                 "<p style='font-size: 16px; color: #333;'>Your OTP is:</p>" +
@@ -234,15 +235,12 @@ public class LoginController{
                 "<a href='https://a2zithub.org/training/a2z/contact' style='padding: 10px 20px; background-color: #3498DB; color: #fff; text-decoration: none; border-radius: 5px;'>Contact Support</a>" +
                 "</div>" +
                 "<p style='font-size: 14px; color: #777; text-align: center; margin-top: 20px;'>Thank you for using our service!</p>" +
-                "<div style='text-align: center; margin-top: 20px;'>" +
-                "<img src='cid:image1' style='max-width: 100%; height: auto;'>" +
-                "</div>" +
                 "</div>" +
                 "</body>" +
                 "</html>";
 
         try {
-        	sendOTPEmail(email, subject, body,"static/img/favicon/a2zlogo.png"); // Assuming this is the correct method signature
+        	sendOTPEmail(email, subject, body,"static/img/favicon/A2Zlogo.jpeg"); // Assuming this is the correct method signature
         	
             return ResponseEntity.ok("OTP sent to " + email + " successfully.");
         } catch (MessagingException e) {
@@ -265,7 +263,10 @@ public class LoginController{
         String body = "<html>" +
                 "<body style='font-family: Arial, sans-serif;'>" +
                 "<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>" +
-                "<h2 style='color: #2C3E50; text-align: center;'>OTP Verification</h2>" +
+                "<div style='display: flex; align-items: center; justify-content: center;'>" +
+                "<img src='cid:image1' style='width: 10%; height: 10%; margin-right: 28%;'>" +
+                "<h2 style='color: #2C3E50; text-align: left;'>OTP Verification</h2>" +
+                "</div>" +
                 "<p style='font-size: 16px; color: #333;'>Dear User,</p>" +
                 "<p style='font-size: 16px; color: #333;'>Your OTP is:</p>" +
                 "<div style='font-size: 24px; color: green; text-align: center; margin: 20px 0;'><strong>" + otp + "</strong></div>" +
@@ -275,16 +276,14 @@ public class LoginController{
                 "<a href='https://a2zithub.org/training/a2z/contact' style='padding: 10px 20px; background-color: #3498DB; color: #fff; text-decoration: none; border-radius: 5px;'>Contact Support</a>" +
                 "</div>" +
                 "<p style='font-size: 14px; color: #777; text-align: center; margin-top: 20px;'>Thank you for using our service!</p>" +
-                "<div style='text-align: center; margin-top: 20px;'>" +
-                "<img src='cid:image1' style='width: 10%; height: 10%;'>" +
-                "</div>" +
                 "</div>" +
                 "</body>" +
                 "</html>";
 
 
+
         try {
-        	sendOTPEmail(email, subject, body,"static/img/favicon/a2zlogo.png"); // Assuming this is the correct method signature
+        	sendOTPEmail(email, subject, body,"static/img/favicon/A2Zlogo.jpeg"); // Assuming this is the correct method signature
         	
             return ResponseEntity.ok("OTP sent to " + email + " successfully.");
         } catch (MessagingException e) {
