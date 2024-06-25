@@ -2063,4 +2063,39 @@ public class adminController{
 					
 					return "admin/sales_Tax_Report";
 				}
+				
+				//Created by Younus - get CashInHand report 
+				@GetMapping("/cashInHand")
+				public String cashInHand(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
+					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+					User user = userRepo.findByUsername(auth.getName());
+					
+					// To get sale data from db
+					int Userid=user.getId();
+					
+					//Pagination Added
+					Pageable pageable =  PageRequest.of(page,size);
+					Page<Sales> sales = salesRepo.showAllActiveSales(Userid,pageable);
+					model.addAttribute("sales", sales);
+					model.addAttribute("currentPage", page);
+				
+					Company company = companyRepo.getCompanyByUserId(user.getId());
+					    String companyName = company.getName();
+					    model.addAttribute("companyName", companyName);
+
+					String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+					if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+						String image = user.getImageUrl();
+						imgpath = StringUtils.ImagePaths.userImageUrl + image;
+					}
+					model.addAttribute("imagePath", imgpath);
+					model.addAttribute("user", user);
+					
+					
+					String image = company.getLogo();
+					String companyLogo = "/img/companylogo/" + image;
+					model.addAttribute("companyLogo", companyLogo);
+					
+					return "admin/cash_In_Hand";
+				}
 }
