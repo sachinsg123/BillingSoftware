@@ -22,10 +22,17 @@ public interface SalesRepository extends JpaRepository<Sales, Integer> {
 	@Query("SELECT MAX(c.saleBillNo) FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
 	String maxSalesBillNo(@Param("id") Integer id);
 	
+
 	@Query("SELECT c FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND c.paymentMode = 'cash' AND u.id = :id")
 	List<Sales> showAllCashPayment(@Param("id") Integer id);
 	
 	//From date to End Date
 	Page<Sales> findByUserIdAndDateBetween(int userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+	@Query("SELECT c FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND c.paymentMode = 'online' AND u.id = :id")
+	Page<Sales> showAllOnlinePayment(@Param("id") Integer id, Pageable pageable);
+	
+	@Query("SELECT c FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND c.paymentMode = 'cheque' AND u.id = :id")
+	Page<Sales> showAllChequePayment(@Param("id") Integer id, Pageable pageable);
 
 }
