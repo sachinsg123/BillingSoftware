@@ -1,5 +1,6 @@
 package com.billing.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -23,5 +24,10 @@ public interface PartiesTransectionRepository extends JpaRepository<PartiesTrans
 	
 	@Query("SELECT MAX(c.billNo) FROM PartiesTransaction c JOIN c.user u WHERE c.status = 'Active' AND u.id = :userId")
 	String maxPurchaseBillNo(@Param("userId") Integer userId);
+	
+	//From date to End Date
+	Page<PartiesTransaction> findByUserIdAndDateBetween(int userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'cash' AND u.id = :userId")
+	List<PartiesTransaction> showAllCashPayment(@Param("userId") Integer userId);
 }

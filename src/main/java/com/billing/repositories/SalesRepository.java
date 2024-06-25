@@ -1,5 +1,6 @@
 package com.billing.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.billing.model.PartiesTransaction;
 import com.billing.model.Sales;
 
 public interface SalesRepository extends JpaRepository<Sales, Integer> {
@@ -19,4 +21,11 @@ public interface SalesRepository extends JpaRepository<Sales, Integer> {
 	
 	@Query("SELECT MAX(c.saleBillNo) FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
 	String maxSalesBillNo(@Param("id") Integer id);
+	
+	@Query("SELECT c FROM Sales c JOIN c.user u WHERE c.status = 'Active' AND c.paymentMode = 'cash' AND u.id = :id")
+	List<Sales> showAllCashPayment(@Param("id") Integer id);
+	
+	//From date to End Date
+	Page<Sales> findByUserIdAndDateBetween(int userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
 }
