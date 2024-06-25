@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.billing.model.PartiesTransaction;
+import com.billing.model.Sales;
 import com.billing.model.Supplier;
 
 @Repository
@@ -24,4 +25,9 @@ public interface PartiesTransectionRepository extends JpaRepository<PartiesTrans
 	@Query("SELECT MAX(c.billNo) FROM PartiesTransaction c JOIN c.user u WHERE c.status = 'Active' AND u.id = :userId")
 	String maxPurchaseBillNo(@Param("userId") Integer userId);
 
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'online' AND u.id = :id")
+	Page<PartiesTransaction> showAllOnlinePayment(@Param("id") Integer id, Pageable pageable);
+	
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'cheque' AND u.id = :id")
+	Page<PartiesTransaction> showAllChequePayment(@Param("id") Integer id, Pageable pageable);
 }
