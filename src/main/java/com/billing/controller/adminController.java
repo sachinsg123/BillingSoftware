@@ -2071,7 +2071,7 @@ public class adminController {
 
 		return "admin/sales_Tax_Report";
 	}
-
+	
 	// Created by Younus - get CashInHand report
 	@GetMapping("/cashPaymentList")
 	public String cashInHand(Model model, @RequestParam(defaultValue = "0") int page,
@@ -2115,10 +2115,10 @@ public class adminController {
 		return "admin/cashPaymentList";
 	}
 
+		
 	@GetMapping("/chequePaymentList")
-	public String chequePaymentList(Model model, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "1") int size) {
-
+	public String chequePaymentList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
+    
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -2155,8 +2155,8 @@ public class adminController {
 	}
 
 	@GetMapping("/onlinePaymentList")
-	public String onlinePaymentList(Model model, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "1") int size) {
+	public String onlinePaymentList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
