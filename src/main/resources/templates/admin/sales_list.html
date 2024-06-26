@@ -48,6 +48,23 @@
 		}
 	</script>
 	
+	<style>
+	@media print {
+        #searchInput, #applyFilter, #return, .dropdown {
+            display: none;
+        }
+        
+        th:last-child, td:last-child {
+            display: none;
+        }
+        
+           /* Hide date inputs by default when printing */
+        #startDate, #endDate, label[for="startDate"], label[for="endDate"] {
+            display: none;
+        }
+    }
+	</style>
+	
 	<!-- Search bar script to filter table-->
 	<script>
 		function filterTable() {
@@ -143,9 +160,9 @@
 				</div >
 				<div class="col-md-10">
 				<!-- Date Range Inputs with Labels -->
-				<button onclick="applyDateFilter()"
+				<button id="applyFilter" onclick="applyDateFilter()"
 					style="margin-top: 20px; height: 35px; border-radius: 10px; float: right; margin-left: 10px;">Apply
-					Filter</button>
+					Filter</button >
 		
 		
 				<input id="endDate" type="date"
@@ -177,7 +194,7 @@
 							<th style="border: 1px solid black;" scope="col">Paid Amount</th>
 							<th style="border: 1px solid black;" scope="col">Balance Due</th>
 							<th style="border: 1px solid black;" scope="col">Net Amount</th>
-							<th style="border: 1px solid black;"></th>
+							<th id="return" style="border: 1px solid black;"></th >
 						</tr>			
 					</thead>
 					<tbody>
@@ -253,6 +270,22 @@
 		  left: auto;
 		}
 	</style>
+	
+	 <script>
+        function preparePrint() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate || endDate) {
+                document.getElementById('startDate').style.display = 'inline-block';
+                document.getElementById('endDate').style.display = 'inline-block';
+                document.querySelector('label[for="startDate"]').style.display = 'inline-block';
+                document.querySelector('label[for="endDate"]').style.display = 'inline-block';
+            }
+        }
+
+        window.onbeforeprint = preparePrint;
+    </script>
 </section>
 </body>
 <!-- END Body -->
