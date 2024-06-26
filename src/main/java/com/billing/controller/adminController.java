@@ -2058,7 +2058,6 @@ public class adminController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
@@ -2066,7 +2065,7 @@ public class adminController {
 		}
 		model.addAttribute("imagePath", imgpath);
 		model.addAttribute("user", user);
-    	String image = company.getLogo();
+		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
 
@@ -2084,21 +2083,19 @@ public class adminController {
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		
-		
+
 		// Pagination Added
 //			Pageable pageable = PageRequest.of(page, size);
 //			Page<Sales> sales = salesRepo.showAllActiveSales(userId, pageable);
 //			model.addAttribute("sales", sales);
 //			model.addAttribute("currentPage", page);
-		
+
 		List<Sales> sales = salesRepo.showAllCashPayment(userId);
 		model.addAttribute("sales", sales);
 
 		List<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllCashPayment(userId);
 		model.addAttribute("partiesTransactions", partiesTransactions);
 
-		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -2117,10 +2114,11 @@ public class adminController {
 
 		return "admin/cashPaymentList";
 	}
+
 		
 	@GetMapping("/chequePaymentList")
 	public String chequePaymentList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
-
+    
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -2128,18 +2126,18 @@ public class adminController {
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		
-		Pageable pageable =  PageRequest.of(page,size);
+
+		Pageable pageable = PageRequest.of(page, size);
 		Page<Sales> sales = salesRepo.showAllChequePayment(userId, pageable);
 		model.addAttribute("sales", sales);
 		model.addAttribute("currentPage", page);
-		
+
 		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllChequePayment(userId, pageable);
 		model.addAttribute("partiesTransactions", partiesTransactions);
-		
+
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-	    String companyName = company.getName();
-	    model.addAttribute("companyName", companyName);
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
@@ -2148,17 +2146,17 @@ public class adminController {
 		}
 		model.addAttribute("imagePath", imgpath);
 		model.addAttribute("user", user);
-		
-		
+
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-		
+
 		return "admin/chequePaymentList";
 	}
-	
+
 	@GetMapping("/onlinePaymentList")
 	public String onlinePaymentList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -2166,18 +2164,18 @@ public class adminController {
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		
-		Pageable pageable =  PageRequest.of(page,size);
+
+		Pageable pageable = PageRequest.of(page, size);
 		Page<Sales> sales = salesRepo.showAllOnlinePayment(userId, pageable);
 		model.addAttribute("sales", sales);
 		model.addAttribute("currentPage", page);
-		
-		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllOnlinePayment(userId,pageable);
+
+		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllOnlinePayment(userId, pageable);
 		model.addAttribute("partiesTransactions", partiesTransactions);
-		
+
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-	    String companyName = company.getName();
-	    model.addAttribute("companyName", companyName);
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
@@ -2187,8 +2185,8 @@ public class adminController {
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-		
+
 		return "admin/onlinePaymentList";
 	}
-	
+
 }

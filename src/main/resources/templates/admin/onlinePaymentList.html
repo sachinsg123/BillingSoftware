@@ -1,46 +1,86 @@
 <!DOCTYPE html> <!-- Changes By Mahesh -->
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 <section>
-	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
-	<!-- BEGIN Page Wrapper -->
-	<div class="contaier-fluid">
-		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12 mt-1">
-				<h1 class="text-center" style="color: white;"><b>All ONLINE PAYMENT</b></h1>
-			</div>
-		</div>
-		<div class="row mt-4" style="background-color: #f6f0f0;">
-			<div class="col-md-12">
-			    <table class="table table-bordered table-hover table-striped" style="background-color: #fff;">
-			        <thead style="background-color: #F3EBD6; color: black;">
-			            <tr style="text-align: center;">
-			                <th style="border: 1px solid black;" scope="col">Type</th>
-			                <th style="border: 1px solid black;" scope="col">Name</th>
-			                <th style="border: 1px solid black;" scope="col">Date</th>
-			                <th style="border: 1px solid black;" scope="col">Amount</th>
-			            </tr>
-			        </thead>
-			        <tbody>
-			            <tr th:each="sale : ${sales.content}" style="text-align: center; border: 1px solid black;">
-			                <td>Sale</td>
-			                <td th:text="${sale.customer.name}"></td>
-			                <td th:text="${sale.date}"></td>
-			                <td style="color: #25D366;" th:text="${sale.amountPaid}"></td>
-			            </tr>
-			            <tr th:each="transaction : ${partiesTransactions.content}" style="text-align: center; border: 1px solid black;">
-			                <td>Purchase</td>
-			                <td th:text="${transaction.parties.name}"></td>
-			                <td th:text="${transaction.date}"></td>
-			                <td style="color: red;" th:text="${transaction.paid}"></td>
-			            </tr>
-			        </tbody>
-			    </table>
-			</div>
-		</div>
-	</div>
+    <script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+    <!-- BEGIN Page Wrapper -->
+    <div class="contaier-fluid">
+        <div class="row" style="background-color:rgb(84,78,131);">
+            <div class="col-md-12 mt-1">
+                <h1 class="text-center" style="color: white;"><b>All ONLINE PAYMENT</b></h1>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title"><b>Sales Online Amount</b></h5>
+                        <p class="card-text" id="totalSaleAmount" style="color: #25D366; font-size: 1.5em; font-weight: bold;"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title"><b> Purchase Online Amount</b></h5>
+                        <p class="card-text" id="totalPurchaseAmount" style="color: red; font-size: 1.5em; font-weight: bold;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4" style="background-color: #f6f0f0;">
+            <div class="col-md-12">
+                <table class="table table-bordered table-hover table-striped" style="background-color: #fff;">
+                    <thead style="background-color: #F3EBD6; color: black;">
+                        <tr style="text-align: center;">
+                            <th style="border: 1px solid black;" scope="col">Type</th>
+                            <th style="border: 1px solid black;" scope="col">Name</th>
+                            <th style="border: 1px solid black;" scope="col">Date</th>
+                            <th style="border: 1px solid black;" scope="col">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sale : ${sales.content}" style="text-align: center; border: 1px solid black;">
+                            <td>Sale</td>
+                            <td th:text="${sale.customer.name}"></td>
+                            <td th:text="${sale.date}"></td>
+                            <td style="color: #25D366;" th:text="${sale.amountPaid}" class="sale-amount"></td>
+                        </tr>
+                        <tr th:each="transaction : ${partiesTransactions.content}" style="text-align: center; border: 1px solid black;">
+                            <td>Purchase</td>
+                            <td th:text="${transaction.parties.name}"></td>
+                            <td th:text="${transaction.date}"></td>
+                            <td style="color: red;" th:text="${transaction.paid}" class="purchase-amount"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTotals();
+        });
+
+        function calculateTotals() {
+            let totalSale = 0;
+            let totalPurchase = 0;
+
+            // Calculate total sale amount
+            document.querySelectorAll('.sale-amount').forEach(function(element) {
+                totalSale += parseFloat(element.textContent.replace('₹', '').trim()) || 0;
+            });
+
+            // Calculate total purchase amount
+            document.querySelectorAll('.purchase-amount').forEach(function(element) {
+                totalPurchase += parseFloat(element.textContent.replace('₹', '').trim()) || 0;
+            });
+
+            // Display the totals
+            document.getElementById('totalSaleAmount').textContent = '₹ ' + totalSale.toFixed(2);
+            document.getElementById('totalPurchaseAmount').textContent = '₹ ' + totalPurchase.toFixed(2);
+        }
+    </script>
 </section>
 </body>
-<!-- END Body -->
-<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
-
 </html>

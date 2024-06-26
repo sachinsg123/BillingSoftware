@@ -105,6 +105,21 @@
 		.search-icon {
 			cursor: pointer;
 		}
+		
+		  @media print {
+        #searchInput, #applyFilter, #return, .dropdown {
+            display: none;
+        }
+        
+        th:last-child, td:last-child {
+            display: none;
+        }
+        
+        /* Hide date inputs by default when printing */
+        #startDate, #endDate, label[for="startDate"], label[for="endDate"] {
+            display: none;
+        }
+    }
 	</style>
 	<div class="container-fluid">
 		<div th:if="${session.message}">
@@ -140,9 +155,9 @@
 					</div>
 					<div class="col-md-10">
 						<!-- Date Range Inputs with Labels -->
-						<button onclick="applyDateFilter()"
+						<button id="applyFilter" onclick="applyDateFilter()"
 							style="margin-top: 20px; height: 35px; border-radius: 10px; float: right; margin-left: 10px;">Apply
-							Filter</button>
+							Filter</button >
 
 
 						<input id="endDate" type="date"
@@ -173,7 +188,7 @@
 			</div>
 			<div class="row mt-2 pb-3">
 				<div class="col-md-12">
-					<table class="table table-bordered" style="background-color: #fff;">
+					<table class="table table-bordered table-striped" style="background-color: #fff;">
 						<thead style="background-color: #F3EBD6;color: black;">
 							<tr>
 								<th style="border: 1px solid black;" scope="col">Date</th>
@@ -187,7 +202,7 @@
 								<th style="border: 1px solid black;" scope="col">Net Payment</th>
 								<th style="border: 1px solid black;" scope="col">Balance Due</th>
 								<th style="border: 1px solid black;" scope="col">Amount Paid</th>
-								<th style="border: 1px solid black;" scope="col"></th>
+								<th id="return" style="border: 1px solid black;" scope="col">Return</th >
 							</tr>
 						</thead>
 						<tbody>
@@ -254,6 +269,22 @@
 			</div>
 		</div>
 	</div>
+	<!-- Script Hide from date to end Date-->
+	 <script>
+        function preparePrint() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate || endDate) {
+                document.getElementById('startDate').style.display = 'inline-block';
+                document.getElementById('endDate').style.display = 'inline-block';
+                document.querySelector('label[for="startDate"]').style.display = 'inline-block';
+                document.querySelector('label[for="endDate"]').style.display = 'inline-block';
+            }
+        }
+
+        window.onbeforeprint = preparePrint;
+    </script>
 </section>
 </body>
 <!-- END Body -->
