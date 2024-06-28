@@ -108,24 +108,24 @@
 				<div class="col-md-2">
 				<!-- Search Bar -->
 					<input id="searchInput" type="text"
-					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
+					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 5px; border-color: rgb(12,131,226);"
 					name="query" placeholder="Search">
 				</div >
 				<div class="col-md-10">
 				<!-- Date Range Inputs with Labels -->
-				<button id="applyFilter" onclick="applyDateFilter()"
-					style="margin-top: 20px; height: 35px; border-radius: 10px; float: right; margin-left: 10px;">Apply Filter</button >
+				<!--<button id="applyFilter" onclick="applyDateFilter()"
+					style="margin-top: 20px; height: 35px;  float: right; margin-left: 10px;">Apply Filter</button >-->
 		
 		
-				<input id="endDate" type="date"
-					style="margin-top: 20px; height: 35px; border-radius: 10px; border-color: rgb(12,131,226); float: right; margin-left: 10px;">
-				<label for="endDate" style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">End
-					Date:</label>
+				<input id="endDate" type="date" onchange="applyDateFilter()"
+					style="margin-top: 20px; height: 35px;  border-color:#F8F6FA; float: right; margin-left: 10px;">
+				<label for="endDate" style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">To
+					:</label>
 		
-				<input id="startDate" type="date"
-					style="margin-top: 20px; height: 35px; border-radius: 10px; border-color: rgb(12,131,226); float: right; margin-left: 10px;">
+				<input id="startDate" type="date" onchange="applyDateFilter()"
+					style="margin-top: 20px; height: 35px; border-color:#F8F6FA; float: right; margin-left: 10px;">
 				<label for="startDate" style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">From
-					Date:</label>
+					:</label>
 				</div >
 				
 			</div>

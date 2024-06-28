@@ -1760,7 +1760,7 @@ public class adminController {
 
 	// Created by Younus - brand add Process
 	@PostMapping("brand/add")
-	public String brandaddProcess(@ModelAttribute BrandDto brandDto, Model model, HttpServletRequest request)
+	public String brandaddProcess(@ModelAttribute BrandDto brandDto, Model model, HttpServletRequest request, HttpSession session)
 			throws URISyntaxException, IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -1803,6 +1803,18 @@ public class adminController {
 		// Save the brand to the repository
 		brandRepo.save(brand);
 		userRepo.save(user);
+		
+		
+		/*
+		 * Brand nFound=brandRepo.findByName(brand.getName());
+		 * 
+		 * if (nFound == null) { brand.setStatus("Active"); brand.setUser(user);
+		 * brandRepo.save(brand); session.setAttribute("message",
+		 * "Brand added successfully!"); } else if
+		 * (brand.getName().equals(nFound.getName())) { session.setAttribute("message",
+		 * "Brand already exists!"); }
+		 */
+		
 		// Get the referer URL from the request header
 		String referer = request.getHeader("referer");
 		// Parse the referer URL to get the path and query
@@ -1811,7 +1823,6 @@ public class adminController {
 		String query = uri.getQuery();
 		// Construct the redirect URL with the original path and query parameters
 		String endpoint = path + (query != null ? "?" + query : "");
-
 		// Redirect to the referer URL
 		return "redirect:" + endpoint;
 	}
@@ -2188,5 +2199,53 @@ public class adminController {
 
 		return "admin/onlinePaymentList";
 	}
+	
+	// Created by Younus
+		@GetMapping("/profitAndLossReport")
+		public String profitAndLossReport(Model model, @RequestParam(defaultValue = "0") int page,
+				@RequestParam(defaultValue = "10") int size,
+				@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+				@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userRepo.findByUsername(auth.getName());
 
+			int userId = user.getId();
+
+			// To get Parties Name data from db
+			List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+			model.addAttribute("parties", parties);
+
+			// Pagination Added
+			Pageable pageable = PageRequest.of(page, size);
+			Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId,
+					pageable);
+			model.addAttribute("partiesTransactions", partiesTransactions);
+			model.addAttribute("currentPage", page);
+
+			Company company = companyRepo.getCompanyByUserId(user.getId());
+			String companyName = company.getName();
+			model.addAttribute("companyName", companyName);
+
+			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+			if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+				String image = user.getImageUrl();
+				imgpath = StringUtils.ImagePaths.userImageUrl + image;
+			}
+			model.addAttribute("imagePath", imgpath);
+			String image = company.getLogo();
+			String companyLogo = "/img/companylogo/" + image;
+			model.addAttribute("companyLogo", companyLogo);
+
+			// from date to End Date
+			if (startDate != null && endDate != null) {
+				// If date range is provided, filter the transactions
+				partiesTransactions = partiesTransectionRepo.findByUserIdAndDateBetween(userId, startDate, endDate,
+						pageable);
+			} else {
+				// If no date range, show all transactions
+				partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
+			}
+
+			return "admin/profit_And_Loss_Report";
+		}
 }
