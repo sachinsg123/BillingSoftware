@@ -45,6 +45,8 @@ public class Sales {
 	
 	private String totalAmount;
 	
+	private String salesType;
+	
 	private String SignatureImage;
 	
 	@ManyToOne
@@ -74,6 +76,14 @@ public class Sales {
 	@JoinColumn(name="user_id")
 	private User user;
 	
+	public String getSalesType() {
+		return salesType;
+	}
+
+	public void setSalesType(String salesType) {
+		this.salesType = salesType;
+	}
+
 	public List<Charges> getCharges() {
 		return charges;
 	}
