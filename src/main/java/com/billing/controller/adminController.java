@@ -1265,12 +1265,14 @@ public class adminController {
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-
+		String saleType = "SALES TRANSACTION";
+		model.addAttribute("saleType", saleType);
+		
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Sales> sales = salesRepo.showAllActiveSales(userId, pageable);
+		Page<Sales> sales = salesRepo.showAllActive(userId, pageable);
 		model.addAttribute("sales", sales);
 		model.addAttribute("currentPage", page);
 
@@ -1395,6 +1397,7 @@ public class adminController {
 		sales.setUser(user);
 
 		List<Charges> charges = sales.getCharges();
+		sales.setSalesType("Sale");
 		salesRepo.save(sales);
 		userRepo.save(user);
 		for (Charges charge : charges) {
@@ -1469,6 +1472,49 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/sales/list";
 	}
 
+	// create by Mahesh
+	@GetMapping("/sales/return/list")
+	public String returnSalesList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String saleType = "SALES RETURN TRANSACTION";
+		model.addAttribute("saleType", saleType);
+
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Sales> sales = salesRepo.showAllActiveSalesReturn(userId, pageable);
+		model.addAttribute("sales", sales);
+		model.addAttribute("currentPage", page);
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
+		model.addAttribute("imagePath", imgpath);
+
+		List<Customer> customers = customerRepo.findAll();
+		model.addAttribute("customers", customers);
+
+		List<Product> products = productRepo.showAllActiveProduct(userId);
+		model.addAttribute("products", products);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		return "admin/sales_list";
+	}
+		
 	// create by Mahesh
 	@GetMapping("/sales/return/{id}")
 	public String returnsales(@PathVariable("id") int id, Model model) {
@@ -1607,7 +1653,7 @@ public class adminController {
 
 		sales.setProducts(newProducts);
 		sales.setCustomer(newCustomer);
-
+		sales.setSalesType("Return");
 		salesRepo.save(sales);
 		return "redirect:/a2zbilling/admin/sales/list";
 	}
