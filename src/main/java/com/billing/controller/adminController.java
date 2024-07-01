@@ -1265,8 +1265,6 @@ public class adminController {
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String saleType = "SALES TRANSACTION";
-		model.addAttribute("saleType", saleType);
 		
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -1462,14 +1460,20 @@ public class adminController {
 	}
 
 	@GetMapping("/sales/delete/{id}")
-	public String deleteSales(@PathVariable("id") int id) {
+	public String deleteSales(@PathVariable("id") int id, HttpServletRequest request) throws URISyntaxException {
 
 		Sales sales = salesRepo.findById(id).get();
 
 		sales.setStatus("InActive");
 
 		salesRepo.save(sales);
-		return "redirect:/a2zbilling/admin/sales/list";
+		String referer = request.getHeader("referer");
+		java.net.URI uri = new java.net.URI(referer);
+		String path = uri.getPath();
+		String query = uri.getQuery();
+		String endpoint = path + (query != null ? "?" + query : "");
+
+		return "redirect:" + endpoint;
 	}
 
 	// create by Mahesh
@@ -1484,8 +1488,6 @@ public class adminController {
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-		String saleType = "SALES RETURN TRANSACTION";
-		model.addAttribute("saleType", saleType);
 
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -1512,7 +1514,7 @@ public class adminController {
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
 
-		return "admin/sales_list";
+		return "admin/saleReturnList";
 	}
 		
 	// create by Mahesh
@@ -1566,7 +1568,90 @@ public class adminController {
 
 	@PostMapping("/sales/return")
 	public String returnsalesProcess(@ModelAttribute Sales sale, Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
 		Sales sales = salesRepo.findById(sale.getId()).get();
+		
+		// this code for check product is return or not
+		Sales sale1 = new Sales();
+		sale1.setCustomer(sales.getCustomer());
+		sale1.setSaleBillNo(sales.getSaleBillNo());
+		sale1.setDate(sales.getDate());
+		
+		String size1 = sales.getSize();
+		String[] oldSizeArray1 = size1.split(",");
+		String oldQuantity1 = sales.getQuantity();
+		int[] oldQuantityArray1 = Arrays.stream(oldQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
+		String tax1 = sales.getTaxInPercentage();
+		String[] oldTaxArray1 = tax1.split(",");
+		String taxInAmount1 = sales.getTaxInAmount();
+		String[] oldTaxInAmountArray1 = taxInAmount1.split(",");
+		int j = 0;
+		for(Product product : sales.getProducts())
+		{
+			if(sale.getProducts().contains(product))
+			{
+				int index = sale.getProducts().indexOf(product);
+				String newQuantity1 = sale.getQuantity();
+				int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
+				
+				if(oldQuantityArray1[j] > newQuantityArray1[index]) {
+					
+					sale1.getProducts().add(product);
+					
+					if(sale1.getQuantity() != null) {
+						sale1.setQuantity(sale1.getQuantity()+","+String.valueOf(oldQuantityArray1[j] - newQuantityArray1[index]));
+					} else sale1.setQuantity(String.valueOf(oldQuantityArray1[j] - newQuantityArray1[index]));
+					
+					if(sale1.getSize() != null) {
+						sale1.setSize(sale1.getSize()+","+oldSizeArray1[j]);
+					} else sale1.setSize(oldSizeArray1[j]);
+					
+					sale1.setPaymentMode(sales.getPaymentMode());
+					
+					if(sale1.getTaxInPercentage() != null) {
+						sale1.setTaxInPercentage(sale1.getTaxInPercentage()+","+oldTaxArray1[j]);
+					} else sale1.setTaxInPercentage(oldTaxArray1[j]);
+					
+					if(sale1.getTaxInAmount() != null) {
+						sale1.setTaxInAmount(sale1.getTaxInAmount()+","+oldTaxInAmountArray1[j]);
+					} else sale1.setTaxInAmount(oldTaxInAmountArray1[j]);
+				}
+			}
+			else {
+				
+				sale1.getProducts().add(product);
+				if(sale1.getQuantity() != null) {
+					sale1.setQuantity(sale1.getQuantity()+","+String.valueOf(oldQuantityArray1[j]));
+				} else sale1.setQuantity(String.valueOf(oldQuantityArray1[j]));
+				
+				if(sale1.getSize() != null) {
+					sale1.setSize(sale1.getSize()+","+oldSizeArray1[j]);
+				} else sale1.setSize(oldSizeArray1[j]);
+				
+				sale1.setPaymentMode(sales.getPaymentMode());
+				
+				if(sale1.getTaxInPercentage() != null) {
+					sale1.setTaxInPercentage(sale1.getTaxInPercentage()+","+oldTaxArray1[j]);
+				} else sale1.setTaxInPercentage(oldTaxArray1[j]);
+				
+				if(sale1.getTaxInAmount() != null) {
+					sale1.setTaxInAmount(sale1.getTaxInAmount()+","+oldTaxInAmountArray1[j]);
+				} else sale1.setTaxInAmount(oldTaxInAmountArray1[j]);
+				
+				
+			}
+			j++;
+		}
+		if(sale1.getProducts().size() > 0) {
+			sales.setSignatureImage(sale.getSignatureImage());
+			sale1.setSalesType("Return");
+			sale1.setStatus("Active");
+			sale1.setUser(user);
+			salesRepo.save(sale1);
+		}
+		// this is the end of the sales return 
+		
 		// new products and customer
 		Customer newCustomer = sale.getCustomer();
 		List<Product> newProducts = sale.getProducts();
@@ -1653,7 +1738,7 @@ public class adminController {
 
 		sales.setProducts(newProducts);
 		sales.setCustomer(newCustomer);
-		sales.setSalesType("Return");
+		sales.setSalesType("Sale");
 		salesRepo.save(sales);
 		return "redirect:/a2zbilling/admin/sales/list";
 	}
