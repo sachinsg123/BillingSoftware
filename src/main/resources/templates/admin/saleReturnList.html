@@ -1,6 +1,15 @@
 <!DOCTYPE html> <!-- Created By Mahesh -->
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 <section>
+	<style>
+        .heading {
+	        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 67%, #ffad26 67%, 68%, #d77045 68%, #d77045 69%, #ffad26 69%, #ffad26 70%, #525187 65%, white 80%);
+	        border-left: 5px solid #FFC241;
+	        color: white;
+	        font-weight: bold;
+	        padding: 6px 10px 3px 10px;
+    	}
+    </style>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
 		function deleteContactAlert(id) {
@@ -125,31 +134,31 @@
         });
     </script>
 	<!-- BEGIN Page Wrapper -->
-	<div class="contaier-fluid">
+	<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
 				<script th:inline="javascript">
+					/*<![CDATA[*/
 					setTimeout(function () {
 						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500); 
+					}, 800); 
 				</script>
 			</div>
 		</div>
-		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12 mt-2">
+		<div class="row heading">
+			<div class="col-md-12">
 				<h1 class="text-center" style="color: white;"><b>SALES RETURN TRANSACTION</b></h1>
 			</div>
 		</div>
-		
 		<div style="background-color: #f5f0f0;">
-		<div class="row text-right">
-			<div class="col-md-12 mt-3">
-				<a th:href="@{'/a2zbilling/admin/sales/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 5px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Sales</a>
+			<div class="row text-right">
+				<div class="col-md-12 mt-3">
+					<a th:href="@{'/a2zbilling/admin/sales/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 5px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Sales</a>
+				</div>
 			</div>
-		</div>
 		
-		 <!--From date to End date filter-->
+		 	<!--From date to End date filter-->
 		
 			<div class="row">
 				<div class="col-md-2">
@@ -186,8 +195,7 @@
 							<th style="border: 1px solid black;" scope="col">Size</th>
 							<th style="border: 1px solid black;" scope="col">Order QTY</th>
 							<th style="border: 1px solid black;" scope="col">Payment Type</th>
-							<th style="border: 1px solid black;" scope="col">Paid Amount</th>
-							<th style="border: 1px solid black;" scope="col">Balance Due</th>
+							<th style="border: 1px solid black;" scope="col">Paid Status</th>
 							<th style="border: 1px solid black;" scope="col">Net Amount</th>
 							<th id="return" style="border: 1px solid black;"></th >
 						</tr>			
@@ -215,8 +223,7 @@
 							    </th:block>
 							</td>
 							<td th:text="${sale.paymentMode}"></td>
-							<td th:text="${sale.amountPaid}"></td>
-							<td th:text="${sale.dueAmount}"></td>
+							<td th:text="${sale.returnPaidStatus}"></td>
 							<td th:text="${sale.netPayment}"></td>
 							<td style="position: relative;">
 							  <div class="dropdown">

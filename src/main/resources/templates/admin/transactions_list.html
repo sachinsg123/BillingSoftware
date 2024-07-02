@@ -47,24 +47,34 @@
 
 		}
 	</script>
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 66%, #ffad26 66%, 67%, #d77045 67%, #d77045 68%, #ffad26 68%, #ffad26 69%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    	}
+    </style>
 	<!-- BEGIN Page Wrapper -->
-	<div class="contaier-fluid">
+	<div class="container-fluid pb-4">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
 				<script th:inline="javascript">
+					/*<![CDATA[*/
 					setTimeout(function () {
 						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500); 
+					}, 800); 
 				</script>
 			</div>
 		</div>
-		<div class="row" style="background-color:rgb(84,78,131);">
+		<div class="row heading">
 			<div class="col-md-12">
-				<h1 class="text-center" style="color: white;"><b>SUPPLIER TRANSACTION'S</b></h1>
+				<h1 class="text-center"><b>SUPPLIER TRANSACTION'S</b></h1>
 			</div>
 		</div>
-	
+		
 		<div class="row mt-4" >
 			<div class="col-md-12">
 				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">

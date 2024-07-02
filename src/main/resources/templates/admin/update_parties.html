@@ -13,7 +13,16 @@
 	</head>
 <body>
 <section>
-	
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    	}
+    </style>
+	<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
@@ -25,13 +34,11 @@
 				</script>
 			</div>
 		</div>
-	<div class="container-fluid pb-3" style="background-color:#f1f1f1; line-height: 25px;">
-		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12 mt-1">
-				<h1 class="text-center" style="font-family:Verdana, Geneva, Tahoma, sans-serif ; color:#fff;"><b>UPDATE SUPPLIER</b></h1>
+		<div class="row heading">
+			<div class="col-md-12">
+				<h1 class="text-center"><b>UPDATE SUPPLIER</b></h1>
 			</div>
 		</div>
-		
 		<form th:action="@{/a2zbilling/admin/parties/update}" method="post" enctype="multipart/form-data"
 			class="form-group" th:object="${partie}">
 				<div class="row">

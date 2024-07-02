@@ -1572,6 +1572,13 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 		Sales sales = salesRepo.findById(sale.getId()).get();
 		
+		if(sale.getProducts().size() == 0) {
+			sales.setReturnPaidStatus(sale.getReturnPaidStatus());
+			sales.setSalesType("Return");
+			sales.setStatus("Active");
+			salesRepo.save(sales);
+			return "redirect:/a2zbilling/admin/sales/list";
+		}
 		// this code for check product is return or not
 		Sales sale1 = new Sales();
 		sale1.setCustomer(sales.getCustomer());
@@ -1587,6 +1594,7 @@ public class adminController {
 		String taxInAmount1 = sales.getTaxInAmount();
 		String[] oldTaxInAmountArray1 = taxInAmount1.split(",");
 		int j = 0;
+		
 		for(Product product : sales.getProducts())
 		{
 			if(sale.getProducts().contains(product))
@@ -1638,13 +1646,25 @@ public class adminController {
 				if(sale1.getTaxInAmount() != null) {
 					sale1.setTaxInAmount(sale1.getTaxInAmount()+","+oldTaxInAmountArray1[j]);
 				} else sale1.setTaxInAmount(oldTaxInAmountArray1[j]);
-				
-				
 			}
 			j++;
 		}
 		if(sale1.getProducts().size() > 0) {
-			sales.setSignatureImage(sale.getSignatureImage());
+			int netPayment = 0;
+			String newQuantity1 = sale1.getQuantity();
+			int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
+			sale1.setSignatureImage(sale.getSignatureImage());
+			List<Product> productList = sale1.getProducts();
+			int k = 0;
+			for(Product product : productList)
+			{
+				int price = Integer.parseInt(product.getPrice());
+				int total = price * newQuantityArray1[k];
+				netPayment += total;
+				k++;
+			}
+			sale1.setReturnPaidStatus(sale.getReturnPaidStatus());
+			sale1.setNetPayment(String.valueOf(netPayment));
 			sale1.setSalesType("Return");
 			sale1.setStatus("Active");
 			sale1.setUser(user);
@@ -1652,10 +1672,11 @@ public class adminController {
 		}
 		// this is the end of the sales return 
 		
+		
 		// new products and customer
 		Customer newCustomer = sale.getCustomer();
 		List<Product> newProducts = sale.getProducts();
-
+		
 		// old products and customer
 		List<Product> oldProduct = sales.getProducts();
 		Customer oldCustomer = sales.getCustomer();
