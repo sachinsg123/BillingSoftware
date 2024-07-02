@@ -64,25 +64,36 @@
 			background-color: #e0e0e0;
 			color: #000;
 		}
-
+	
 		.search-icon {
 			cursor: pointer;
 		}
-
+	
 		@media print {
 			#searchInput {
 				display: none;
 			}
-			
-			#applyFilter{
+	
+			#applyFilter {
 				display: none;
 			}
-			
+	
 			/* Hide date inputs by default when printing */
-        #startDate, #endDate, label[for="startDate"], label[for="endDate"] {
-            display: none;
-        }
-			
+			#startDate,
+			#endDate,
+			label[for="startDate"],
+			label[for="endDate"] {
+				display: none;
+			}
+	
+		}
+	
+		.heading {
+			background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+			border-left: 5px solid #FFC241;
+			color: white;
+			font-weight: bold;
+			padding: 0.5px 10px 0.5px 10px;
 		}
 	</style>
 	<div class="container-fluid">
@@ -96,8 +107,8 @@
 				</script>
 			</div>
 		</div>
-		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
-			<div class="col-md-12 mt-1">
+		<div class="heading" style="background-color: rgb(84,78,130); color: #fff;">
+			<div class="col-md-12 ">
 				<h1 class="text-center"><b>SALES REPORT</b></h1>
 			</div>
 		</div>

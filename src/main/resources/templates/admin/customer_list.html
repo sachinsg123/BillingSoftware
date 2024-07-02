@@ -8,6 +8,27 @@
 
 <body>
 	<section>
+	
+	
+	<style>
+		@media print {
+	
+			#editbutton,
+			td:nth-child(8),
+			th:nth-child(8) {
+				display: none;
+			}
+		}
+	
+		.heading {
+			background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+			border-left: 5px solid #FFC241;
+			color: white;
+			font-weight: bold;
+			padding: 1px 10px 0.5px 10px;
+		}
+	</style>
+	
 		<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 		<script>
 
@@ -56,15 +77,14 @@
 			}
 
 		</script>
-
-		<!-- Changes by Younus -->
-
-		<div class="row">
-			<div class="col-md-12" style="background-color: rgb(84,78,130);color:#fff;">
-				<h1 class="text-center pt-1"><b>CUSTOMERS LIST	</b></h1>
+		
+		<div class="heading">
+			<div class="col-md-12" >
+				<h1 class="text-center"><b>CUSTOMERS LIST</b></h1>
 			</div>
 		</div>
-		<div class="row mt-3" style="background-color: #f5f0f0;">
+	
+		<div class="row mt-3" >
 			<div class="col-md-12 pb-2">
 				<table class="table table-bordered table-hover table-striped" style="background-color: #fff	;">
 					<thead style="background-color: #F3EBD6; color: black;">
@@ -76,7 +96,7 @@
 							<th style="border: 1px solid black;" scope="col">Address</th >
 							<th style="border: 1px solid black;" scope="col">Due Amount</th >
 							<th style="border: 1px solid black;"  scope="col">Added Date</th >
-							<th style="border: 1px solid black;" scope="col">Edit</th >
+							<th id="editbutton" style="border: 1px solid black;" scope="col">Edit</th  >
 						</tr>
 					</thead>
 					<tbody style="text-align: center;">
@@ -111,6 +131,7 @@
 
 			</div>
 		</div>
+		
 	</section>
 
 </body>

@@ -4,72 +4,68 @@
 		    
 		        <!-- BEGIN Page Wrapper -->
 		        
-		<section>                 
+		<section> 
+		<style>
+		.heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+        }
+		</style>                
 		<div class="contaier-fluid">
-		  <div th:if="${session.message}">
-		  <div class="alert alert-primary" role="alert">
-		 <p th:text="${session.message}"></p>
-		<script th:inline="javascript">
-		/*<![CDATA[*/
-		setTimeout(function() {
-			
-			window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-		}, 500); 
-		
-		</script> 
-		
-		<!-- Changes by Younus -->
-		
-		  </div>
+		  
+		<div class="row heading" style="background-color: rgb(84,78,130);color:#fff;">
+			<div class="col-md-12 ">
+				<h1 class="text-center "><b>ADD CUSTOMER</b></h1>
+			</div>
 		</div>
-		<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
-		 <div class="col-md-12 " >
-		 <h1 class="text-center pt-1"><b>ADD CUSTOMER</b></h1>
-		  </div>
-		   </div>
 		<form th:action="@{/a2zbilling/admin/customer/add}" method="post" enctype="multipart/form-data" class="form-group">
-		 <div class="row pb-3" style="background-color: #f5f0f0;">
-		  <div class="col-md-4 mt-4">
-		  <div class="form-group">
-		  <label>Customer Name</label>
-		  <input type="text" required class="form-control" name="name" placeholder="Enter your name">
-		  </div>
-		  </div>
-		    <div class="col-md-4 mt-4">
-		  <div class="form-group">
-		  <label>Customer email</label>
-		  <input type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
-		  </div>
-		  </div>
-		  <div class="col-md-4 mt-4">
-		  <div class="form-group">
-		  <label>Customer Mobile</label>
-		  <input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile" placeholder="Enter your mobile No">
-		  </div>
-		  </div>
-		  <div class="col-md-4 mt-2">
-		  <div class="form-group">
-		  <label>Address</label>
-		  <input type="text" required class="form-control" name="address" placeholder="Enter your address">
-		  </div>
-		  </div>
-		   <div class="col-md-4 mt-2">
-		  <div class="form-group">
-		  <label>Choose date</label>
-		  <input type="date" class="form-control" name="addedDate">
-		  </div>
-		  </div>
-		  <div class="col-md-12">
-		  <div class="text-center">
-		  <button type="submit"  class="btn btn-info text-center mt-5">Add</button>
-		  </div>
-		  </div>
-		  </div>
-		  </form>
-		 </div>
-		</section>                      
-		 </body>
-		    <!-- END Body -->
+			<div class="row pb-3" style="background-color: #f5f0f0;">
+				<div class="col-md-4 mt-4">
+					<div class="form-group">
+						<label>Customer Name</label>
+						<input type="text" required class="form-control" name="name" placeholder="Enter your name">
+					</div>
+				</div>
+				<div class="col-md-4 mt-4">
+					<div class="form-group">
+						<label>Customer email</label>
+						<input type="email" required class="form-control" name="email" placeholder="Enter your e-mail">
+					</div>
+				</div>
+				<div class="col-md-4 mt-4">
+					<div class="form-group">
+						<label>Customer Mobile</label>
+						<input type="text" id="mobile" pattern="[0-9]{10}" required class="form-control" name="mobile"
+							placeholder="Enter your mobile No">
+					</div>
+				</div>
+				<div class="col-md-4 mt-2">
+					<div class="form-group">
+						<label>Address</label>
+						<input type="text" required class="form-control" name="address" placeholder="Enter your address">
+					</div>
+				</div>
+				<div class="col-md-4 mt-2">
+					<div class="form-group">
+						<label>Choose date</label>
+						<input type="date" class="form-control" name="addedDate">
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="text-center">
+						<button type="submit" class="btn btn-info text-center mt-5">Add</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		</div>
+		</section>
+		</body>
+		<!-- END Body -->
 		
 		<!-- Mirrored from www.gotbootstrap.com/themes/smartadmin/4.5.1/intel_marketing_dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Apr 2023 07:42:05 GMT -->
+		
 		</html>

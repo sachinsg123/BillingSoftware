@@ -80,30 +80,43 @@
             document.getElementById('searchInput').addEventListener('keyup', filterTable);
         });
     </script>
-    <style>
-        .table tbody tr:hover {
-            background-color: #e0e0e0;
-            color: #000;
-        }
-
-        .search-icon {
-            cursor: pointer;
-        }
-        @media print {
+	<style>
+		.table tbody tr:hover {
+			background-color: #e0e0e0;
+			color: #000;
+		}
+	
+		.search-icon {
+			cursor: pointer;
+		}
+	
+		@media print {
 			#searchInput {
 				display: none;
 			}
-			#applyFilter{
+	
+			#applyFilter {
 				display: none;
 			}
-			
+	
 			/* Hide date inputs by default when printing */
-        #startDate, #endDate, label[for="startDate"], label[for="endDate"] {
-            display: none;
-        }
-        
+			#startDate,
+			#endDate,
+			label[for="startDate"],
+			label[for="endDate"] {
+				display: none;
+			}
+	
 		}
-    </style>
+	
+		.heading {
+			background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 64%, #ffad26 64%, 65%, #d77045 65%, #d77045 66%, #ffad26 66%, #ffad26 67%, #525187 65%, white 80%);
+			border-left: 5px solid #FFC241;
+			color: white;
+			font-weight: bold;
+			padding: 0.5px 10px 0.5px 10px;
+		}
+	</style>
     <div class="container-fluid">
         <div th:if="${session.message}">
             <div class="alert alert-primary" role="alert">
@@ -115,8 +128,8 @@
                 </script>
             </div>
         </div>
-        <div class="row" style="background-color: rgb(84,78,130); color: #fff;">
-            <div class="col-md-12 mt-1">
+        <div class="heading" style="background-color: rgb(84,78,130); color: #fff;">
+            <div class="col-md-12">
                 <h1 class="text-center"><b>SALES TAX REPORT</b></h1>
             </div>
         </div>
