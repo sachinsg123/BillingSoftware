@@ -48,8 +48,17 @@
 			}
 
 		</script>
-		<div class="contaier-fluid" >
-			<div class="row" >
+		<style>
+			@media print {
+				#actionColumn,
+				td:nth-child(4),
+				th:nth-child(4) {
+					display: none;
+				}
+			}
+		</style>
+		<div class="contaier-fluid">
+			<div class="row">
 				<div class="col-md-12" style="background-color: #534F84;color: #fff;">
 					<h1 class="text-center"><b>BRAND LIST</b></h1>
 				</div>
@@ -65,7 +74,7 @@
 
 		<div class="row" >
 			<div class="col-md-12" >
-				<table class="table table-bordered table-hover table-striped" style="background-color: #fff;">
+				<table class="table table-bordered table-hover table-striped" style="background-color: #fff; text-transform: uppercase; text-align: center">
 					<thead style="background-color: #F3EBD6;">
 						<tr>
 							<th style="border: 1px solid black;" scope="col" name="id">ID</th >
