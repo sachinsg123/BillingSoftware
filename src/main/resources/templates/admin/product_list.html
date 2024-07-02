@@ -9,7 +9,15 @@
 <body>
 
 	<section>
-
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    }
+    </style>
 		<script>
 
 			function deleteProductAlert(id) {
@@ -53,6 +61,7 @@
 				})
 
 			}
+			
 		</script>
 		<script>
 			function filterTable() {
@@ -98,15 +107,15 @@
 			}
 		</style>
 		<div class="contaier-fluid" > 
-			<div class="row" style="background-color:rgb(84,78,130);color: #fff;" >
-				<div class="col-md-12 mt-1">
+			<div class="row heading" style="background-color:rgb(84,78,130);color: #fff;" >
+				<div class="col-md-12">
 					<h1 class="text-center"><b>PRODUCT LIST</b></h1>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<!-- Search Bar -->
 				<input id="searchInput" type="text"
-					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
+					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 5px; border-color: rgb(12,131,226);"
 					name="query" placeholder=" Search">
 			</div>
 			<div class="row" >

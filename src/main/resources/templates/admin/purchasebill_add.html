@@ -22,7 +22,7 @@
 				flex-wrap: wrap;
 				justify-content: space-between;
 			}
-
+		
 			.invoice-field {
 				flex-basis: calc(50% - 10px);
 				margin-bottom: 10px;
@@ -31,39 +31,40 @@
 				border: 1px solid #ccc;
 				border-radius: 5px;
 			}
-
+		
 			.invoice-label {
 				font-weight: bold;
 			}
-
+		
 			.invoice-value {
 				margin-left: 10px;
 			}
+		
+			@media print {
+				#actionButton {
+					display: none;
+				}
+			}
+		
+			.heading {
+				background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+				border-left: 5px solid #FFC241;
+				color: white;
+				font-weight: bold;
+				padding: 0.5px 10px 0.5px 10px;
+			}
 		</style>
-
-		<div class="contaier-fluid">
-			<div th:if="${session.message}">
-				<div class="alert alert-primary" role="alert">
-					<p th:text="${session.message}"></p>
-					<script th:inline="javascript">
-						/*<![CDATA[*/
-						setTimeout(function () {
-
-							window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-						}, 500);
-					</script>
-				</div>
-			</div>
 
 	</head>
 
-	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
+	<div class="contaier-fluid">
+	<div class="heading" >
 		<div class="col-md-12 ">
-			<h1 class="text-center pt-1"><b>PURCHASE BILL</b></h1>
+			<h1 class="text-center"><b>PURCHASE BILL</b></h1>
 		</div>
 	</div>
 
-	<div class="row pb-3" style="background-color: #f5f0f0;">
+	<div class="contaier-fluid pb-3" style="background-color: #f5f0f0;">
 
 		<form th:action="@{/a2zbilling/admin/purchasebill/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
@@ -124,7 +125,7 @@
 				<table id="itemtable" class="table table-bordered" style="background-color: #fff; color: black;">
 					<thead style="background-color: #F3EBD6;">
 						<tr>
-							<th style="border: 1px solid black;"></th>
+							<th id="actionButton" style="border: 1px solid black;"></th >
 							<th style="border: 1px solid black;" scope="col">Product Name</th>
 							<th style="border: 1px solid black;" scope="col">Available Qty</th>
 							<th style="border: 1px solid black;" scope="col">Quantity</th>
