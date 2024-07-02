@@ -64,6 +64,16 @@ public class Sales {
 	
 	private String status;
 	
+	private String returnPaidStatus;
+	
+	public String getReturnPaidStatus() {
+		return returnPaidStatus;
+	}
+
+	public void setReturnPaidStatus(String returnPaidStatus) {
+		this.returnPaidStatus = returnPaidStatus;
+	}
+
 	public String getSize() {
 		return size;
 	}

@@ -47,7 +47,15 @@
 
 		}
 	</script>
-	
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 65%, #ffad26 65%, 66%, #d77045 66%, #d77045 67%, #ffad26 67%, #ffad26 68%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    }
+    </style>
 	<style>
 	@media print {
         #searchInput, #applyFilter, #return, .dropdown {
@@ -125,31 +133,21 @@
         });
     </script>
 	<!-- BEGIN Page Wrapper -->
-	<div class="contaier-fluid">
-		<div th:if="${session.message}">
-			<div class="alert alert-primary" role="alert">
-				<p th:text="${session.message}"></p>
-				<script th:inline="javascript">
-					setTimeout(function () {
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500); 
-				</script>
-			</div>
-		</div>
-		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12 mt-2">
-				<h1 class="text-center" style="color: white;"><b>SALES TRANSACTION</b></h1>
-			</div>
-		</div>
+	<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
 		
+		<div class="row heading">
+			<div class="col-md-12">
+				<h1 class="text-center"><b>SALES TRANSACTION</b></h1>
+			</div>
+		</div>
 		<div style="background-color: #f5f0f0;">
-		<div class="row text-right">
-			<div class="col-md-12 mt-3">
-				<a th:href="@{'/a2zbilling/admin/sales/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 5px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Sales</a>
+			<div class="row text-right">
+				<div class="col-md-12 mt-3">
+					<a th:href="@{'/a2zbilling/admin/sales/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 5px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Sales</a>
+				</div>
 			</div>
-		</div>
 		
-		 <!--From date to End date filter-->
+		 	<!--From date to End date filter-->
 		
 			<div class="row">
 				<div class="col-md-2">
@@ -172,7 +170,6 @@
 				</div >
 				
 			</div>
-		
 		
 		<div class="row mt-2" style="background-color:#f5f0f0 ;">
 			<div class="col-md-12">
@@ -225,7 +222,7 @@
 							    </button>
 							    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 							      <!--<a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>-->
-							      <a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Sales Return</b></a>
+							      <a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Return</b></a>
 							      <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
 							    </div>
 							  </div>

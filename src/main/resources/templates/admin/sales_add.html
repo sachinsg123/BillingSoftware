@@ -8,7 +8,15 @@
  <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    	}
+    </style>
 	<script>	
 		function deleteContactAlert(id) {
 
@@ -52,23 +60,23 @@
 			})
 		}
 	</script>
-<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
+<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
 	<div th:if="${session.message}">
 		<div class="alert alert-primary" role="alert">
 			<p th:text="${session.message}"></p>
 			<script th:inline="javascript">
+				/*<![CDATA[*/
 				setTimeout(function () {
 					window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-				}, 500);
+				}, 800); 
 			</script>
 		</div>
 	</div>
-<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
-	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
-        <div class="col-md-12">
-            <h1 class="text-center mt-2"><b>SALES BILL</b></h1>
-        </div>
-    </div>
+	<div class="row heading">
+		<div class="col-md-12">
+			<h1 class="text-center"><b>SALES BILL</b></h1>
+		</div>
+	</div>
 	<form th:action="@{/a2zbilling/admin/sales/add}" method="post" enctype="multipart/form-data" class="form-group">
 		<div class="row">
 			<div class="col-md-4 mt-3 input-group">

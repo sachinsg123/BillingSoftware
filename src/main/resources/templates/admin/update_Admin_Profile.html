@@ -59,6 +59,15 @@
 	</script>
 	<!-- BEGIN Page Wrapper -->
 	  <section>
+		<style>
+	        .heading {
+		        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+		        border-left: 5px solid #FFC241;
+		        color: white;
+		        font-weight: bold;
+		        padding: 6px 10px 3px 10px;
+	    	}
+	    </style>
 					<div class="contaier-fluid">
 						<div th:if="${session.message}">
 							<div class="alert alert-primary" role="alert">
@@ -74,8 +83,8 @@
 							</div>
 						</div>
 						<div class="container-fluid pb-3" style="background-color:#f1f1f1" th:object="${user}">
-							<div class="row" style="background-color:rgb(85,75,126);">
-								<div class="col-md-12 mt-2">
+							<div class="row heading" style="background-color:rgb(85,75,126);">
+								<div class="col-md-12">
 									<h1 class="text-center" style="color: white;"><b>Update Profile</b></h1>
 								</div>
 							</div>
