@@ -139,54 +139,63 @@
 								<tr>
 									<th style="border: 1px solid black;" scope="col">Particulars</th>
 									<th style="border: 1px solid black;" scope="col">Amount</th>
+									<th style="border: 1px solid black;" scope="col">Invoice No</th>
 									<th style="border: 1px solid black;" scope="col">Date</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								
+								<tr >
 									<td>Sale (+)</td>
-									<td id="sale" style="color: green;">5000</td>
+									<td  id="sale" style="color: green;">5000</td  >
+									<td ></td >
 									<td></td>
-								</tr>
+								</tr >
 								<tr>
 									<td>Sales Return (-)</td>
 									<td id="salesReturn" style="color: red;">0</td>
+									<td></td>
 									<td></td>
 								</tr>
 								<tr th:each="transaction : ${partiesTransactions.content}">
 									<td>Purchase (-)</td>
 									<td th:text="${transaction.paid}" id="purchase" style="color: red;">0</td>
+									<td th:text="${transaction.billNo}"></td >
 									<td th:text="${transaction.date}"></td>
 								</tr>
 								<tr>
 									<td>Purchase Return (+)</td>
 									<td id="purchaseReturn" style="color: green;">0</td>
 									<td></td>
+									<td></td>
 								</tr>
 								<tr>
 									<td>Opening Stock (-)</td>
 									<td id="openingStock" style="color: red;">0</td>
+									<td></td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>Closing Stock (+)</td>
 									<td id="closingStock" style="color: green;">0</td>
 									<td></td>
+									<td></td>
 								</tr>
 								<tr style="font-weight: bold;">
 									<td style="background-color: #DBF7D0;">Gross Profit (+)</td>
 									<td id="grossProfit" style="color: green; background-color:#DBF7D0 ;"></td>
-									<td></td>
+									
 								</tr>
 								<tr>
 									<td>Other Income (+)</td>
 									<td id="otherIncome" style="color: green">0</td>
-									<td></td>
+									
 								</tr>
 								<tr>
 									<td>Other Expenses (-)</td>
 									<td id="otherExpenses" style="color: red;">0</td>
-									<td></td>
+									
+									
 								</tr>
 								<tr style="font-weight: bold;">
 									<td style="background-color: #DBF7D0;">Net Profit (+)</td>

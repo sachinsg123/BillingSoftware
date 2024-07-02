@@ -46,6 +46,16 @@
 			})
 		}
 	</script>
+	
+	<style>
+	@media print{
+		#actionColumn,
+		Td:nth-child(4),
+		Th:nth-child(4){
+			display: none;
+		}
+	}
+	</style>
 	<!-- BEGIN Page Wrapper -->
 	<div class="contaier-fluid">
 		<div th:if="${session.message}">
@@ -76,9 +86,9 @@
 						<tr style="text-align: center;">
 							<!-- <th scope="col">Supplier Id</th> -->
 							<th style="border: 1px solid black;" scope="col">Supplier Name</th>
-							<th style="border: 1px solid black;" scope="col">AMOUNT</th>
+							<th style="border: 1px solid black;" scope="col">Amount</th>
 							<th style="border: 1px solid black;" scope="col">Payment</th>
-							<th style="border: 1px solid black;" scope="col"></th>
+							<th id="actionColumn" style="border: 1px solid black;" scope="col">Action</th >
 						</tr>
 					</thead>
 					<tbody>
