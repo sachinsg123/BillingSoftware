@@ -3,6 +3,7 @@
 
 <body>
 	<section>
+	
 		<script>
 
 			function deleteContactAlert(id) {
@@ -43,23 +44,32 @@
 							'error'
 						)
 					}
-				})
-
+				})	
 			}
 
 		</script>
 		<style>
 			@media print {
+		
 				#actionColumn,
 				td:nth-child(4),
 				th:nth-child(4) {
 					display: none;
 				}
 			}
+		
+		
+			.heading {
+				background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+				border-left: 5px solid #FFC241;
+				color: white;
+				font-weight: bold;
+				padding: 1px 10px 0.5px 10px;
+			}
 		</style>
 		<div class="contaier-fluid">
-			<div class="row">
-				<div class="col-md-12" style="background-color: #534F84;color: #fff;">
+			<div class="heading">
+				<div class="col-md-12">
 					<h1 class="text-center"><b>BRAND LIST</b></h1>
 				</div>
 			</div>
@@ -70,7 +80,7 @@
 					<i class="fa-solid fa-circle-plus"></i> Add Brand
 				</button>
 			</div>
-		</div>
+		
 
 		<div class="row" >
 			<div class="col-md-12" >
@@ -113,6 +123,7 @@
 						th:href="@{/a2zbilling/admin/brand/list(page=${currentPage + 1}, size=${brands.size})}">Next</a>
 				</div>
 			</div>
+		</div>
 		</div>
 		</div>
 	</section>
