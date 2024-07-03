@@ -4,6 +4,14 @@
 	.styled-button {
 		width: 150px;
 	}
+
+	.heading {
+		background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+		border-left: 5px solid #FFC241;
+		color: white;
+		font-weight: bold;
+		padding: 6px 10px 3px 10px;
+	}
 </style>
 <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -18,11 +26,13 @@
 				</script>
 			</div>
 		</div>
+		<div class="heading">
 		<div class="row" style="background-color:rgb(84,78,130) ; color: #fff;">
 			<div class="col-md-12 mt-1">
 				<h1 class="text-center"><b>ADD PRODUCT</b></h1>
 			</div>
 		</div>
+		</div >
 		
 		<form th:action="@{/a2zbilling/admin/product/add}" method="post" enctype="multipart/form-data"
 			class="form-group">
