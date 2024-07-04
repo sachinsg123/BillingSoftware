@@ -42,6 +42,11 @@ public class User{
 	@OneToMany(mappedBy ="user")
 	private List<Parties> parties = new ArrayList<Parties>();
 	
+	@OneToMany(mappedBy ="user")
+	private List<PurchaseOrder> purchaseorder = new ArrayList<PurchaseOrder>();
+	
+	
+
 	public List<Charges> getCharges() {
 		return charges;
 	}
@@ -196,16 +201,13 @@ public class User{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-/*
-	public List<Roles> getRoles() {
-		return roles;
+	public List<PurchaseOrder> getPurchaseorder() {
+		return purchaseorder;
 	}
 
-	public void setRoles(List<Roles> roles) {
-		this.roles = roles;
+	public void setPurchaseorder(List<PurchaseOrder> purchaseorder) {
+		this.purchaseorder = purchaseorder;
 	}
-	
-	*/	
 	public String getRole() {
 		return role;
 	}
