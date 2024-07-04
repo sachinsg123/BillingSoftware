@@ -971,22 +971,25 @@ public class adminController {
 		user.getPartiesTransactions().add(partiesTransaction);
 		partiesTransaction.setUser(user);
 
+		//update the parties due
 		Parties parties = partiesTransaction.getParties();
-		Double amount = Double.parseDouble(parties.getOpeningBalance())
-				+ Double.parseDouble(partiesTransaction.getDues());
-		if (amount < 0) {
+		Double amount = Double.parseDouble(parties.getOpeningBalance()) - Double.parseDouble(partiesTransaction.getDues());
+		if (amount > 0) {
 			parties.setPayment("toReceive");
 		} else {
 			parties.setPayment("toPay");
 		}
+		
 		parties.setOpeningBalance(String.valueOf(amount));
 		parties.getTransactions().add(partiesTransaction);
 		partiesRepo.save(parties);
-
+		
+		partiesTransaction.setPurchaseType("Purchase");
 		partiesTransectionRepo.save(partiesTransaction);
 		userRepo.save(user);
 		partiesTransaction.setStatus("Active");
 
+		//update the products quantity
 		List<Product> products = partiesTransaction.getProducts();
 		int i = 0;
 		for (Product product : products) {
@@ -1016,7 +1019,6 @@ public class adminController {
 				productRepo.save(product);
 			}
 			i++;
-
 		}
 
 		return "redirect:/a2zbilling/admin/purchasebill/transection";
@@ -1095,10 +1097,11 @@ public class adminController {
 	}
 
 	@GetMapping("/purchasereturn/transection")
-	public String purchaseReturnList(Model model) {
+	public String purchaseReturnList(Model model,  @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		int userId = user.getId();
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1107,6 +1110,11 @@ public class adminController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
+		Pageable pageable = PageRequest.of(page, size);
+		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection1(userId,pageable);
+		model.addAttribute("partiesTransactions", partiesTransactions);
+		model.addAttribute("currentPage", page);
+		
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
@@ -1145,8 +1153,7 @@ public class adminController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		int userid = user.getId();
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userid);
+		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userId);
 		model.addAttribute("suppliers", suppliers);
 
 		// to render unit list on Purchase bill page
@@ -1173,45 +1180,161 @@ public class adminController {
 	}
 
 	@PostMapping("/purchasereturn/add")
-	public String addPurchaseReturnProccess(Model model, @PathVariable int id) {
+	public String addPurchaseReturnProccess(@ModelAttribute PartiesTransaction partiesTransaction, Model model, HttpSession session) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
-		String username = auth.getName();
-		String email = user.getEmail();
-		model.addAttribute("username", username);
-		model.addAttribute("email", email);
-		Company company = companyRepo.getCompanyByUserId(user.getId());
-
-		PartiesTransaction partiesTransaction = partiesTransectionRepo.findById(id).get();
-		model.addAttribute("partiesTransaction", partiesTransaction);
-
-		String companyName = company.getName();
-		model.addAttribute("companyName", companyName);
-
-		int userid = user.getId();
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userid);
-		model.addAttribute("suppliers", suppliers);
-
-		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.showAllActiveUnit(userId);
-		model.addAttribute("units", units);
-
-		// to render list on Purchase bill page
-		List<Size> sizes = sizeRepo.showAllSize(userId);
-		model.addAttribute("sizes", sizes);
-
-		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-			String image = user.getImageUrl();
-			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		
+		PartiesTransaction partiesTransactions = partiesTransectionRepo.findById(partiesTransaction.getId()).get();
+		
+		List<Product> newproducts = partiesTransaction.getProducts();
+		List<Product> oldproducts = partiesTransactions.getProducts();
+		
+		String newQuantity = partiesTransaction.getQuantity();
+		int[] newQuantityArray = Arrays.stream(newQuantity.split(",")).mapToInt(Integer::parseInt).toArray();
+		String oldQuantity = partiesTransactions.getQuantity();
+		int[] oldQuantityArray = Arrays.stream(oldQuantity.split(",")).mapToInt(Integer::parseInt).toArray();
+		int k = 0;
+		for(Product product : newproducts)
+		{
+			int index = oldproducts.indexOf(product);
+			Stock stock = product.getStock();
+			int AQty = Integer.parseInt(stock.getQuantity());
+			int Qty = oldQuantityArray[index] - newQuantityArray[k];
+			if(AQty < Qty)
+			{
+				session.setAttribute("message", "Product Return Quantity is Less than Available Quantity !!");
+				return "redirect:/a2zbilling/admin/purchasebill/transection";
+			}
+			k++;
 		}
-		model.addAttribute("imagePath", imgpath);
-
-		String image = company.getLogo();
-		String companyLogo = "/img/companylogo/" + image;
-		model.addAttribute("companyLogo", companyLogo);
-
+		
+		String size = partiesTransaction.getSize();
+		String[] oldSizeArray = size.split(",");
+		
+		PartiesTransaction partiesTransaction1 = new PartiesTransaction();
+		
+		partiesTransaction1.setBillNo(partiesTransaction.getBillNo());
+		partiesTransaction1.setDate(partiesTransaction.getDate());
+		partiesTransaction1.setPaymentMode(partiesTransaction.getPaymentMode());
+		
+		int j = 0;
+		for(Product product : oldproducts)
+		{
+			if(newproducts.contains(product))
+			{
+				int index = partiesTransaction.getProducts().indexOf(product);
+				String newQuantity1 = partiesTransaction.getQuantity();
+				int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
+				
+				if(oldQuantityArray[j] > newQuantityArray1[index]) {
+					
+					if(partiesTransaction1.getProducts().size() == 0) {
+						List<Product> productList = new ArrayList<>();
+						productList.add(product);
+						partiesTransaction1.setProducts(productList);
+					}
+					else {
+						partiesTransaction1.getProducts().add(product);
+					}
+					
+					if(partiesTransaction1.getQuantity() != null) {
+						partiesTransaction1.setQuantity(partiesTransaction1.getQuantity()+","+String.valueOf(oldQuantityArray[j] - newQuantityArray1[index]));
+					} else partiesTransaction1.setQuantity(String.valueOf(oldQuantityArray[j] - newQuantityArray1[index]));
+					
+					if(partiesTransaction1.getSize() != null) {
+						partiesTransaction1.setSize(partiesTransaction1.getSize()+","+oldSizeArray[j]);
+					} else partiesTransaction1.setSize(oldSizeArray[j]);
+					
+					int diff = oldQuantityArray[j] - newQuantityArray1[index];
+					Stock stock = product.getStock();
+					int quantity = Integer.parseInt(stock.getQuantity()) - diff;
+					stock.setQuantity(String.valueOf(quantity));
+					stockRepo.save(stock);
+					productRepo.save(product);
+				}
+			}
+			else {
+				if(partiesTransaction1.getProducts().size() == 0) {
+					List<Product> productList = new ArrayList<>();
+					productList.add(product);
+					partiesTransaction1.setProducts(productList);
+					
+				}
+				else {
+					partiesTransaction1.getProducts().add(product);
+				}
+				
+				if(partiesTransaction1.getQuantity() != null) {
+					partiesTransaction1.setQuantity(partiesTransaction1.getQuantity()+","+String.valueOf(oldQuantityArray[j]));
+				} else partiesTransaction1.setQuantity(String.valueOf(oldQuantityArray[j]));
+				
+				if(partiesTransaction1.getSize() != null) {
+					partiesTransaction1.setSize(partiesTransaction1.getSize()+","+oldSizeArray[j]);
+				} else partiesTransaction1.setSize(oldSizeArray[j]);
+				
+				Stock stock = product.getStock();
+				int quantity = Integer.parseInt(stock.getQuantity()) - oldQuantityArray[j];
+				stock.setQuantity(String.valueOf(quantity));
+				stockRepo.save(stock);
+				productRepo.save(product);
+			}
+			j++;
+		}
+		if(partiesTransaction1.getProducts().size() > 0) {
+			double netPayment = 0;
+			String newQuantity1 = partiesTransaction1.getQuantity();
+			int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
+			List<Product> productList = partiesTransaction1.getProducts();
+			k = 0;
+			for(Product product : productList)
+			{
+				double price = Integer.parseInt(product.getPrice());
+				double total = price * newQuantityArray1[k];
+				netPayment += total;
+				k++;
+			}
+			
+			Parties parties = partiesTransaction.getParties();
+			Double amount = Double.parseDouble(parties.getOpeningBalance()) + netPayment;
+			if (amount > 0) {
+				parties.setPayment("toReceive");
+			} else {
+				parties.setPayment("toPay");
+			}
+			parties.setOpeningBalance(String.valueOf(amount));
+			partiesRepo.save(parties);
+			
+			partiesTransaction1.setParties(partiesTransaction.getParties());
+			partiesTransaction1.setPaymentStatus(partiesTransaction.getPaymentStatus());
+			partiesTransaction1.setNetPayment(String.valueOf(netPayment));
+			partiesTransaction1.setStatus("Active");
+			partiesTransaction1.setPurchaseType("Return");
+			partiesTransaction1.setUser(user);
+			session.setAttribute("message", "Purchase Return Successfully !!");
+			partiesTransectionRepo.save(partiesTransaction1);
+		}
+		
+		partiesTransactions.setDate(partiesTransaction.getDate());
+		partiesTransactions.setQuantity(partiesTransaction.getQuantity());
+		partiesTransactions.setDiscountInRupees(partiesTransaction.getDiscountInRupees());
+		partiesTransactions.setDiscountInPercentage(partiesTransaction.getDiscountInPercentage());
+		partiesTransactions.setTaxInRupees(partiesTransaction.getTaxInRupees());
+		partiesTransactions.setTaxInPercentage(partiesTransaction.getTaxInPercentage());
+		partiesTransactions.setPaymentMode(partiesTransaction.getPaymentMode());
+		partiesTransactions.setPaid(partiesTransaction.getPaid());
+		partiesTransactions.setDues(partiesTransaction.getDues());
+		partiesTransactions.setTotalAmount(partiesTransaction.getTotalAmount());
+		partiesTransactions.setNetPayment(partiesTransaction.getNetPayment());
+		partiesTransactions.setSize(partiesTransaction.getSize());
+		partiesTransactions.setParties(partiesTransaction.getParties());
+		partiesTransactions.setProducts(partiesTransaction.getProducts());
+		partiesTransactions.setUser(user);
+		
+		partiesTransactions.setPurchaseType("Purchase");
+		partiesTransactions.setStatus("Active");
+		partiesTransectionRepo.save(partiesTransactions);
+		session.setAttribute("message", "Purchase Updated Successfully !!");
 		return "redirect:/a2zbilling/admin/purchasebill/transection";
 
 	}
@@ -1714,8 +1837,6 @@ public class adminController {
 			stock.setQuantity(String.valueOf(num));
 			product.setStock(stock);
 
-//			customerProduct.add(product);
-//			product.getCustomer().add(oldCustomer);
 			productRepo.save(product);
 		}
 		i = 0;

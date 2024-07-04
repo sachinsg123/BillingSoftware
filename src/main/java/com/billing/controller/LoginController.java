@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.billing.model.Company;
 import com.billing.model.User;
@@ -156,6 +158,18 @@ public class LoginController{
     public ResponseEntity<String> checkValidOTP(@RequestParam("otp") String otp) {
         if(otp.equals(storedOtp)) {
         	return ResponseEntity.ok("Email Verified Successfully !!");
+        }
+        return ResponseEntity.ok("Entered OTP is Wrong");
+    }
+	
+	@PostMapping("/sendOTPForUpdateEmail")
+    public ResponseEntity<String> sendOTPForUpdateEmail(@RequestParam("otp") String otp, @RequestParam("email") String email) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userrepo.findByUsername(auth.getName());
+        if(otp.equals(storedOtp)) {
+        	user.setEmail(email);
+        	userrepo.save(user);
+        	return ResponseEntity.ok("Email Updated Successfully !!");
         }
         return ResponseEntity.ok("Entered OTP is Wrong");
     }

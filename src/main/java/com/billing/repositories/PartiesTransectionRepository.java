@@ -17,11 +17,14 @@ import com.billing.model.Supplier;
 @Repository
 public interface PartiesTransectionRepository extends JpaRepository<PartiesTransaction, Integer> {
 
-	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND u.id = :id")
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.purchaseType = 'Purchase'  AND u.id = :id")
 	List<PartiesTransaction> showAllActivePartiesTransection(@Param("id") Integer id);
 	
-	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND u.id = :id")
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.purchaseType = 'Purchase' AND u.id = :id")
 	Page<PartiesTransaction> showAllActivePartiesTransection(@Param("id") Integer id, Pageable pageable);
+	
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.purchaseType = 'Return' AND u.id = :id")
+	Page<PartiesTransaction> showAllActivePartiesTransection1(@Param("id") Integer id, Pageable pageable);
 	
 	@Query("SELECT CONCAT('PB - ', MAX(CAST(SUBSTRING(c.billNo, 5) AS integer))) FROM PartiesTransaction c JOIN c.user u WHERE c.status = 'Active' AND u.id = :userId")
 	String maxPurchaseBillNo(@Param("userId") Integer userId);
@@ -29,13 +32,13 @@ public interface PartiesTransectionRepository extends JpaRepository<PartiesTrans
 	//From date to End Date
 	Page<PartiesTransaction> findByUserIdAndDateBetween(int userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
-	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'cash' AND u.id = :userId")
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'cash' AND s.purchaseType = 'Purchase' AND u.id = :userId")
 	List<PartiesTransaction> showAllCashPayment(@Param("userId") Integer userId);
 
-	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'online' AND u.id = :id")
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'online' AND s.purchaseType = 'Purchase' AND u.id = :id")
 	Page<PartiesTransaction> showAllOnlinePayment(@Param("id") Integer id, Pageable pageable);
 	
-	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'cheque' AND u.id = :id")
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.paymentMode = 'cheque' AND s.purchaseType = 'Purchase' AND u.id = :id")
 	Page<PartiesTransaction> showAllChequePayment(@Param("id") Integer id, Pageable pageable);
 
 }

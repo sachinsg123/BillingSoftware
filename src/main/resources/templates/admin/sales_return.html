@@ -247,7 +247,7 @@
 		                </div>
 		            </div>
 		        </div>
-		        <div class="row">
+		        <div class="row d-flex justify-content-between">
 					<div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Payment mode:</label>
@@ -259,31 +259,31 @@
 		                    </select>
 		                </div>
 		            </div>
-		            <div style="margin-left: 170px;">
+		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Paid:</label>
 		                    <input id="paidAmountField" type="number" required class="form-control" name="amountPaid" placeholder="Amount paid" oninput="updateDues()" th:field="*{amountPaid}">
 		                </div>
 		            </div>
-		            <div style="margin-left: 89px;">
+		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Dues:</label>
 		                    <input id="duesAmountField" type="number" required class="form-control" name="dueAmount" placeholder="Dues" readonly th:field="*{dueAmount}">
 		                </div>
 		            </div>
-		            <div style="margin-left: 69px;">
+		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Net Payment:</label>
 		                    <input id="netPaymentField" type="number" required class="form-control" name="netPayment" placeholder="Final Amount" readonly th:field="*{netPayment}">
 		                </div>
 		            </div>
 		        </div>
-				<div class="row">
+				<div class="row d-flex justify-content-between">
 					<div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Return Amount Status:</label>
-		                    <select class="form-control" name="returnPaidStatus">
-								<option>Choose</option>
+		                    <select class="form-control" required name="returnPaidStatus">
+								<option value="" disabled selected>Choose</option>
 								<option value="Amount Paid">Amount Paid</option>
 								<option	value="Amount Not Paid">Amount Not Paid</option>
 							</select>

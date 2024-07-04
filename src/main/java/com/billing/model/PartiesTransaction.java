@@ -35,6 +35,8 @@ public class PartiesTransaction {
 	
 	private String paymentMode;
 	
+	private String paymentStatus;
+	
 	private String paid;
 	
 	private String dues;
@@ -42,11 +44,21 @@ public class PartiesTransaction {
 	private String totalAmount;
 	
 	private String status;
+	
+	private String purchaseType;
 
 	private String netPayment;
 	
 	private String size;
 	
+	public String getPurchaseType() {
+		return purchaseType;
+	}
+
+	public void setPurchaseType(String purchaseType) {
+		this.purchaseType = purchaseType;
+	}
+
 	public String getSize() {
 		return size;
 	}
@@ -77,6 +89,14 @@ public class PartiesTransaction {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 	public int getId() {
