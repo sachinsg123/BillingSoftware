@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 
-<!-- BEGIN Page Wrapper -->
-
-<!-- Created by Younus -->
-
 <section>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-	<head>
-
-		<meta charset="UTF-8">
-		<title>Invoice</title>
-		<style>
+    <head>
+        <meta charset="UTF-8">
+        <title>Invoice</title>
+        <style>
 			.invoice-container {
 				width: 100%;
 				padding: 20px;
@@ -43,533 +38,312 @@
 			.invoice-value {
 				margin-left: 10px;
 			}
+
+
+			.heading {
+				background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+				border-left: 5px solid #FFC241;
+				color: white;
+				font-weight: bold;
+				padding: 0.5px 10px 0.5px 10px;
+			}
+			
 		</style>
+        </style>
+    </head>
 
-		<div class="contaier-fluid">
-			<div th:if="${session.message}">
-				<div class="alert alert-primary" role="alert">
-					<p th:text="${session.message}"></p>
-					<script th:inline="javascript">
-						/*<![CDATA[*/
-						setTimeout(function () {
+    <div class="container-fluid">
+        <div class="heading" style="background-color: rgb(84,78,130);color:#fff;">
+            <div class="col-md-12">
+                <h1 class="text-center"><b>PURCHASE ORDER</b></h1>
+            </div>
+        </div>
+        
+        <form th:action="@{/a2zbilling/admin/purchaseorder/add}" method="post" enctype="multipart/form-data" class="form-group">
+        <div class="row pb-3">
+            <div class="col-md-12 mt-1">
+                <!-- Purchase Order Number Code -->
+                <div class="row d-flex justify-content-end">
+                    <div class="col-md-3 mt-3 input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="background-color: #B3409A; color: white; border: 1px solid #694c94c4;">PO No</span>
+                        </div>
+                        <input th:value="${newpoBillNo}" id="purchaseorder" name="orderNo" style="border: 1px solid #B3409A;" type="text" class="form-control" readonly>
+                    </div>
+                </div>
 
-							window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-						}, 500);
+                <!-- Get Parties data from database -->
+                <div class="row ml-1 mr-1 mb-3">
+                    <div class="input-group">
+                        <div class="col-md-4 mt-3 input-group">
+                            <label>Supplier Name :- </label>
+                            <select id="partiesSelect" class="form-select form-control" aria-label="Default select example" name="parties" required>
+                                <option value="" disabled selected>Choose</option>
+                                <option th:each="party:${parties}" th:value="${party.id}" th:text="${party.name}"
+                                    th:attr="data-mobile=${party.mobile}, data-email=${party.email}"></option>
+                            </select>
+                            <button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
 
+                        <div class="col-md-3 mt-3 input-group">
+                            <label>Mobile :- </label>
+                            <input id="mobile1" readonly type="text" class="form-control">
+                        </div>
+                        <div class="col-md-3 mt-3 input-group">
+                            <label>Email :- </label>
+                            <input id="email1" readonly type="email" class="form-control">
+                        </div>
 
+                        <div class="col-md-2 mt-3 input-group">
+                            <label>Date :- </label>
+                            <input name="date" type="text" class="form-control" id="currentDateInput" readonly>
+                        </div>
+                    </div>
+                </div>
 
-					</script>
+                <table id="itemTable" class="table table-bordered table-stripped table-hover" style="background-color: white;">
+                    <thead style="background-color: #F3EBD6; color: black;">
+                        <tr>
+                            <th id="actionbutton" style="border: 1px solid black;">Action</th>
+                            <th style="border: 1px solid black;" scope="col">Product Name</th>
+                            <th style="border: 1px solid black;" scope="col">Quantity</th>
+                            <th style="border: 1px solid black;" scope="col">Size</th>
+                        </tr>
+                    </thead>
+                    <tbody id="addrow">
+                        <tr>
+                            <td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)" style="background-color: red; color: white;"><i class="fa-solid fa-trash"></i></button></td>
+                            <td><select id="productSelect" class="form-select form-control"
+									aria-label="Default select example" name="products">
+									<option value="" disabled selected	>Select</option>
+
+									<!-- Dynamically populate options with product data -->
+									<option th:each="product:${products}" th:value="${product.id}"
+										th:text="${product.name}"
+										th:attr="data-price=${product.price},data-quantity=${product.stock?.quantity} ">
+
+									</option>
+								</select>
+							</td>
+                            <td><input class="form-control" min="1" type="number" name="quantity[]" required oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
+                            <td>
+                                <select name="size[]" class="form-control" required>
+                                    <option value="None">Select Size</option>
+                                    <option th:each="size : ${sizes}" th:value="${size.sizeValue}" th:text="${size.sizeValue}"></option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Add Row Button -->
+            <div class="col-md-12 mt-3">
+                <button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add Row</button>
+            </div>
+
+            <!-- Add Underline -->
+            <div style="height: 0px; width: 100%; border: 1px solid #B3409A; margin-top: 10px;"></div>
+
+            <div class="col-md-12 mt-5">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-info text-center">Save</button>
+                    <a th:href="@{'/a2zbilling/admin/purchaseorder/transection'}" class="btn btn-info ml-3">Cancel</a>
+                </div>
+            </div>
+            </form>
+
+           <!--Add Parties Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
+					<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
 				</div>
-			</div>
 
-	</head>
-
-
-	<div class="row" style="background-color: rgb(84,78,130);color:#fff;">
-		<div class="col-md-12 ">
-			<h1 class="text-center pt-1">Purchase Order</h1>
-		</div>
-	</div>
-
-	<div class="row pb-3" style="background-color: #f5f0f0;">
-
-		<!-- //style="overflow-x: auto;" -->
-		<div class="col-md-12 mt-1">
-
-			<!--Purchase Order Number Code-->
-			<div class="row d-flex justify-content-end">
-				<div class="col-md-3 mt-3 input-group ">
-					<div class="input-group-prepend">
-						<span class="input-group-text"
-							style="background-color: #B3409A; color: white ; border: 1px solid #694c94c4 ;">PO No</span>
-					</div>
-					<input id="purchaseorder" style="border: 1px solid #B3409A ;" type="text" class="form-control"
-						readonly value="A2Z-PO-">
-				</div>
-			</div>
-
-			<!--Get Suppiler data from database-->
-			<div class="row ml-1 mr-1 mb-3">
-				<div class="input-group">
-					<div class="col-md-4 mt-3 input-group">
-						<label>Supplier Name :- </label>
-						<select id="supplierSelect" class="form-select form-control" aria-label="Default select example"
-							name="addSupplierProduct">
-							<option selected>Choose</option>
-							<!-- Dynamically populate options with Supplier data -->
-							<option th:each="supplier:${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"
-								th:attr="data-mobile=${supplier.mobile}, data-email=${supplier.email}"></option>
-						</select>
-
-
-						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
-							<i class="fa-solid fa-plus"></i>
-						</button>
-					</div>
-					<div class="col-md-3 mt-3 input-group">
-						<label>Mobile :- </label>
-						<input id="mobile1" readonly type="text" class="form-control">
-					</div>
-					<div class="col-md-3 mt-3 input-group">
-						<label>Email :- </label>
-						<input id="email1" readonly type="email" class="form-control">
-					</div>
-					<div class="col-md-2 mt-3 input-group">
-						<label>Date :- </label>
-						<input type="text" class="form-control" id="currentDateInput" readonly>
-					</div>
-				</div>
-			</div>
-
-
-			<table id="itemTable" class="table table-bordered" style="background-color: #CD9BB1; color: white;">
-				<thead style="background-color: #B3409A;">
-					<tr>
-						<th></th>
-						<th scope="col">Item Name</th>
-						<th scope="col">Quantity</th>
-						<th scope="col">Size</th>
-						<th scope="col">Unit</th>
-						<th scope="col">Price/Unit</th>
-						<th scope="col">Tax %</th>
-						<th scope="col">Tax Amount</th>
-						<th scope="col">Total Amount</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><button type="button" class="btn btn-danger btn-sm text-white"><i
-									class="fa-solid fa-trash"></i></button></td>
-						<td><input class="form-control" type="text" name="item[]" required></td>
-						<td><input class="form-control" min="1" type="number" name="quantity[]" required
-								oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
-
-
-
-						<td>
-							<select name="size[]" class="form-control" required>
-								<option value="None">Select Size</option>
-								<option th:each="size : ${sizes}" value="${size.id}" th:text="${size.sizeValue}">
-									</select>
-						</td>
-						<td>
-							<select name="unit[]" class="form-control" required>
-								<option value="None">Select Unit</option>
-								<option th:each="unit : ${units}" value="${unit.id}" th:text="${unit.unitName}">
-									</select>
-						</td>
-
-
-
-						<td><input id="priceperunitfield" class="form-control" type="number" name="price[]" required
-								oninput="calculateTotalAmount(this)"></td>
-						<td><input id="taxPercentField" class="form-control" type="number" name="tax_percent[]" required
-								oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>
-						<td><input id="taxAmountField" class="form-control" type="number" name="tax_amount[]" required>
-						</td>
-						<td><input class="form-control" type="number" name="total_amount[]" required readonly></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<!-- Add Row Button -->
-		<div class="col-md-12 mt-3 ">
-			<button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add
-				Row</button>
-		</div>
-
-		<!-- Add Underline  -->
-		<div style="height: 0px; width: 100%; border: 1px solid #B3409A; margin-top: 10px; "></div>
-
-		<div class="invoice-container mt-5" style="background-color: #F9F9F9;">
-			<div class="container">
-				<div class="row d-flex justify-content-between">
-					<div>
-						<div class="form-group">
-							<label class="invoice-label">Total amount:</label>
-							<input id="totalAmountField" type="text" required class="form-control" name="total amount"
-								placeholder="Total amount" readonly>
-						</div>
-					</div>
-					<div>
-						<div class="form-group">
-							<label class="invoice-label">Discount (Rs):</label>
-							<input id="discountAmountField" type="number" class="form-control" name="discount"
-								placeholder="Discount amount" oninput="updatePercentageAmount()">
-						</div>
-					</div>
-					<div>
-						<div class="form-group">
-							<label class="invoice-label">Discount %:</label>
-							<input id="discountPercentField" type="number" class="form-control" name="discount %"
-								placeholder="Discount %" oninput="updateDiscountedAmount()">
-						</div>
-					</div>
-					<div>
-						<div class="form-group">
-							<label class="invoice-label">Payment mode:</label>
-							<select class="form-control" name="type" required>
-								<option value="cash">Cash</option>
-								<option value="cheque">Cheque</option>
-								<option value="online">Online</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div>
-						<div class="form-group mt-2">
-							<label class="invoice-label">Paid:</label>
-							<input id="paidAmountField" type="number" required class="form-control" name="paid"
-								placeholder="Amount paid" oninput="updateDues()">
-						</div>
-					</div>
-					<div style="margin-left: 170px;">
-						<div class="form-group mt-2">
-							<label class="invoice-label">Dues:</label>
-							<input id="duesAmountField" type="number" required class="form-control" name="dues"
-								placeholder="Dues" readonly>
-						</div>
-					</div>
-					<div style="margin-left: 170px;">
-						<div class="form-group mt-2">
-							<label class="invoice-label">Net Payment:</label>
-							<input id="netPaymentField" type="number" required class="form-control" name="netpayment"
-								placeholder="Final Amount" readonly>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="col-md-12 mt-5">
-			<div class="text-center">
-				<button type="submit" class="btn btn-info text-center ">Save</button>
-				<!--<button type="button" onclick="saveAndNew" class="btn btn-info text-center ml-3 ">Save & New</button> -->
-				<a th:href="@{'/a2zbilling/admin/purchasebill/transection'}" class="btn btn-info ml-3">Cancel</a>
-			</div>
-		</div>
-
-
-		<!-- Add Supplier Modal -->
-		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
-			aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header d-flex justify-content-center" style="background-color: #534F84;color: #fff;">
-						<h1 class="modal-title" id="exampleModalLabel">Add Supplier</h1>
-					</div>
-					<div class="modal-body" style="background-color: #f5f0f0;">
-						<form th:action="@{/a2zbilling/admin/supplier/add}" method="post" enctype="multipart/form-data"
-							class="form-group">
-							<div class="row pb-3" >
-								<div class="col-md-5 mt-4">
-									<label>Supplier Name</label>
-								</div>
-								<div class="col-md-7 mt-4">
-									<input type="text" required class="form-control" name="name"
-										placeholder="Enter supplier name">
-								</div>
-								<div class="col-md-5 mt-4">
-									<label>Supplier Email</label>
-								</div>
-								<div class="col-md-7 mt-4">
-									<input size="50" type="email" required class="form-control" name="email"
-										placeholder="Enter supplier e-mail">
-								</div>
-								<div class="col-md-5 mt-4">
-									<label>Supplier Mobile</label>
-								</div>
-								<div class="col-md-7 mt-4">
-									<input type="text" pattern="[0-9]{10}" required class="form-control" name="mobile"
-										placeholder="Enter supplier mobile No">
-								</div>
-								<div class="col-md-5 mt-2">
-									<label>Address</label>
-								</div>
-								<div class="col-md-7 mt-4">
-									<textarea type="text" required class="form-control" name="address"
-										placeholder="Enter supplier address"></textarea>
-								</div>
-								<div class="col-md-5 mt-2">
-									<label>Choose Date</label>
-								</div>
-								<div class="col-md-7 mt-4">
-									<input type="date" class="form-control" name="addedDate">
-								</div>
-								<div class="modal-footer d-flex justify-content-end">
-									<button type="submit" class="btn btn-primary">Add</button>
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								</div>
+				<div class="modal-body" style="background-color: #f5f0f0;">
+					<form th:action="@{/a2zbilling/admin/parties/add}" method="post" enctype="multipart/form-data"
+						class="form-group">
+						<div class="row pb-3">
+							<div class="col-md-5 mt-4">
+								<label><b>Supplier Name*</b></label>
 							</div>
-						</form>
-					</div>
+							<div class="col-md-7 mt-4">
+								<input type="text" required class="form-control" name="name"
+									placeholder="Enter party name">
+							</div>
+
+							<div class="col-md-5 mt-4">
+								<label><b>Supplier Mobile*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input type="text" id="mobile1" pattern="[0-9]{10}" required class="form-control"
+									name="mobile" placeholder="Enter party mobile No">
+							</div>
+							<div class="col-md-5 mt-4">
+								<label><b>Billing Address*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<textarea name="billingAddress" required type="text" class="form-control"
+									placeholder="Billing Address"></textarea>
+							</div>
+
+							<div class="col-md-5 mt-4">
+								<label><b>Shipping Address*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<textarea name="shippingAddress" required type="text" class="form-control"
+									placeholder="Shipping Address"></textarea>
+							</div>
+
+							<div class="col-md-5 mt-4">
+								<label><b>Supplier email*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input size="50" type="email" required class="form-control" name="email"
+									placeholder="Enter party e-mail">
+							</div>
+							<div class="col-md-5 mt-4">
+								<label><b>GST Type</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<select name="gstType" required class="form-control" id="businessType">
+									<option value="unregistered/Consumer">Unregistered/Consumer</option>
+									<option value="registeredBusinessRegular">Registered Business - Regular</option>
+									<option value="registeredBusinessComposition">Registered Business - Composition
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-5 mt-4" id="gstinLable" style="display: none;">
+								<label><b>GSTIN Number*</b></label>
+							</div>
+
+							<div class="col-md-7 mt-4" id="gstinInput" style="display: none;">
+								<input name="gstinNumber" type="text" class="form-control" placeholder="GSTIN Number">
+							</div>
+							<div class="col-md-5 mt-4">
+								<label><b>Opening Balance*</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input name="openingBalance" type="text" class="form-control"
+									placeholder="Opening Balance">
+							</div>
+							<div class="col-md-5 mt-4"></div>
+
+							<div class="col-md-7 mt-4">
+								<select name="payment" required class="form-control">
+									<option>Select</option>
+									<option value="toPay">To Pay</option>
+									<option value="toReceive">To Receive</option>
+								</select>
+							</div>
+							<div class="col-md-5 mt-2">
+								<label><b>Choose date</b></label>
+							</div>
+							<div class="col-md-7 mt-4">
+								<input type="date" class="form-control" name="date">
+							</div>
+
+							<div class="modal-footer d-flex justify-content-end">
+								<button type="submit" class="btn btn-primary">Add</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
-		
-		<!-- Add Print Buttons -->
-		<div class="col-md-12 mt-3 text-center">
-			<button type="button" class="btn btn-primary" onclick="printBill()">Print</button>
-		</div>
-
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-		<script>
-			// Function to print the bill
-			function printBill() {
-				window.print();
-			}
-		</script>
-
-		<script>
-			$(document).ready(function () {
-
-				// Event listener for changing the selected option in the dropdown
-				$('#supplierSelect').change(function () {
-					var selectedOption = $(this).find('option:selected');
-					var phone = selectedOption.data('mobile');
-					var email = selectedOption.data('email');
-
-					$('#mobile1').val(phone);
-					$('#email1').val(email);
-				});
-			});
-		</script>
-
-
-		<script>
-
-			function addRow() {
-				var newRow = '<tr>' +
-					'<td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button></td>' +
-					'<td><input class="form-control" type="text" name="item[]" required></td>' +
-					'<td><input class="form-control" type="number" name="quantity[]" required oninput="calculateTotalAmount(this)"></td>' +
-					'<td><input class="form-control" type="text" name="size[]" required></td>' +
-					'<td>' +
-					'<select class="form-control" name="unit[]" required>' +
-					'<option value="None">NONE</option>' +
-					'<option value="kg">Kilogram (kg)</option>' +
-					'<option value="lit">Liter (lit)</option>' +
-					'<option value="pic">Pieces (pic)</option>' +
-					'</select>' +
-					'</td>' +
-					'<td><input class="form-control" type="number" name="price[]" required oninput="calculateTotalAmount(this)"></td>' +
-					'<td><input class="form-control" type="number" name="tax_percent[]" required oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>' +
-					'<td><input class="form-control" type="number" name="tax_amount[]" required></td>' +
-					'<td><input class="form-control" type="number" name="total_amount[]" required readonly></td>' +
-					'</tr>';
-
-				var tbody = document.querySelector('#itemTable tbody');
-				tbody.insertAdjacentHTML('beforeend', newRow);
-
-				// Update row index for other rows
-				updateRowIndexes();
-			}
-
-			function removeRow(btn) {
-				var row = btn.parentNode.parentNode;
-				row.parentNode.removeChild(row);
-				updateTotalAmount();
-				updateDiscountedAmount();
-				updateDues();
-
-				// Update row index for other rows
-				updateRowIndexes();
-			}
-
-			function calculateTotalAmount(input) {
-				var row = input.parentNode.parentNode;
-				var price = parseFloat(row.querySelector('[name="price[]"]').value);
-				var quantity = parseFloat(row.querySelector('[name="quantity[]"]').value);
-
-				// Validate quantity
-				if (quantity <= 0) {
-					alert("Quantity must be a positive number.");
-					input.value = 1;
-					quantity = 1;
-				}
-
-				var taxAmount = parseFloat(row.querySelector('[name="tax_amount[]"]').value);
-				var totalAmount = (price * quantity) + taxAmount;
-				row.querySelector('[name="total_amount[]"]').value = totalAmount.toFixed(2);
-				updateTotalAmount();
-				updateDiscountedAmount();
-				updateDues();
-			}
-
-			function calculateTaxAmount(input) {
-				var row = input.parentNode.parentNode;
-				var taxPercent = parseFloat(input.value);
-				var price = parseFloat(row.querySelector('[name="price[]"]').value);
-				var quantity = parseFloat(row.querySelector('[name="quantity[]"]').value);
-				var taxAmount = (price * quantity * taxPercent) / 100;
-				row.querySelector('[name="tax_amount[]"]').value = taxAmount.toFixed(2);
-				updateTotalAmount();
-				updateDiscountedAmount();
-				updateDues();
-			}
-
-			function updateTotalAmount() {
-				var totalAmount = 0;
-				var totalAmountInputs = document.querySelectorAll('[name="total_amount[]"]');
-				totalAmountInputs.forEach(function (input) {
-					totalAmount += parseFloat(input.value);
-				});
-				document.getElementById('totalAmountField').value = totalAmount.toFixed(2);
-			}
-
-			function updatePercentageAmount() {
-				var totalAmountField = document.getElementById('totalAmountField');
-				var discountPercentField = document.getElementById('discountPercentField');
-				var discountAmountField = document.getElementById('discountAmountField');
-
-				// Calculate the percentage and net amount initially
-				calculatePercentageAndNetAmount();
-
-				// Add event listener to discountAmountField
-				discountAmountField.addEventListener('input', calculatePercentageAndNetAmount);
-
-				// Function to calculate percentage and net amount
-				function calculatePercentageAndNetAmount() {
-					var totalAmount = parseFloat(totalAmountField.value);
-					var discountAmount = parseFloat(discountAmountField.value);
-
-					// Calculate the discount percentage
-					var discountPercentage = (discountAmount / totalAmount) * 100;
-
-					// Update the net amount
-					var netAmount = totalAmount - discountAmount;
-
-					// Update the discount percentage display
-					document.getElementById('discountPercentField').value = discountPercentage.toFixed(2);
-
-					// Update the net amount display
-					document.getElementById('netPaymentField').value = netAmount.toFixed(2);
-				}
-			}
-
-			function updateDiscountedAmount() {
-				var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
-				var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
-				var discountPercent = parseFloat(document.getElementById('discountPercentField').value);
-
-				// Calculate the discounted amount
-				var discountedAmount = discountAmount;
-				if (!isNaN(discountPercent)) {
-					discountedAmount = (totalAmount * discountPercent) / 100;
-				}
-
-				// Update the net amount
-				var netAmount = totalAmount - discountedAmount;
-
-				// Update the discounted amount display
-				document.getElementById('discountAmountField').value = discountedAmount.toFixed(2);
-
-				// Update the net amount display
-				document.getElementById('netPaymentField').value = netAmount.toFixed(2);
-			}
-
-			function updateDues() {
-				var totalAmount = parseFloat(document.getElementById('totalAmountField').value);
-				var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
-				var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
-				var duesAmount = totalAmount - paidAmount;
-
-				// Exclude discounted amount from dues if there are dues
-				if (duesAmount > 0) {
-					duesAmount -= discountAmount;
-					if (duesAmount < 0) {
-						duesAmount = 0; // Ensure dues amount doesn't go negative
-					}
-				}
-
-				// Update the dues amount display
-				document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
-			}
-
-			// Function to update row indexes
-			function updateRowIndexes() {
-				var rows = document.querySelectorAll('#itemTable tbody tr');
-				rows.forEach(function (row, index) {
-					var inputs = row.querySelectorAll('input, select');
-					inputs.forEach(function (input) {
-						var name = input.getAttribute('name');
-						var newName = name.replace(/\[(\d+)\]/, '[' + index + ']');
-						input.setAttribute('name', newName);
-					});
-				});
-			}
-
-
-			//Code to show alert when user enter negative discountAmount
-			const priceperunitfield = document.getElementById('priceperunitfield');
-			priceperunitfield.addEventListener('input', function () {
-				if (parseFloat(priceperunitfield.value) < 0) {
-					alert("Price per unit of Product should be > 0");
-					priceperunitfield.value = "";
-				}
-			});
-
-
-
-			//Code to show alert when user enter negative discountAmount
-			const discountAmountField = document.getElementById('discountAmountField');
-			discountAmountField.addEventListener('input', function () {
-				if (parseFloat(discountAmountField.value) < 0) {
-					alert("Please Enter Discount Amount > 0");
-					discountAmountField.value = "";
-				}
-			});
-
-			//Code to show alert when user enter negative discount %
-			const discountPercentField = document.getElementById('discountPercentField');
-			discountPercentField.addEventListener('input', function () {
-				if (parseFloat(discountPercentField.value) < 0) {
-					alert("Please Enter Discount % > 0");
-					discountPercentField.value = "";
-				}
-			});
-
-
-			//Code to show alert when user enter negative Tax %
-			const taxPercentField = document.getElementById('taxPercentField');
-			taxPercentField.addEventListener('input', function () {
-				if (parseFloat(taxPercentField.value) < 0) {
-					alert("Please Enter Tax % > 0");
-					taxPercentField.value = "";
-				}
-			});
-
-
-			//Code to show alert when user enter negative Tax Amount
-			const taxAmountField = document.getElementById('taxAmountField');
-			taxAmountField.addEventListener('input', function () {
-				if (parseFloat(taxAmountField.value) < 0) {
-					alert("Please Enter Tax Amount > 0");
-					taxAmountField.value = "";
-				}
-			});
-
-
-			// Get the current date automatically
-			var currentDate = new Date();
-
-			// Format the date as desired (e.g., "2024-04-26")
-			var formattedDate = currentDate.toISOString().split('T')[0];
-
-			// Set the value of the input field to the formatted date
-			document.getElementById('currentDateInput').value = formattedDate;
-
-		</script>
-
-
 	</div>
-	</form>
-	</div>
+     <!-- Add Print Buttons -->
+           <!-- <div class="col-md-12 mt-3 text-center">
+                <button type="button" class="btn btn-primary" onclick="printBill()">Print</button>
+            </div>-->
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+            <script>
+                // Function to print the bill
+                function printBill() {
+                    window.print();
+                }
+
+                $(document).ready(function () {
+                    // Event listener for changing the selected option in the dropdown
+                    $('#partiesSelect').change(function () {
+                        var selectedOption = $(this).find('option:selected');
+                        var phone = selectedOption.data('mobile');
+                        var email = selectedOption.data('email');
+
+                        $('#mobile1').val(phone);
+                        $('#email1').val(email);
+                    });
+
+                    // Get the current date automatically
+                    var currentDate = new Date();
+                    var formattedDate = currentDate.toISOString().split('T')[0];
+                    document.getElementById('currentDateInput').value = formattedDate;
+                });
+
+                var rowCounter = 1;
+
+                function addRow() {
+					var opts = $("#productSelect").html();
+                    rowCounter++;
+                    var newRow = `
+                        <tr id="row${rowCounter}">
+                            <td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)" style="background-color: red; color: white;"><i class="fa-solid fa-trash"></i></button></td>
+                             <td>
+                                <select name="products" class="form-control" required>
+                                     ${opts}
+                                </select>
+                            </td>
+                            <td><input class="form-control" min="1" type="number" name="quantity[]" required oninput="validateQuantity(this); calculateTotalAmount(this)"></td>
+                            <td>
+                                <select name="size[]" class="form-control" required>
+                                    <option value="None">Select Size</option>
+                                    ${document.querySelector('select[name="size[]"]').innerHTML.split('<option value="None">Select Size</option>')[1]}
+                                </select>
+                            </td>
+                        </tr>
+                    `;
+                    document.getElementById('addrow').insertAdjacentHTML('beforeend', newRow);
+                }
+
+                function removeRow(btn) {
+                    var row = btn.closest('tr');
+                    row.parentNode.removeChild(row);
+                    updateRowIndexes();
+                }
+
+                function updateRowIndexes() {
+                    var rows = document.querySelectorAll('#itemTable tbody tr');
+                    rows.forEach(function (row, index) {
+                        var inputs = row.querySelectorAll('input, select');
+                        inputs.forEach(function (input) {
+                            var name = input.getAttribute('name');
+                            var newName = name.replace(/\[(\d+)\]/, '[' + index + ']');
+                            input.setAttribute('name', newName);
+                        });
+                    });
+                }
+
+                function validateQuantity(input) {
+                    if (input.value < 1) {
+                        alert("Quantity must be at least 1");
+                        input.value = 1;
+                    }
+                }
+
+                function calculateTotalAmount(input) {
+                    // Implement your total amount calculation logic here
+                    console.log("Calculating total amount...");
+                }
+            </script>
+        </div>
+    </div>
 </section>
-</body>
-<!-- END Body -->
-
 </html>
