@@ -189,6 +189,7 @@
 								<th style="border: 1px solid black;" scope="col">Supplier Name</th>
 								<th style="border: 1px solid black;" scope="col">Product Name</th>
 								<th style="border: 1px solid black;" scope="col">Quantity</th>
+								<th style="border: 1px solid black;" scope="col">Size</th>
 								<th style="border: 1px solid black;" scope="col">Discount Amount</th>
 								<th style="border: 1px solid black;" scope="col">Payment Type</th>
 								<th style="border: 1px solid black;" scope="col">Net Payment</th>
@@ -200,8 +201,7 @@
 						<tbody>
 							<tr th:each="party : ${partiesTransactions.content}"
 								style="text-align: center; border: 1px solid black;">
-								<td th:text="${party.date}"><input type="text" class="form-control" value="" readonly>
-								</td>
+								<td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
 								<td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
 								<td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
 								<td>
@@ -214,6 +214,11 @@
 								<td>
 									<th:block th:each="qty : ${#strings.arraySplit(party?.quantity, ',')}">
 										<span th:text="${qty}"></span><br>
+									</th:block>
+								</td>
+								<td>
+									<th:block th:each="size : ${#strings.arraySplit(party?.size, ',')}">
+										<span th:text="${size}"></span><br>
 									</th:block>
 								</td>
 								<!--<td th:text="${party?.quantity}"><input class="form-control" value="" readonly></td>-->
@@ -233,8 +238,7 @@
 											aria-haspopup="true" aria-expanded="false">
 											<i class="fa-solid fa-ellipsis-vertical"></i>
 										</button>
-										<div class="dropdown-menu dropdown-menu-right"
-											aria-labelledby="dropdownMenuButton">
+										<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 											<!--<a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>-->
 											<a class="dropdown-item"
 												th:href="@{'/a2zbilling/admin/purchasereturn/add/' + ${party.id}}"><b>Purchase
