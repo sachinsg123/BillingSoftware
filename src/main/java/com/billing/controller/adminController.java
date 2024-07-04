@@ -1077,17 +1077,22 @@ public class adminController {
 		
 		//PurchaseOrder No
 		String pobillNo=purchaseOrderRepo.maxPurchaseOrderNo(userId);
+		if(pobillNo != null && !pobillNo.isEmpty()) {
 			String newpoBillNo=pobillNo.substring(0, 5);
 			int no=Integer.parseInt(pobillNo.substring(5, pobillNo.length()));
 			no +=1;
 			newpoBillNo +=no;
 			model.addAttribute("newpoBillNo", newpoBillNo);
+		}else {
+			String newpoBillNo ="PO - 1";
+		model.addAttribute("newpoBillNo", newpoBillNo);
+		}
+		
 		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
-		
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
