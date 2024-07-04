@@ -44,6 +44,7 @@ import com.billing.model.GSTRate;
 import com.billing.model.Parties;
 import com.billing.model.PartiesTransaction;
 import com.billing.model.Product;
+import com.billing.model.PurchaseOrder;
 import com.billing.model.Sales;
 import com.billing.model.Size;
 import com.billing.model.Stock;
@@ -61,6 +62,7 @@ import com.billing.repositories.GSTRepository;
 import com.billing.repositories.PartiesRepository;
 import com.billing.repositories.PartiesTransectionRepository;
 import com.billing.repositories.ProductRepository;
+import com.billing.repositories.PurchaseOrderRepository;
 import com.billing.repositories.SalesRepository;
 import com.billing.repositories.SizeRepository;
 import com.billing.repositories.StockRepository;
@@ -136,6 +138,9 @@ public class adminController {
 
 	@Autowired
 	private StockRepository stockRepo;
+	
+	@Autowired
+	private PurchaseOrderRepository purchaseOrderRepo;
 
 	@GetMapping("/viewAdminProfile")
 	public String viewAdminProfile(Model model) {
@@ -1061,21 +1066,31 @@ public class adminController {
 		User user = userRepo.findByUsername(auth.getName());
 
 		int userId = user.getId();
-		List<Supplier> suppliers = supplierRepo.showAllActiveSupplier(userId);
-		model.addAttribute("suppliers", suppliers);
 
-		// to render unit list on Purchase bill page
-		List<Unit> units = unitRepo.showAllActiveUnit(userId);
-		model.addAttribute("units", units);
+		//to render Supplier's on Purchase order -> Here Parties means Supplier
+		List<Parties> parties =partiesRepo.showAllActiveParties(userId);
+		model.addAttribute("parties", parties);
+		
+		List<Product> products = productRepo.showAllActiveProduct(userId);
+		model.addAttribute("products", products);
 
 		// to render list on Purchase bill page
 		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
-
+		
+		//PurchaseOrder No
+		String pobillNo=purchaseOrderRepo.maxPurchaseOrderNo(userId);
+			String newpoBillNo=pobillNo.substring(0, 5);
+			int no=Integer.parseInt(pobillNo.substring(5, pobillNo.length()));
+			no +=1;
+			newpoBillNo +=no;
+			model.addAttribute("newpoBillNo", newpoBillNo);
+		
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
+		
 
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 
@@ -1095,6 +1110,68 @@ public class adminController {
 
 		return "admin/purchaseorder_add";
 	}
+	
+	@PostMapping("/purchaseorder/add")
+	public String processPurchaseOrder(@ModelAttribute PurchaseOrder purchaseOrder) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+
+		int userId = user.getId();
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		
+		purchaseOrder.setStatus("Active");
+		user.getPurchaseorder().add(purchaseOrder);
+		purchaseOrder.setUser(user);
+		purchaseOrderRepo.save(purchaseOrder);
+
+		return "redirect:/a2zbilling/admin/purchaseorder/transection";
+	}
+	
+		@GetMapping("/purchaseorder/transection")
+			public String purchaseOrderList(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		  Pageable pageable = PageRequest.of(page, size); 
+		  Page<PurchaseOrder> purchaseOrders = purchaseOrderRepo.showAllActivePurchaseOrderTransection(userId, pageable);
+		  model.addAttribute("purchaseOrders", purchaseOrders);
+		  model.addAttribute("currentPage", page);
+		 
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
+		model.addAttribute("imagePath", imgpath);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		return "admin/purchaseorder_transection";
+	}
+		
+		@GetMapping("/purchaseorder/delete/{id}")
+		public String deletePurchaseorderById(@PathVariable("id") int id) {
+			
+			Optional<PurchaseOrder> po=purchaseOrderRepo.findById(id);
+			PurchaseOrder purchaseOrder=po.get();
+			
+			purchaseOrder.setStatus("InActive");
+			purchaseOrderRepo.save(purchaseOrder);
+
+			return "redirect:/a2zbilling/admin/purchaseorder/transection";
+		}
 
 	@GetMapping("/purchasereturn/transection")
 	public String purchaseReturnList(Model model,  @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
