@@ -10,6 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -329,7 +330,37 @@ public class adminController {
 
 		model.addAttribute("productNamesString", productNamesString);
 		model.addAttribute("minStockProducts", minStockProducts);
+        		
+		List<Customer> customers = customerRepo.showAllCustomerBYActive(userId);
+        LocalDate currentDate = LocalDate.now();
 
+        List<Customer> alertCustomers = new ArrayList<>();
+
+        for (Customer customer : customers) {
+            String customerDate = customer.getPaymentReminderDate();
+
+            // Check if customerDate is null or empty
+            if (customerDate == null || customerDate.isEmpty() || Double.parseDouble(customer.getDueAmount()) <= 0) {
+                // Log the error or handle the null/empty case as needed
+                System.out.println("Customer date is null or empty for customer: " + customer.getName());
+                continue; // Skip this iteration
+            }
+
+            try {
+                LocalDate customerProvidedDate = LocalDate.parse(customerDate);
+
+                if (currentDate.isEqual(customerProvidedDate) || currentDate.isAfter(customerProvidedDate)) {
+                    alertCustomers.add(customer);
+                }
+            } catch (DateTimeParseException e) {
+                // Log the error or handle the invalid date format case as needed
+                System.out.println("Invalid date format for customer: " + customer.getName() + ", date: " + customerDate);
+            }
+        }
+
+        // Add the list of customers needing alert to the model
+        model.addAttribute("alertCustomers", alertCustomers);
+        
 		List<Sales> sales = salesRepo.showAllActiveSales(userId);
 		int salesRecordCount = sales.size();
 		model.addAttribute("salesRecordCount", salesRecordCount);
@@ -354,7 +385,7 @@ public class adminController {
 		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		long suppliercount = parties.size();
 		model.addAttribute("suppliercount", suppliercount);
-
+		System.out.println("suppliercount            ");
 		return "home";
 	}
 

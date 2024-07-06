@@ -44,9 +44,9 @@ public class Customer {
 	@OneToMany(mappedBy = "customer")
 	private List<Sales> sales = new ArrayList<>();
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "customer_user", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private List<User> user = new ArrayList<User>();
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
 
 	private String status;
 
@@ -138,11 +138,11 @@ public class Customer {
 		this.products = products;
 	}
 
-	public List<User> getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(List<User> user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
