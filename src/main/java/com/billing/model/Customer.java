@@ -34,6 +34,8 @@ public class Customer {
 
 	private String addedDate;
 	
+	private String paymentReminderDate;
+	
 	private String dueAmount;
 	
 	@ManyToMany(mappedBy = "customer")
@@ -47,6 +49,14 @@ public class Customer {
 	private List<User> user = new ArrayList<User>();
 
 	private String status;
+
+	public String getPaymentReminderDate() {
+		return paymentReminderDate;
+	}
+
+	public void setPaymentReminderDate(String paymentReminderDate) {
+		this.paymentReminderDate = paymentReminderDate;
+	}
 
 	public String getDueAmount() {
 		return dueAmount;

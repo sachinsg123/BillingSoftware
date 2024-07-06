@@ -1,6 +1,7 @@
 package com.billing.controller;
 
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -212,5 +213,20 @@ public class CustomerController {
 
 		return "redirect:/a2zbilling/admin/customer/list";
 	}
-
+	
+	@PostMapping("/customer/setPaymentReminderOrUpdateDue")
+	public String setPaymentReminderOrUpdateDue(@RequestParam("id") int id, @RequestParam("paymentReminderDate") String paymentReminderDate, @RequestParam("duePaid") double duePaid)
+	{
+		Customer customer = customerRepo.findById(id).get();
+		
+		customer.setPaymentReminderDate(paymentReminderDate);
+		
+		DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        
+		double totalDue = Double.parseDouble(customer.getDueAmount()) + duePaid;
+		customer.setDueAmount(decimalFormat.format(totalDue));
+		
+		customerRepo.save(customer);
+		return "redirect:/a2zbilling/admin/customer/list";
+	}
 }

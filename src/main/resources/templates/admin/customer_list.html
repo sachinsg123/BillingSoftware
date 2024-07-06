@@ -19,14 +19,13 @@
 				display: none;
 			}
 		}
-	
 		.heading {
-			background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
-			border-left: 5px solid #FFC241;
-			color: white;
-			font-weight: bold;
-			padding: 1px 10px 0.5px 10px;
-		}
+		        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 65%, #ffad26 65%, 66%, #d77045 66%, #d77045 67%, #ffad26 67%, #ffad26 68%, #525187 65%, white 80%);
+		        border-left: 5px solid #FFC241;
+		        color: white;
+		        font-weight: bold;
+		        padding: 6px 10px 3px 10px;
+				}
 	</style>
 	
 		<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
@@ -77,15 +76,21 @@
 			}
 
 		</script>
-		
-		<div class="heading">
+	<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
+		<div class=" row heading">
 			<div class="col-md-12" >
 				<h1 class="text-center"><b>CUSTOMERS LIST</b></h1>
 			</div>
 		</div>
-	
-		<div class="row mt-3" >
-			<div class="col-md-12 pb-2">
+		<div>
+			<div class="row text-right">
+				<div class="col-md-12 mt-3">
+					<a data-toggle="modal" data-target="#exampleModal" 
+					style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 5px;" 
+					class="btn btn-info"><i class="fa-solid fa-circle-plus"></i>Payment Reminder</a>
+				</div>
+			</div>
+			<div class="col-md-12 mt-2 pb-2">
 				<table class="table table-bordered table-hover table-striped" style="background-color: #fff	;">
 					<thead style="background-color: #F3EBD6; color: black;">
 						<tr style="text-align: center;">
@@ -116,8 +121,6 @@
 						</tr>
 					</tbody>
 				</table>
-
-
 				<div>
 					<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${customers.totalPages}"></span>
 				</div>
@@ -127,13 +130,140 @@
 					<a th:if="${customers.hasNext()}"
 						th:href="@{/a2zbilling/admin/customer/list(page=${currentPage + 1}, size=${customers.size})}">Next</a>
 				</div>
-
-
 			</div>
 		</div>
-		
-	</section>
-
+	</div>
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+			<div class="modal-header d-flex justify-content-center" style="background-color:rgb(84,78,131); color: white;">
+				<h1 class="modal-title" id="exampleModalLabel">Set Payment Reminder Or Update Due</h1>
+				<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		  <div class="modal-body" style="background-color: #f5f0f0;">
+		  <form th:action="@{/a2zbilling/admin/customer/setPaymentReminderOrUpdateDue}" method="post" enctype="multipart/form-data" class="form-group">
+		  		<div class="row pb-3">
+					<div class="col-md-5 mt-4">
+						<input id="id" name="id" style="display: none;">
+				        <label><b>Customer Name</b></label>
+				    </div>
+				    <div class="col-md-7 mt-4">
+						<select required id="customerSelect" class="form-select form-control" aria-label="Default select example" name="customer">
+				            <option value="" disabled selected>Choose</option>
+				            <!-- Dynamically populate options with customer data -->
+				            <option th:each="customer:${customers}" th:value="${customer.id}" th:text="${customer.name}"
+									th:attr="data-mobile=${customer.mobile}, 
+									data-id=${customer.id},
+									data-email=${customer.email},
+									data-address=${customer.address},
+									data-due=${customer.dueAmount}">
+							</option>
+				        </select>
+				    </div>
+					
+		  		  <div class="col-md-5 mt-4">
+						<label><b>Customer email</b></label>
+				  </div>
+		  		  <div class="col-md-7 mt-4">
+		  		  		<input id="email" size="50" type="email" readonly class="form-control" name="email" placeholder="Enter your e-mail">
+		  		  </div>
+				  
+				  <div class="col-md-5 mt-4">
+						<label><b>Customer Mobile</b></label>
+				  </div>
+		  		  <div class="col-md-7 mt-4">
+						<input type="text" id="mobile" pattern="[0-9]{10}" readonly class="form-control" name="mobile" placeholder="Enter your mobile No">
+		  		  </div>
+				  
+		  		  <div class="col-md-5 mt-2">
+		  		  		<label><b>Address</b></label>
+		  		  </div>
+				  <div class="col-md-7 mt-4">
+		  		  		<textarea id="address" type="text" readonly class="form-control" name="address" placeholder="Enter your address"></textarea>
+		  		  </div>
+				  <div class="col-md-5 mt-4">
+  						<label><b>Remaining Due</b></label>
+  				  </div>
+  		  		  <div class="col-md-7 mt-4">
+  						<input type="text" id="due" readonly class="form-control" name="due">
+  		  		  </div>
+		  		  <div class="col-md-5 mt-2">
+						<label><b>Due Paid Status</b></label>
+		  		  </div>
+		  		  <div class="col-md-7 mt-4">
+					<select required id="duePaidStatus" class="form-select form-control">
+			            <option value="" disabled selected>Choose</option>
+						<option value="Paid">Paid</option>
+						<option value="Not Paid">Not Paid</option>
+			            
+			        </select>
+		  		  </div>
+				  
+				  <div class="col-md-5 mt-4" id="lableDiv" style="display: none;">
+  						<label><b>How Many Due Paid</b></label>
+  				  </div>
+  		  		  <div class="col-md-7 mt-4" id="inputDiv" style="display: none;">
+  						<input type="number" id="duePaid" class="form-control" name="duePaid" placeholder="Enter Due Paid">
+  		  		  </div>
+				  <div class="col-md-5 mt-2" id="lableDiv1" style="display: none;">
+						<label><b>Choose Payment Reminder Date</b></label>
+					</div>
+					<div class="col-md-7 mt-4" id="inputDiv1" style="display: none;">
+						<input type="date" class="form-control" name="paymentReminderDate">
+					</div>
+					
+				  <div class="modal-footer d-flex justify-content-end">
+				      <button type="submit" class="btn btn-primary">Add</button>
+				      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				  </div>	  
+		  	</div>
+		  </form>
+		  </div>
+	    </div>
+	  </div>
+	</div>
+	<script>
+	$(document).ready(function(){
+	   $('#customerSelect').change(function() {
+	       var selectedOption = $(this).find('option:selected');
+		   var id = selectedOption.data('id');
+	       var phone = selectedOption.data('mobile');
+	       var email = selectedOption.data('email');
+		   var address = selectedOption.data('address');
+		   var due = selectedOption.data('due');
+		   
+		  $('#id').val(id);
+          $('#mobile').val(phone);
+          $('#email').val(email);
+		  $('#address').val(address);
+		  $('#due').val(due);
+	   });
+	});
+	
+	$(document).ready(function () {
+			$('#duePaidStatus').change(function () {
+				var selectedValue = $(this).val();
+				if (selectedValue === 'Paid') {
+					$('#lableDiv').show();
+					$('#inputDiv').show();
+				}
+				if (selectedValue === 'Not Paid') {
+					$('#lableDiv1').show();
+					$('#inputDiv1').show();
+				} 
+				if (selectedValue === 'Paid') {
+					$('#lableDiv1').hide();
+					$('#inputDiv1').hide();
+				}
+				if (selectedValue === 'Not Paid') {
+					$('#lableDiv').hide();
+					$('#inputDiv').hide();
+				}
+			});
+		});
+	</script>
+</section>
 </body>
-
 </html>
