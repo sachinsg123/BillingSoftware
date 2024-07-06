@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -1132,9 +1133,9 @@ public class adminController {
 		return "redirect:/a2zbilling/admin/purchaseorder/transection";
 	}
 	
-		@GetMapping("/purchaseorder/transection")
-			public String purchaseOrderList(Model model, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
+	@GetMapping("/purchaseorder/transection")
+	public String purchaseOrderList(Model model, @RequestParam(defaultValue = "0") int page,
+	@RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -1448,19 +1449,18 @@ public class adminController {
 		return "admin/purchasereturn_update";
 	}
 
-	@GetMapping("/purchasebill/delete/{id}")
+	@GetMapping("/purchasereturn/delete/{id}")
 	public String deletePurchasebillById(@PathVariable("id") int id) {
 
 		PartiesTransaction partiesTransaction = partiesTransectionRepo.findById(id).get();
 		partiesTransaction.setStatus("InActive");
 		partiesTransectionRepo.save(partiesTransaction);
 
-		return "redirect:/a2zbilling/admin/purchasebill/transection";
+		return "redirect:/a2zbilling/admin/purchasereturn/transection";
 	}
 
 	@GetMapping("/sales/list")
-	public String salesList(Model model, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
+	public String salesList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -1560,81 +1560,72 @@ public class adminController {
 	}
 
 	@PostMapping("/sales/add")
-	public String salesAddingProcess(@ModelAttribute Sales sales, HttpSession session, HttpServletRequest request,
-			Model model) throws URISyntaxException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
+	public String salesAddingProcess(@ModelAttribute Sales sales, HttpSession session, HttpServletRequest request, Model model) throws URISyntaxException {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User user = userRepo.findByUsername(auth.getName());
 
-		String referer = request.getHeader("referer");
-		java.net.URI uri = new java.net.URI(referer);
-		String path = uri.getPath();
-		String query = uri.getQuery();
-		String endpoint = path + (query != null ? "?" + query : "");
+	    String referer = request.getHeader("referer");
+	    java.net.URI uri = new java.net.URI(referer);
+	    String path = uri.getPath();
+	    String query = uri.getQuery();
+	    String endpoint = path + (query != null ? "?" + query : "");
 
-		String quantity = sales.getQuantity();
-		int[] quantityArray = Arrays.stream(quantity.split(",")).mapToInt(Integer::parseInt).toArray();
+	    if (sales.getDiscountInAmount() == null || sales.getDiscountInAmount().isEmpty()) {
+	        sales.setDiscountInAmount("0");
+	    }
+	    if (sales.getDiscountInPercentage() == null || sales.getDiscountInPercentage().isEmpty()) {
+	        sales.setDiscountInPercentage("0");
+	    }
+	    if (sales.getSignatureImage() == null) {
+	        sales.setSignatureImage("");
+	    }
+	    
+	    sales.setUser(user);
+	    sales.setStatus("Active");
+	    sales.setSalesType("Sale");
+	    user.getSales().add(sales);
+	    salesRepo.save(sales);
+	    
+	    List<Charges> charges = sales.getCharges();
+	    for (Charges charge : charges) {
+	        charge.getSales().add(sales);
+	        chargesRepo.save(charge);
+	    }
 
-		sales.setStatus("Active");
-		if (sales.getDiscountInAmount() == "") {
-			sales.setDiscountInAmount("0");
-		}
-		if (sales.getDiscountInPercentage() == "") {
-			sales.setDiscountInPercentage("0");
-		}
+	    List<Product> products = sales.getProducts();
+	    String quantity = sales.getQuantity();
+	    int[] quantityArray = Arrays.stream(quantity.split(",")).mapToInt(Integer::parseInt).toArray();
+	    int i = 0;
+	    for (Product product : products) {
+	        Stock stock = product.getStock();
+	        int num = Integer.parseInt(stock.getQuantity()) - quantityArray[i];
+	        stock.setQuantity(String.valueOf(num));
+	        stockRepo.save(stock);
+	        product.setStock(stock);
 
-		if (sales.getSignatureImage() == null) {
-			sales.setSignatureImage("");
-		}
-		user.getSales().add(sales);
+	        product.getSales().add(sales);
+	        
+	        // Save stock changes and update product-customer relation
+	        productRepo.save(product);
+	        i++;
+	    }
+	    
+	    Customer customer = sales.getCustomer();
+	    customer.getSales().add(sales);
+	    Double amount = Double.parseDouble(customer.getDueAmount()) + Double.parseDouble(sales.getDueAmount());
+	    customer.setDueAmount(String.valueOf(amount));
+	    
+	    // Save final customer state
+	    customerRepo.save(customer);
+	    
+	    // Save final user state
+	    userRepo.save(user);
+	    
+	    session.setAttribute("message", "Sales Bill Generated Successfully");
 
-		if (sales.getCustomer() == null) {
-			session.setAttribute("message", "Customer Not Selected");
-			return "redirect:" + endpoint;
-		}
-		Customer customer = sales.getCustomer();
-		if (sales.getProducts().isEmpty()) {
-			session.setAttribute("message", "Product Not Selected");
-			return "redirect:" + endpoint;
-		}
-		List<Product> products = sales.getProducts();
-		sales.setUser(user);
-
-		List<Charges> charges = sales.getCharges();
-		sales.setSalesType("Sale");
-		salesRepo.save(sales);
-		userRepo.save(user);
-		for (Charges charge : charges) {
-			charge.getSales().add(sales);
-			chargesRepo.save(charge);
-		}
-
-		customer.getSales().add(sales);
-		List<Product> customerProduct = customer.getProducts();
-		int i = 0;
-		for (Product product : products) {
-			Stock stock = product.getStock();
-
-			int num = Integer.parseInt(stock.getQuantity()) - quantityArray[i];
-			stock.setQuantity(String.valueOf(num));
-			product.setStock(stock);
-
-			customerProduct.add(product);
-			product.getCustomer().add(customer);
-			productRepo.save(product);
-		}
-		customer.setProducts(customerProduct);
-		Double amount = Double.parseDouble(customer.getDueAmount()) + Double.parseDouble(sales.getDueAmount());
-		customer.setDueAmount(String.valueOf(amount));
-		customerRepo.save(customer);
-
-		for (Product product : products) {
-			product.getSales().add(sales);
-			productRepo.save(product);
-		}
-		session.setAttribute("message", "Sales Bill Generated Successfully");
-
-		return "redirect:" + endpoint;
+	    return "redirect:" + endpoint;
 	}
+
 
 	@GetMapping("/sales/update")
 	public String updatesales(Model model) {
@@ -2556,51 +2547,71 @@ public class adminController {
 	}
 	
 	// Created by Younus
-		@GetMapping("/profitAndLossReport")
-		public String profitAndLossReport(Model model, @RequestParam(defaultValue = "0") int page,
-				@RequestParam(defaultValue = "10") int size,
-				@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-				@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userRepo.findByUsername(auth.getName());
+	@GetMapping("/profitAndLossReport")
+	public String profitAndLossReport(Model model, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+		String username = user.getUsername();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
-			int userId = user.getId();
-
-			// To get Parties Name data from db
-			List<Parties> parties = partiesRepo.showAllActiveParties(userId);
-			model.addAttribute("parties", parties);
-
-			// Pagination Added
-			Pageable pageable = PageRequest.of(page, size);
-			Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId,
-					pageable);
-			model.addAttribute("partiesTransactions", partiesTransactions);
-			model.addAttribute("currentPage", page);
-
-			Company company = companyRepo.getCompanyByUserId(user.getId());
-			String companyName = company.getName();
-			model.addAttribute("companyName", companyName);
-
-			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-			if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-				String image = user.getImageUrl();
-				imgpath = StringUtils.ImagePaths.userImageUrl + image;
-			}
-			model.addAttribute("imagePath", imgpath);
-			String image = company.getLogo();
-			String companyLogo = "/img/companylogo/" + image;
-			model.addAttribute("companyLogo", companyLogo);
-
-			// from date to End Date
-			if (startDate != null && endDate != null) {
-				// If date range is provided, filter the transactions
-				partiesTransactions = partiesTransectionRepo.findByUserIdAndDateBetween(userId, startDate, endDate,
-						pageable);
-			} else {
-				// If no date range, show all transactions
-				partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
-			}
-
-			return "admin/profit_And_Loss_Report";
+		// To get Parties Name data from db
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+		model.addAttribute("parties", parties);
+		
+		double sumOfAllActivePurchase = 0;
+		double sumOfAllActivePurchaseReturn = 0;
+		double sumOfAllActiveSales = 0;
+		double sumOfAllActiveSalesReturn = 0;
+		
+		List<PartiesTransaction> partiesTransactions1 = partiesTransectionRepo.showAllActivePartiesTransection(userId);
+		List<PartiesTransaction> partiesTransactions2 = partiesTransectionRepo.showAllActivePartiesTransection1(userId);
+		List<Sales> sales1 = salesRepo.showAllActiveSales(userId);
+		List<Sales> sales2 = salesRepo.showAllActiveSalesReturn(userId);
+		
+		for(PartiesTransaction partiesTransaction : partiesTransactions1) {
+			if(partiesTransaction.getNetPayment() != null) sumOfAllActivePurchase += Float.parseFloat(partiesTransaction.getNetPayment());
 		}
+		for(PartiesTransaction partiesTransaction : partiesTransactions2) {
+			if(partiesTransaction.getNetPayment() != null) sumOfAllActivePurchaseReturn += Float.parseFloat(partiesTransaction.getNetPayment());
+			
+		}
+		for(Sales sale : sales1) {
+			if(sale.getNetPayment() != null) sumOfAllActiveSales += Float.parseFloat(sale.getNetPayment());
+		}
+		for(Sales sale : sales2) {
+			if(sale.getNetPayment() != null) sumOfAllActiveSalesReturn += Float.parseFloat(sale.getNetPayment());
+		}
+		DecimalFormat decimalFormat = new DecimalFormat("#.00");
+       
+        
+		String sumOfAllPurchase = decimalFormat.format(sumOfAllActivePurchase);
+		String sumOfAllPurchaseReturn = decimalFormat.format(sumOfAllActivePurchaseReturn);
+		String sumOfAllSale = decimalFormat.format(sumOfAllActiveSales);
+		String sumOfAllSaleReturn = decimalFormat.format(sumOfAllActiveSalesReturn);
+		
+		model.addAttribute("sumOfAllPurchase", sumOfAllPurchase);
+		model.addAttribute("sumOfAllPurchaseReturn", sumOfAllPurchaseReturn);
+		model.addAttribute("sumOfAllSale", sumOfAllSale);
+		model.addAttribute("sumOfAllSaleReturn", sumOfAllSaleReturn);
+		
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
+		model.addAttribute("imagePath", imgpath);
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		return "admin/profit_And_Loss_Report";
+	}
 }

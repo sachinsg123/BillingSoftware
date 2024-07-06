@@ -80,6 +80,7 @@
 				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
 					<thead style="color:black; background-color: #F3EBD6">
                         <tr>
+							<th scope="col">Status</th>
                             <th scope="col">Date</th>
                             <th scope="col">Invoice No</th>
                             <th scope="col">Supplier Name</th>
@@ -94,6 +95,7 @@
                     </thead>
 					<tbody>
 						<tr th:each="party : ${partiesTransactions}" style="text-align: center; border: 1px solid black;">
+							<td th:text="${party.purchaseType}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
                             <td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
@@ -110,11 +112,11 @@
                                 </th:block>
 							</td>
                             
-                            <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.discountInRupees ?: 0}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
-                            <td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly></td>
-                            <td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.dues ?: 0}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.paid ?: 0}"><input type="text" class="form-control" value="" readonly></td>
                         </tr>
 					</tbody>
 				</table>

@@ -129,7 +129,6 @@
 						style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">From
 						:</label>
 				</div>
-
 			</div>
 			<div style="background-color: #f5f0f0;">
 				<div class="row mt-2 pb-3">
@@ -139,63 +138,44 @@
 								<tr>
 									<th style="border: 1px solid black;" scope="col">Particulars</th>
 									<th style="border: 1px solid black;" scope="col">Amount</th>
-									<th style="border: 1px solid black;" scope="col">Invoice No</th>
-									<th style="border: 1px solid black;" scope="col">Date</th>
 								</tr>
 							</thead>
 							<tbody>
-								
-								<tr >
+								<tr>
 									<td>Sale (+)</td>
-									<td  id="sale" style="color: green;">5000</td  >
-									<td ></td >
-									<td></td>
-								</tr >
+									<td th:text="${sumOfAllSale}" id="sale" style="color: green;">5000</td  >
+								</tr>
 								<tr>
 									<td>Sales Return (-)</td>
-									<td id="salesReturn" style="color: red;">0</td>
-									<td></td>
-									<td></td>
+									<td th:text="${sumOfAllSaleReturn}" id="salesReturn" style="color: red;">0</td>
 								</tr>
-								<tr th:each="transaction : ${partiesTransactions.content}">
+								<tr>
 									<td>Purchase (-)</td>
-									<td th:text="${transaction.paid}" id="purchase" style="color: red;">0</td>
-									<td th:text="${transaction.billNo}"></td >
-									<td th:text="${transaction.date}"></td>
+									<td th:text="${sumOfAllPurchase}" id="purchase" style="color: red;">0</td>
 								</tr>
 								<tr>
 									<td>Purchase Return (+)</td>
-									<td id="purchaseReturn" style="color: green;">0</td>
-									<td></td>
-									<td></td>
+									<td th:text="${sumOfAllPurchaseReturn}" id="purchaseReturn" style="color: green;">0</td>								
 								</tr>
 								<tr>
 									<td>Opening Stock (-)</td>
 									<td id="openingStock" style="color: red;">0</td>
-									<td></td>
-									<td></td>
 								</tr>
 								<tr>
 									<td>Closing Stock (+)</td>
 									<td id="closingStock" style="color: green;">0</td>
-									<td></td>
-									<td></td>
 								</tr>
 								<tr style="font-weight: bold;">
 									<td style="background-color: #DBF7D0;">Gross Profit (+)</td>
 									<td id="grossProfit" style="color: green; background-color:#DBF7D0 ;"></td>
-									
 								</tr>
 								<tr>
 									<td>Other Income (+)</td>
 									<td id="otherIncome" style="color: green">0</td>
-									
 								</tr>
 								<tr>
 									<td>Other Expenses (-)</td>
 									<td id="otherExpenses" style="color: red;">0</td>
-									
-									
 								</tr>
 								<tr style="font-weight: bold;">
 									<td style="background-color: #DBF7D0;">Net Profit (+)</td>
@@ -203,18 +183,6 @@
 								</tr>
 							</tbody>
 						</table>
-
-						<!-- Pagination Code -->
-						<div>
-							<span
-								th:text="'Page ' + ${currentPage + 1} + ' of ' + ${partiesTransactions.totalPages}"></span>
-						</div>
-						<div>
-							<a th:if="${partiesTransactions.hasPrevious()}"
-								th:href="@{/a2zbilling/admin/purchaseReport(page=${currentPage - 1}, size=${partiesTransactions.size})}">Previous</a>
-							<a th:if="${partiesTransactions.hasNext()}"
-								th:href="@{/a2zbilling/admin/purchaseReport(page=${currentPage + 1}, size=${partiesTransactions.size})}">Next</a>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -286,6 +254,4 @@
 	</script>
 </section>
 </body>
-<!-- END Body -->
-
 </html>
