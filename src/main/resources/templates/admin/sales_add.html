@@ -93,7 +93,7 @@
 								data-address=${customer.address}">
 						</option>
 			        </select>
-					<button class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
+					<button type="button" class="btn btn-info ml-2" style="height: 38px;" data-toggle="modal" data-target="#exampleModal">
 						<i class="fa-solid fa-plus"></i>
 				   	</button>
 				</div>
@@ -108,7 +108,7 @@
 				</div>
 		    </div>
 			<div class="col-md-4 mt-3 input-group">
-				<div class="col-md-4">
+				<div class="col-md-6">
 	               <label><b>Sale Bill No. :- </b></label>
 				</div>
 				<div class="col-md-6">
@@ -126,7 +126,7 @@
 				</div>
 		    </div>
 			<div class="col-md-4 mt-1 input-group ml-auto">
-				<div class="col-md-4">
+				<div class="col-md-6">
 					<label><b>Date :- </b></label>
 				</div>
 				<div class="col-md-6">
@@ -425,6 +425,18 @@
 			    $('#totalAmountField').val(totalAmount.toFixed(2));
 				$('#netPaymentField').val(totalAmount.toFixed(2));
 			}	
+		function updateNetPayment() {
+			    let totalAmount = parseFloat($('#totalAmountField').val()) || 0;
+			    let discountAmount = parseFloat($('#discountAmountField').val()) || 0;
+			    let paidAmount = parseFloat($('#paidAmountField').val()) || 0;
+				var chargesPrice = parseFloat(document.getElementById('chargesPrice').value) || 0;
+				
+			    let netPayment = totalAmount - discountAmount + chargesPrice;
+			    let dues = netPayment - paidAmount;
+			
+			    $('#netPaymentField').val(netPayment.toFixed(2));
+			    updateDues();
+			}
 		function updateDues() {
                 var totalAmount = parseFloat(document.getElementById('netPaymentField').value);
                 var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
@@ -566,8 +578,6 @@
 		</script>
 	<script>
 	$(document).ready(function(){
-		
-	   // Event listener for changing the selected option in the dropdown
 	   $('#customerSelect').change(function() {
 	       var selectedOption = $(this).find('option:selected');
 	       var phone = selectedOption.data('mobile');
@@ -648,7 +658,7 @@
 		            <tr id="row${i}">
 		                <td><input id="barcode${i}" type="text" class="form-control"></td>
 		                <td>
-		                    <select required id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
+		                    <select required id="productSelect${i}" class="form-select form-control" aria-label="Default select example" onchange="calculateTaxAmount1(${i})" name="products">
 		                        ${opts}
 		                    </select>
 		                </td>
@@ -744,6 +754,7 @@
 			    });
 			
 			    $('#totalAmountField').val(overallTotal.toFixed(2));
+				updateNetPayment();
 	        }
 		    // Remove row when "Remove" button is clicked
 		    $(document).on('click', '.remove_row', function() {

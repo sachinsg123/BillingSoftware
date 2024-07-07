@@ -3,7 +3,42 @@
 <div th:replace="fragments/head :: head"></div>
 
 <body class="mod-bg-1 mod-nav-link">
+	<style>
+	        .alert-container {
+	            overflow: hidden;
+	            white-space: nowrap;
+	            background-color: #f2dede;
+	            color: #a94442;
+	            border-radius: 4px;
+	            padding: 10px;
+	            margin: 20px auto;
+	            width: 100%;
+	        }
+			.heading1 {
+	            color: #a94442;
+				text-align: center;
+	        }
+	        .alert-content {
+	            display: inline-block;
+	            padding-left: 100%;
+	            animation: scroll-left 25s linear infinite;
+	        }
 	
+	        .alert-item {
+	            display: inline-block;
+	            margin-right: 30px;
+	            font-weight: bold;
+	        }
+	
+	        @keyframes scroll-left {
+	            0% {
+	                transform: translateX(0%);
+	            }
+	            100% {
+	                transform: translateX(-100%);
+	            }
+	        }
+	    </style>
 	<script>
 		'use strict';
         </script>
@@ -56,6 +91,16 @@
 						        /*]]>*/
 						    </script>
 						</div>
+						<div class="alert-container" th:if="${alertCustomers != null and #lists.size(alertCustomers) > 0}">
+							<h2 class="heading1">Customers Who Missed Payment Deadlines</h2>
+					        <div class="alert-content">
+					            <span th:each="customer : ${alertCustomers}" class="alert-item">
+					                <span th:text="${customer.name}"></span>:  
+									<span th:text="${customer.dueAmount}"></span>
+									
+					            </span>
+					        </div>
+					    </div>
                         <div class="row">
                             <div class="col-sm-6 col-xl-3">
                                 <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">

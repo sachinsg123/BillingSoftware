@@ -67,7 +67,7 @@ public class User{
 	
 	private String status;
 	
-	@ManyToMany(mappedBy ="user")
+	@OneToMany(mappedBy ="user")
 	private List<Customer> customers = new ArrayList<Customer>();
 	
 	@OneToMany(mappedBy = "user")

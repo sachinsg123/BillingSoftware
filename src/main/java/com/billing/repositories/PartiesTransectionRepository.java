@@ -26,6 +26,9 @@ public interface PartiesTransectionRepository extends JpaRepository<PartiesTrans
 	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.purchaseType = 'Return' AND u.id = :id")
 	Page<PartiesTransaction> showAllActivePartiesTransection1(@Param("id") Integer id, Pageable pageable);
 	
+	@Query("SELECT s FROM PartiesTransaction s JOIN s.user u WHERE s.status = 'Active' AND s.purchaseType = 'Return' AND u.id = :id")
+	List<PartiesTransaction> showAllActivePartiesTransection1(@Param("id") Integer id);
+	
 	@Query("SELECT CONCAT('PB - ', MAX(CAST(SUBSTRING(c.billNo, 5) AS integer))) FROM PartiesTransaction c JOIN c.user u WHERE c.status = 'Active' AND u.id = :userId")
 	String maxPurchaseBillNo(@Param("userId") Integer userId);
 	

@@ -7,8 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -333,7 +335,37 @@ public class adminController {
 
 		model.addAttribute("productNamesString", productNamesString);
 		model.addAttribute("minStockProducts", minStockProducts);
+        		
+		List<Customer> customers = customerRepo.showAllCustomerBYActive(userId);
+        LocalDate currentDate = LocalDate.now();
 
+        List<Customer> alertCustomers = new ArrayList<>();
+
+        for (Customer customer : customers) {
+            String customerDate = customer.getPaymentReminderDate();
+
+            // Check if customerDate is null or empty
+            if (customerDate == null || customerDate.isEmpty() || Double.parseDouble(customer.getDueAmount()) <= 0) {
+                // Log the error or handle the null/empty case as needed
+                System.out.println("Customer date is null or empty for customer: " + customer.getName());
+                continue; // Skip this iteration
+            }
+
+            try {
+                LocalDate customerProvidedDate = LocalDate.parse(customerDate);
+
+                if (currentDate.isEqual(customerProvidedDate) || currentDate.isAfter(customerProvidedDate)) {
+                    alertCustomers.add(customer);
+                }
+            } catch (DateTimeParseException e) {
+                // Log the error or handle the invalid date format case as needed
+                System.out.println("Invalid date format for customer: " + customer.getName() + ", date: " + customerDate);
+            }
+        }
+
+        // Add the list of customers needing alert to the model
+        model.addAttribute("alertCustomers", alertCustomers);
+        
 		List<Sales> sales = salesRepo.showAllActiveSales(userId);
 		int salesRecordCount = sales.size();
 		model.addAttribute("salesRecordCount", salesRecordCount);
@@ -358,7 +390,7 @@ public class adminController {
 		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		long suppliercount = parties.size();
 		model.addAttribute("suppliercount", suppliercount);
-
+		System.out.println("suppliercount            ");
 		return "home";
 	}
 
@@ -1136,10 +1168,11 @@ public class adminController {
 
 		return "redirect:/a2zbilling/admin/purchaseorder/transection";
 	}
-
+  
 	@GetMapping("/purchaseorder/transection")
 	public String purchaseOrderList(Model model, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -1454,19 +1487,18 @@ public class adminController {
 		return "admin/purchasereturn_update";
 	}
 
-	@GetMapping("/purchasebill/delete/{id}")
+	@GetMapping("/purchasereturn/delete/{id}")
 	public String deletePurchasebillById(@PathVariable("id") int id) {
 
 		PartiesTransaction partiesTransaction = partiesTransectionRepo.findById(id).get();
 		partiesTransaction.setStatus("InActive");
 		partiesTransectionRepo.save(partiesTransaction);
 
-		return "redirect:/a2zbilling/admin/purchasebill/transection";
+		return "redirect:/a2zbilling/admin/purchasereturn/transection";
 	}
 
 	@GetMapping("/sales/list")
-	public String salesList(Model model, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
+	public String salesList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -1566,81 +1598,72 @@ public class adminController {
 	}
 
 	@PostMapping("/sales/add")
-	public String salesAddingProcess(@ModelAttribute Sales sales, HttpSession session, HttpServletRequest request,
-			Model model) throws URISyntaxException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
+	public String salesAddingProcess(@ModelAttribute Sales sales, HttpSession session, HttpServletRequest request, Model model) throws URISyntaxException {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    User user = userRepo.findByUsername(auth.getName());
 
-		String referer = request.getHeader("referer");
-		java.net.URI uri = new java.net.URI(referer);
-		String path = uri.getPath();
-		String query = uri.getQuery();
-		String endpoint = path + (query != null ? "?" + query : "");
+	    String referer = request.getHeader("referer");
+	    java.net.URI uri = new java.net.URI(referer);
+	    String path = uri.getPath();
+	    String query = uri.getQuery();
+	    String endpoint = path + (query != null ? "?" + query : "");
 
-		String quantity = sales.getQuantity();
-		int[] quantityArray = Arrays.stream(quantity.split(",")).mapToInt(Integer::parseInt).toArray();
+	    if (sales.getDiscountInAmount() == null || sales.getDiscountInAmount().isEmpty()) {
+	        sales.setDiscountInAmount("0");
+	    }
+	    if (sales.getDiscountInPercentage() == null || sales.getDiscountInPercentage().isEmpty()) {
+	        sales.setDiscountInPercentage("0");
+	    }
+	    if (sales.getSignatureImage() == null) {
+	        sales.setSignatureImage("");
+	    }
+	    
+	    sales.setUser(user);
+	    sales.setStatus("Active");
+	    sales.setSalesType("Sale");
+	    user.getSales().add(sales);
+	    salesRepo.save(sales);
+	    
+	    List<Charges> charges = sales.getCharges();
+	    for (Charges charge : charges) {
+	        charge.getSales().add(sales);
+	        chargesRepo.save(charge);
+	    }
 
-		sales.setStatus("Active");
-		if (sales.getDiscountInAmount() == "") {
-			sales.setDiscountInAmount("0");
-		}
-		if (sales.getDiscountInPercentage() == "") {
-			sales.setDiscountInPercentage("0");
-		}
+	    List<Product> products = sales.getProducts();
+	    String quantity = sales.getQuantity();
+	    int[] quantityArray = Arrays.stream(quantity.split(",")).mapToInt(Integer::parseInt).toArray();
+	    int i = 0;
+	    for (Product product : products) {
+	        Stock stock = product.getStock();
+	        int num = Integer.parseInt(stock.getQuantity()) - quantityArray[i];
+	        stock.setQuantity(String.valueOf(num));
+	        stockRepo.save(stock);
+	        product.setStock(stock);
 
-		if (sales.getSignatureImage() == null) {
-			sales.setSignatureImage("");
-		}
-		user.getSales().add(sales);
+	        product.getSales().add(sales);
+	        
+	        // Save stock changes and update product-customer relation
+	        productRepo.save(product);
+	        i++;
+	    }
+	    
+	    Customer customer = sales.getCustomer();
+	    customer.getSales().add(sales);
+	    Double amount = Double.parseDouble(customer.getDueAmount()) + Double.parseDouble(sales.getDueAmount());
+	    customer.setDueAmount(String.valueOf(amount));
+	    
+	    // Save final customer state
+	    customerRepo.save(customer);
+	    
+	    // Save final user state
+	    userRepo.save(user);
+	    
+	    session.setAttribute("message", "Sales Bill Generated Successfully");
 
-		if (sales.getCustomer() == null) {
-			session.setAttribute("message", "Customer Not Selected");
-			return "redirect:" + endpoint;
-		}
-		Customer customer = sales.getCustomer();
-		if (sales.getProducts().isEmpty()) {
-			session.setAttribute("message", "Product Not Selected");
-			return "redirect:" + endpoint;
-		}
-		List<Product> products = sales.getProducts();
-		sales.setUser(user);
-
-		List<Charges> charges = sales.getCharges();
-		sales.setSalesType("Sale");
-		salesRepo.save(sales);
-		userRepo.save(user);
-		for (Charges charge : charges) {
-			charge.getSales().add(sales);
-			chargesRepo.save(charge);
-		}
-
-		customer.getSales().add(sales);
-		List<Product> customerProduct = customer.getProducts();
-		int i = 0;
-		for (Product product : products) {
-			Stock stock = product.getStock();
-
-			int num = Integer.parseInt(stock.getQuantity()) - quantityArray[i];
-			stock.setQuantity(String.valueOf(num));
-			product.setStock(stock);
-
-			customerProduct.add(product);
-			product.getCustomer().add(customer);
-			productRepo.save(product);
-		}
-		customer.setProducts(customerProduct);
-		Double amount = Double.parseDouble(customer.getDueAmount()) + Double.parseDouble(sales.getDueAmount());
-		customer.setDueAmount(String.valueOf(amount));
-		customerRepo.save(customer);
-
-		for (Product product : products) {
-			product.getSales().add(sales);
-			productRepo.save(product);
-		}
-		session.setAttribute("message", "Sales Bill Generated Successfully");
-
-		return "redirect:" + endpoint;
+	    return "redirect:" + endpoint;
 	}
+
 
 	@GetMapping("/sales/update")
 	public String updatesales(Model model) {
@@ -2701,7 +2724,6 @@ public class adminController {
 			String image = user.getImageUrl();
 			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
-
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
@@ -2721,5 +2743,4 @@ public class adminController {
 
 		return "redirect:/a2zbilling/admin/expense/list";
 	}
-
 }

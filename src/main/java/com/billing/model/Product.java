@@ -260,14 +260,6 @@ public class Product{
 		this.about = about;
 	}
 	
-//	public Supplier getSupplier() {
-//		return supplier;
-//	}
-//
-//	public void setSupplier(Supplier supplier) {
-//		this.supplier = supplier;
-//	}
-
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", quantity=" + quantity + ", color=" + color + ", price="
