@@ -30,7 +30,7 @@ public class Brand{
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
-	
+		
 	public User getUser() {
 		return user;
 	}

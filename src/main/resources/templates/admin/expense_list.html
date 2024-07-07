@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Customer list</title>
+</head>
+
+<body>
+	<section>
+
+
+		<style>
+			@media print {
+
+				#editbutton,
+				td:nth-child(8),
+				th:nth-child(8) {
+					display: none;
+				}
+			}
+
+			.heading {
+				background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+				border-left: 5px solid #FFC241;
+				color: white;
+				font-weight: bold;
+				padding: 1px 10px 0.5px 10px;
+			}
+		</style>
+
+		<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+		<script>
+
+			function deleteContactAlert(id) {
+
+				const swalWithBootstrapButtons = Swal.mixin({
+					customClass: {
+						confirmButton: 'btn btn-success',
+						cancelButton: 'btn btn-danger'
+					},
+					buttonsStyling: false
+				})
+
+				swalWithBootstrapButtons.fire({
+					title: 'Are you sure?',
+					text: "You won't be able to revert this!",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Yes, delete it!',
+					cancelButtonText: 'No, cancel!',
+					buttonsStyling: true,
+					reverseButtons: true
+				}).then((result) => {
+					if (result.isConfirmed) {
+
+
+						window.location = "/a2zbilling/admin/expense/delete/" + id + " ";
+
+
+						swalWithBootstrapButtons.fire(
+							'Expense Transection Deleted Successfully !',
+
+						)
+					} else if (
+						/* Read more about handling dismissals below */
+						result.dismiss === Swal.DismissReason.cancel
+					) {
+						swalWithBootstrapButtons.fire(
+							'Cancelled',
+							'Expense Transection Not deleted',
+							'error'
+						)
+					}
+				})
+
+			}
+
+		</script>
+
+		<div class="heading">
+			<div class="col-md-12">
+				<h1 class="text-center"><b>EXPENSE LIST</b></h1>
+			</div>
+		</div>
+
+		<div class="col-md-12 mt-3" style="text-align: right;">
+			<a th:href="@{'/a2zbilling/admin/expense/add'}" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i>
+				Add Expense</a>
+		</div>
+
+		<div class="row mt-3">
+			<div class="col-md-12 pb-2">
+				<table class="table table-bordered table-hover table-striped" style="background-color: #fff	;">
+					<thead style="background-color: #F3EBD6; color: black;">
+						<tr style="text-align: center;">
+							<th style="border: 1px solid black;" scope="col">Date</th>
+							<th style="border: 1px solid black;" scope="col">Bill No</th>
+							<th style="border: 1px solid black;" scope="col">Product Name</th>
+							<th style="border: 1px solid black;" scope="col">Quantity</th>
+							<th style="border: 1px solid black;" scope="col">Amount</th>
+							<th style="border: 1px solid black;" scope="col">Payment Type</th>
+							<th style="border: 1px solid black;" scope="col">Net Amount</th>
+							<th id="editbutton" style="border: 1px solid black;" scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody style="text-align: center;">
+						<tr th:each="expense : ${expenses.content}"
+								style="text-align: center; border: 1px solid black;">
+							<td th:text="${expense.date}"></td >
+							<td th:text="${expense.billNo}"></td >
+							<td th:text="${expense.productName}"></td >
+							<td th:text="${expense.quantity}"></td >
+							<td th:text="${expense.amount}"></td >
+							<td th:text="${expense.paymentMode}"></td >
+							<td th:text="${expense.netPayment}"></td >
+							<td >
+							<div class="dropdown">
+								<button type="button" id="dropdownMenuButton" data-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false">
+									<i class="fa-solid fa-ellipsis-vertical"></i>
+								</button>
+								<div class="dropdown-menu dropdown-menu-right"
+									aria-labelledby="dropdownMenuButton">
+									<a class="dropdown-item" th:onclick="|deleteContactAlert(${expense.id})|
+									" href="#"><b>Delete</b></a>
+								</div>
+							</div>
+							</td >
+						</tr >
+					</tbody>
+				</table>
+				<div>
+						<span
+							th:text="'Page ' + ${currentPage + 1} + ' of ' + ${expenses.totalPages}"></span>
+					</div>
+				
+					<div>
+						<a th:if="${expenses.hasPrevious()}"
+							th:href="@{/a2zbilling/admin/expense/list(page=${currentPage - 1}, size=${expenses.size})}">Previous</a>
+						<a th:if="${expenses.hasNext()}"
+							th:href="@{/a2zbilling/admin/expense/list(page=${currentPage + 1}, size=${expenses.size})}">Next</a>
+					</div>
+				
+				</div>
+		</div>
+
+	</section>
+
+</body>
+
+</html>
