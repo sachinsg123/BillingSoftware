@@ -40,6 +40,7 @@ import com.billing.model.Charges;
 import com.billing.model.Company;
 import com.billing.model.CompanyDto;
 import com.billing.model.Customer;
+import com.billing.model.Expense;
 import com.billing.model.GSTRate;
 import com.billing.model.Parties;
 import com.billing.model.PartiesTransaction;
@@ -58,6 +59,7 @@ import com.billing.repositories.ChargesRepository;
 import com.billing.repositories.ColorRepository;
 import com.billing.repositories.CompanyRepository;
 import com.billing.repositories.CustomerRepository;
+import com.billing.repositories.ExpenseRepository;
 import com.billing.repositories.GSTRepository;
 import com.billing.repositories.PartiesRepository;
 import com.billing.repositories.PartiesTransectionRepository;
@@ -138,9 +140,12 @@ public class adminController {
 
 	@Autowired
 	private StockRepository stockRepo;
-	
+
 	@Autowired
 	private PurchaseOrderRepository purchaseOrderRepo;
+
+	@Autowired
+	private ExpenseRepository expenseRepo;
 
 	@GetMapping("/viewAdminProfile")
 	public String viewAdminProfile(Model model) {
@@ -976,25 +981,26 @@ public class adminController {
 		user.getPartiesTransactions().add(partiesTransaction);
 		partiesTransaction.setUser(user);
 
-		//update the parties due
+		// update the parties due
 		Parties parties = partiesTransaction.getParties();
-		Double amount = Double.parseDouble(parties.getOpeningBalance()) - Double.parseDouble(partiesTransaction.getDues());
+		Double amount = Double.parseDouble(parties.getOpeningBalance())
+				- Double.parseDouble(partiesTransaction.getDues());
 		if (amount > 0) {
 			parties.setPayment("toReceive");
 		} else {
 			parties.setPayment("toPay");
 		}
-		
+
 		parties.setOpeningBalance(String.valueOf(amount));
 		parties.getTransactions().add(partiesTransaction);
 		partiesRepo.save(parties);
-		
+
 		partiesTransaction.setPurchaseType("Purchase");
 		partiesTransectionRepo.save(partiesTransaction);
 		userRepo.save(user);
 		partiesTransaction.setStatus("Active");
 
-		//update the products quantity
+		// update the products quantity
 		List<Product> products = partiesTransaction.getProducts();
 		int i = 0;
 		for (Product product : products) {
@@ -1067,31 +1073,30 @@ public class adminController {
 
 		int userId = user.getId();
 
-		//to render Supplier's on Purchase order -> Here Parties means Supplier
-		List<Parties> parties =partiesRepo.showAllActiveParties(userId);
+		// to render Supplier's on Purchase order -> Here Parties means Supplier
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		model.addAttribute("parties", parties);
-		
+
 		List<Product> products = productRepo.showAllActiveProduct(userId);
 		model.addAttribute("products", products);
 
 		// to render list on Purchase bill page
 		List<Size> sizes = sizeRepo.showAllSize(userId);
 		model.addAttribute("sizes", sizes);
-		
-		//PurchaseOrder No
-		String pobillNo=purchaseOrderRepo.maxPurchaseOrderNo(userId);
-		if(pobillNo != null && !pobillNo.isEmpty()) {
-			String newpoBillNo=pobillNo.substring(0, 5);
-			int no=Integer.parseInt(pobillNo.substring(5, pobillNo.length()));
-			no +=1;
-			newpoBillNo +=no;
+
+		// PurchaseOrder No
+		String pobillNo = purchaseOrderRepo.maxPurchaseOrderNo(userId);
+		if (pobillNo != null && !pobillNo.isEmpty()) {
+			String newpoBillNo = pobillNo.substring(0, 5);
+			int no = Integer.parseInt(pobillNo.substring(5, pobillNo.length()));
+			no += 1;
+			newpoBillNo += no;
 			model.addAttribute("newpoBillNo", newpoBillNo);
-		}else {
-			String newpoBillNo ="PO - 1";
-		model.addAttribute("newpoBillNo", newpoBillNo);
+		} else {
+			String newpoBillNo = "PO - 1";
+			model.addAttribute("newpoBillNo", newpoBillNo);
 		}
-		
-		
+
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1115,7 +1120,7 @@ public class adminController {
 
 		return "admin/purchaseorder_add";
 	}
-	
+
 	@PostMapping("/purchaseorder/add")
 	public String processPurchaseOrder(@ModelAttribute PurchaseOrder purchaseOrder) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1123,7 +1128,7 @@ public class adminController {
 
 		int userId = user.getId();
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-		
+
 		purchaseOrder.setStatus("Active");
 		user.getPurchaseorder().add(purchaseOrder);
 		purchaseOrder.setUser(user);
@@ -1131,9 +1136,9 @@ public class adminController {
 
 		return "redirect:/a2zbilling/admin/purchaseorder/transection";
 	}
-	
-		@GetMapping("/purchaseorder/transection")
-			public String purchaseOrderList(Model model, @RequestParam(defaultValue = "0") int page,
+
+	@GetMapping("/purchaseorder/transection")
+	public String purchaseOrderList(Model model, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -1147,11 +1152,11 @@ public class adminController {
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
-		  Pageable pageable = PageRequest.of(page, size); 
-		  Page<PurchaseOrder> purchaseOrders = purchaseOrderRepo.showAllActivePurchaseOrderTransection(userId, pageable);
-		  model.addAttribute("purchaseOrders", purchaseOrders);
-		  model.addAttribute("currentPage", page);
-		 
+		Pageable pageable = PageRequest.of(page, size);
+		Page<PurchaseOrder> purchaseOrders = purchaseOrderRepo.showAllActivePurchaseOrderTransection(userId, pageable);
+		model.addAttribute("purchaseOrders", purchaseOrders);
+		model.addAttribute("currentPage", page);
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
@@ -1165,25 +1170,26 @@ public class adminController {
 
 		return "admin/purchaseorder_transection";
 	}
-		
-		@GetMapping("/purchaseorder/delete/{id}")
-		public String deletePurchaseorderById(@PathVariable("id") int id) {
-			
-			Optional<PurchaseOrder> po=purchaseOrderRepo.findById(id);
-			PurchaseOrder purchaseOrder=po.get();
-			
-			purchaseOrder.setStatus("InActive");
-			purchaseOrderRepo.save(purchaseOrder);
 
-			return "redirect:/a2zbilling/admin/purchaseorder/transection";
-		}
+	@GetMapping("/purchaseorder/delete/{id}")
+	public String deletePurchaseorderById(@PathVariable("id") int id) {
+
+		Optional<PurchaseOrder> po = purchaseOrderRepo.findById(id);
+		PurchaseOrder purchaseOrder = po.get();
+
+		purchaseOrder.setStatus("InActive");
+		purchaseOrderRepo.save(purchaseOrder);
+
+		return "redirect:/a2zbilling/admin/purchaseorder/transection";
+	}
 
 	@GetMapping("/purchasereturn/transection")
-	public String purchaseReturnList(Model model,  @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+	public String purchaseReturnList(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
-		
+
 		String username = auth.getName();
 		String email = user.getEmail();
 		model.addAttribute("username", username);
@@ -1193,10 +1199,11 @@ public class adminController {
 		model.addAttribute("companyName", companyName);
 
 		Pageable pageable = PageRequest.of(page, size);
-		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection1(userId,pageable);
+		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection1(userId,
+				pageable);
 		model.addAttribute("partiesTransactions", partiesTransactions);
 		model.addAttribute("currentPage", page);
-		
+
 		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
 		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
 			String image = user.getImageUrl();
@@ -1262,72 +1269,71 @@ public class adminController {
 	}
 
 	@PostMapping("/purchasereturn/add")
-	public String addPurchaseReturnProccess(@ModelAttribute PartiesTransaction partiesTransaction, Model model, HttpSession session) {
+	public String addPurchaseReturnProccess(@ModelAttribute PartiesTransaction partiesTransaction, Model model,
+			HttpSession session) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
-		
+
 		PartiesTransaction partiesTransactions = partiesTransectionRepo.findById(partiesTransaction.getId()).get();
-		
+
 		List<Product> newproducts = partiesTransaction.getProducts();
 		List<Product> oldproducts = partiesTransactions.getProducts();
-		
+
 		String newQuantity = partiesTransaction.getQuantity();
 		int[] newQuantityArray = Arrays.stream(newQuantity.split(",")).mapToInt(Integer::parseInt).toArray();
 		String oldQuantity = partiesTransactions.getQuantity();
 		int[] oldQuantityArray = Arrays.stream(oldQuantity.split(",")).mapToInt(Integer::parseInt).toArray();
 		int k = 0;
-		for(Product product : newproducts)
-		{
+		for (Product product : newproducts) {
 			int index = oldproducts.indexOf(product);
 			Stock stock = product.getStock();
 			int AQty = Integer.parseInt(stock.getQuantity());
 			int Qty = oldQuantityArray[index] - newQuantityArray[k];
-			if(AQty < Qty)
-			{
+			if (AQty < Qty) {
 				session.setAttribute("message", "Product Return Quantity is Less than Available Quantity !!");
 				return "redirect:/a2zbilling/admin/purchasebill/transection";
 			}
 			k++;
 		}
-		
+
 		String size = partiesTransaction.getSize();
 		String[] oldSizeArray = size.split(",");
-		
+
 		PartiesTransaction partiesTransaction1 = new PartiesTransaction();
-		
+
 		partiesTransaction1.setBillNo(partiesTransaction.getBillNo());
 		partiesTransaction1.setDate(partiesTransaction.getDate());
 		partiesTransaction1.setPaymentMode(partiesTransaction.getPaymentMode());
-		
+
 		int j = 0;
-		for(Product product : oldproducts)
-		{
-			if(newproducts.contains(product))
-			{
+		for (Product product : oldproducts) {
+			if (newproducts.contains(product)) {
 				int index = partiesTransaction.getProducts().indexOf(product);
 				String newQuantity1 = partiesTransaction.getQuantity();
 				int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
-				
-				if(oldQuantityArray[j] > newQuantityArray1[index]) {
-					
-					if(partiesTransaction1.getProducts().size() == 0) {
+
+				if (oldQuantityArray[j] > newQuantityArray1[index]) {
+
+					if (partiesTransaction1.getProducts().size() == 0) {
 						List<Product> productList = new ArrayList<>();
 						productList.add(product);
 						partiesTransaction1.setProducts(productList);
-					}
-					else {
+					} else {
 						partiesTransaction1.getProducts().add(product);
 					}
-					
-					if(partiesTransaction1.getQuantity() != null) {
-						partiesTransaction1.setQuantity(partiesTransaction1.getQuantity()+","+String.valueOf(oldQuantityArray[j] - newQuantityArray1[index]));
-					} else partiesTransaction1.setQuantity(String.valueOf(oldQuantityArray[j] - newQuantityArray1[index]));
-					
-					if(partiesTransaction1.getSize() != null) {
-						partiesTransaction1.setSize(partiesTransaction1.getSize()+","+oldSizeArray[j]);
-					} else partiesTransaction1.setSize(oldSizeArray[j]);
-					
+
+					if (partiesTransaction1.getQuantity() != null) {
+						partiesTransaction1.setQuantity(partiesTransaction1.getQuantity() + ","
+								+ String.valueOf(oldQuantityArray[j] - newQuantityArray1[index]));
+					} else
+						partiesTransaction1.setQuantity(String.valueOf(oldQuantityArray[j] - newQuantityArray1[index]));
+
+					if (partiesTransaction1.getSize() != null) {
+						partiesTransaction1.setSize(partiesTransaction1.getSize() + "," + oldSizeArray[j]);
+					} else
+						partiesTransaction1.setSize(oldSizeArray[j]);
+
 					int diff = oldQuantityArray[j] - newQuantityArray1[index];
 					Stock stock = product.getStock();
 					int quantity = Integer.parseInt(stock.getQuantity()) - diff;
@@ -1335,26 +1341,27 @@ public class adminController {
 					stockRepo.save(stock);
 					productRepo.save(product);
 				}
-			}
-			else {
-				if(partiesTransaction1.getProducts().size() == 0) {
+			} else {
+				if (partiesTransaction1.getProducts().size() == 0) {
 					List<Product> productList = new ArrayList<>();
 					productList.add(product);
 					partiesTransaction1.setProducts(productList);
-					
-				}
-				else {
+
+				} else {
 					partiesTransaction1.getProducts().add(product);
 				}
-				
-				if(partiesTransaction1.getQuantity() != null) {
-					partiesTransaction1.setQuantity(partiesTransaction1.getQuantity()+","+String.valueOf(oldQuantityArray[j]));
-				} else partiesTransaction1.setQuantity(String.valueOf(oldQuantityArray[j]));
-				
-				if(partiesTransaction1.getSize() != null) {
-					partiesTransaction1.setSize(partiesTransaction1.getSize()+","+oldSizeArray[j]);
-				} else partiesTransaction1.setSize(oldSizeArray[j]);
-				
+
+				if (partiesTransaction1.getQuantity() != null) {
+					partiesTransaction1
+							.setQuantity(partiesTransaction1.getQuantity() + "," + String.valueOf(oldQuantityArray[j]));
+				} else
+					partiesTransaction1.setQuantity(String.valueOf(oldQuantityArray[j]));
+
+				if (partiesTransaction1.getSize() != null) {
+					partiesTransaction1.setSize(partiesTransaction1.getSize() + "," + oldSizeArray[j]);
+				} else
+					partiesTransaction1.setSize(oldSizeArray[j]);
+
 				Stock stock = product.getStock();
 				int quantity = Integer.parseInt(stock.getQuantity()) - oldQuantityArray[j];
 				stock.setQuantity(String.valueOf(quantity));
@@ -1363,20 +1370,19 @@ public class adminController {
 			}
 			j++;
 		}
-		if(partiesTransaction1.getProducts().size() > 0) {
+		if (partiesTransaction1.getProducts().size() > 0) {
 			double netPayment = 0;
 			String newQuantity1 = partiesTransaction1.getQuantity();
 			int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
 			List<Product> productList = partiesTransaction1.getProducts();
 			k = 0;
-			for(Product product : productList)
-			{
+			for (Product product : productList) {
 				double price = Integer.parseInt(product.getPrice());
 				double total = price * newQuantityArray1[k];
 				netPayment += total;
 				k++;
 			}
-			
+
 			Parties parties = partiesTransaction.getParties();
 			Double amount = Double.parseDouble(parties.getOpeningBalance()) + netPayment;
 			if (amount > 0) {
@@ -1386,7 +1392,7 @@ public class adminController {
 			}
 			parties.setOpeningBalance(String.valueOf(amount));
 			partiesRepo.save(parties);
-			
+
 			partiesTransaction1.setParties(partiesTransaction.getParties());
 			partiesTransaction1.setPaymentStatus(partiesTransaction.getPaymentStatus());
 			partiesTransaction1.setNetPayment(String.valueOf(netPayment));
@@ -1396,7 +1402,7 @@ public class adminController {
 			session.setAttribute("message", "Purchase Return Successfully !!");
 			partiesTransectionRepo.save(partiesTransaction1);
 		}
-		
+
 		partiesTransactions.setDate(partiesTransaction.getDate());
 		partiesTransactions.setQuantity(partiesTransaction.getQuantity());
 		partiesTransactions.setDiscountInRupees(partiesTransaction.getDiscountInRupees());
@@ -1412,7 +1418,7 @@ public class adminController {
 		partiesTransactions.setParties(partiesTransaction.getParties());
 		partiesTransactions.setProducts(partiesTransaction.getProducts());
 		partiesTransactions.setUser(user);
-		
+
 		partiesTransactions.setPurchaseType("Purchase");
 		partiesTransactions.setStatus("Active");
 		partiesTransectionRepo.save(partiesTransactions);
@@ -1470,7 +1476,7 @@ public class adminController {
 		model.addAttribute("username", username);
 		model.addAttribute("email", email);
 		Company company = companyRepo.getCompanyByUserId(user.getId());
-		
+
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
 
@@ -1683,7 +1689,8 @@ public class adminController {
 
 	// create by Mahesh
 	@GetMapping("/sales/return/list")
-	public String returnSalesList(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+	public String returnSalesList(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -1721,7 +1728,7 @@ public class adminController {
 
 		return "admin/saleReturnList";
 	}
-		
+
 	// create by Mahesh
 	@GetMapping("/sales/return/{id}")
 	public String returnsales(@PathVariable("id") int id, Model model) {
@@ -1776,8 +1783,8 @@ public class adminController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		Sales sales = salesRepo.findById(sale.getId()).get();
-		
-		if(sale.getProducts().size() == 0) {
+
+		if (sale.getProducts().size() == 0) {
 			sales.setReturnPaidStatus(sale.getReturnPaidStatus());
 			sales.setSalesType("Return");
 			sales.setStatus("Active");
@@ -1789,7 +1796,7 @@ public class adminController {
 		sale1.setCustomer(sales.getCustomer());
 		sale1.setSaleBillNo(sales.getSaleBillNo());
 		sale1.setDate(sales.getDate());
-		
+
 		String size1 = sales.getSize();
 		String[] oldSizeArray1 = size1.split(",");
 		String oldQuantity1 = sales.getQuantity();
@@ -1799,70 +1806,75 @@ public class adminController {
 		String taxInAmount1 = sales.getTaxInAmount();
 		String[] oldTaxInAmountArray1 = taxInAmount1.split(",");
 		int j = 0;
-		
-		for(Product product : sales.getProducts())
-		{
-			if(sale.getProducts().contains(product))
-			{
+
+		for (Product product : sales.getProducts()) {
+			if (sale.getProducts().contains(product)) {
 				int index = sale.getProducts().indexOf(product);
 				String newQuantity1 = sale.getQuantity();
 				int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
-				
-				if(oldQuantityArray1[j] > newQuantityArray1[index]) {
-					
+
+				if (oldQuantityArray1[j] > newQuantityArray1[index]) {
+
 					sale1.getProducts().add(product);
-					
-					if(sale1.getQuantity() != null) {
-						sale1.setQuantity(sale1.getQuantity()+","+String.valueOf(oldQuantityArray1[j] - newQuantityArray1[index]));
-					} else sale1.setQuantity(String.valueOf(oldQuantityArray1[j] - newQuantityArray1[index]));
-					
-					if(sale1.getSize() != null) {
-						sale1.setSize(sale1.getSize()+","+oldSizeArray1[j]);
-					} else sale1.setSize(oldSizeArray1[j]);
-					
+
+					if (sale1.getQuantity() != null) {
+						sale1.setQuantity(sale1.getQuantity() + ","
+								+ String.valueOf(oldQuantityArray1[j] - newQuantityArray1[index]));
+					} else
+						sale1.setQuantity(String.valueOf(oldQuantityArray1[j] - newQuantityArray1[index]));
+
+					if (sale1.getSize() != null) {
+						sale1.setSize(sale1.getSize() + "," + oldSizeArray1[j]);
+					} else
+						sale1.setSize(oldSizeArray1[j]);
+
 					sale1.setPaymentMode(sales.getPaymentMode());
-					
-					if(sale1.getTaxInPercentage() != null) {
-						sale1.setTaxInPercentage(sale1.getTaxInPercentage()+","+oldTaxArray1[j]);
-					} else sale1.setTaxInPercentage(oldTaxArray1[j]);
-					
-					if(sale1.getTaxInAmount() != null) {
-						sale1.setTaxInAmount(sale1.getTaxInAmount()+","+oldTaxInAmountArray1[j]);
-					} else sale1.setTaxInAmount(oldTaxInAmountArray1[j]);
+
+					if (sale1.getTaxInPercentage() != null) {
+						sale1.setTaxInPercentage(sale1.getTaxInPercentage() + "," + oldTaxArray1[j]);
+					} else
+						sale1.setTaxInPercentage(oldTaxArray1[j]);
+
+					if (sale1.getTaxInAmount() != null) {
+						sale1.setTaxInAmount(sale1.getTaxInAmount() + "," + oldTaxInAmountArray1[j]);
+					} else
+						sale1.setTaxInAmount(oldTaxInAmountArray1[j]);
 				}
-			}
-			else {
-				
+			} else {
+
 				sale1.getProducts().add(product);
-				if(sale1.getQuantity() != null) {
-					sale1.setQuantity(sale1.getQuantity()+","+String.valueOf(oldQuantityArray1[j]));
-				} else sale1.setQuantity(String.valueOf(oldQuantityArray1[j]));
-				
-				if(sale1.getSize() != null) {
-					sale1.setSize(sale1.getSize()+","+oldSizeArray1[j]);
-				} else sale1.setSize(oldSizeArray1[j]);
-				
+				if (sale1.getQuantity() != null) {
+					sale1.setQuantity(sale1.getQuantity() + "," + String.valueOf(oldQuantityArray1[j]));
+				} else
+					sale1.setQuantity(String.valueOf(oldQuantityArray1[j]));
+
+				if (sale1.getSize() != null) {
+					sale1.setSize(sale1.getSize() + "," + oldSizeArray1[j]);
+				} else
+					sale1.setSize(oldSizeArray1[j]);
+
 				sale1.setPaymentMode(sales.getPaymentMode());
-				
-				if(sale1.getTaxInPercentage() != null) {
-					sale1.setTaxInPercentage(sale1.getTaxInPercentage()+","+oldTaxArray1[j]);
-				} else sale1.setTaxInPercentage(oldTaxArray1[j]);
-				
-				if(sale1.getTaxInAmount() != null) {
-					sale1.setTaxInAmount(sale1.getTaxInAmount()+","+oldTaxInAmountArray1[j]);
-				} else sale1.setTaxInAmount(oldTaxInAmountArray1[j]);
+
+				if (sale1.getTaxInPercentage() != null) {
+					sale1.setTaxInPercentage(sale1.getTaxInPercentage() + "," + oldTaxArray1[j]);
+				} else
+					sale1.setTaxInPercentage(oldTaxArray1[j]);
+
+				if (sale1.getTaxInAmount() != null) {
+					sale1.setTaxInAmount(sale1.getTaxInAmount() + "," + oldTaxInAmountArray1[j]);
+				} else
+					sale1.setTaxInAmount(oldTaxInAmountArray1[j]);
 			}
 			j++;
 		}
-		if(sale1.getProducts().size() > 0) {
+		if (sale1.getProducts().size() > 0) {
 			int netPayment = 0;
 			String newQuantity1 = sale1.getQuantity();
 			int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
 			sale1.setSignatureImage(sale.getSignatureImage());
 			List<Product> productList = sale1.getProducts();
 			int k = 0;
-			for(Product product : productList)
-			{
+			for (Product product : productList) {
 				int price = Integer.parseInt(product.getPrice());
 				int total = price * newQuantityArray1[k];
 				netPayment += total;
@@ -1875,13 +1887,12 @@ public class adminController {
 			sale1.setUser(user);
 			salesRepo.save(sale1);
 		}
-		// this is the end of the sales return 
-		
-		
+		// this is the end of the sales return
+
 		// new products and customer
 		Customer newCustomer = sale.getCustomer();
 		List<Product> newProducts = sale.getProducts();
-		
+
 		// old products and customer
 		List<Product> oldProduct = sales.getProducts();
 		Customer oldCustomer = sales.getCustomer();
@@ -2115,8 +2126,8 @@ public class adminController {
 
 	// Created by Younus - brand add Process
 	@PostMapping("brand/add")
-	public String brandaddProcess(@ModelAttribute BrandDto brandDto, Model model, HttpServletRequest request, HttpSession session)
-			throws URISyntaxException, IOException {
+	public String brandaddProcess(@ModelAttribute BrandDto brandDto, Model model, HttpServletRequest request,
+			HttpSession session) throws URISyntaxException, IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -2158,8 +2169,7 @@ public class adminController {
 		// Save the brand to the repository
 		brandRepo.save(brand);
 		userRepo.save(user);
-		
-		
+
 		/*
 		 * Brand nFound=brandRepo.findByName(brand.getName());
 		 * 
@@ -2169,7 +2179,7 @@ public class adminController {
 		 * (brand.getName().equals(nFound.getName())) { session.setAttribute("message",
 		 * "Brand already exists!"); }
 		 */
-		
+
 		// Get the referer URL from the request header
 		String referer = request.getHeader("referer");
 		// Parse the referer URL to get the path and query
@@ -2437,7 +2447,7 @@ public class adminController {
 
 		return "admin/sales_Tax_Report";
 	}
-	
+
 	// Created by Younus - get CashInHand report
 	@GetMapping("/cashPaymentList")
 	public String cashInHand(Model model, @RequestParam(defaultValue = "0") int page,
@@ -2481,10 +2491,10 @@ public class adminController {
 		return "admin/cashPaymentList";
 	}
 
-		
 	@GetMapping("/chequePaymentList")
-	public String chequePaymentList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
-    
+	public String chequePaymentList(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
 		int userId = user.getId();
@@ -2521,7 +2531,8 @@ public class adminController {
 	}
 
 	@GetMapping("/onlinePaymentList")
-	public String onlinePaymentList(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue="10") int size) {
+	public String onlinePaymentList(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
@@ -2554,53 +2565,161 @@ public class adminController {
 
 		return "admin/onlinePaymentList";
 	}
-	
+
 	// Created by Younus
-		@GetMapping("/profitAndLossReport")
-		public String profitAndLossReport(Model model, @RequestParam(defaultValue = "0") int page,
-				@RequestParam(defaultValue = "10") int size,
-				@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-				@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userRepo.findByUsername(auth.getName());
+	@GetMapping("/profitAndLossReport")
+	public String profitAndLossReport(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
 
-			int userId = user.getId();
+		int userId = user.getId();
 
-			// To get Parties Name data from db
-			List<Parties> parties = partiesRepo.showAllActiveParties(userId);
-			model.addAttribute("parties", parties);
+		// To get Parties Name data from db
+		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
+		model.addAttribute("parties", parties);
 
-			// Pagination Added
-			Pageable pageable = PageRequest.of(page, size);
-			Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId,
-					pageable);
-			model.addAttribute("partiesTransactions", partiesTransactions);
-			model.addAttribute("currentPage", page);
+		// Pagination Added
+		Pageable pageable = PageRequest.of(page, size);
+		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId,
+				pageable);
+		model.addAttribute("partiesTransactions", partiesTransactions);
+		model.addAttribute("currentPage", page);
 
-			Company company = companyRepo.getCompanyByUserId(user.getId());
-			String companyName = company.getName();
-			model.addAttribute("companyName", companyName);
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
 
-			String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
-			if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
-				String image = user.getImageUrl();
-				imgpath = StringUtils.ImagePaths.userImageUrl + image;
-			}
-			model.addAttribute("imagePath", imgpath);
-			String image = company.getLogo();
-			String companyLogo = "/img/companylogo/" + image;
-			model.addAttribute("companyLogo", companyLogo);
-
-			// from date to End Date
-			if (startDate != null && endDate != null) {
-				// If date range is provided, filter the transactions
-				partiesTransactions = partiesTransectionRepo.findByUserIdAndDateBetween(userId, startDate, endDate,
-						pageable);
-			} else {
-				// If no date range, show all transactions
-				partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
-			}
-
-			return "admin/profit_And_Loss_Report";
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
 		}
+		model.addAttribute("imagePath", imgpath);
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		// from date to End Date
+		if (startDate != null && endDate != null) {
+			// If date range is provided, filter the transactions
+			partiesTransactions = partiesTransectionRepo.findByUserIdAndDateBetween(userId, startDate, endDate,
+					pageable);
+		} else {
+			// If no date range, show all transactions
+			partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
+		}
+
+		return "admin/profit_And_Loss_Report";
+	}
+
+	@GetMapping("/expense/add")
+	public String expenseAdd(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+	
+		int userId = user.getId();
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+		
+		// Expense Bill No
+		String expensebillNo=expenseRepo.maxExpenseBillNo(userId);
+		if(expensebillNo != null && !expensebillNo.isEmpty()) {
+			String newexpensebillNo=expensebillNo.substring(0, 5);
+			int no = Integer.parseInt(expensebillNo.substring(5, expensebillNo.length()));
+			no += 1;
+			newexpensebillNo +=no;
+			model.addAttribute("newexpensebillNo", newexpensebillNo);
+			
+		}else {
+			String newexpensebillNo ="EB - 1";
+			model.addAttribute("newexpensebillNo", newexpensebillNo);
+		}
+		
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
+
+		model.addAttribute("imagePath", imgpath);
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+
+		return "/admin/add_expense";
+	}
+
+	@PostMapping("/expense/add")
+	public String processAddExpense(@ModelAttribute Expense expense) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+
+		int userId = user.getId();
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+
+		expense.setStatus("Active");
+		user.getExpense().add(expense);
+		expense.setUser(user);
+		expenseRepo.save(expense);
+
+		return "redirect:/a2zbilling/admin/expense/list";
+	}
+
+	@GetMapping("/expense/list")
+	public String getAllExpense(Model model, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUsername(auth.getName());
+		int userId = user.getId();
+
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Expense> expenses = expenseRepo.showAllActiveExpenseList(userId, pageable);
+		model.addAttribute("expenses", expenses);
+		model.addAttribute("currentPage", page);
+
+		String username = auth.getName();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+
+		Company company = companyRepo.getCompanyByUserId(user.getId());
+		String companyName = company.getName();
+		model.addAttribute("companyName", companyName);
+
+		String imgpath = StringUtils.ImagePaths.adminImageUrl + "admin.jpg";
+		if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+			String image = user.getImageUrl();
+			imgpath = StringUtils.ImagePaths.userImageUrl + image;
+		}
+
+		String image = company.getLogo();
+		String companyLogo = "/img/companylogo/" + image;
+		model.addAttribute("companyLogo", companyLogo);
+		model.addAttribute("imagePath", imgpath);
+
+		return "admin/expense_list";
+	}
+	
+	@GetMapping("/expense/delete/{id}")
+	public String deleteExpenseById(@PathVariable("id") int id) {
+		
+        Optional<Expense> e=expenseRepo.findById(id);
+        Expense expense=e.get();
+        
+        expense.setStatus("InActive");
+        expenseRepo.save(expense);
+
+		return "redirect:/a2zbilling/admin/expense/list";
+	}
+
 }
