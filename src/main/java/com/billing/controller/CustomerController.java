@@ -222,7 +222,7 @@ public class CustomerController {
 		
 		DecimalFormat decimalFormat = new DecimalFormat("#.00");
         if(paymentReminderDate != null) {
-			double totalDue = Double.parseDouble(customer.getDueAmount()) + duePaid;
+			double totalDue = Double.parseDouble(customer.getDueAmount()) - duePaid;
 			customer.setDueAmount(decimalFormat.format(totalDue));
         }
 		
