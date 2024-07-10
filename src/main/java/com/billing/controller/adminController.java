@@ -2589,28 +2589,63 @@ public class adminController {
 		return "admin/onlinePaymentList";
 	}
 
-	// Created by Younus
 	@GetMapping("/profitAndLossReport")
-	public String profitAndLossReport(Model model, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	public String profitAndLossReport(Model model, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
 		int userId = user.getId();
+		String username = user.getUsername();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
 		// To get Parties Name data from db
 		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		model.addAttribute("parties", parties);
-
-		// Pagination Added
-		Pageable pageable = PageRequest.of(page, size);
-		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId,
-				pageable);
-		model.addAttribute("partiesTransactions", partiesTransactions);
-		model.addAttribute("currentPage", page);
-
+		
+		double sumOfAllActivePurchase = 0;
+		double sumOfAllActivePurchaseReturn = 0;
+		double sumOfAllActiveSales = 0;
+		double sumOfAllActiveSalesReturn = 0;
+		double sumOfAllActiveExpense = 0;
+		
+		List<PartiesTransaction> partiesTransactions1 = partiesTransectionRepo.showAllActivePartiesTransection(userId);
+		List<PartiesTransaction> partiesTransactions2 = partiesTransectionRepo.showAllActivePartiesTransection1(userId);
+		List<Sales> sales1 = salesRepo.showAllActiveSales(userId);
+		List<Sales> sales2 = salesRepo.showAllActiveSalesReturn(userId);
+		List<Expense> expences = expenseRepo.showAllActiveExpenseList(userId);
+		
+		for(PartiesTransaction partiesTransaction : partiesTransactions1) {
+			if(partiesTransaction.getNetPayment() != null) sumOfAllActivePurchase += Float.parseFloat(partiesTransaction.getNetPayment());
+		}
+		for(PartiesTransaction partiesTransaction : partiesTransactions2) {
+			if(partiesTransaction.getNetPayment() != null) sumOfAllActivePurchaseReturn += Float.parseFloat(partiesTransaction.getNetPayment());
+			
+		}
+		for(Sales sale : sales1) {
+			if(sale.getNetPayment() != null) sumOfAllActiveSales += Float.parseFloat(sale.getNetPayment());
+		}
+		for(Sales sale : sales2) {
+			if(sale.getNetPayment() != null) sumOfAllActiveSalesReturn += Float.parseFloat(sale.getNetPayment());
+		}
+		for(Expense expense :expences) {
+			if(expense.getNetPayment() != null) sumOfAllActiveExpense += Float.parseFloat(expense.getNetPayment());
+		}
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+       
+		String sumOfAllPurchase = decimalFormat.format(sumOfAllActivePurchase);
+		String sumOfAllPurchaseReturn = decimalFormat.format(sumOfAllActivePurchaseReturn);
+		String sumOfAllSale = decimalFormat.format(sumOfAllActiveSales);
+		String sumOfAllSaleReturn = decimalFormat.format(sumOfAllActiveSalesReturn);
+		String sumOfAllExpense = decimalFormat.format(sumOfAllActiveExpense);
+		
+		model.addAttribute("sumOfAllPurchase", sumOfAllPurchase);
+		model.addAttribute("sumOfAllPurchaseReturn", sumOfAllPurchaseReturn);
+		model.addAttribute("sumOfAllSale", sumOfAllSale);
+		model.addAttribute("sumOfAllSaleReturn", sumOfAllSaleReturn);
+		model.addAttribute("sumOfAllExpense", sumOfAllExpense);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -2624,16 +2659,6 @@ public class adminController {
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-
-		// from date to End Date
-		if (startDate != null && endDate != null) {
-			// If date range is provided, filter the transactions
-			partiesTransactions = partiesTransectionRepo.findByUserIdAndDateBetween(userId, startDate, endDate,
-					pageable);
-		} else {
-			// If no date range, show all transactions
-			partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
-		}
 
 		return "admin/profit_And_Loss_Report";
 	}

@@ -21,10 +21,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT c FROM Expense c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
 	Page<Expense> showAllActiveExpenseList(@Param("id") Integer id, Pageable pageable);
 	
-	//Generate Bill No
-//	@Query("SELECT CONCAT('EB - ', MAX(CAST(SUBSTRING(c.billNo, 5) AS integer))) FROM Expense c JOIN c.user u WHERE u.id = :id")
-//	String maxExpenseBillNo(@Param("id") Integer id);
-	
 	@Query("SELECT CONCAT('EB - ', MAX(CAST(SUBSTRING(c.billNo, 5) AS integer))) FROM Expense c JOIN c.user u WHERE c.status = 'Active' AND u.id = :id")
 	String maxExpenseBillNo(@Param("id") Integer id);
 
