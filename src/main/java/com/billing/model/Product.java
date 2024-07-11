@@ -27,6 +27,8 @@ public class Product{
 	private Color color;
 	
 	private String price;
+
+	private String sellingPrice;
 	
 	@ManyToOne
 	@JoinColumn(name="brand_id")
@@ -71,7 +73,15 @@ public class Product{
     @JoinColumn(name="parties_id")
     private Parties parties;
 	
-    public Parties getParties() {
+    public String getSellingPrice() {
+		return sellingPrice;
+	}
+
+	public void setSellingPrice(String sellingPrice) {
+		this.sellingPrice = sellingPrice;
+	}
+
+	public Parties getParties() {
 		return parties;
 	}
 

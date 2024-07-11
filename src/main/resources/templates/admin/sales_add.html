@@ -171,7 +171,8 @@
 								<select required id="productSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="products">
 						           <option value="" disabled selected>Choose</option>
 								   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-							               th:attr="data-price=${product.price},
+							               th:attr="data-price=${product.sellingPrice},
+										   			data-price1	=${product.price},
 							                         data-quantity=${product.stock?.quantity},
 													 data-tax=${product.stock?.taxInPercentage}">
 							       </option>
@@ -546,6 +547,7 @@
 			   $('#productSelect').change(function() {
 			       var selectedOption = $(this).find('option:selected');
 			       var price = selectedOption.data('price');
+				   var price1 = selectedOption.data('price1');
 			       var AQty = selectedOption.data('quantity');
 				   var Cgst = selectedOption.data('cgst');
 				   var tax = selectedOption.data('tax');
@@ -555,6 +557,10 @@
 				   {
 					AQty = 0;
 				   }
+				   if(price == null)
+   				   {
+					price = price1;
+   				   }
 				   if(Cgst == null)
 				   {
 					Cgst = 0;
@@ -688,6 +694,7 @@
 		        $(`#productSelect${index}`).change(function() {
 		            var selectedOption = $(this).find('option:selected');
 		            var price = selectedOption.data('price');
+					var price1 = selectedOption.data('price1');
 		            var quantity = selectedOption.data('quantity');
 		            var size = selectedOption.data('size');
 					var tax = selectedOption.data('tax');
@@ -697,6 +704,10 @@
 					   {
 							quantity = 0;
 					   }
+				   if(price == null)
+				    {
+				  		price = price1;
+				     }
 					if(tax == null)
    					   {
 						tax = 0;

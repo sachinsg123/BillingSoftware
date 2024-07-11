@@ -2081,11 +2081,11 @@ public class adminController {
 
 	// Created by Younus
 	@PostMapping("/managestock")
-	public String manageStockProcess(@ModelAttribute Stock stock, HttpSession session, Model model,
+	public String manageStockProcess(@ModelAttribute Stock stock, @RequestParam("sellingPrice") double sellingPrice, HttpSession session, Model model,
 			HttpServletRequest request) throws URISyntaxException {
 
 		Product product = stock.getProduct();
-
+		product.setSellingPrice(String.valueOf(sellingPrice));
 		if (product.getStock() != null) {
 			int id = product.getStock().getId();
 			Stock stocks = stockRepo.findById(id).get();
