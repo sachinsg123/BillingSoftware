@@ -79,15 +79,4 @@ public class Unit{
 	public void setAddedDate(String addedDate) {
 		this.addedDate = addedDate;
 	}
-
-	@Override
-	public String toString() {
-		return "Unit [id=" + id + ", unitCode=" + unitCode + ", product=" + product + "]";
-	}
-	
-	
-	
-	
-	
-
 }

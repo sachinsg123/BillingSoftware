@@ -153,20 +153,4 @@ public class Company {
 		this.logo = logo;
 	}
 
-	@Override
-	public String toString() {
-		return "Company [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", Address=" + Address
-				+ ", type=" + type + ", businessCategory=" + businessCategory + ", gstn=" + gstn + ", signature="
-				+ signature + ", state=" + state + ", description=" + description + ", logo=" + logo + ", user=" + user
-				+ "]";
-	}
-
-	/*
-	 * public List<Customer> getCustomers() { return customers; }
-	 * 
-	 * public void setCustomers(List<Customer> customers) { this.customers =
-	 * customers; }
-	 * 
-	 */
-
 }

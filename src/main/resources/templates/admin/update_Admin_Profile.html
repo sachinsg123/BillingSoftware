@@ -37,7 +37,7 @@
 								</div>
 							</div>
 						
-							  <form th:action="@{/a2zbilling/admin/updateAdminProfile}" method="post" enctype="multipart/form-data" class="form-group">
+							<form th:action="@{/a2zbilling/admin/updateAdminProfile}" method="post" enctype="multipart/form-data" class="form-group">
 									<div class="row">
 										<div class="col-md-5 mt-4">
 									        <label><b>UserName</b></label>
@@ -108,13 +108,14 @@
 										<input name="imageUrl" class="form-control" id="imageUrl" type="file">
 									  </div>
 							  		</div>
-								<div class="row text-center">
-	  								<div class="col-md-12 mt-4">
-	  									<button type="submit" id="saveBtn" class="btn btn-success" style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
-	  									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
-	  										th:href="@{'/a2zbilling/admin/viewAdminProfile'}" class="btn btn-info"><b>Cancel</b></a>
-	  								</div>
-	  							</div>
+									<div class="row text-center">
+		  								<div class="col-md-12 mt-4">
+		  									<button type="submit" id="saveBtn" class="btn btn-success" 
+													style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
+		  									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
+		  										th:href="@{'/a2zbilling/admin/viewAdminProfile'}" class="btn btn-info"><b>Cancel</b></a>
+		  								</div>
+		  							</div>
 							  </form>
 						</div>
 					</div>
