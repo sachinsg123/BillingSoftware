@@ -79,10 +79,4 @@ public class Brand{
 		this.status = status;
 	}
 
-	@Override
-	public String toString() {
-		return "Brand [id=" + id + ", name=" + name + ", status=" + status + ", logo=" + logo + ", products=" + products
-				+ "]";
-	}
-
 }
