@@ -765,6 +765,14 @@ public class adminController {
 		category.setAddedDate(formattedDate);
 		Category cFound = categoryRepo.findByCategoryName(category.getCategoryName());
 
+//		category.setStatus("Active");
+//		List<Category> categories= user.getCategories();
+//		user.setCategories(categories);
+//		category.setUser(user);
+//		categoryRepo.save(category);
+//		userRepo.save(user);
+		
+		
 		if (cFound == null) {
 			category.setStatus("Active");
 			category.setUser(user);
