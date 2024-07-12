@@ -269,14 +269,4 @@ public class User{
 		this.expense = expense;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", email=" + email + ", mobile=" + mobile + ", products="
-				+ products + ", categories=" + categories + ", charges=" + charges + ", brand=" + brand + ", parties="
-				+ parties + ", purchaseorder=" + purchaseorder + ", expense=" + expense + ", role=" + role
-				+ ", password=" + password + ", imageUrl=" + imageUrl + ", status=" + status + ", customers="
-				+ customers + ", supplier=" + supplier + ", sizes=" + sizes + ", company=" + company + ", gst=" + gst
-				+ ", units=" + units + ", sales=" + sales + ", partiesTransactions=" + partiesTransactions + "]";
-	}
-
 }

@@ -79,16 +79,4 @@ public class GSTRate{
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-
-	@Override
-	public String toString() {
-		return "GSTRate [id=" + id + ", gstRate=" + gstRate + ", cgstRate=" + cgstRate + ", sgstRate=" + sgstRate
-				+ ", user=" + user + ", products=" + products + "]";
-	}
-	
-	 
-	
-	
-	
-
 }

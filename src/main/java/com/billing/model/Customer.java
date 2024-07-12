@@ -153,11 +153,4 @@ public class Customer {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	@Override
-	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", password="
-				+ password + ", address=" + address + ", addedDate=" + addedDate + ", products=" + products + ", status=" + status + "]";
-	}
-
 }
