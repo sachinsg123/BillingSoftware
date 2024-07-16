@@ -132,7 +132,8 @@
 								<th style="border: 1px solid black;" scope="col">Added Date</th >
 								<th style="border: 1px solid black;" scope="col">Quantity</th >
 								<th style="border: 1px solid black;" scope="col">Supplied by</th >
-								<th style="border: 1px solid black;" scope="col">Product price</th >
+								<th style="border: 1px solid black;" scope="col">Product Purchase price</th >
+								<th style="border: 1px solid black;" scope="col">Product Selling price</th >
 								<th id="actionColumn" style="border: 1px solid black;" class="text-center" scope="col">Action</th  >
 							</tr>
 						</thead>
@@ -149,6 +150,7 @@
 								<!--<td>Admin</td>-->
 								<td th:text="${product.parties?.name}"> </td>
 								<td th:text="${product?.price}"></td>
+								<td th:text="${product?.sellingPrice ?: 0}"></td>
 								<td>
 									<div class="input-group">
 										<a th:href="@{'/a2zbilling/admin/product/edit/'+${product.id}}"

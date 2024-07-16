@@ -226,9 +226,9 @@ public class adminController {
 
 	@PostMapping("/updateAdminProfile")
 	public String updateProcessUser(@ModelAttribute UserDto userDto, HttpSession session) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-
+		System.out.println("This is a userId "+userDto.getId());
+		
+		User user = userRepo.findById(userDto.getId()).get();
 		MultipartFile image = userDto.getImageUrl();
 		if (!image.isEmpty()) {
 			Date date = new Date();
@@ -250,17 +250,22 @@ public class adminController {
 			}
 			user.setImageUrl(storageFileName);
 		}
-
-		if (!userDto.getUsername().isEmpty() && userRepo.findByUsername(userDto.getUsername()) == null) {
-			user.setUsername(userDto.getUsername());
-		}
-		if (!userDto.getEmail().isEmpty() && userRepo.findByEmail(userDto.getEmail()) == null) {
-			user.setEmail(userDto.getEmail());
-		}
-		if (!userDto.getMobile().isEmpty() && userRepo.findByMobile(userDto.getMobile()) == null) {
-			user.setMobile(userDto.getMobile());
-		}
-
+		String userName = userDto.getUsername();
+		user.setUsername(userName);
+		User user1 = userRepo.findByEmail(userDto.getEmail());
+		if(user1 != null && user.getId() != user1.getId())
+        {
+       	 session.setAttribute("message", "This Email Already Used");
+       	 return "redirect:/a2zbilling/admin/viewAdminProfile";
+        }
+        user1 = userRepo.findByMobile(userDto.getMobile());
+        if(user1 != null &&user.getId() != user1.getId())
+        {
+       	 session.setAttribute("message", "This Mobile Number Already Used");
+       	 return "redirect:/a2zbilling/admin/viewAdminProfile";
+        }
+        user.setEmail(userDto.getEmail());
+        user.setMobile(userDto.getMobile());
 		Company company = user.getCompany();
 
 		if (!userDto.getCompanyname().isEmpty()) {
@@ -764,14 +769,6 @@ public class adminController {
 		String formattedDate = formatter.format(d);
 		category.setAddedDate(formattedDate);
 		Category cFound = categoryRepo.findByCategoryName(category.getCategoryName());
-
-//		category.setStatus("Active");
-//		List<Category> categories= user.getCategories();
-//		user.setCategories(categories);
-//		category.setUser(user);
-//		categoryRepo.save(category);
-//		userRepo.save(user);
-		
 		
 		if (cFound == null) {
 			category.setStatus("Active");

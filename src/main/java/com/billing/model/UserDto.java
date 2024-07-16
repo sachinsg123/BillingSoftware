@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 //created by Mahesh
 public class UserDto {
 	
+	private int id;
+	
 	private String username;
 	
 	private String email;
@@ -16,6 +18,14 @@ public class UserDto {
 	private MultipartFile imageUrl;
 	
 	private String companyname;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getCompanyname() {
 		return companyname;
