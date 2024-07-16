@@ -41,11 +41,16 @@
 					</div>
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
-							<label>Product Price</label>
+							<label>Product Purchase Price</label>
 							<input type="text" class="form-control" name="price" th:field="*{price}">
 						</div>
 					</div>
-					
+					<div class="col-md-4 mt-3">
+						<div class="form-group">
+							<label>Product Selling Price</label>
+							<input type="text" class="form-control" name="sellingPrice" th:field="*{sellingPrice}" readonly>
+						</div>
+					</div>
 					<!--<div class="col-md-4 mt-2">
 						<div class="form-group">
 							<label>Quantity</label>

@@ -55,7 +55,9 @@
 											data-categoryName=${product.category?.categoryName ?: 'N/A'},
 											data-unitName=${product.unit?.unitName ?: 'N/A'},
 											data-quantity=${product.stock?.quantity ?: '0'},											
-											data-tax=${product.stock?.taxInPercentage ?: '0'}">											
+											data-tax=${product.stock?.taxInPercentage ?: '0'},
+											data-sellingPrice=${product.sellingPrice ?: '0'},
+											data-minQuantity=${product.stock?.minQuantity ?: '0'}">											
 							</option>
 						</select>
 					</div>
@@ -110,14 +112,14 @@
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Minimum Stock Qty</label>
-							<input type="number" min="1" required class="form-control" name="minQuantity" placeholder="Enter min stock qty">
+							<input id="minQuantity" type="number" required class="form-control" name="minQuantity" placeholder="Enter min stock qty">
 						</div>
 					</div>
 					
 					<div class="col-md-4 mt-3">
 						<div class="form-group">
 							<label>Selling Price</label>
-							<input type="number" required class="form-control" name="sellingPrice" placeholder="Enter Selling Price">
+							<input id="sellingPrice" type="number" required class="form-control" name="sellingPrice" placeholder="Enter Selling Price">
 						</div>
 					</div>
 
@@ -143,7 +145,17 @@
 					var unitName = selectedOption.attr('data-unitName');
 					var quantity = selectedOption.attr('data-quantity');
 					var tax = selectedOption.attr('data-tax');
-								
+					var sellingPrice = selectedOption.attr('data-sellingPrice');
+					var minStockAlert = selectedOption.attr('data-minQuantity');
+					
+					if(sellingPrice === null)
+					{
+						sellingPrice = 0;
+					}
+					if(minStockAlert === null)
+					{
+						minStockAlert = 0;
+					}
 			        $('#price').val(price);
 			        $('#supplierName').val(supplierName);
 					$('#brandName').val(brandName);
@@ -151,6 +163,8 @@
 					$('#unitName').val(unitName);
 					$('#quantity').val(quantity);
 					$('#taxInPercentage').val(tax);
+					$('#sellingPrice').val(sellingPrice);
+					$('#minQuantity').val(minStockAlert);
 			    });
 			});
 		</script>
