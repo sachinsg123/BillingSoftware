@@ -1318,7 +1318,9 @@ public class adminController {
 		int userId = user.getId();
 
 		PartiesTransaction partiesTransactions = partiesTransectionRepo.findById(partiesTransaction.getId()).get();
-
+		Double oldDue = Double.parseDouble(partiesTransactions.getDues());
+		Double newDue = Double.parseDouble(partiesTransaction.getDues());
+		
 		List<Product> newproducts = partiesTransaction.getProducts();
 		List<Product> oldproducts = partiesTransactions.getProducts();
 
@@ -1424,20 +1426,35 @@ public class adminController {
 				netPayment += total;
 				k++;
 			}
-
-			Parties parties = partiesTransaction.getParties();
-			Double amount = Double.parseDouble(parties.getOpeningBalance()) + netPayment;
-			if (amount > 0) {
-				parties.setPayment("toReceive");
+			DecimalFormat decimalFormat = new DecimalFormat("0.00");
+			if(partiesTransaction.getPaymentStatus().equals("Amount Not Received")) {
+				
+				Parties parties = partiesTransaction.getParties();
+				Double amount = Double.parseDouble(parties.getOpeningBalance()) - oldDue + newDue + netPayment;
+				String stringAmount = decimalFormat.format(amount);
+				if (amount > 0) {
+					parties.setPayment("toReceive");
+				} else {
+					parties.setPayment("toPay");
+				}
+				parties.setOpeningBalance(stringAmount);
+				partiesRepo.save(parties);
 			} else {
-				parties.setPayment("toPay");
+				Parties parties = partiesTransaction.getParties();
+				Double amount = Double.parseDouble(parties.getOpeningBalance()) - oldDue + newDue;
+				String stringAmount = decimalFormat.format(amount);
+				if (amount > 0) {
+					parties.setPayment("toReceive");
+				} else {
+					parties.setPayment("toPay");
+				}
+				parties.setOpeningBalance(stringAmount);
+				partiesRepo.save(parties);
 			}
-			parties.setOpeningBalance(String.valueOf(amount));
-			partiesRepo.save(parties);
-
+			String stringNetPayment = decimalFormat.format(netPayment);
 			partiesTransaction1.setParties(partiesTransaction.getParties());
 			partiesTransaction1.setPaymentStatus(partiesTransaction.getPaymentStatus());
-			partiesTransaction1.setNetPayment(String.valueOf(netPayment));
+			partiesTransaction1.setNetPayment(stringNetPayment);
 			partiesTransaction1.setStatus("Active");
 			partiesTransaction1.setPurchaseType("Return");
 			partiesTransaction1.setUser(user);
@@ -1901,6 +1918,7 @@ public class adminController {
 			}
 			j++;
 		}
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
 		double netPayment = 0;
 		if (sale1.getProducts().size() > 0) {
 			
@@ -1922,7 +1940,7 @@ public class adminController {
 				netPayment += total;
 				k++;
 			}
-			DecimalFormat decimalFormat = new DecimalFormat("0.00");
+			
 			String  stringNetAmount = decimalFormat.format(netPayment);
 			
 			sale1.setSignatureImage(sale.getSignatureImage());
@@ -1948,14 +1966,15 @@ public class adminController {
 		Double newDue = Double.parseDouble(sale.getDueAmount());
 
 		if (oldCustomer.getId() == newCustomer.getId()) {
-			//Double diffDue = oldDue - newDue;
 			if(sale.getReturnPaidStatus().equals("Amount Not Paid")) {
-				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) + newDue - netPayment;
-				oldCustomer.setDueAmount(String.valueOf(amount));
+				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - oldDue + newDue - netPayment;
+				String stringAmount = decimalFormat.format(amount);
+				oldCustomer.setDueAmount(stringAmount);
 				customerRepo.save(oldCustomer);
 			} else {
-				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) + newDue;
-				oldCustomer.setDueAmount(String.valueOf(amount));
+				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - oldDue + newDue;
+				String stringAmount = decimalFormat.format(amount);
+				oldCustomer.setDueAmount(stringAmount);
 				customerRepo.save(oldCustomer);
 			}
 		}
