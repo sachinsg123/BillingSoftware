@@ -150,7 +150,7 @@
 									<!-- Dynamically populate options with product data -->
 									<option th:each="product:${products}" th:value="${product.id}"
 										th:text="${product.name}"
-										th:attr="data-quantity=${product.stock?.quantity} ">
+										th:attr="data-quantity=${product.stock?.quantity ?: 0} ">
 
 									</option>
 								</select>
@@ -413,7 +413,8 @@
 				var selectedOption = $(this).find('option:selected');
 				var price = 0;
 				var AQty = selectedOption.data('quantity');
-
+				
+				
 				$('#price').val(price);
 				$('#AQty').val(AQty);
 

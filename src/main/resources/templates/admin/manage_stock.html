@@ -56,6 +56,7 @@
 											data-unitName=${product.unit?.unitName ?: 'N/A'},
 											data-quantity=${product.stock?.quantity ?: '0'},											
 											data-tax=${product.stock?.taxInPercentage ?: '0'},
+											data-purchasePrice=${product.Price ?: '0'},
 											data-sellingPrice=${product.sellingPrice ?: '0'},
 											data-minQuantity=${product.stock?.minQuantity ?: '0'}">											
 							</option>
@@ -145,6 +146,7 @@
 					var unitName = selectedOption.attr('data-unitName');
 					var quantity = selectedOption.attr('data-quantity');
 					var tax = selectedOption.attr('data-tax');
+					var Price = selectedOption.attr('data-purchasePrice');
 					var sellingPrice = selectedOption.attr('data-sellingPrice');
 					var minStockAlert = selectedOption.attr('data-minQuantity');
 					
@@ -163,6 +165,7 @@
 					$('#unitName').val(unitName);
 					$('#quantity').val(quantity);
 					$('#taxInPercentage').val(tax);
+					$('#price').val(Price);
 					$('#sellingPrice').val(sellingPrice);
 					$('#minQuantity').val(minStockAlert);
 			    });

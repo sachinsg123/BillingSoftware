@@ -74,7 +74,7 @@
 	</div>
 	<div class="row heading">
 		<div class="col-md-12">
-            <h1 class="text-center"><b>SALES UPDATE/RETURN</b></h1>
+            <h1 class="text-center"><b>SALES RETURN</b></h1>
         </div>
     </div>
 	<form th:action="@{/a2zbilling/admin/sales/return}" method="post" th:object="${sale}"
@@ -154,8 +154,8 @@
 				        <tr>
 				            <th scope="col">Barcode</th>
 				            <th scope="col">Product Name</th>
-				            <th scope="col">CGST</th>
-				            <th scope="col">SGST</th>
+				            <!--<th scope="col">CGST</th>
+				            <th scope="col">SGST</th>-->
 				            <th scope="col">Product Size</th>
 				            <th scope="col">Available Qty</th>
 				            <th scope="col">QTY</th>
@@ -175,13 +175,13 @@
 					                <option th:each="p : ${products}" 
 					                        th:value="${p.id}" 
 					                        th:text="${p.name}"
-					                        th:attr="data-price=${p.price}, data-quantity=${p.stock?.quantity}, data-size=${p.size?.sizeValue}, data-tax=${p.stock?.taxInPercentage}"
+					                        th:attr="data-price=${p.price}, data-sellingPrice=${p.sellingPrice}, data-quantity=${p.stock?.quantity}, data-size=${p.size?.sizeValue}, data-tax=${p.stock?.taxInPercentage}"
 					                        th:selected="${p.id} == ${product.id}">
 					                </option>
 					            </select>
 					        </td>
-					        <td><input id="cgst" style="width: 70px;" th:value="${product?.gst?.cgstRate ?: '0'}" type="text" class="form-control" readonly></td>
-					        <td><input id="sgst" style="width: 70px;" th:value="${product?.gst?.sgstRate ?: '0'}" type="text" class="form-control" readonly></td>
+					        <!--<td><input id="cgst" style="width: 70px;" th:value="${product?.gst?.cgstRate ?: '0'}" type="text" class="form-control" readonly></td>
+					        <td><input id="sgst" style="width: 70px;" th:value="${product?.gst?.sgstRate ?: '0'}" type="text" class="form-control" readonly></td>-->
 					        <td>
 								<select required id="sizeSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="size">
 						           <option value="" selected>Choose</option>
@@ -196,7 +196,7 @@
 					        <td><input id="Qty" required style="width: 70px;" type="number" name="quantity" th:value="${#strings.arraySplit(sale?.quantity, ',')[iterStat.index]}" class="form-control"  oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
 					        <td><input id="taxinpercentage" style="width: 70px;" name="taxInPercentage" type="number" th:value="${#strings.arraySplit(sale?.taxInPercentage, ',')[iterStat.index]}" class="form-control" oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
 					        <td><input id="taxinamount" style="width: 70px;" name="taxInAmount" type="text" class="form-control" readonly th:value="${#strings.arraySplit(sale?.taxInAmount, ',')[iterStat.index]}"></td>
-					        <td><input id="price" required style="width: 70px;" type="text" th:value="${product?.price}" class="form-control"></td>
+					        <td><input id="price" required style="width: 70px;" type="text" th:value="${product?.sellingPrice ?: product?.price}" class="form-control"></td>
 					        <td><input id="total_amount" style="width: 70px;" class="form-control" type="text" readonly></td>
 					        <td>
 					            <a id="deleteBtn" class="btn btn-danger" style="background-color: red; color: white;"><b><i class="fa-solid fa-trash"></i></b></a>
@@ -205,9 +205,9 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-md-2 mt-2 pb-2">
+			<!--<div class="col-md-2 mt-2 pb-2">
 				<button type="button" class="btn btn-success" id="add" style="color: white;"><b><i class="fa-solid fa-plus"></i> Add Row</b></button>
-			</div>
+			</div>-->
 		</div>
 		<div class="invoice-container mt-3 ml-1 mr-1">
 		    <div class="container">
@@ -376,6 +376,7 @@
     });
 	
 	function updateNetPayment() {
+		updateDiscountedAmount();
 	    let totalAmount = parseFloat($('#totalAmountField').val()) || 0;
 	    let discountAmount = parseFloat($('#discountAmountField').val()) || 0;
 	    let paidAmount = parseFloat($('#paidAmountField').val()) || 0;
@@ -436,6 +437,7 @@
 	            row.find('#total_amount').val(totalAmount.toFixed(2));
 	        });
 			calculateTotalAmount();
+			
 	    }
 	function calculateTotalAmount() {
 	    let totalAmount = 0;
@@ -484,11 +486,9 @@
             var paidAmount = parseFloat(document.getElementById('paidAmountField').value) || 0;
             var discountAmount = parseFloat(document.getElementById('discountAmountField').value) || 0;
 			var chargesPrice = parseFloat(document.getElementById('chargesPrice').value) || 0;
+			
             var duesAmount = totalAmount - paidAmount - discountAmount + chargesPrice;
 
-            if (duesAmount < 0) {
-				duesAmount = 0;
-            }
             document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
 			updateNetPayment();
         }
@@ -563,7 +563,8 @@
 			   // Event listener for changing the selected option in the dropdown
 			   $('#productSelect').change(function() {
 			       var selectedOption = $(this).find('option:selected');
-			       var price = selectedOption.data('price');
+				   var price = selectedOption.data('price');
+			       var sellingPrice = selectedOption.data('sellingPrice');
 				   var size = selectedOption.data('size');
 				   var tax = selectedOption.data('tax');
 			       var AQty = selectedOption.data('quantity');
@@ -572,8 +573,11 @@
 				   {
 					AQty = 0;
 				   }
-				   
-			       $('#price').val(price);
+				   if(sellingPrice == null)
+				   {
+					sellingPrice = price;
+				   }
+			       $('#price').val(sellingPrice);
 				   $('#size').val(size);
 				   $('#taxinpercentage').val(tax);
 				   $('#AQty').val(AQty);
@@ -597,9 +601,7 @@
 	});
 	</script>
 	
-	
-	
-	<script type="text/javascript">
+	<!--<script type="text/javascript">
 			$(document).ready(function() {
 				var i = 1; // Initialize counter for row IDs
 				
@@ -753,7 +755,7 @@
 					calculateOverallTotal();
 			    });
 			});
-		</script>
+	</script>-->
 
 	<script>
         // Get the current date
