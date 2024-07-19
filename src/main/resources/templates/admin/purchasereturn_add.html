@@ -498,11 +498,9 @@
 	            var totalAmount = parseFloat(document.getElementById('totalAmountField').value) || 0;
 	            var paidAmount = parseFloat(document.getElementById('paidAmountField').value) || 0;
 	            var discountAmount = parseFloat(document.getElementById('discountAmountField').value) || 0;
-	            var duesAmount = totalAmount - paidAmount - discountAmount;
+	            
+				var duesAmount = totalAmount - paidAmount - discountAmount;
 	
-	            if (duesAmount < 0) {
-					duesAmount = 0;
-	            }
 	            document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
 				updateNetPayment();
 	        }

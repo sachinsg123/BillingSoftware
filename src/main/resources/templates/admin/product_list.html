@@ -149,7 +149,7 @@
 								<td th:text="${product.stock?.quantity ?:0}"></td>
 								<!--<td>Admin</td>-->
 								<td th:text="${product.parties?.name}"> </td>
-								<td th:text="${product?.price}"></td>
+								<td th:text="${product?.price ?: 0}"></td>
 								<td th:text="${product?.sellingPrice ?: 0}"></td>
 								<td>
 									<div class="input-group">

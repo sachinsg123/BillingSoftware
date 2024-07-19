@@ -51,6 +51,16 @@ public class PartiesTransaction {
 	
 	private String size;
 	
+	private List<String> price = new ArrayList<>();
+	
+	public List<String> getPrice() {
+		return price;
+	}
+
+	public void setPrice(List<String> price) {
+		this.price = price;
+	}
+
 	public String getPurchaseType() {
 		return purchaseType;
 	}

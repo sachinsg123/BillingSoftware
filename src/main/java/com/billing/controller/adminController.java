@@ -1009,7 +1009,7 @@ public class adminController {
 	public String addPurchaseBillProcess(@ModelAttribute PartiesTransaction partiesTransaction, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		
 		String quantity = partiesTransaction.getQuantity();
 		int[] quantityArray = Arrays.stream(quantity.split(",")).mapToInt(Integer::parseInt).toArray();
 
@@ -1019,16 +1019,17 @@ public class adminController {
 		partiesTransaction.setUser(user);
 
 		// update the parties due
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		
 		Parties parties = partiesTransaction.getParties();
-		Double amount = Double.parseDouble(parties.getOpeningBalance())
-				- Double.parseDouble(partiesTransaction.getDues());
+		Double amount = Double.parseDouble(parties.getOpeningBalance()) - Double.parseDouble(partiesTransaction.getDues());
 		if (amount > 0) {
 			parties.setPayment("toReceive");
 		} else {
 			parties.setPayment("toPay");
 		}
-
-		parties.setOpeningBalance(String.valueOf(amount));
+		String  stringAmount = decimalFormat.format(amount);
+		parties.setOpeningBalance(stringAmount);
 		parties.getTransactions().add(partiesTransaction);
 		partiesRepo.save(parties);
 
@@ -1039,9 +1040,11 @@ public class adminController {
 
 		// update the products quantity
 		List<Product> products = partiesTransaction.getProducts();
+		List<String> prices = partiesTransaction.getPrice();
+		
 		int i = 0;
 		for (Product product : products) {
-			// Stock stock =product.getStock();
+			
 			if (product.getStock() != null) {
 				int id = product.getStock().getId();
 				Stock stocks = stockRepo.findById(id).get();
@@ -1052,7 +1055,6 @@ public class adminController {
 				String addQty = String.valueOf(oldQty + newQty);
 
 				stocks.setQuantity(addQty);
-				productRepo.save(product);
 				stockRepo.save(stocks);
 
 			} else {
@@ -1064,8 +1066,10 @@ public class adminController {
 				stockRepo.save(stock);
 
 				product.setStock(stock);
-				productRepo.save(product);
+				
 			}
+			product.setPrice(prices.get(i));
+			productRepo.save(product);
 			i++;
 		}
 
@@ -1314,7 +1318,9 @@ public class adminController {
 		int userId = user.getId();
 
 		PartiesTransaction partiesTransactions = partiesTransectionRepo.findById(partiesTransaction.getId()).get();
-
+		Double oldDue = Double.parseDouble(partiesTransactions.getDues());
+		Double newDue = Double.parseDouble(partiesTransaction.getDues());
+		
 		List<Product> newproducts = partiesTransaction.getProducts();
 		List<Product> oldproducts = partiesTransactions.getProducts();
 
@@ -1420,20 +1426,35 @@ public class adminController {
 				netPayment += total;
 				k++;
 			}
-
-			Parties parties = partiesTransaction.getParties();
-			Double amount = Double.parseDouble(parties.getOpeningBalance()) + netPayment;
-			if (amount > 0) {
-				parties.setPayment("toReceive");
+			DecimalFormat decimalFormat = new DecimalFormat("0.00");
+			if(partiesTransaction.getPaymentStatus().equals("Amount Not Received")) {
+				
+				Parties parties = partiesTransaction.getParties();
+				Double amount = Double.parseDouble(parties.getOpeningBalance()) - oldDue + newDue + netPayment;
+				String stringAmount = decimalFormat.format(amount);
+				if (amount > 0) {
+					parties.setPayment("toReceive");
+				} else {
+					parties.setPayment("toPay");
+				}
+				parties.setOpeningBalance(stringAmount);
+				partiesRepo.save(parties);
 			} else {
-				parties.setPayment("toPay");
+				Parties parties = partiesTransaction.getParties();
+				Double amount = Double.parseDouble(parties.getOpeningBalance()) - oldDue + newDue;
+				String stringAmount = decimalFormat.format(amount);
+				if (amount > 0) {
+					parties.setPayment("toReceive");
+				} else {
+					parties.setPayment("toPay");
+				}
+				parties.setOpeningBalance(stringAmount);
+				partiesRepo.save(parties);
 			}
-			parties.setOpeningBalance(String.valueOf(amount));
-			partiesRepo.save(parties);
-
+			String stringNetPayment = decimalFormat.format(netPayment);
 			partiesTransaction1.setParties(partiesTransaction.getParties());
 			partiesTransaction1.setPaymentStatus(partiesTransaction.getPaymentStatus());
-			partiesTransaction1.setNetPayment(String.valueOf(netPayment));
+			partiesTransaction1.setNetPayment(stringNetPayment);
 			partiesTransaction1.setStatus("Active");
 			partiesTransaction1.setPurchaseType("Return");
 			partiesTransaction1.setUser(user);
@@ -1652,11 +1673,13 @@ public class adminController {
 	        productRepo.save(product);
 	        i++;
 	    }
-	    
+	    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		
 	    Customer customer = sales.getCustomer();
 	    customer.getSales().add(sales);
 	    Double amount = Double.parseDouble(customer.getDueAmount()) + Double.parseDouble(sales.getDueAmount());
-	    customer.setDueAmount(String.valueOf(amount));
+	    String due = decimalFormat.format(amount);
+	    customer.setDueAmount(due);
 	    
 	    // Save final customer state
 	    customerRepo.save(customer);
@@ -1895,21 +1918,34 @@ public class adminController {
 			}
 			j++;
 		}
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		double netPayment = 0;
 		if (sale1.getProducts().size() > 0) {
-			int netPayment = 0;
+			
 			String newQuantity1 = sale1.getQuantity();
 			int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
-			sale1.setSignatureImage(sale.getSignatureImage());
+			
 			List<Product> productList = sale1.getProducts();
 			int k = 0;
 			for (Product product : productList) {
-				int price = Integer.parseInt(product.getPrice());
-				int total = price * newQuantityArray1[k];
+				String priceInString = "";
+				if(product.getSellingPrice() == null)
+				{
+					priceInString = product.getPrice();
+				} else {
+					priceInString = product.getSellingPrice();
+				}
+				double price = Double.parseDouble(priceInString);
+				double total = price * newQuantityArray1[k];
 				netPayment += total;
 				k++;
 			}
+			
+			String  stringNetAmount = decimalFormat.format(netPayment);
+			
+			sale1.setSignatureImage(sale.getSignatureImage());
 			sale1.setReturnPaidStatus(sale.getReturnPaidStatus());
-			sale1.setNetPayment(String.valueOf(netPayment));
+			sale1.setNetPayment(stringNetAmount);
 			sale1.setSalesType("Return");
 			sale1.setStatus("Active");
 			sale1.setUser(user);
@@ -1930,20 +1966,19 @@ public class adminController {
 		Double newDue = Double.parseDouble(sale.getDueAmount());
 
 		if (oldCustomer.getId() == newCustomer.getId()) {
-			Double diffDue = oldDue - newDue;
-			Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - diffDue;
-			oldCustomer.setDueAmount(String.valueOf(amount));
-			customerRepo.save(oldCustomer);
-		} else {
-			// remove due from old customer
-			oldCustomer.setDueAmount(String.valueOf(Double.parseDouble(oldCustomer.getDueAmount()) - oldDue));
-			customerRepo.save(oldCustomer);
-
-			// add due in new customer
-			Double amount = Double.parseDouble(newCustomer.getDueAmount()) + Double.parseDouble(sale.getDueAmount());
-			newCustomer.setDueAmount(String.valueOf(amount));
-			customerRepo.save(newCustomer);
+			if(sale.getReturnPaidStatus().equals("Amount Not Paid")) {
+				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - oldDue + newDue - netPayment;
+				String stringAmount = decimalFormat.format(amount);
+				oldCustomer.setDueAmount(stringAmount);
+				customerRepo.save(oldCustomer);
+			} else {
+				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - oldDue + newDue;
+				String stringAmount = decimalFormat.format(amount);
+				oldCustomer.setDueAmount(stringAmount);
+				customerRepo.save(oldCustomer);
+			}
 		}
+		
 		// update the quantity
 		String oldQuantity = sales.getQuantity();
 		int[] oldQuantityArray = Arrays.stream(oldQuantity.split(",")).mapToInt(Integer::parseInt).toArray();
