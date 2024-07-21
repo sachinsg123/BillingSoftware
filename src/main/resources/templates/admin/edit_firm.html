@@ -8,34 +8,29 @@
 </head>
 
 <body>
-	
+	    
     <section>
-        <div class="row mb-3 pt-1" style="background-color: rgb(84,78,130);color:#fff;">
+    <style>
+    .heading {
+				background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+				border-left: 5px solid #FFC241;
+				color: white;
+				font-weight: bold;
+				padding: 6px 10px 3px 10px;
+		   	 }
+    </style>
+        <div class="heading mb-3 pt-1" style="background-color: rgb(84,78,130);color:#fff;">
             <div class="col-md-12">
                 <h1 class=""><b>EDIT FIRM</b></h1>
             </div>
         </div>
+    
 
         <!-- Success message alert -->
         <div th:if="${successMessage}" class="alert alert-info" role="alert" id="successMessage">
             <span th:text="${successMessage}" style="font-weight: bold;"></span>
         </div>
         
-        <script>
-    // Function to hide the popup after a second
-    function hidePopup() {
-        const popup = document.getElementById('successMessage');
-        if (popup) {
-            setTimeout(() => {
-                popup.style.display = 'none';
-            }, 2000); // 1000 milliseconds = 1 second
-        }
-    }
-
-    // Call the function to hide the popup
-    hidePopup();
-</script>
-
         <!-- Error message alert -->
         <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
             <span th:text="${errorMessage}"></span>
@@ -98,6 +93,23 @@
                 </div>
             </div>
         </form>
+        
+		    <script>
+		    // Function to hide the popup after a second
+		    function hidePopup() {
+		        const popup = document.getElementById('successMessage');
+		        if (popup) {
+		            setTimeout(() => {
+		                popup.style.display = 'none';
+		            }, 2000); // 1000 milliseconds = 1 second
+		        }
+		    }
+		
+		    // Call the function to hide the popup
+		    hidePopup();
+		</script>
+
+
         <script>
         // Hide the success message after 2 seconds
         setTimeout(function() {
