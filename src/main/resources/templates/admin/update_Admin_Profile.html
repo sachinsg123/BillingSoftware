@@ -1,7 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
-
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
 
 <body class="mod-bg-1 mod-nav-link">
 	
@@ -30,14 +34,15 @@
 								</script>
 							</div>
 						</div>
-						<div class="container-fluid pb-3" style="background-color:#f1f1f1" th:object="${user}">
+						<div class="container-fluid pb-3" style="background-color:#f1f1f1">
 							<div class="row heading" style="background-color:rgb(85,75,126);">
 								<div class="col-md-12">
 									<h1 class="text-center" style="color: white;"><b>Update Profile</b></h1>
 								</div>
 							</div>
-						
-							  <form th:action="@{/a2zbilling/admin/updateAdminProfile}" method="post" enctype="multipart/form-data" class="form-group">
+							<form th:action="@{/a2zbilling/admin/updateAdminProfile}" method="post" enctype="multipart/form-data"
+								th:object="${user}" class="form-group">
+								<input th:field="*{id}" style="display: none;" name="id">
 									<div class="row">
 										<div class="col-md-5 mt-4">
 									        <label><b>UserName</b></label>
@@ -76,7 +81,7 @@
 											<label><b>Enter OTP*</b></label>
 										</div>
 										<div class="col-md-4 mt-4 d-flex align-items-center">
-											<input type="text" id="enterOtp" required class="form-control"
+											<input type="text" id="enterOtp" class="form-control"
 												placeholder="Enter your OTP">
 										</div>
 										<div class="col-md-3 mt-4 d-flex align-items-center">
@@ -108,13 +113,14 @@
 										<input name="imageUrl" class="form-control" id="imageUrl" type="file">
 									  </div>
 							  		</div>
-								<div class="row text-center">
-	  								<div class="col-md-12 mt-4">
-	  									<button type="submit" id="saveBtn" class="btn btn-success" style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
-	  									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
-	  										th:href="@{'/a2zbilling/admin/viewAdminProfile'}" class="btn btn-info"><b>Cancel</b></a>
-	  								</div>
-	  							</div>
+									<div class="row text-center">
+		  								<div class="col-md-12 mt-4">
+		  									<button type="submit" id="saveBtn" class="btn btn-success" 
+													style="background-color:#1C92EF; color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;">Save</button>
+		  									<a style="color: white; padding: 5px 22px; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; margin-right: 2%;" 
+		  										th:href="@{'/a2zbilling/admin/viewAdminProfile'}" class="btn btn-info"><b>Cancel</b></a>
+		  								</div>
+		  							</div>
 							  </form>
 						</div>
 					</div>
@@ -124,7 +130,19 @@
 		inputFile.onchange = function(){
 			profileImage.src = URL.createObjectURL(inputFile.files[0]);			}					
 	</script>
-	
+	<script>
+		document.getElementById('saveBtn').addEventListener('click', function() {
+            var otpSection = document.getElementById('sendEmailOTP');
+            var otpInput = document.getElementById('enterOtp');
+
+            // Toggle the OTP section visibility
+            if (otpSection.style.display === 'none') {
+				otpInput.removeAttribute('required');
+            } else {
+				otpInput.setAttribute('required', 'required');
+            }
+        });
+    </script>
 	<!-- for sending OTP when Updating email address -->
 	<script th:inline="javascript">
 		/*<![CDATA[*/

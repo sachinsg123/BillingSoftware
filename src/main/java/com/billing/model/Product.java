@@ -27,6 +27,8 @@ public class Product{
 	private Color color;
 	
 	private String price;
+
+	private String sellingPrice;
 	
 	@ManyToOne
 	@JoinColumn(name="brand_id")
@@ -71,7 +73,15 @@ public class Product{
     @JoinColumn(name="parties_id")
     private Parties parties;
 	
-    public Parties getParties() {
+    public String getSellingPrice() {
+		return sellingPrice;
+	}
+
+	public void setSellingPrice(String sellingPrice) {
+		this.sellingPrice = sellingPrice;
+	}
+
+	public Parties getParties() {
 		return parties;
 	}
 
@@ -258,15 +268,6 @@ public class Product{
 
 	public void setAbout(String about) {
 		this.about = about;
-	}
-	
-	@Override
-	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", quantity=" + quantity + ", color=" + color + ", price="
-				+ price + ", user=" + user + ", addedDate=" + addedDate + ", status=" + status
-				+ ", imageUrl=" + imageUrl + ", category=" + category + ", stock=" + stock
-				+ ", size=" + size + ", about=" + about + ", parties=" + parties + ", unit=" + unit + ", gst=" + gst
-				+ ", sales=" + sales + "]";
 	}
 	
 }

@@ -225,9 +225,9 @@ public class adminController {
 
 	@PostMapping("/updateAdminProfile")
 	public String updateProcessUser(@ModelAttribute UserDto userDto, HttpSession session) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUsername(auth.getName());
-
+		System.out.println("This is a userId "+userDto.getId());
+		
+		User user = userRepo.findById(userDto.getId()).get();
 		MultipartFile image = userDto.getImageUrl();
 		if (!image.isEmpty()) {
 			Date date = new Date();
@@ -249,17 +249,22 @@ public class adminController {
 			}
 			user.setImageUrl(storageFileName);
 		}
-
-		if (!userDto.getUsername().isEmpty() && userRepo.findByUsername(userDto.getUsername()) == null) {
-			user.setUsername(userDto.getUsername());
-		}
-		if (!userDto.getEmail().isEmpty() && userRepo.findByEmail(userDto.getEmail()) == null) {
-			user.setEmail(userDto.getEmail());
-		}
-		if (!userDto.getMobile().isEmpty() && userRepo.findByMobile(userDto.getMobile()) == null) {
-			user.setMobile(userDto.getMobile());
-		}
-
+		String userName = userDto.getUsername();
+		user.setUsername(userName);
+		User user1 = userRepo.findByEmail(userDto.getEmail());
+		if(user1 != null && user.getId() != user1.getId())
+        {
+       	 session.setAttribute("message", "This Email Already Used");
+       	 return "redirect:/a2zbilling/admin/viewAdminProfile";
+        }
+        user1 = userRepo.findByMobile(userDto.getMobile());
+        if(user1 != null &&user.getId() != user1.getId())
+        {
+       	 session.setAttribute("message", "This Mobile Number Already Used");
+       	 return "redirect:/a2zbilling/admin/viewAdminProfile";
+        }
+        user.setEmail(userDto.getEmail());
+        user.setMobile(userDto.getMobile());
 		Company company = user.getCompany();
 
 		if (!userDto.getCompanyname().isEmpty()) {
@@ -763,7 +768,7 @@ public class adminController {
 		String formattedDate = formatter.format(d);
 		category.setAddedDate(formattedDate);
 		Category cFound = categoryRepo.findByCategoryName(category.getCategoryName());
-
+		
 		if (cFound == null) {
 			category.setStatus("Active");
 			category.setUser(user);
@@ -1003,7 +1008,7 @@ public class adminController {
 	public String addPurchaseBillProcess(@ModelAttribute PartiesTransaction partiesTransaction, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
+		
 		String quantity = partiesTransaction.getQuantity();
 		int[] quantityArray = Arrays.stream(quantity.split(",")).mapToInt(Integer::parseInt).toArray();
 
@@ -1013,16 +1018,17 @@ public class adminController {
 		partiesTransaction.setUser(user);
 
 		// update the parties due
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		
 		Parties parties = partiesTransaction.getParties();
-		Double amount = Double.parseDouble(parties.getOpeningBalance())
-				- Double.parseDouble(partiesTransaction.getDues());
+		Double amount = Double.parseDouble(parties.getOpeningBalance()) - Double.parseDouble(partiesTransaction.getDues());
 		if (amount > 0) {
 			parties.setPayment("toReceive");
 		} else {
 			parties.setPayment("toPay");
 		}
-
-		parties.setOpeningBalance(String.valueOf(amount));
+		String  stringAmount = decimalFormat.format(amount);
+		parties.setOpeningBalance(stringAmount);
 		parties.getTransactions().add(partiesTransaction);
 		partiesRepo.save(parties);
 
@@ -1033,9 +1039,11 @@ public class adminController {
 
 		// update the products quantity
 		List<Product> products = partiesTransaction.getProducts();
+		List<String> prices = partiesTransaction.getPrice();
+		
 		int i = 0;
 		for (Product product : products) {
-			// Stock stock =product.getStock();
+			
 			if (product.getStock() != null) {
 				int id = product.getStock().getId();
 				Stock stocks = stockRepo.findById(id).get();
@@ -1046,7 +1054,6 @@ public class adminController {
 				String addQty = String.valueOf(oldQty + newQty);
 
 				stocks.setQuantity(addQty);
-				productRepo.save(product);
 				stockRepo.save(stocks);
 
 			} else {
@@ -1058,8 +1065,10 @@ public class adminController {
 				stockRepo.save(stock);
 
 				product.setStock(stock);
-				productRepo.save(product);
+				
 			}
+			product.setPrice(prices.get(i));
+			productRepo.save(product);
 			i++;
 		}
 
@@ -1308,7 +1317,9 @@ public class adminController {
 		int userId = user.getId();
 
 		PartiesTransaction partiesTransactions = partiesTransectionRepo.findById(partiesTransaction.getId()).get();
-
+		Double oldDue = Double.parseDouble(partiesTransactions.getDues());
+		Double newDue = Double.parseDouble(partiesTransaction.getDues());
+		
 		List<Product> newproducts = partiesTransaction.getProducts();
 		List<Product> oldproducts = partiesTransactions.getProducts();
 
@@ -1414,20 +1425,35 @@ public class adminController {
 				netPayment += total;
 				k++;
 			}
-
-			Parties parties = partiesTransaction.getParties();
-			Double amount = Double.parseDouble(parties.getOpeningBalance()) + netPayment;
-			if (amount > 0) {
-				parties.setPayment("toReceive");
+			DecimalFormat decimalFormat = new DecimalFormat("0.00");
+			if(partiesTransaction.getPaymentStatus().equals("Amount Not Received")) {
+				
+				Parties parties = partiesTransaction.getParties();
+				Double amount = Double.parseDouble(parties.getOpeningBalance()) - oldDue + newDue + netPayment;
+				String stringAmount = decimalFormat.format(amount);
+				if (amount > 0) {
+					parties.setPayment("toReceive");
+				} else {
+					parties.setPayment("toPay");
+				}
+				parties.setOpeningBalance(stringAmount);
+				partiesRepo.save(parties);
 			} else {
-				parties.setPayment("toPay");
+				Parties parties = partiesTransaction.getParties();
+				Double amount = Double.parseDouble(parties.getOpeningBalance()) - oldDue + newDue;
+				String stringAmount = decimalFormat.format(amount);
+				if (amount > 0) {
+					parties.setPayment("toReceive");
+				} else {
+					parties.setPayment("toPay");
+				}
+				parties.setOpeningBalance(stringAmount);
+				partiesRepo.save(parties);
 			}
-			parties.setOpeningBalance(String.valueOf(amount));
-			partiesRepo.save(parties);
-
+			String stringNetPayment = decimalFormat.format(netPayment);
 			partiesTransaction1.setParties(partiesTransaction.getParties());
 			partiesTransaction1.setPaymentStatus(partiesTransaction.getPaymentStatus());
-			partiesTransaction1.setNetPayment(String.valueOf(netPayment));
+			partiesTransaction1.setNetPayment(stringNetPayment);
 			partiesTransaction1.setStatus("Active");
 			partiesTransaction1.setPurchaseType("Return");
 			partiesTransaction1.setUser(user);
@@ -1646,11 +1672,13 @@ public class adminController {
 	        productRepo.save(product);
 	        i++;
 	    }
-	    
+	    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		
 	    Customer customer = sales.getCustomer();
 	    customer.getSales().add(sales);
 	    Double amount = Double.parseDouble(customer.getDueAmount()) + Double.parseDouble(sales.getDueAmount());
-	    customer.setDueAmount(String.valueOf(amount));
+	    String due = decimalFormat.format(amount);
+	    customer.setDueAmount(due);
 	    
 	    // Save final customer state
 	    customerRepo.save(customer);
@@ -1889,21 +1917,34 @@ public class adminController {
 			}
 			j++;
 		}
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		double netPayment = 0;
 		if (sale1.getProducts().size() > 0) {
-			int netPayment = 0;
+			
 			String newQuantity1 = sale1.getQuantity();
 			int[] newQuantityArray1 = Arrays.stream(newQuantity1.split(",")).mapToInt(Integer::parseInt).toArray();
-			sale1.setSignatureImage(sale.getSignatureImage());
+			
 			List<Product> productList = sale1.getProducts();
 			int k = 0;
 			for (Product product : productList) {
-				int price = Integer.parseInt(product.getPrice());
-				int total = price * newQuantityArray1[k];
+				String priceInString = "";
+				if(product.getSellingPrice() == null)
+				{
+					priceInString = product.getPrice();
+				} else {
+					priceInString = product.getSellingPrice();
+				}
+				double price = Double.parseDouble(priceInString);
+				double total = price * newQuantityArray1[k];
 				netPayment += total;
 				k++;
 			}
+			
+			String  stringNetAmount = decimalFormat.format(netPayment);
+			
+			sale1.setSignatureImage(sale.getSignatureImage());
 			sale1.setReturnPaidStatus(sale.getReturnPaidStatus());
-			sale1.setNetPayment(String.valueOf(netPayment));
+			sale1.setNetPayment(stringNetAmount);
 			sale1.setSalesType("Return");
 			sale1.setStatus("Active");
 			sale1.setUser(user);
@@ -1924,20 +1965,19 @@ public class adminController {
 		Double newDue = Double.parseDouble(sale.getDueAmount());
 
 		if (oldCustomer.getId() == newCustomer.getId()) {
-			Double diffDue = oldDue - newDue;
-			Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - diffDue;
-			oldCustomer.setDueAmount(String.valueOf(amount));
-			customerRepo.save(oldCustomer);
-		} else {
-			// remove due from old customer
-			oldCustomer.setDueAmount(String.valueOf(Double.parseDouble(oldCustomer.getDueAmount()) - oldDue));
-			customerRepo.save(oldCustomer);
-
-			// add due in new customer
-			Double amount = Double.parseDouble(newCustomer.getDueAmount()) + Double.parseDouble(sale.getDueAmount());
-			newCustomer.setDueAmount(String.valueOf(amount));
-			customerRepo.save(newCustomer);
+			if(sale.getReturnPaidStatus().equals("Amount Not Paid")) {
+				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - oldDue + newDue - netPayment;
+				String stringAmount = decimalFormat.format(amount);
+				oldCustomer.setDueAmount(stringAmount);
+				customerRepo.save(oldCustomer);
+			} else {
+				Double amount = Double.parseDouble(oldCustomer.getDueAmount()) - oldDue + newDue;
+				String stringAmount = decimalFormat.format(amount);
+				oldCustomer.setDueAmount(stringAmount);
+				customerRepo.save(oldCustomer);
+			}
 		}
+		
 		// update the quantity
 		String oldQuantity = sales.getQuantity();
 		int[] oldQuantityArray = Arrays.stream(oldQuantity.split(",")).mapToInt(Integer::parseInt).toArray();
@@ -2080,11 +2120,11 @@ public class adminController {
 
 	// Created by Younus
 	@PostMapping("/managestock")
-	public String manageStockProcess(@ModelAttribute Stock stock, HttpSession session, Model model,
+	public String manageStockProcess(@ModelAttribute Stock stock, @RequestParam("sellingPrice") double sellingPrice, HttpSession session, Model model,
 			HttpServletRequest request) throws URISyntaxException {
 
 		Product product = stock.getProduct();
-
+		product.setSellingPrice(String.valueOf(sellingPrice));
 		if (product.getStock() != null) {
 			int id = product.getStock().getId();
 			Stock stocks = stockRepo.findById(id).get();
@@ -2588,28 +2628,63 @@ public class adminController {
 		return "admin/onlinePaymentList";
 	}
 
-	// Created by Younus
 	@GetMapping("/profitAndLossReport")
-	public String profitAndLossReport(Model model, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	public String profitAndLossReport(Model model, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUsername(auth.getName());
-
 		int userId = user.getId();
+		String username = user.getUsername();
+		String email = user.getEmail();
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
 
 		// To get Parties Name data from db
 		List<Parties> parties = partiesRepo.showAllActiveParties(userId);
 		model.addAttribute("parties", parties);
-
-		// Pagination Added
-		Pageable pageable = PageRequest.of(page, size);
-		Page<PartiesTransaction> partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId,
-				pageable);
-		model.addAttribute("partiesTransactions", partiesTransactions);
-		model.addAttribute("currentPage", page);
-
+		
+		double sumOfAllActivePurchase = 0;
+		double sumOfAllActivePurchaseReturn = 0;
+		double sumOfAllActiveSales = 0;
+		double sumOfAllActiveSalesReturn = 0;
+		double sumOfAllActiveExpense = 0;
+		
+		List<PartiesTransaction> partiesTransactions1 = partiesTransectionRepo.showAllActivePartiesTransection(userId);
+		List<PartiesTransaction> partiesTransactions2 = partiesTransectionRepo.showAllActivePartiesTransection1(userId);
+		List<Sales> sales1 = salesRepo.showAllActiveSales(userId);
+		List<Sales> sales2 = salesRepo.showAllActiveSalesReturn(userId);
+		List<Expense> expences = expenseRepo.showAllActiveExpenseList(userId);
+		
+		for(PartiesTransaction partiesTransaction : partiesTransactions1) {
+			if(partiesTransaction.getNetPayment() != null) sumOfAllActivePurchase += Float.parseFloat(partiesTransaction.getNetPayment());
+		}
+		for(PartiesTransaction partiesTransaction : partiesTransactions2) {
+			if(partiesTransaction.getNetPayment() != null) sumOfAllActivePurchaseReturn += Float.parseFloat(partiesTransaction.getNetPayment());
+			
+		}
+		for(Sales sale : sales1) {
+			if(sale.getNetPayment() != null) sumOfAllActiveSales += Float.parseFloat(sale.getNetPayment());
+		}
+		for(Sales sale : sales2) {
+			if(sale.getNetPayment() != null) sumOfAllActiveSalesReturn += Float.parseFloat(sale.getNetPayment());
+		}
+		for(Expense expense :expences) {
+			if(expense.getNetPayment() != null) sumOfAllActiveExpense += Float.parseFloat(expense.getNetPayment());
+		}
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+       
+		String sumOfAllPurchase = decimalFormat.format(sumOfAllActivePurchase);
+		String sumOfAllPurchaseReturn = decimalFormat.format(sumOfAllActivePurchaseReturn);
+		String sumOfAllSale = decimalFormat.format(sumOfAllActiveSales);
+		String sumOfAllSaleReturn = decimalFormat.format(sumOfAllActiveSalesReturn);
+		String sumOfAllExpense = decimalFormat.format(sumOfAllActiveExpense);
+		
+		model.addAttribute("sumOfAllPurchase", sumOfAllPurchase);
+		model.addAttribute("sumOfAllPurchaseReturn", sumOfAllPurchaseReturn);
+		model.addAttribute("sumOfAllSale", sumOfAllSale);
+		model.addAttribute("sumOfAllSaleReturn", sumOfAllSaleReturn);
+		model.addAttribute("sumOfAllExpense", sumOfAllExpense);
+		
 		Company company = companyRepo.getCompanyByUserId(user.getId());
 		String companyName = company.getName();
 		model.addAttribute("companyName", companyName);
@@ -2623,16 +2698,6 @@ public class adminController {
 		String image = company.getLogo();
 		String companyLogo = "/img/companylogo/" + image;
 		model.addAttribute("companyLogo", companyLogo);
-
-		// from date to End Date
-		if (startDate != null && endDate != null) {
-			// If date range is provided, filter the transactions
-			partiesTransactions = partiesTransectionRepo.findByUserIdAndDateBetween(userId, startDate, endDate,
-					pageable);
-		} else {
-			// If no date range, show all transactions
-			partiesTransactions = partiesTransectionRepo.showAllActivePartiesTransection(userId, pageable);
-		}
 
 		return "admin/profit_And_Loss_Report";
 	}

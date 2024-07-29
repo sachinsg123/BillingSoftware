@@ -81,22 +81,4 @@ public class Category{
 	public void setAddedDate(String addedDate) {
 		this.addedDate = addedDate;
 	}
-
-	@Override
-	public String toString() {
-		return "Category [id=" + id + ", categoryName=" + categoryName +", user=" + user
-				+ ", status=" + status + ", addedDate=" + addedDate + "]";
-	}
-
-	
-	
-	
-
-	
-	
-	
-	
-
-	
-
 }

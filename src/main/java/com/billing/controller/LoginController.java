@@ -233,6 +233,7 @@ public class LoginController{
 		if(user != null) return ResponseEntity.ok("Email Present");
 		
         String otp = generateOTP(6); // Generate a 6-digit OTP
+        System.out.println(otp);
         storedOtp = otp;
         String subject = "Your OTP for Verification : " + otp;
         String body = "<html>" +
@@ -272,6 +273,7 @@ public class LoginController{
 		if(user == null) return ResponseEntity.ok("Email Not Present");
 		
         String otp = generateOTP(6); // Generate a 6-digit OTP
+        System.out.println(otp);
         storedOtp = otp;
         String subject = "Your OTP for Verification : " + otp;
         String body = "<html>" +

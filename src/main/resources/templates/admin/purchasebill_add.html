@@ -150,7 +150,7 @@
 									<!-- Dynamically populate options with product data -->
 									<option th:each="product:${products}" th:value="${product.id}"
 										th:text="${product.name}"
-										th:attr="data-price=${product.price},data-quantity=${product.stock?.quantity} ">
+										th:attr="data-quantity=${product.stock?.quantity ?: 0} ">
 
 									</option>
 								</select>
@@ -177,10 +177,10 @@
 								</select>
 							</td>
 							<td><input id="price" class="form-control" type="number" name="price" required
-									oninput="calculateTotalAmount(this)" readonly></td>
-							<td><input id="taxinpercentage" class="form-control" type="text" name="taxInPercentage"
+									oninput="calculateTotalAmount(this)"></td>
+							<td><input id="taxinpercentage" class="form-control" type="number" name="taxInPercentage"
 									required oninput="calculateTaxAmount(this); calculateTotalAmount(this)"></td>
-							<td><input id="taxinamount" class="form-control" type="text" name="taxInRupees" required>
+							<td><input id="taxinamount" class="form-control" type="text" name="taxInRupees" readonly>
 							</td>
 							<td><input class="form-control" id="total_amount" type="number" name="total_Amount" required
 									readonly></td>
@@ -411,9 +411,10 @@
 			// Event listener for changing the selected option in the dropdown
 			$('#productSelect').change(function () {
 				var selectedOption = $(this).find('option:selected');
-				var price = selectedOption.data('price');
+				var price = 0;
 				var AQty = selectedOption.data('quantity');
-
+				
+				
 				$('#price').val(price);
 				$('#AQty').val(AQty);
 
@@ -490,7 +491,7 @@
 		                        ${units}
 		                    </select>
 		                </td>
-		                 <td><input id="price${i}" type="text" class="form-control" readonly></td>
+		                 <td><input id="price${i}" type="number" class="form-control"></td>
 		                <td><input id="taxinpercentage${i}" name="taxInPercentage" oninput="calculateTaxAmount1(${i})" type="number" class="form-control"></td>
 		                <td><input id="taxinamount${i}" name="taxInRupees" type="text" class="form-control" readonly></td>
 		                
@@ -507,13 +508,11 @@
 			function addChangeListener(index) {
 				$(`#productSelect${index}`).change(function () {
 					var selectedOption = $(this).find('option:selected');
-					var price = selectedOption.data('price');
+					var price = 0;
 					var quantity = selectedOption.data('quantity');
-					var size = selectedOption.data('size');
 
 					$(`#price${index}`).val(price);
 					$(`#AQty${index}`).val(quantity);
-					$(`#size${index}`).val(size);
 				});
 			}
 			// Function to calculate tax amount and total amount

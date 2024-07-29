@@ -153,8 +153,8 @@
 						<tr>
 							<th scope="col">Barcode</th>
 							<th scope="col">Product Name</th>
-							<th scope="col">CGST</th>
-							<th scope="col">SGST</th>
+							<!--<th scope="col">CGST</th>
+							<th scope="col">SGST</th>-->
 							<th scope="col">Product Size</th>
 							<th scope="col">Available Qty</th>
 							<th scope="col">QTY</th>
@@ -171,14 +171,15 @@
 								<select required id="productSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="products">
 						           <option value="" disabled selected>Choose</option>
 								   <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
-							               th:attr="data-price=${product.price},
+							               th:attr="data-price=${product.sellingPrice},
+										   			data-price1	=${product.price},
 							                         data-quantity=${product.stock?.quantity},
 													 data-tax=${product.stock?.taxInPercentage}">
 							       </option>
 					           	</select>
 							</td>
-							<td><input id="cgst" type="text" style="width: 70px;" class="form-control" readonly></td>
-							<td><input id="sgst" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<!--<td><input id="cgst" type="text" style="width: 70px;" class="form-control" readonly></td>
+							<td><input id="sgst" type="text" style="width: 70px;" class="form-control" readonly></td>-->
 							<td>
 								<select required id="sizeSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="size">
 						           <option value="" selected>Choose</option>
@@ -186,7 +187,7 @@
 					           	</select>
 							</td>
 							<td><input id="AQty" type="number" style="width: 70px;" class="form-control" readonly></td>
-							<td><input id="Qty" required name="quantity" type="number" style="width: 70px;" class="form-control"></td>
+							<td><input id="Qty" required name="quantity" type="number" style="width: 70px;" class="form-control" oninput="calculatetaxInAmountAndTotalAmount(this)"></td>
 							<td><input id="taxinpercentage" name="taxInPercentage" oninput="calculateTaxAmount()" type="number" style="width: 70px;" class="form-control"></td>
 							<td><input id="taxinamount" name="taxInAmount" type="text" style="width: 70px;" class="form-control" readonly></td>
 							<td><input id="price" required type="text" style="width: 70px;" class="form-control"></td>
@@ -424,8 +425,10 @@
 			    });
 			    $('#totalAmountField').val(totalAmount.toFixed(2));
 				$('#netPaymentField').val(totalAmount.toFixed(2));
+				updateDues();
 			}	
 		function updateNetPayment() {
+				updateDiscountedAmount();
 			    let totalAmount = parseFloat($('#totalAmountField').val()) || 0;
 			    let discountAmount = parseFloat($('#discountAmountField').val()) || 0;
 			    let paidAmount = parseFloat($('#paidAmountField').val()) || 0;
@@ -438,24 +441,17 @@
 			    updateDues();
 			}
 		function updateDues() {
-                var totalAmount = parseFloat(document.getElementById('netPaymentField').value);
-                var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
-                var discountAmount = parseFloat(document.getElementById('discountAmountField').value);
+                var totalAmount = parseFloat(document.getElementById('netPaymentField').value) || 0;
+                var paidAmount = parseFloat(document.getElementById('paidAmountField').value) || 0;
+                var discountAmount = parseFloat(document.getElementById('discountAmountField').value) || 0;
                 var duesAmount = totalAmount - paidAmount;
 
-                if(duesAmount < 0) {
-					document.getElementById('duesAmountField').value = 0;
-				}
-				else{
-					// Update the dues amount display
-					document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
-				}
-                
+				document.getElementById('duesAmountField').value = duesAmount.toFixed(2);
             }
 		function calculatePercentageAndNetAmount1() {
-				  var totalAmount = parseFloat(totalAmountField.value);
-				  var discountAmount = parseFloat(discountAmountField.value);
-				  var chargesPrice = parseFloat(document.getElementById('chargesPrice').value);
+				  var totalAmount = parseFloat(totalAmountField.value) || 0;
+				  var discountAmount = parseFloat(discountAmountField.value) || 0;
+				  var chargesPrice = parseFloat(document.getElementById('chargesPrice').value) || 0;
 				
 				  // Calculate the discount percentage
 				  var discountPercentage = (discountAmount / totalAmount) * 100;
@@ -468,6 +464,7 @@
 				
 				  // Update the net amount display
 				  document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+				  updateDues();
 				}
 		function updateChargesPrice() {
 		            var selectElement = document.getElementById("selectCharges");
@@ -488,21 +485,58 @@
 			    // Add event listener to discountAmountField
 			    discountAmountField.addEventListener('input', calculatePercentageAndNetAmount);
 			}
+			function calculatetaxInAmountAndTotalAmount(input) {
+				        var row = $(input).closest('tr');
+				        var price = parseFloat(row.find('#price').val()) || 0;
+						var AQty = parseFloat(row.find('#AQty').val()) || 0;
+				        var qty = parseFloat(row.find('#Qty').val()) || 0;
+				        var taxPercentage = parseFloat(row.find('#taxinpercentage').val());
+						if(qty > AQty)
+						{
+							alert("Please Enter Quantity less than Available Quantity");
+							row.find('#Qty').val(AQty);
+							qty = AQty;
+						}
+						if(taxPercentage < 0)
+						{
+							alert("Please Enter Taxs > 0");
+							row.find('#taxinamount').val(0.00);
+							row.find('#taxinpercentage').val(0);
+							taxPercentage = 0;
+						}
+						if(qty < 0)
+						{
+							alert("Please Enter Quantity > 0");
+							row.find('#Qty').val(0);
+							row.find('#total_amount').val(0.00);
+							qty = 0;
+						}
+				        var taxAmount = (price * qty * (taxPercentage / 100));
+				        row.find('#taxinamount').val(taxAmount.toFixed(2));
+				
+				        var totalAmount = (price * qty) + taxAmount;
+				        row.find('#total_amount').val(totalAmount.toFixed(2));
+						
+						calculateTotalAmount();
+				    }
 			    // Function to calculate percentage and net amount
 		function calculatePercentageAndNetAmount() {
-			        var totalAmount = parseFloat(totalAmountField.value);
+			        var totalAmount = parseFloat(totalAmountField.value) || 0;
 			        var discountAmount = parseFloat(discountAmountField.value) || 0;
+					var chargesPrice = parseFloat(document.getElementById('chargesPrice').value) || 0;
+					
 			        // Calculate the discount percentage
 			        var discountPercentage = (discountAmount / totalAmount) * 100;
 			
 			        // Update the net amount
-			        var netAmount = totalAmount - discountAmount;
+			        var netAmount = totalAmount - discountAmount + chargesPrice;
 			
 			        // Update the discount percentage display
 			        document.getElementById('discountPercentField').value = discountPercentage.toFixed(2);
 			
 			        // Update the net amount display
 			        document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+					updateDues();
 			    }
 
 		function updateDiscountedAmount(){
@@ -519,10 +553,11 @@
     
 			// Function to calculate discounted amount and net amount
 	        function calculateDiscountAndNetAmount() {
-	            var totalAmount = parseFloat(totalAmountField.value);
-	            var discountAmount = parseFloat(discountAmountField.value);
-	            var discountPercent = parseFloat(discountPercentField.value);
-
+	            var totalAmount = parseFloat(totalAmountField.value) || 0;
+	            var discountAmount = parseFloat(discountAmountField.value) || 0;
+	            var discountPercent = parseFloat(discountPercentField.value) || 0;
+				var chargesPrice = parseFloat(document.getElementById('chargesPrice').value) || 0;
+				
 	            var discountedAmount = discountAmount;
 	            if (!isNaN(discountPercent)) {
 	                discountedAmount = (totalAmount * discountPercent) / 100;
@@ -532,13 +567,14 @@
 				    }
 	
 	            // Update the net amount
-	            var netAmount = totalAmount - discountedAmount;
+	            var netAmount = totalAmount - discountedAmount + chargesPrice;
 	
 	            // Update the discounted amount display
 	            document.getElementById('discountAmountField').value = discountedAmount.toFixed(2);
 	
 	            // Update the net amount display
 	            document.getElementById('netPaymentField').value = netAmount.toFixed(2);
+				updateDues();
 	        }
 
 			$(document).ready(function(){
@@ -546,6 +582,7 @@
 			   $('#productSelect').change(function() {
 			       var selectedOption = $(this).find('option:selected');
 			       var price = selectedOption.data('price');
+				   var price1 = selectedOption.data('price1');
 			       var AQty = selectedOption.data('quantity');
 				   var Cgst = selectedOption.data('cgst');
 				   var tax = selectedOption.data('tax');
@@ -555,6 +592,10 @@
 				   {
 					AQty = 0;
 				   }
+				   if(price == null || price == 0)
+   				   {
+					price = price1;
+   				   }
 				   if(Cgst == null)
 				   {
 					Cgst = 0;
@@ -662,8 +703,8 @@
 		                        ${opts}
 		                    </select>
 		                </td>
-		                <td><input id="cgst${i}" type="text" class="form-control" readonly></td>
-		                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>
+		                <!--<td><input id="cgst${i}" type="text" class="form-control" readonly></td>
+		                <td><input id="sgst${i}" type="text" class="form-control" readonly></td>-->
 		                <td>
 							<select required id="sizeSelect" class="form-select form-control" style="width: 90px;" aria-label="Default select example" name="size">
 								${size}
@@ -688,6 +729,7 @@
 		        $(`#productSelect${index}`).change(function() {
 		            var selectedOption = $(this).find('option:selected');
 		            var price = selectedOption.data('price');
+					var price1 = selectedOption.data('price1');
 		            var quantity = selectedOption.data('quantity');
 		            var size = selectedOption.data('size');
 					var tax = selectedOption.data('tax');
@@ -697,6 +739,10 @@
 					   {
 							quantity = 0;
 					   }
+				   if(price == null)
+				    {
+				  		price = price1;
+				     }
 					if(tax == null)
    					   {
 						tax = 0;

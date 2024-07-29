@@ -110,17 +110,4 @@ public class Supplier{
 		this.addedDate = addedDate;
 	}
 
-	@Override
-	public String toString() {
-		return "Supplier [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", address="
-				+ address + ", user=" + user + ", status=" + status + ", addedDate=" + addedDate + "]";
-	}
-
-	
-	
-	
-	
-	
-	
-
 }

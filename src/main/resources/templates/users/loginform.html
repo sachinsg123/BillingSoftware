@@ -39,6 +39,8 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 	<script th:src="@{/js/script.js}" defer></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	<style>
 		.verificationbutton {
 			text-align: center;
@@ -527,6 +529,17 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 	<script src="/js/vendors.bundle.js"></script>
 	<script src="/js/app.bundle.js"></script>
 	<script>
+		document.getElementById('add').addEventListener('click', function() {
+            var otpSection = document.getElementById('enterOtp').value;
+			var btnSection = document.getElementById('createAccountOTP');
+            // Toggle the OTP section visibility
+            if (!otpSection || btnSection.style.display != 'none') {
+				alert("First Verify Email");
+				return;
+            }
+        });
+    </script>
+	<script>
 		$("#js-login-btn").click(function (event) {
 
 			// Fetch form to apply custom Bootstrap validation
@@ -621,7 +634,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 								}
 							},
 							error: function (error) {
-								alert('Failed to send OTP');
+								alert('Please Check Internet Connection');
 							}
 						});
 					} else {
@@ -658,7 +671,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 								}
 							},
 							error: function (error) {
-								alert('Failed to send OTP');
+								alert('Please Check Internet Connection');
 							}
 						});
 					} else {

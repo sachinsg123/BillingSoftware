@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+<section>
+<head>
+	<style>
+		.heading {
+			background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+			border-left: 5px solid #FFC241;
+			color: white;
+			font-weight: bold;
+			padding: 0.5px 10px 0.5px 10px;
+		}
+	</style>
+</head>
 
 <body>
-	<section>
 		<div class="contaier-fluid">
 			<div th:if="${session.message}">
 				<div class="alert alert-primary" role="alert">
@@ -17,11 +28,11 @@
 					</script>
 				</div>
 			</div>
-			
-			<div class="pb-4" style="background-color: #f5f0f0;">
-				<div class="row" style="background-color: #534F84;color: #fff;">
+				
+			<div class="contaier-fluid pb-4" style="background-color: #f5f0f0;">
+				<div class="heading">
 					<div class="col-md-12 mt-1">
-						<h1 class="text-center">UPDATE CATEGORY</h1>
+						<h1 class="text-center"><b>UPDATE CATEGORY</b></h1>
 					</div>
 				</div>
 				<form th:action="@{/a2zbilling/admin/category/update}"	 method="post" th:object="${category}"
