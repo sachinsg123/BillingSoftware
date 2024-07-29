@@ -8,7 +8,15 @@
  <section>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    	}
+    </style>
 	<script>	
 		function deleteContactAlert(id) {
 
@@ -52,23 +60,23 @@
 			})
 		}
 	</script>
-<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
+<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
 	<div th:if="${session.message}">
 		<div class="alert alert-primary" role="alert">
 			<p th:text="${session.message}"></p>
 			<script th:inline="javascript">
+				/*<![CDATA[*/
 				setTimeout(function () {
 					window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-				}, 500);
+				}, 800); 
 			</script>
 		</div>
 	</div>
-<div class="contaier-fluid mt-4 pb-2" style="background-color:#F0F0E1;">
-	<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
-        <div class="col-md-12">
-            <h1 class="text-center mt-2"><b>SALES BILL</b></h1>
-        </div>
-    </div>
+	<div class="row heading">
+		<div class="col-md-12">
+			<h1 class="text-center"><b>SALES BILL</b></h1>
+		</div>
+	</div>
 	<form th:action="@{/a2zbilling/admin/sales/add}" method="post" enctype="multipart/form-data" class="form-group">
 		<div class="row">
 			<div class="col-md-4 mt-3 input-group">
@@ -85,7 +93,7 @@
 								data-address=${customer.address}">
 						</option>
 			        </select>
-					<button class="btn btn-info ml-2" data-toggle="modal" data-target="#exampleModal">
+					<button type="button" class="btn btn-info ml-2" style="height: 38px;" data-toggle="modal" data-target="#exampleModal">
 						<i class="fa-solid fa-plus"></i>
 				   	</button>
 				</div>
@@ -100,7 +108,7 @@
 				</div>
 		    </div>
 			<div class="col-md-4 mt-3 input-group">
-				<div class="col-md-4">
+				<div class="col-md-6">
 	               <label><b>Sale Bill No. :- </b></label>
 				</div>
 				<div class="col-md-6">
@@ -118,7 +126,7 @@
 				</div>
 		    </div>
 			<div class="col-md-4 mt-1 input-group ml-auto">
-				<div class="col-md-4">
+				<div class="col-md-6">
 					<label><b>Date :- </b></label>
 				</div>
 				<div class="col-md-6">
@@ -232,7 +240,7 @@
 		                </div>
 		            </div>					
 		        </div>
-		        <div class="row">
+		        <div class="row d-flex justify-content-between">
 					<div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Payment mode:</label>
@@ -244,19 +252,19 @@
 		                    </select>
 		                </div>
 		            </div>
-		            <div style="margin-left: 165px;">
+		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Paid:</label>
 		                    <input id="paidAmountField" type="number" required class="form-control" name="amountPaid" placeholder="Amount paid" oninput="updateDues()">
 		                </div>
 		            </div>
-		            <div style="margin-left: 63px;">
+		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Dues:</label>
 		                    <input id="duesAmountField" type="number" required class="form-control" name="dueAmount" placeholder="Dues" readonly>
 		                </div>
 		            </div>
-		            <div style="margin-left: 27px;">
+		            <div>
 		                <div class="form-group mt-2">
 		                    <label class="invoice-label">Net Payment:</label>
 		                    <input id="netPaymentField" type="number" required class="form-control" name="netPayment" placeholder="Final Amount" readonly>
@@ -417,6 +425,18 @@
 			    $('#totalAmountField').val(totalAmount.toFixed(2));
 				$('#netPaymentField').val(totalAmount.toFixed(2));
 			}	
+		function updateNetPayment() {
+			    let totalAmount = parseFloat($('#totalAmountField').val()) || 0;
+			    let discountAmount = parseFloat($('#discountAmountField').val()) || 0;
+			    let paidAmount = parseFloat($('#paidAmountField').val()) || 0;
+				var chargesPrice = parseFloat(document.getElementById('chargesPrice').value) || 0;
+				
+			    let netPayment = totalAmount - discountAmount + chargesPrice;
+			    let dues = netPayment - paidAmount;
+			
+			    $('#netPaymentField').val(netPayment.toFixed(2));
+			    updateDues();
+			}
 		function updateDues() {
                 var totalAmount = parseFloat(document.getElementById('netPaymentField').value);
                 var paidAmount = parseFloat(document.getElementById('paidAmountField').value);
@@ -558,8 +578,6 @@
 		</script>
 	<script>
 	$(document).ready(function(){
-		
-	   // Event listener for changing the selected option in the dropdown
 	   $('#customerSelect').change(function() {
 	       var selectedOption = $(this).find('option:selected');
 	       var phone = selectedOption.data('mobile');
@@ -640,7 +658,7 @@
 		            <tr id="row${i}">
 		                <td><input id="barcode${i}" type="text" class="form-control"></td>
 		                <td>
-		                    <select required id="productSelect${i}" class="form-select form-control" aria-label="Default select example" name="products">
+		                    <select required id="productSelect${i}" class="form-select form-control" aria-label="Default select example" onchange="calculateTaxAmount1(${i})" name="products">
 		                        ${opts}
 		                    </select>
 		                </td>
@@ -736,6 +754,7 @@
 			    });
 			
 			    $('#totalAmountField').val(overallTotal.toFixed(2));
+				updateNetPayment();
 	        }
 		    // Remove row when "Remove" button is clicked
 		    $(document).on('click', '.remove_row', function() {

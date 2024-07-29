@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+<!-- Created by Younus -->
+<section>
+	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	<script>
+		function filterTable() {
+			const query = document.getElementById('searchInput').value.toLowerCase();
+			const rows = document.querySelectorAll('tbody tr');
+
+			rows.forEach(row => {
+				const cells = row.querySelectorAll('td');
+				let match = false;
+				cells.forEach(cell => {
+					if (cell.textContent.toLowerCase().includes(query)) {
+						match = true;
+					}
+				});
+				row.style.display = match ? '' : 'none';
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementById('searchInput').addEventListener('keyup', filterTable);
+		});
+	</script>
+
+	<!--from date to end date script-->
+	<script>
+		function filterTable() {
+			const query = document.getElementById('searchInput').value.toLowerCase();
+			const startDate = new Date(document.getElementById('startDate').value);
+			const endDate = new Date(document.getElementById('endDate').value);
+			const rows = document.querySelectorAll('tbody tr');
+
+			rows.forEach(row => {
+				const cells = row.querySelectorAll('td');
+				let match = false;
+				let dateMatch = true;
+
+				const rowDate = new Date(cells[0].textContent);
+				if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+					dateMatch = rowDate >= startDate && rowDate <= endDate;
+				}
+
+				cells.forEach(cell => {
+					if (cell.textContent.toLowerCase().includes(query)) {
+						match = true;
+					}
+				});
+
+				row.style.display = (match && dateMatch) ? '' : 'none';
+			});
+		}
+
+		function applyDateFilter() {
+			filterTable();
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementById('searchInput').addEventListener('keyup', filterTable);
+		});
+	</script>
+	<style>
+		.table tbody tr:hover {
+			background-color: #e0e0e0;
+			color: #000;
+		}
+
+		.search-icon {
+			cursor: pointer;
+		}
+
+		@media print {
+			#searchInput {
+				display: none;
+			}
+
+			#applyFilter {
+				display: none;
+			}
+
+			/* Hide date inputs by default when printing */
+			#startDate,
+			#endDate,
+			label[for="startDate"],
+			label[for="endDate"] {
+				display: none;
+			}
+
+		}
+	</style>
+	<div class="container-fluid">
+		<div th:if="${session.message}">
+			<div class="alert alert-primary" role="alert">
+				<p th:text="${session.message}"></p>
+				<script th:inline="javascript">
+					setTimeout(function () {
+						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
+					}, 500);
+				</script>
+			</div>
+		</div>
+		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
+			<div class="col-md-12 mt-1">
+				<h1 class="text-center"><b>PROFIT & LOSS REPORT</b></h1>
+			</div>
+		</div>
+
+		<!--From date to End date filter-->
+		<div style="background-color: #f5f0f0;">
+			<div class="row">
+				<div class="col-md-2">
+					<!-- Search Bar -->
+					<input id="searchInput" type="text"
+						style="margin-top: 20px; height: 35px; width: 200px; border-radius: 5px; border-color: rgb(12,131,226);"
+						name="query" placeholder="Search">
+				</div>
+				<div class="col-md-10">
+					<input id="endDate" type="date" onchange="applyDateFilter()"
+						style="margin-top: 20px; height: 35px; border-color: #F8F6FA; float: right; margin-left: 10px;">
+					<label for="endDate"
+						style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">To
+						:</label>
+
+					<input id="startDate" type="date" onchange="applyDateFilter()"
+						style="margin-top: 20px; height: 35px; border-color: #F8F6FA; float: right; margin-left: 10px;">
+					<label for="startDate"
+						style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">From
+						:</label>
+				</div>
+			</div>
+			<div style="background-color: #f5f0f0;">
+				<div class="row mt-2 pb-3">
+					<div class="col-md-12">
+						<table class="table table-bordered table-hover table-striped" style="background-color: #fff;">
+							<thead style="background-color: #F3EBD6;color: black;" a>
+								<tr>
+									<th style="border: 1px solid black;" scope="col">Particulars</th>
+									<th style="border: 1px solid black;" scope="col">Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sale (+)</td>
+									<td th:text="${sumOfAllSale}" id="sale" style="color: green;">5000</td  >
+								</tr>
+								<tr>
+									<td>Sales Return (-)</td>
+									<td th:text="${sumOfAllSaleReturn}" id="salesReturn" style="color: red;">0</td>
+								</tr>
+								<tr>
+									<td>Purchase (-)</td>
+									<td th:text="${sumOfAllPurchase}" id="purchase" style="color: red;">0</td>
+								</tr>
+								<tr>
+									<td>Purchase Return (+)</td>
+									<td th:text="${sumOfAllPurchaseReturn}" id="purchaseReturn" style="color: green;">0</td>								
+								</tr>
+								<tr>
+									<td>Opening Stock (-)</td>
+									<td id="openingStock" style="color: red;">0</td>
+								</tr>
+								<tr>
+									<td>Closing Stock (+)</td>
+									<td id="closingStock" style="color: green;">0</td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<td style="background-color: #DBF7D0;">Gross Profit (+)</td>
+									<td id="grossProfit" style="color: green; background-color:#DBF7D0 ;"></td>
+								</tr>
+								<tr>
+									<td>Other Income (+)</td>
+									<td id="otherIncome" style="color: green">0</td>
+								</tr>
+								<tr>
+									<td>Other Expenses (-)</td>
+									<td id="otherExpenses" style="color: red;">0</td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<td style="background-color: #DBF7D0;">Net Profit (+)</td>
+									<td id="netProfit" style="color: green; background-color:#DBF7D0 ;"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Add Print Buttons -->
+	<div class="col-md-12 mt-3 text-center">
+		<button type="button" class="btn btn-primary" onclick="printBill()">Print</button>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+	<script>
+		// Function to print the bill
+		function printBill() {
+			window.print();
+		}
+	</script>
+
+	<!-- Script Hide from date to end Date-->
+	<script>
+		function preparePrint() {
+			const startDate = document.getElementById('startDate').value;
+			const endDate = document.getElementById('endDate').value;
+
+			if (startDate || endDate) {
+				document.getElementById('startDate').style.display = 'inline-block';
+				document.getElementById('endDate').style.display = 'inline-block';
+				document.querySelector('label[for="startDate"]').style.display = 'inline-block';
+				document.querySelector('label[for="endDate"]').style.display = 'inline-block';
+			}
+		}
+
+		window.onbeforeprint = preparePrint;
+	</script>
+
+	<script>
+		function calculateProfits() {
+			// Get values
+			const sale = parseFloat(document.getElementById('sale').textContent);
+			const salesReturn = parseFloat(document.getElementById('salesReturn').textContent);
+			const purchase = parseFloat(document.getElementById('purchase').textContent);
+			const purchaseReturn = parseFloat(document.getElementById('purchaseReturn').textContent);
+			const openingStock = parseFloat(document.getElementById('openingStock').textContent);
+			const closingStock = parseFloat(document.getElementById('closingStock').textContent);
+			const otherIncome = parseFloat(document.getElementById('otherIncome').textContent);
+			const otherExpenses = parseFloat(document.getElementById('otherExpenses').textContent);
+
+			// Calculate Gross Profit
+			const grossProfit = sale - salesReturn - purchase + purchaseReturn - openingStock + closingStock;
+
+			// Calculate Net Profit
+			const netProfit = grossProfit + otherIncome - otherExpenses;
+
+			// Update the table
+			const grossProfitCell = document.getElementById('grossProfit');
+			const netProfitCell = document.getElementById('netProfit');
+
+			grossProfitCell.textContent = grossProfit.toFixed(2);
+			netProfitCell.textContent = netProfit.toFixed(2);
+
+			// Set color based on profit/loss
+			grossProfitCell.style.color = grossProfit >= 0 ? 'green' : 'red';
+			netProfitCell.style.color = netProfit >= 0 ? 'green' : 'red';
+		}
+
+		// Call the function when the page loads
+		document.addEventListener('DOMContentLoaded', calculateProfits);
+	</script>
+</section>
+</body>
+</html>

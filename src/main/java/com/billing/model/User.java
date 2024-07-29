@@ -42,6 +42,12 @@ public class User{
 	@OneToMany(mappedBy ="user")
 	private List<Parties> parties = new ArrayList<Parties>();
 	
+	@OneToMany(mappedBy ="user")
+	private List<PurchaseOrder> purchaseorder = new ArrayList<PurchaseOrder>();
+	
+	@OneToMany(mappedBy ="user")
+	private List<Expense> expense= new ArrayList<Expense>();
+
 	public List<Charges> getCharges() {
 		return charges;
 	}
@@ -61,7 +67,7 @@ public class User{
 	
 	private String status;
 	
-	@ManyToMany(mappedBy ="user")
+	@OneToMany(mappedBy ="user")
 	private List<Customer> customers = new ArrayList<Customer>();
 	
 	@OneToMany(mappedBy = "user")
@@ -196,16 +202,13 @@ public class User{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-/*
-	public List<Roles> getRoles() {
-		return roles;
+	public List<PurchaseOrder> getPurchaseorder() {
+		return purchaseorder;
 	}
 
-	public void setRoles(List<Roles> roles) {
-		this.roles = roles;
+	public void setPurchaseorder(List<PurchaseOrder> purchaseorder) {
+		this.purchaseorder = purchaseorder;
 	}
-	
-	*/	
 	public String getRole() {
 		return role;
 	}
@@ -257,12 +260,23 @@ public class User{
 		this.company = company;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", email=" + email + ", mobile=" + mobile + "Role="+ role + "]";
+	
+	public List<Expense> getExpense() {
+		return expense;
 	}
 
-	
-	
+	public void setExpense(List<Expense> expense) {
+		this.expense = expense;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", mobile=" + mobile + ", products="
+				+ products + ", categories=" + categories + ", charges=" + charges + ", brand=" + brand + ", parties="
+				+ parties + ", purchaseorder=" + purchaseorder + ", expense=" + expense + ", role=" + role
+				+ ", password=" + password + ", imageUrl=" + imageUrl + ", status=" + status + ", customers="
+				+ customers + ", supplier=" + supplier + ", sizes=" + sizes + ", company=" + company + ", gst=" + gst
+				+ ", units=" + units + ", sales=" + sales + ", partiesTransactions=" + partiesTransactions + "]";
+	}
 
 }

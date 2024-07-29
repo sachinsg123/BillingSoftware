@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+
+<section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Invoice</title>
+        <style>
+            .invoice-container {
+                width: 100%;
+                padding: 20px;
+                border: 2px solid #ccc;
+                border-radius: 10px;
+                background-color: #f9f9f9;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+                text-align: left;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .invoice-field {
+                flex-basis: calc(50% - 10px);
+                margin-bottom: 10px;
+                box-sizing: border-box;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .invoice-label {
+                font-weight: bold;
+            }
+
+            .invoice-value {
+                margin-left: 10px;
+            }
+
+            .heading {
+                background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+                border-left: 5px solid #FFC241;
+                color: white;
+                font-weight: bold;
+                padding: 0.5px 10px 0.5px 10px;
+            }
+        </style>
+    </head>
+
+    <div class="container-fluid">
+        <div class="heading" style="background-color: rgb(84,78,130);color:#fff;">
+            <div class="col-md-12">
+                <h1 class="text-center"><b>ADD EXPENSE</b></h1>
+            </div>
+        </div>
+        
+        <form th:action="@{/a2zbilling/admin/expense/add}" method="post" enctype="multipart/form-data" class="form-group">
+        <div class="row pb-3">
+            <div class="col-md-12 mt-1">
+                <!-- Purchase Order Number Code -->
+                <div class="row d-flex justify-content-end">
+                    <div class="col-md-3 mt-3 mb-3 input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="background-color: #B3409A; color: white; border: 1px solid #694c94c4;">PO No</span>
+                        </div>
+                        <input th:value="${newexpensebillNo}" id="expense" name="billNo" style="border: 1px solid #B3409A;" type="text" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <!-- Get Parties data from database -->
+                <div class="row ml-1 mr-1 mb-3">
+                    <div class="input-group d-flex justify-content-end">
+                        <div class="col-md-2 mt-3 input-group">
+                            <label>Date :- </label>
+                            <input name="date" type="text" class="form-control" id="currentDateInput" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <table id="itemTable" class="table table-bordered table-stripped table-hover" style="background-color: white;">
+                    <thead style="background-color: #F3EBD6; color: black;">
+                        <tr>
+                            <th id="actionbutton" style="border: 1px solid black;">Action</th>
+                            <th style="border: 1px solid black;" scope="col">Product Name</th>
+                            <th style="border: 1px solid black;" scope="col">Quantity</th>
+                            <th style="border: 1px solid black;" scope="col">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="addrow">
+                        <tr>
+                            <td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)" style="background-color: red; color: white;"><i class="fa-solid fa-trash"></i></button></td>
+                            <td>
+                                <input class="form-control" min="1" type="text" name="productName" required>
+                            </td>
+                            <td><input class="form-control" min="1" type="number" name="quantity" required oninput="validateQuantity(this); calculateTotalAmount()"></td>
+                            <td>
+                                <input class="form-control" min="1" type="number" name="amount" required oninput="calculateTotalAmount()">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Add Row Button -->
+            <div class="col-md-12 mt-3">
+                <button type="button" class="btn btn-sm btn-success" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add Row</button>
+            </div>
+
+            <!-- Add Underline -->
+            <div style="height: 0px; width: 100%; border: 1px solid #B3409A; margin-top: 10px;"></div>
+            
+            <div class="invoice-container mt-5" style="background-color: #F9F9F9;">
+                <div class="container">
+                    <div class="d-flex justify-content-left">
+                        <div class="form-group mt-2 ml-6" style="width: 250px;">
+                            <label class="invoice-label">Net Payment:</label>
+                            <input id="netPaymentField" type="number" required class="form-control" name="netPayment"
+                                placeholder="Final Amount" readonly>
+                        </div>
+                        <div>
+                            <div class="form-group mt-2 " style="margin-left: 150px; width: 200px;">
+                                <label class="invoice-label">Payment Type:</label>
+                                <select class="form-control" name="paymentMode" required>
+                                    <option value="">Choose</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="cheque">Cheque</option>
+                                    <option value="online">Online</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-5">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-info text-center">Save</button>
+                    <a th:href="@{'/a2zbilling/admin/expense/list'}" class="btn btn-info ml-3">Cancel</a>
+                </div>
+            </div>
+        </div>
+        </form>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        <script>
+            // Function to print the bill
+            function printBill() {
+                window.print();
+            }
+
+            $(document).ready(function () {
+                // Event listener for changing the selected option in the dropdown
+                $('#partiesSelect').change(function () {
+                    var selectedOption = $(this).find('option:selected');
+                    var phone = selectedOption.data('mobile');
+                    var email = selectedOption.data('email');
+
+                    $('#mobile1').val(phone);
+                    $('#email1').val(email);
+                });
+
+                // Get the current date automatically
+                var currentDate = new Date();
+                var formattedDate = currentDate.toISOString().split('T')[0];
+                document.getElementById('currentDateInput').value = formattedDate;
+            });
+
+            var rowCounter = 1;
+
+            function addRow() {
+                rowCounter++;
+                var newRow = `
+                    <tr id="row${rowCounter}">
+                        <td><button type="button" class="btn btn-danger btn-sm text-white" onclick="removeRow(this)" style="background-color: red; color: white;"><i class="fa-solid fa-trash"></i></button></td>
+                        <td><input class="form-control" min="1" type="text" name="productName[]" required></td>
+                        <td><input class="form-control" min="1" type="number" name="quantity[]" required oninput="validateQuantity(this); calculateTotalAmount()"></td>
+                        <td><input class="form-control" min="1" type="number" name="amount[]" required oninput="calculateTotalAmount()"></td>
+                    </tr>
+                `;
+                document.getElementById('addrow').insertAdjacentHTML('beforeend', newRow);
+                updateRowIndexes();
+                calculateTotalAmount();
+            }
+
+            function removeRow(btn) {
+                var row = btn.closest('tr');
+                var allRows = document.querySelectorAll('#itemTable tbody tr');
+                if (allRows.length > 1) {
+                    row.parentNode.removeChild(row);
+                    calculateTotalAmount();
+                    updateRowIndexes();
+                } else {
+                    alert("The first row cannot be deleted.");
+                }
+            }
+
+            function updateRowIndexes() {
+                var rows = document.querySelectorAll('#itemTable tbody tr');
+                rows.forEach(function (row, index) {
+                    var inputs = row.querySelectorAll('input, select');
+                    inputs.forEach(function (input) {
+                        var name = input.getAttribute('name');
+                        var newName = name.replace(/\[(\d+)\]/, '[' + index + ']');
+                        input.setAttribute('name', newName);
+                    });
+                });
+            }
+
+            function validateQuantity(input) {
+                if (input.value < 1) {
+                    alert("Quantity must be at least 1");
+                    input.value = 1;
+                }
+            }
+
+            function calculateTotalAmount() {
+                var total = 0;
+                $('#itemTable tbody tr').each(function () {
+                    var amount = $(this).find('input[name^="amount"]').val();
+                    if (amount) {
+                        total += parseFloat(amount);
+                    }
+                });
+                $('#netPaymentField').val(total.toFixed(2));
+            }
+        </script>
+    </div>
+</section>
+</html>

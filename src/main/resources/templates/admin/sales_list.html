@@ -25,13 +25,10 @@
 			}).then((result) => {
 				if (result.isConfirmed) {
 
-
 					window.location = "/a2zbilling/admin/sales/delete/" + id + " ";
-
 
 					swalWithBootstrapButtons.fire(
 						'Sale Order Deleted Successfully !',
-
 					)
 				} else if (
 					/* Read more about handling dismissals below */
@@ -47,32 +44,133 @@
 
 		}
 	</script>
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 65%, #ffad26 65%, 66%, #d77045 66%, #d77045 67%, #ffad26 67%, #ffad26 68%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    }
+    </style>
+	<style>
+	@media print {
+        #searchInput, #applyFilter, #return, .dropdown {
+            display: none;
+        }
+        
+        th:last-child, td:last-child {
+            display: none;
+        }
+        
+           /* Hide date inputs by default when printing */
+        #startDate, #endDate, label[for="startDate"], label[for="endDate"] {
+            display: none;
+        }
+    }
+	</style>
+	
+	<!-- Search bar script to filter table-->
+	<script>
+		function filterTable() {
+			const query = document.getElementById('searchInput').value.toLowerCase();
+			const rows = document.querySelectorAll('tbody tr');
+
+			rows.forEach(row => {
+				const cells = row.querySelectorAll('td');
+				let match = false;
+				cells.forEach(cell => {
+					if (cell.textContent.toLowerCase().includes(query)) {
+						match = true;
+					}
+				});
+				row.style.display = match ? '' : 'none';
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementById('searchInput').addEventListener('keyup', filterTable);
+		});
+	</script>
+	
+	 <!--from date to end date script-->
+	  <script>
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let match = false;
+                let dateMatch = true;
+                
+                const rowDate = new Date(cells[0].textContent);
+                if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                    dateMatch = rowDate >= startDate && rowDate <= endDate;
+                }
+
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(query)) {
+                        match = true;
+                    }
+                });
+                
+                row.style.display = (match && dateMatch) ? '' : 'none';
+            });
+        }
+
+        function applyDateFilter() {
+            filterTable();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('searchInput').addEventListener('keyup', filterTable);
+        });
+    </script>
 	<!-- BEGIN Page Wrapper -->
-	<div class="contaier-fluid">
-		<div th:if="${session.message}">
-			<div class="alert alert-primary" role="alert">
-				<p th:text="${session.message}"></p>
-				<script th:inline="javascript">
-					setTimeout(function () {
-						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500); 
-				</script>
-			</div>
-		</div>
-		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12 mt-2">
-				<h1 class="text-center" style="color: white;"><b>SALES TRANSACTION</b></h1>
-			</div>
-		</div>
+	<div class="container-fluid pb-4" style="background-color: #f1f1f1; line-height: 25px;">
 		
-		<div class="row text-right">
-			<div class="col-md-12 mt-3">
-				<a th:href="@{'/a2zbilling/admin/sales/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 8px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Sales</a>
+		<div class="row heading">
+			<div class="col-md-12">
+				<h1 class="text-center"><b>SALES TRANSACTION</b></h1>
 			</div>
 		</div>
-		<div class="row mt-2"	>
+		<div style="background-color: #f5f0f0;">
+			<div class="row text-right">
+				<div class="col-md-12 mt-3">
+					<a th:href="@{'/a2zbilling/admin/sales/add'}" style="color: white; padding: 5px 22px; display: inline-block; font-size: 14px; margin: 3px 2px; cursor: pointer; border-radius: 5px;" class="btn btn-info"><i class="fa-solid fa-circle-plus"></i> Add Sales</a>
+				</div>
+			</div>
+		
+		 	<!--From date to End date filter-->
+		
+			<div class="row">
+				<div class="col-md-2">
+				<!-- Search Bar -->
+					<input id="searchInput" type="text"
+					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 5px; border-color: rgb(12,131,226);"
+					name="query" placeholder="Search">
+				</div >
+				
+				<div class="col-md-10">
+				<input id="endDate" type="date" onchange="applyDateFilter()"
+					style="margin-top: 20px; height: 35px; border-color: #F8F6FA; float: right; margin-left: 10px;">
+				<label for="endDate" style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">To
+					:</label>
+		
+				<input id="startDate" type="date" onchange="applyDateFilter()"
+					style="margin-top: 20px; height: 35px; border-color: #F8F6FA; float: right; margin-left: 10px;">
+				<label for="startDate" style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">From
+					:</label>
+				</div >
+				
+			</div>
+		
+		<div class="row mt-2" style="background-color:#f5f0f0 ;">
 			<div class="col-md-12">
-				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
+				<table style="border: 1px solid black; background-color: white;"  class="table table-bordered table-hover table-striped">
 					<thead style="background-color: #F3EBD6;">
 						<tr style="text-align: center;">
 							<th style="border: 1px solid black;" scope="col">Date</th>
@@ -85,7 +183,7 @@
 							<th style="border: 1px solid black;" scope="col">Paid Amount</th>
 							<th style="border: 1px solid black;" scope="col">Balance Due</th>
 							<th style="border: 1px solid black;" scope="col">Net Amount</th>
-							<th style="border: 1px solid black;"></th>
+							<th id="return" style="border: 1px solid black;"></th >
 						</tr>			
 					</thead>
 					<tbody>
@@ -121,7 +219,7 @@
 							    </button>
 							    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 							      <!--<a class="dropdown-item" th:href="@{/a2zbilling/admin/sales/update}"><b>Edit</b></a>-->
-							      <a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Sales Return</b></a>
+							      <a class="dropdown-item" th:href="@{'/a2zbilling/admin/sales/return/'+ ${sale.id} }"><b>Sales Update/Return</b></a>
 							      <a class="dropdown-item" th:onclick="|deleteContactAlert(${sale.id})|" href="#"><b>Delete</b></a>
 							    </div>
 							  </div>
@@ -138,7 +236,7 @@
 			    </div>
 			</div>
 		</div>
-		
+		</div>
 	</div>
 	<style>
 		.dropdown {
@@ -161,6 +259,22 @@
 		  left: auto;
 		}
 	</style>
+	
+	 <script>
+        function preparePrint() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate || endDate) {
+                document.getElementById('startDate').style.display = 'inline-block';
+                document.getElementById('endDate').style.display = 'inline-block';
+                document.querySelector('label[for="startDate"]').style.display = 'inline-block';
+                document.querySelector('label[for="endDate"]').style.display = 'inline-block';
+            }
+        }
+
+        window.onbeforeprint = preparePrint;
+    </script>
 </section>
 </body>
 <!-- END Body -->

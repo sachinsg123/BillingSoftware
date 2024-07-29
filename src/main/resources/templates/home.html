@@ -3,7 +3,42 @@
 <div th:replace="fragments/head :: head"></div>
 
 <body class="mod-bg-1 mod-nav-link">
+	<style>
+	        .alert-container {
+	            overflow: hidden;
+	            white-space: nowrap;
+	            background-color: #f2dede;
+	            color: #a94442;
+	            border-radius: 4px;
+	            padding: 10px;
+	            margin: 20px auto;
+	            width: 100%;
+	        }
+			.heading1 {
+	            color: #a94442;
+				text-align: center;
+	        }
+	        .alert-content {
+	            display: inline-block;
+	            padding-left: 100%;
+	            animation: scroll-left 25s linear infinite;
+	        }
 	
+	        .alert-item {
+	            display: inline-block;
+	            margin-right: 30px;
+	            font-weight: bold;
+	        }
+	
+	        @keyframes scroll-left {
+	            0% {
+	                transform: translateX(0%);
+	            }
+	            100% {
+	                transform: translateX(-100%);
+	            }
+	        }
+	    </style>
 	<script>
 		'use strict';
         </script>
@@ -34,7 +69,7 @@
 						            var modalHtml = '<div class="modal fade" tabindex="-1" role="dialog">' +
 						                                '<div class="modal-dialog" role="document">' +
 						                                    '<div style="background-color:#f5f0f0;" class="modal-content">' +
-						                                        '<div style="background-color:rgb(84,78,131)" class="modal-header">' +
+						                                        '<div style="background-color:red" class="modal-header">' +
 						                                            '<h1 style="color:white" class="modal-title">Minimum Stock Alert</h1>' +
 						                                            '<button style="color:red" type="button" class="close" data-dismiss="modal" aria-label="Close">' +
 						                                                '<span aria-hidden="true">&times;</span>' +
@@ -56,6 +91,16 @@
 						        /*]]>*/
 						    </script>
 						</div>
+						<div class="alert-container" th:if="${alertCustomers != null and #lists.size(alertCustomers) > 0}">
+							<h2 class="heading1">Customers Who Missed Payment Deadlines</h2>
+					        <div class="alert-content">
+					            <span th:each="customer : ${alertCustomers}" class="alert-item">
+					                <span th:text="${customer.name}"></span>:  
+									<span th:text="${customer.dueAmount}"></span>
+									
+					            </span>
+					        </div>
+					    </div>
                         <div class="row">
                             <div class="col-sm-6 col-xl-3">
                                 <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
@@ -113,7 +158,7 @@
                                 <div id="panel-4" class="panel">
                                     <div class="panel-hdr">
                                         <h2>
-                                            Purchase<span class="fw-300"><i>Records</i></span>
+                                            Sales Record<span class="fw-300"></span>
                                         </h2>
                                     </div>
                                     <div class="panel-container show">
@@ -161,7 +206,7 @@
                                 </div>
                             </div>
 						<div class="row">
-                            <div id="panel-4" class="panel">
+                            <div id="panel-5" class="panel">
                                 <div class="panel-hdr">
                                     <h2>
                                         Purchase Records
@@ -439,35 +484,32 @@
   									<span aria-hidden="true">&times;</span>
   								</button>
   							</div>
-  							<div class="modal-body" style="background-color:#f5f0f0;">
-  								<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
-  									<div class="row">
-  										<div class="col-md-12 mt-2">
-  											<input type="hidden" class="form-control" name="name">
-  											<div class="form-group">
-  												<label><b>Name :</b></label>
-  												<input type="text" class="form-control" onkeyup="gstCalculator()"
-  													id="gstPercentage" name="gstRate"
-  													placeholder="Charges Name" required>
-  											</div>
-  										</div>
-  										<div class="col-md-12 mt-2">
-  											<div class="form-group">
-  												<label><b>Price :</b></label>
-  												<input type="text" class="form-control" id="sgstPercentage"
-  													name="sgstRate" placeholder="Enter price">
-  											</div>
-  										</div>
-  										
-  									</div>
-  									<div class="col-md-12 mt-4">
-  										<div class="text-center">
-  											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
-  											 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
-  										</div>
-  									</div>
-  								</form>
-  							</div>
+							<div class="modal-body" style="background-color:#f5f0f0;">
+								<form th:action="@{/a2zbilling/admin/charges/add}" method="post" class="form-group">
+									<div class="row">
+										<div class="col-md-12 mt-2">
+											<input type="hidden" class="form-control" id="id">
+											<div class="form-group">
+												<label><b>Name :</b></label>
+												<input type="text" class="form-control" name="name" placeholder="Charges Name" required>
+											</div>
+										</div>
+										<div class="col-md-12 mt-2">
+											<div class="form-group">
+												<label><b>Price :</b></label>
+												<input type="text" class="form-control" name="price" placeholder="Enter price" required>
+											</div>
+										</div>
+							
+									</div>
+									<div class="col-md-12 mt-4">
+										<div class="text-center">
+											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+											<button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
+										</div>
+									</div>
+								</form>
+							</div>
   						</div>
   				   </div>
   				</div>	
@@ -510,44 +552,7 @@
 										</div>
 									</div>
 								</form>
-  <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
-				<h1 class="modal-title" id="exampleModalLabel"><b>ADD CHARGES</b></h1>
-				<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body" style="background-color:#f5f0f0;">
-				<form th:action="@{/a2zbilling/admin/charges/add}" method="post" class="form-group">
-					<div class="row">
-						<div class="col-md-12 mt-2">
-							<input type="hidden" class="form-control" id="id">
-							<div class="form-group">
-								<label><b>Name :</b></label>
-								<input type="text" class="form-control" name="name" placeholder="Charges Name" required>
-							</div>
-						</div>
-						<div class="col-md-12 mt-2">
-							<div class="form-group">
-								<label><b>Price :</b></label>
-								<input type="text" class="form-control" name="price" placeholder="Enter price" required>
-							</div>
-						</div>
-						
-					</div>
-					<div class="col-md-12 mt-4">
-						<div class="text-center">
-							<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
-							 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+ 
 			<div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">

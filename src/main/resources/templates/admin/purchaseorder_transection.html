@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
+<!-- Created by Younus -->
+<section>
+	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
+	<script>
+		function deleteContactAlert(id) {
+			const swalWithBootstrapButtons = Swal.mixin({
+				customClass: {
+					confirmButton: 'btn btn-success',
+					cancelButton: 'btn btn-danger'
+				},
+				buttonsStyling: false
+			})
+
+			swalWithBootstrapButtons.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'No, cancel!',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location = "/a2zbilling/admin/purchaseorder/delete/" + id + " ";
+
+					swalWithBootstrapButtons.fire(
+						'Transection Deleted Successfully!'
+					)
+				} else if (
+					result.dismiss === Swal.DismissReason.cancel
+				) {
+					swalWithBootstrapButtons.fire(
+						'Cancelled',
+						'Transection Not deleted',
+						'error'
+					)
+				}
+			})
+		}
+
+		function filterTable() {
+			const query = document.getElementById('searchInput').value.toLowerCase();
+			const rows = document.querySelectorAll('tbody tr');
+
+			rows.forEach(row => {
+				const cells = row.querySelectorAll('td');
+				let match = false;
+				cells.forEach(cell => {
+					if (cell.textContent.toLowerCase().includes(query)) {
+						match = true;
+					}
+				});
+				row.style.display = match ? '' : 'none';
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementById('searchInput').addEventListener('keyup', filterTable);
+		});
+	</script>
+	<!--from date to end date script-->
+	  <script>
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let match = false;
+                let dateMatch = true;
+                
+                const rowDate = new Date(cells[0].textContent);
+                if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                    dateMatch = rowDate >= startDate && rowDate <= endDate;
+                }
+
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(query)) {
+                        match = true;
+                    }
+                });
+                
+                row.style.display = (match && dateMatch) ? '' : 'none';
+            });
+        }
+
+        function applyDateFilter() {
+            filterTable();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('searchInput').addEventListener('keyup', filterTable);
+        });
+    </script>
+	<style>
+		.table tbody tr:hover {
+			background-color: #e0e0e0;
+			color: #000;
+		}
+	
+		.search-icon {
+			cursor: pointer;
+		}
+	
+		@media print {
+	
+			#searchInput,
+			#applyFilter,
+			#return,
+			.dropdown {
+				display: none;
+			}
+	
+			th:last-child,
+			td:last-child {
+				display: none;
+			}
+	
+			/* Hide date inputs by default when printing */
+			#startDate,
+			#endDate,
+			label[for="startDate"],
+			label[for="endDate"] {
+				display: none;
+			}
+		}
+	
+		.heading {
+			background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 66%, #ffad26 66%, 67%, #d77045 67%, #d77045 68%, #ffad26 68%, #ffad26 69%, #525187 65%, white 80%);
+			border-left: 5px solid #FFC241;
+			color: white;
+			font-weight: bold;
+			padding: 0.5px 10px 0.5px 10px;
+		}
+	</style>
+	<div class="contaier-fluid">
+		
+		<div  >
+			<div class=" heading" style="background-color: rgb(84,78,130); color: #fff;">
+				<div class="col-md-12">
+					<h1 class="text-center"><b>PURCHASE ORDER LIST</b></h1>
+				</div>
+			</div>
+
+		
+			<div class="col-md-12 mt-3" style="text-align: right;">
+				<a th:href="@{'/a2zbilling/admin/purchaseorder/add'}" class="btn btn-info"><i
+						class="fa-solid fa-circle-plus"></i> Add Purchase Order</a>
+			</div>
+			<!--From date to End date filter-->
+			<div>
+				<div class="row">
+					<div class="col-md-2">
+						<!-- Search Bar -->
+						<input id="searchInput" type="text"
+							style="margin-top: 20px; margin-left: 10px; height: 35px; width: 200px; border-radius: 5px; border-color: rgb(12,131,226);"
+							name="query" placeholder="Search">
+					</div>
+					
+					<div class="col-md-10">
+						<input id="endDate" type="date" onchange="applyDateFilter()"
+							style="margin-top: 20px; height: 35px; border-color: #F8F6FA; float: right; margin-left: 10px;">
+						<label for="endDate"
+							style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">To
+							:</label>
+
+						<input id="startDate" type="date" onchange="applyDateFilter()"
+							style="margin-top: 20px; height: 35px; border-color: #F8F6FA; float: right; margin-left: 10px;">
+						<label for="startDate"
+							style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">From
+							:</label>
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="row mt-2 pb-3">
+				<div class="col-md-12">
+					<table class="table table-bordered table-striped" style="background-color: #fff;">
+						<thead style="background-color: #F3EBD6;color: black;">
+							<tr>
+								<th style="border: 1px solid black;" scope="col">Date</th>
+								<th style="border: 1px solid black;" scope="col">Invoice No</th>
+								<th style="border: 1px solid black;" scope="col">Supplier Name</th>
+								<th style="border: 1px solid black;" scope="col">Product Name</th>
+								<th style="border: 1px solid black;" scope="col">Quantity</th>
+								<th style="border: 1px solid black;" scope="col">Size</th>
+								
+								<th id="return" style="border: 1px solid black;" scope="col">Action</th >
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="purchaseorder : ${purchaseOrders.content}"
+								style="text-align: center; border: 1px solid black;">
+								<td th:text="${purchaseorder.date}"></td >
+								<td th:text="${purchaseorder.orderNo}"></td>
+								<td th:text="${purchaseorder.parties?.name}"></td >
+								<td >
+								<ul style="list-style-type: none; padding: 0; margin: 0;">
+								    <li th:each="product : ${purchaseorder.products}">
+								        <span th:text="${product.name}"></span>
+								    </li>
+								</ul>
+								</td >
+								<td>
+									<th:block th:each="qty : ${#strings.arraySplit(purchaseorder.quantity, ',')}">
+								        <span th:text="${qty}"></span><br>
+								    </th:block>
+								</td >
+								<td>
+								<th:block th:each="size : ${#strings.arraySplit(purchaseorder.size, ',')}">
+							        <span th:text="${size}"></span><br>
+							    </th:block>
+								</td >
+								<td style="position: relative;">
+										<div class="dropdown">
+										<button type="button" id="dropdownMenuButton" data-toggle="dropdown"
+											aria-haspopup="true" aria-expanded="false">
+											<i class="fa-solid fa-ellipsis-vertical"></i>
+										</button>
+										<div class="dropdown-menu dropdown-menu-right"
+											aria-labelledby="dropdownMenuButton">
+											<a class="dropdown-item" th:onclick="|deleteContactAlert(${purchaseorder.id})|
+											" href="#"><b>Delete</b></a>
+										</div>
+									</div>
+								</td>
+							
+							</tr >
+						</tbody>
+					</table>
+					<div>
+						<span
+							th:text="'Page ' + ${currentPage + 1} + ' of ' + ${purchaseOrders.totalPages}"></span>
+					</div>
+				
+					<div>
+						<a th:if="${purchaseOrders.hasPrevious()}"
+							th:href="@{/a2zbilling/admin/purchaseorder/transection(page=${currentPage - 1}, size=${purchaseOrders.size})}">Previous</a>
+						<a th:if="${purchaseOrders.hasNext()}"
+							th:href="@{/a2zbilling/admin/purchaseorder/transection(page=${currentPage + 1}, size=${purchaseOrders.size})}">Next</a>
+					</div>
+					
+				</div>
+			</div>
+		</div >
+	</div>
+	<!-- Script Hide from date to end Date-->
+	 <script>
+        function preparePrint() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate || endDate) {
+                document.getElementById('startDate').style.display = 'inline-block';
+                document.getElementById('endDate').style.display = 'inline-block';
+                document.querySelector('label[for="startDate"]').style.display = 'inline-block';
+                document.querySelector('label[for="endDate"]').style.display = 'inline-block';
+            }
+        }
+
+        window.onbeforeprint = preparePrint;
+    </script>
+</section>
+</body>
+<!-- END Body -->
+
+</html>

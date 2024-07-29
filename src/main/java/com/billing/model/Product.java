@@ -9,7 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -82,11 +81,24 @@ public class Product{
 
 	@ManyToOne
     @JoinColumn(name="unit_id")
-    
-    
     private Unit unit;
+	
+//	@ManyToOne
+//    @JoinColumn(name="purchaseorder_id")
+//    private PurchaseOrder purchaseOrder;
+	
+	@ManyToMany(mappedBy = "products")
+    private List<PurchaseOrder> purchaseorder = new ArrayList<>();
     
-    @ManyToOne
+    public List<PurchaseOrder> getPurchaseorder() {
+		return purchaseorder;
+	}
+
+	public void setPurchaseorder(List<PurchaseOrder> purchaseorder) {
+		this.purchaseorder = purchaseorder;
+	}
+
+	@ManyToOne
     @JoinColumn(name="gst_id")
     private GSTRate gst;
     
@@ -248,14 +260,6 @@ public class Product{
 		this.about = about;
 	}
 	
-//	public Supplier getSupplier() {
-//		return supplier;
-//	}
-//
-//	public void setSupplier(Supplier supplier) {
-//		this.supplier = supplier;
-//	}
-
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", quantity=" + quantity + ", color=" + color + ", price="

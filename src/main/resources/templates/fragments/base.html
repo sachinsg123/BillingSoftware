@@ -124,7 +124,6 @@
        <!-- model stART  -->
        <!-- Button trigger modal -->
 <!-- Modal For edit firm -->
-
    <!--  Modal for Unit adding  -->
   <div class="modal fade" id="exampleModalUnits" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -225,7 +224,7 @@
   								</form>
   							</div>
   						</div>
-       </div>
+  				 </div>
        </div>
   <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog"
   					aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -237,75 +236,36 @@
   									<span aria-hidden="true">&times;</span>
   								</button>
   							</div>
-  							<div class="modal-body" style="background-color:#f5f0f0;">
-  								<form th:action="@{/a2zbilling/admin/gst/add}" method="post" class="form-group">
-  									<div class="row">
-  										<div class="col-md-12 mt-2">
-  											<input type="hidden" class="form-control" name="name">
-  											<div class="form-group">
-  												<label><b>Name :</b></label>
-  												<input type="text" class="form-control" onkeyup="gstCalculator()"
-  													id="gstPercentage" name="gstRate"
-  													placeholder="Charges Name" required>
-  											</div>
-  										</div>
-  										<div class="col-md-12 mt-2">
-  											<div class="form-group">
-  												<label><b>Price :</b></label>
-  												<input type="text" class="form-control" id="sgstPercentage"
-  													name="sgstRate" placeholder="Enter price">
-  											</div>
-  										</div>
-  									</div>
-  									<div class="col-md-12 mt-4">
-  										<div class="text-center">
-  											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
-  											 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
-  										</div>
-  									</div>
-  								</form>
-  							</div>
+							<div class="modal-body" style="background-color:#f5f0f0;">
+								<form th:action="@{/a2zbilling/admin/charges/add}" method="post" class="form-group">
+									<div class="row">
+										<div class="col-md-12 mt-2">
+											<input type="hidden" class="form-control" id="id">
+											<div class="form-group">
+												<label><b>Name :</b></label>
+												<input type="text" class="form-control" name="name" placeholder="Charges Name" required>
+											</div>
+										</div>
+										<div class="col-md-12 mt-2">
+											<div class="form-group">
+												<label><b>Price :</b></label>
+												<input type="text" class="form-control" name="price" placeholder="Enter price" required>
+											</div>
+										</div>
+							
+									</div>
+									<div class="col-md-12 mt-4">
+										<div class="text-center">
+											<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
+											<button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
+										</div>
+									</div>
+								</form>
+							</div>
   						</div>
-        </div>
-       </div>
-  <div class="modal fade" id="exampleModalForCharges" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header align-items-center" style="background-color:rgb(84,78,131); color: white;">
-				<h1 class="modal-title" id="exampleModalLabel"><b>ADD CHARGES</b></h1>
-				<button type="button" class="close" style="color: red;" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body" style="background-color:#f5f0f0;">
-				<form th:action="@{/a2zbilling/admin/charges/add}" method="post" class="form-group">
-					<div class="row">
-						<div class="col-md-12 mt-2">
-							<input type="hidden" class="form-control" id="id">
-							<div class="form-group">
-								<label><b>Name :</b></label>
-								<input type="text" class="form-control" name="name" placeholder="Charges Name" required>
-							</div>
-						</div>
-						<div class="col-md-12 mt-2">
-							<div class="form-group">
-								<label><b>Price :</b></label>
-								<input type="text" class="form-control" name="price" placeholder="Enter price" required>
-							</div>
-						</div>
-						
-					</div>
-					<div class="col-md-12 mt-4">
-						<div class="text-center">
-							<button type="submit" class="btn btn-info text-center"><b>Add</b></button>
-							 <button type="button" class="btn btn-secondary text-center" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+      				  </div>
+       				</div>
+ 
   <div class="modal fade" id="exampleModalCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="background-color: #f5f0f0;">
@@ -322,7 +282,7 @@
                       <script th:inline="javascript">
                       setTimeout(function() {
             	            window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-                 }, 500); 
+                 	}, 500); 
                     </script> 
                       </div>
                      </div>
@@ -462,7 +422,6 @@
                     <!-- END Color profile -->
                 </div>
             </div>
-      
         </div>
         <!-- END Page Wrapper -->
         <!-- BEGIN Quick Menu -->

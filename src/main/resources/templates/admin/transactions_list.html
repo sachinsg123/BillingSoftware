@@ -47,29 +47,40 @@
 
 		}
 	</script>
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 66%, #ffad26 66%, 67%, #d77045 67%, #d77045 68%, #ffad26 68%, #ffad26 69%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    	}
+    </style>
 	<!-- BEGIN Page Wrapper -->
-	<div class="contaier-fluid">
+	<div class="container-fluid pb-4">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
 				<script th:inline="javascript">
+					/*<![CDATA[*/
 					setTimeout(function () {
 						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500); 
+					}, 800); 
 				</script>
 			</div>
 		</div>
-		<div class="row" style="background-color:rgb(84,78,131);">
+		<div class="row heading">
 			<div class="col-md-12">
-				<h1 class="text-center" style="color: white;"><b>SUPPLIER TRANSACTION'S</b></h1>
+				<h1 class="text-center"><b>SUPPLIER TRANSACTION'S</b></h1>
 			</div>
 		</div>
-	
+		
 		<div class="row mt-4" >
 			<div class="col-md-12">
 				<table style="border: 1px solid black;" class="table table-bordered table-hover table-striped">
 					<thead style="color:black; background-color: #F3EBD6">
                         <tr>
+							<th scope="col">Status</th>
                             <th scope="col">Date</th>
                             <th scope="col">Invoice No</th>
                             <th scope="col">Supplier Name</th>
@@ -84,6 +95,7 @@
                     </thead>
 					<tbody>
 						<tr th:each="party : ${partiesTransactions}" style="text-align: center; border: 1px solid black;">
+							<td th:text="${party.purchaseType}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.date}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.billNo}"><input class="form-control" value="" readonly></td>
                             <td th:text="${party.parties?.name}"><input class="form-control" value="" readonly></td>
@@ -100,11 +112,11 @@
                                 </th:block>
 							</td>
                             
-                            <td th:text="${party.discountInRupees}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.discountInRupees ?: 0}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.paymentMode}"><input type="text" class="form-control" value="" readonly></td>
                             <td th:text="${party.netPayment}"><input type="text" class="form-control" value="" readonly></td>
-                            <td th:text="${party.dues}"><input type="text" class="form-control" value="" readonly></td>
-                            <td th:text="${party.paid}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.dues ?: 0}"><input type="text" class="form-control" value="" readonly></td>
+                            <td th:text="${party.paid ?: 0}"><input type="text" class="form-control" value="" readonly></td>
                         </tr>
 					</tbody>
 				</table>

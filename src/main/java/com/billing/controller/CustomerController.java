@@ -1,6 +1,7 @@
 package com.billing.controller;
 
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -83,10 +85,8 @@ public class CustomerController {
 
 		User addedByUser = userRepo.findByUsername(user);
 
-		List<User> userList = new ArrayList<User>();
-		userList.add(addedByUser);
 		customer.setDueAmount("0");
-		customer.setUser(userList);
+		customer.setUser(user1);
 		customer.setStatus("Active");
 		customerRepo.save(customer);
 
@@ -212,5 +212,21 @@ public class CustomerController {
 
 		return "redirect:/a2zbilling/admin/customer/list";
 	}
-
+	
+	@PostMapping("/customer/setPaymentReminderOrUpdateDue")
+	public String setPaymentReminderOrUpdateDue(@RequestParam("id") int id, @RequestParam("paymentReminderDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String paymentReminderDate, @RequestParam("duePaid") double duePaid)
+	{
+		Customer customer = customerRepo.findById(id).get();
+		
+		customer.setPaymentReminderDate(paymentReminderDate);
+		
+		DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        if(paymentReminderDate != null) {
+			double totalDue = Double.parseDouble(customer.getDueAmount()) + duePaid;
+			customer.setDueAmount(decimalFormat.format(totalDue));
+        }
+		
+		customerRepo.save(customer);
+		return "redirect:/a2zbilling/admin/customer/list";
+	}
 }

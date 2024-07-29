@@ -124,7 +124,7 @@ public class PartiesController {
 			return "admin/add_parties";
 		}
 		
-		// changes By Mahesh
+		// changes By Mahesh  MaheshM Branch
 		@PostMapping("/parties/add")
 		public String partiesAddingProcess(@ModelAttribute Parties parties, HttpSession session, HttpServletRequest request)
 				throws URISyntaxException {

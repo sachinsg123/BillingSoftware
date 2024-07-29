@@ -43,20 +43,79 @@
             document.getElementById('totalTaxAmount').textContent = totalTax.toFixed(2);
         }
     </script>
+    
+    <!--from date to end date script-->
+	  <script>
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let match = false;
+                let dateMatch = true;
+                
+                const rowDate = new Date(cells[0].textContent);
+                if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                    dateMatch = rowDate >= startDate && rowDate <= endDate;
+                }
+
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(query)) {
+                        match = true;
+                    }
+                });
+                
+                row.style.display = (match && dateMatch) ? '' : 'none';
+            });
+        }
+
+        function applyDateFilter() {
+            filterTable();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('searchInput').addEventListener('keyup', filterTable);
+        });
+    </script>
 
 	<style>
 		.table tbody tr:hover {
 			background-color: #e0e0e0;
 			color: #000;
 		}
-
+	
 		.search-icon {
 			cursor: pointer;
 		}
+	
 		@media print {
 			#searchInput {
 				display: none;
 			}
+	
+			#applyFilter {
+				display: none;
+			}
+	
+			/* Hide date inputs by default when printing */
+			#startDate,
+			#endDate,
+			label[for="startDate"],
+			label[for="endDate"] {
+				display: none;
+			}
+	
+		}
+	
+		.heading {
+			background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 66%, #ffad26 66%, 67%, #d77045 67%, #d77045 68%, #ffad26 68%, #ffad26 69%, #525187 65%, white 80%);
+			border-left: 5px solid #FFC241;
+			color: white;
+			font-weight: bold;
+			padding: 0.5px 10px 0.5px 10px;
 		}
 	</style>
 	<div class="container-fluid">
@@ -70,21 +129,49 @@
 				</script>
 			</div>
 		</div>
-		<div class="row" style="background-color: rgb(84,78,130); color: #fff;">
-			<div class="col-md-12 mt-1">
+		<div class="heading" style="background-color: rgb(84,78,130); color: #fff;">
+			<div class="col-md-12	">
 				<h1 class="text-center"><b>PURCHASE TAX REPORT</b></h1>
 			</div>
 		</div>
+		
+		<!--From date to End date filter-->
 		<div style="background-color: #f5f0f0;">
-			<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-2">
 				<!-- Search Bar -->
+					<input id="searchInput" type="text"
+					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 5px; border-color: rgb(12,131,226);"
+					name="query" placeholder="Search">
+				</div >
+				<div class="col-md-10">
+				<!-- Date Range Inputs with Labels -->
+		
+				<input id="endDate" type="date" onchange="applyDateFilter()"
+					style="margin-top: 20px; height: 35px; border-color: #F8F6FA; float: right; margin-left: 10px;">
+				<label for="endDate" style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">To
+					:</label>
+		
+				<input id="startDate" type="date" onchange="applyDateFilter()"
+					style="margin-top: 20px; height: 35px; border-color:#F8F6FA; float: right; margin-left: 10px;">
+				<label for="startDate" style="margin-top: 20px; float: right; margin-left: 10px; line-height: 35px;">From
+					:</label>
+				</div >
+				
+			</div>
+
+		</div>
+		
+		<div style="background-color: #f5f0f0;">
+			<!--<div class="col-md-6">
+				 Search Bar
 				<input id="searchInput" type="text"
 					style="margin-top: 20px; height: 35px; width: 200px; border-radius: 10px; border-color: rgb(12,131,226);"
 					name="query" placeholder=" Search">
-			</div>
+			</div>-->
 			<div class="row mt-2 pb-3">
 				<div class="col-md-12">
-					<table class="table table-bordered" style="background-color: #fff;">
+					<table class="table table-bordered table-striped" style="background-color: #fff;">
 						<thead style="background-color: #F3EBD6;color: black;">
 							<tr>
 								<th style="border: 1px solid black;" scope="col">Date</th >
@@ -168,6 +255,23 @@
 			window.print();
 		}
 	</script>
+	
+	<!-- Script Hide from date to end Date-->
+	 <script>
+        function preparePrint() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate || endDate) {
+                document.getElementById('startDate').style.display = 'inline-block';
+                document.getElementById('endDate').style.display = 'inline-block';
+                document.querySelector('label[for="startDate"]').style.display = 'inline-block';
+                document.querySelector('label[for="endDate"]').style.display = 'inline-block';
+            }
+        }
+
+        window.onbeforeprint = preparePrint;
+    </script>
 
 </section>
 </body>

@@ -49,23 +49,43 @@
 			}
 
 		</script>
+		<style>
+			@media print {
+
+				#actionColumn,
+				td:nth-child(4),
+				th:nth-child(4) {
+					display: none;
+				}
+			}
+
+			.heading {
+				background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 66%, #ffad26 66%, 67%, #d77045 67%, #d77045 68%, #ffad26 68%, #ffad26 69%, #525187 65%, white 80%);
+				border-left: 5px solid #FFC241;
+				color: white;
+				font-weight: bold;
+				padding: 6px 10px 3px 10px;
+			}
+		</style>
+
 		<div class="contaier-fluid">
-			<div class="row">
-				<div class="col-md-12" style="background-color: #534F84;color: #fff;">
+			<div class=" heading">
+				<div class="col-md-12">
 					<h1 class="text-center"><b>CATEGORY LIST</b></h1>
 				</div>
 			</div>
-			<div class="row" style="background-color: #f5f0f0;">
-				<div class="col-md-12 mt-3" >
-					<table class="table table-bordered table-hover table-striped" style="background-color: #fff;">
+			<div class="row">
+				<div class="col-md-12 mt-3">
+					<table class="table table-bordered table-hover table-striped"
+						style="background-color: #fff; text-align: center;">
 						<thead style="background-color: #F3EBD6;">
 							<tr>
-								<th style="border: 1px solid black;" scope="col">ID</th >
-								<th style="border: 1px solid black;" scope="col">Category Name</th >
-								<th style="border: 1px solid black;" scope="col">Added Date</th >
-								<th style="border: 1px solid black;" scope="col">Action</th >
+								<th style="border: 1px solid black;" scope="col">ID</th>
+								<th style="border: 1px solid black;" scope="col">Category Name</th>
+								<th style="border: 1px solid black;" scope="col">Added Date</th>
+								<th id="actionColumn" style="border: 1px solid black;" scope="col">Action</th>
 							</tr>
-						</thead >
+						</thead>
 						<tbody>
 							<tr th:each="category : ${categories}">
 								<th scope="row" th:text="${category.id}"></th>
@@ -80,7 +100,7 @@
 							</tr>
 						</tbody>
 					</table>
-					
+
 					<!-- Pagination Code -->
 					<div>
 						<span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${categories.totalPages}"></span>
@@ -91,7 +111,7 @@
 						<a th:if="${categories.hasNext()}"
 							th:href="@{/a2zbilling/admin/category/list(page=${currentPage + 1}, size=${categories.size})}">Next</a>
 					</div>
-					
+
 				</div>
 			</div>
 		</div>

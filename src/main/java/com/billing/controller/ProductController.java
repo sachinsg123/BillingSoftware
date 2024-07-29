@@ -351,7 +351,7 @@ public class ProductController {
 			Category cat1 = categoryRepo.findByCategoryName(product.getCategory().getCategoryName());
 			cat1.getProducts().add(product);
 			categoryRepo.save(cat1);
-			product.setCategory(cat1);
+			productFound.setCategory(cat1);
 		}
 		productFound.setStatus("Active");
 

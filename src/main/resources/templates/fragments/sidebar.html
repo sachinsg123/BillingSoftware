@@ -97,68 +97,14 @@
 				<ul>
 					<li>
 						<a th:href="@{/a2zbilling/admin/sales/list}" title="Create Sales Bill" data-filter-tags="sales">
-							<span class="nav-link-text" data-i18n="nav.documentation_general_docs">SALES</span>
+							<span class="nav-link-text" data-i18n="nav.documentation_general_docs">SALES BILL</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Project Structure" data-filter-tags="sales invoices">
-							<span class="nav-link-text" data-i18n="nav.documentation_project_structure">INVOICES</span>
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Flavors & Editions" data-filter-tags="documentation sales return">
+						<a th:href="@{/a2zbilling/admin/sales/return/list}" title="Flavors & Editions" data-filter-tags="documentation sales return">
 							<span class="nav-link-text" data-i18n="nav.documentation_flavors_&_editions">SALES
 								RETURN</span>
 						</a>
-					</li>
-					<li>
-						<a href="#" title="Quatation" data-filter-tags="documentation quotation">
-							<span class="nav-link-text" data-i18n="nav.documentation_community_support">QUATATION</span>
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Premium Support" data-filter-tags="documentation premium support">
-							<span class="nav-link-text" data-i18n="nav.documentation_premium_support">POS</span>
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Return" data-filter-tags="sales return">
-							<span class="nav-link-text" data-i18n="nav.documentation_licensing	">RETURN</span>
-						</a>
-						<ul>
-							<li>
-								<a href="#" title="Sales Return" data-filter-tags="sales sales return">
-									<span class="nav-link-text" data-i18n="nav.documentation_licensing">SALES
-										RETURN</span>
-								</a>
-							</li>
-							<li>
-								<a href="#" title="Purchase Return" data-filter-tags="sales purchase return">
-									<span class="nav-link-text" data-i18n="nav.documentation_licensing">PURCHASE
-										RETURN</span>
-								</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a href="#" title="Transfer" data-filter-tags="sales build notes">
-							<span class="nav-link-text" data-i18n="nav.documentation_build_notes">TRANSFER</span>
-
-						</a>
-						<ul>
-							<li>
-								<a href="#" title="Transfer list" data-filter-tags="sales transfer list">
-									<span class="nav-link-text" data-i18n="nav.documentation_licensing">TRANSFER
-										LIST</span>
-								</a>
-							</li>
-							<li>
-								<a href="#" title="transfer list" data-filter-tags="sales transfer list">
-									<span class="nav-link-text" data-i18n="nav.documentation_licensing">IMPORT
-										TRANSFER</span>
-								</a>
-							</li>
-						</ul>
 					</li>
 				</ul>
 			</li>
@@ -201,24 +147,25 @@
 						</a>
 					</li>
 					<li>
-					
-						<a href="#" title="Import purchase" data-filter-tags="theme import purchase">
-							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">IMPORT
-								PURCHASE</span>
-						</a>
-					</li>
-					<li>
-						<a th:href="@{/a2zbilling/admin/purchaseorder/add}" title="Create Purchase order" data-filter-tags="theme purchase order">
-							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">PURCHASE
-								ORDER</span>
-						</a>
-					</li>
-					<li>
 						<a th:href="@{/a2zbilling/admin/purchasereturn/transection}" title="Create Purchase return" data-filter-tags="theme purchase return">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">PURCHASE
 								RETURN</span>
 						</a>
 					</li>
+					<!--<li>
+					
+						<a href="#" title="Import purchase" data-filter-tags="theme import purchase">
+							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">IMPORT
+								PURCHASE</span>
+						</a>
+					</li>-->
+					<li>
+						<a th:href="@{/a2zbilling/admin/purchaseorder/transection}" title="Create Purchase order" data-filter-tags="theme purchase order">
+							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">PURCHASE
+								ORDER</span>
+						</a>
+					</li>
+					
 
 				</ul>
 			</li>
@@ -230,17 +177,17 @@
 				</a>
 				<ul>
 					<li>
-						<a href="#" title="Cash In Hand" data-filter-tags="theme expenses">
+						<a th:href="@{/a2zbilling/admin/cashPaymentList}" title="Cash In Hand" data-filter-tags="theme expenses">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">CASH IN HAND</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Cheque Payment" data-filter-tags="theme expense category">
+						<a th:href="@{/a2zbilling/admin/chequePaymentList}" title="Cheque Payment" data-filter-tags="theme expense category">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">CHEQUE PAYMENT</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" title="Online Payments	" data-filter-tags="theme expenses">
+						<a th:href="@{/a2zbilling/admin/onlinePaymentList}" title="Online Payments	" data-filter-tags="theme expenses">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ONLINE PAYMENT</span>
 						</a>
 					</li>
@@ -278,7 +225,7 @@
 				</a>
 				<ul>
 					<li>
-						<a href="#" title="How it works" data-filter-tags="peoples customer">
+						<a href="#" title="Add Customers" data-filter-tags="peoples customer">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">CUSTOMERS</span>
 						</a>
 						<ul>
@@ -290,7 +237,7 @@
 								</a>
 							</li>
 							<li>
-								<a th:href="@{/a2zbilling/admin/customer/list}" title="Customer List"
+								<a th:href="@{/a2zbilling/admin/customer/list}" title="All Customer List"
 									data-filter-tags="peoples customer">
 									<span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">ALL
 										CUSTOMERS</span>
@@ -331,6 +278,12 @@
 						</a>
 					</li>
 				</ul>
+			</li>
+			<li>
+				<a th:href="@{/a2zbilling/admin/expense/list}" title="Add Expense, Expense List" data-filter-tags="expenses">
+					<i class="fa-solid fa-wallet"></i>
+					<span class="nav-link-text" data-i18n="nav.theme_settings">EXPENSE</span>
+				</a>
 			</li>
 			<li>
 				<a href="#" title="Add Unit, Charges, Gst" data-filter-tags="master">
@@ -400,7 +353,7 @@
 					</li>
 					
 					<li>
-						<a href="#" title="Profit & Loss Report" data-filter-tags="profit & loss report">
+						<a th:href="@{/a2zbilling/admin/profitAndLossReport}" title="Profit & Loss Report" data-filter-tags="profit & loss report">
 							<span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">PROFIT & LOSS REPORT</span>
 						</a>
 					</li>
@@ -478,10 +431,6 @@
 					</div>
 				</form>
 			</div>
-		</div>
-		<!--    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
+		</div>S
 	</div>
 </div>

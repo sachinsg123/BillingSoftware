@@ -1,6 +1,15 @@
 <!DOCTYPE html> <!-- Created By Mahesh -->
 <html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/base::layout(~{::section})">
 <section>
+	<style>
+        .heading {
+        background: linear-gradient(45deg, #685099 0%, #595591 60%, #4E5A8B 60%, #37627C 62%, #ffad26 62%, 63%, #d77045 63%, #d77045 64%, #ffad26 64%, #ffad26 65%, #525187 65%, white 80%);
+        border-left: 5px solid #FFC241;
+        color: white;
+        font-weight: bold;
+        padding: 6px 10px 3px 10px;
+    	}
+    </style>
 	<script src="https://kit.fontawesome.com/0faddc1af8.js" crossorigin="anonymous"></script>
 	<script>
 		function deleteContactAlert(id) {
@@ -46,21 +55,32 @@
 			})
 		}
 	</script>
+	
+	<style>
+	@media print{
+		#actionColumn,
+		Td:nth-child(4),
+		Th:nth-child(4){
+			display: none;
+		}
+	}
+	</style>
 	<!-- BEGIN Page Wrapper -->
-	<div class="contaier-fluid">
+	<div class="container-fluid pb-4">
 		<div th:if="${session.message}">
 			<div class="alert alert-primary" role="alert">
 				<p th:text="${session.message}"></p>
 				<script th:inline="javascript">
+					/*<![CDATA[*/
 					setTimeout(function () {
 						window.location.href = '/a2zbilling/admin/clearSessionAttribute';
-					}, 500); 
+					}, 800); 
 				</script>
 			</div>
 		</div>
-		<div class="row" style="background-color:rgb(84,78,131);">
-			<div class="col-md-12 mt-2">
-				<h1 class="text-center" style="color: white;"><b>ALL SUPPLIER</b></h1>
+		<div class="row heading">
+			<div class="col-md-12">
+				<h1 class="text-center"><b>ALL SUPPLIER</b></h1>
 			</div>
 		</div>
 		
@@ -76,9 +96,9 @@
 						<tr style="text-align: center;">
 							<!-- <th scope="col">Supplier Id</th> -->
 							<th style="border: 1px solid black;" scope="col">Supplier Name</th>
-							<th style="border: 1px solid black;" scope="col">AMOUNT</th>
+							<th style="border: 1px solid black;" scope="col">Amount</th>
 							<th style="border: 1px solid black;" scope="col">Payment</th>
-							<th style="border: 1px solid black;" scope="col"></th>
+							<th id="actionColumn" style="border: 1px solid black;" scope="col">Action</th >
 						</tr>
 					</thead>
 					<tbody>
